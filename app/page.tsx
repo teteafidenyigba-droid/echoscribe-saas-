@@ -47,7 +47,10 @@ export default function LandingPage() {
           }}>IA v5</span>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <Link className="nav-login" href="/login" style={{ color: "#4a6a8a", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8 }}>
+          <Link className="nav-login" href="/login" style={{
+            color: "#1e7fc5", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8,
+            border: "1.5px solid #1e7fc5", fontWeight: 600,
+          }}>
             Connexion
           </Link>
           <Link className="nav-cta" href="/register" style={{
