@@ -37,7 +37,7 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     display: "block",
     fontSize: 12,
-    color: "#7bacc2",
+    color: "#c8d8ea",
     fontFamily: "'JetBrains Mono', monospace",
     marginBottom: 6,
     letterSpacing: "0.06em",

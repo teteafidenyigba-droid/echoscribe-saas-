@@ -119,7 +119,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sub: {
     fontSize: 14,
-    color: "#4a7a96",
+    color: "#7bacc2",
     fontFamily: "'JetBrains Mono', monospace",
     marginBottom: 28,
     textAlign: "center",
@@ -127,7 +127,7 @@ const styles: Record<string, React.CSSProperties> = {
   label: {
     display: "block",
     fontSize: 12,
-    color: "#7bacc2",
+    color: "#c8d8ea",
     fontFamily: "'JetBrains Mono', monospace",
     marginBottom: 6,
     letterSpacing: "0.06em",
@@ -167,7 +167,7 @@ const styles: Record<string, React.CSSProperties> = {
   footerText: {
     textAlign: "center",
     fontSize: 14,
-    color: "#4a7a96",
+    color: "#c8d8ea",
     marginTop: 20,
     fontFamily: "'JetBrains Mono', monospace",
   },
