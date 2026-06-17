@@ -461,7 +461,7 @@ export default function LandingPage() {
               <div style={{ fontSize: 16, color: "#e2eaf5", fontWeight: 600, marginBottom: 8 }}>
                 {item.q}
               </div>
-              <div style={{ fontSize: 14, lineHeight: 1.7, color: "#7bacc2" }}>{item.a}</div>
+              <div style={{ fontSize: 14, lineHeight: 1.7, color: "#c8d8ea" }}>{item.a}</div>
             </div>
           ))}
         </div>
