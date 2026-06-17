@@ -7,29 +7,30 @@ export default function LandingPage() {
       {/* NAV */}
       <nav style={{
         position: "sticky", top: 0, zIndex: 50,
-        background: "rgba(220,232,245,0.95)", backdropFilter: "blur(12px)",
-        borderBottom: "1px solid #c0d4e8", padding: "0 40px",
+        background: "rgba(220,232,245,0.96)", backdropFilter: "blur(16px)",
+        borderBottom: "1px solid #b8cfe4", padding: "0 48px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        height: 68, boxShadow: "0 1px 8px rgba(30,58,95,0.08)",
+        height: 70, boxShadow: "0 1px 12px rgba(30,58,95,0.1)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 26, fontStyle: "italic", color: "#1e3a5f" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#1e3a5f", letterSpacing: "-0.01em" }}>
             Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#1e7fc5" }}>Scribe</span>
           </span>
           <span style={{
             background: "#1e3a5f", borderRadius: 999, padding: "3px 10px",
-            fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase" as const,
-            color: "#ffffff", fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase" as const,
+            color: "#7dd3fc", fontFamily: "'JetBrains Mono', monospace",
           }}>IA v5</span>
         </div>
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-          <Link href="/login" style={{ color: "#4a6a8a", textDecoration: "none", fontSize: 15, padding: "8px 16px" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <Link href="/login" style={{ color: "#4a6a8a", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8 }}>
             Connexion
           </Link>
           <Link href="/register" style={{
-            background: "#1e3a5f", borderRadius: 10, color: "#ffffff",
-            textDecoration: "none", fontSize: 15, padding: "10px 22px", fontWeight: 600,
-            boxShadow: "0 2px 8px rgba(30,58,95,0.3)",
+            background: "linear-gradient(135deg, #1e3a5f, #1e5a8a)",
+            borderRadius: 10, color: "#ffffff", textDecoration: "none",
+            fontSize: 15, padding: "10px 24px", fontWeight: 600,
+            boxShadow: "0 2px 10px rgba(30,58,95,0.35)",
           }}>
             Essai gratuit 7 jours →
           </Link>
@@ -38,217 +39,289 @@ export default function LandingPage() {
 
       {/* HERO */}
       <section style={{
-        background: "linear-gradient(135deg, #1e3a5f 0%, #1e5a8a 50%, #1e7fc5 100%)",
-        padding: "100px 24px 80px", textAlign: "center", position: "relative", overflow: "hidden",
+        background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 40%, #1a6aaa 80%, #1e7fc5 100%)",
+        padding: "110px 24px 90px", textAlign: "center", position: "relative", overflow: "hidden",
       }}>
-        {/* Cercles décoratifs */}
-        <div style={{ position: "absolute", top: -80, right: -80, width: 400, height: 400, borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -120, left: -60, width: 500, height: 500, borderRadius: "50%", background: "rgba(255,255,255,0.03)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "rgba(125,211,252,0.06)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -150, left: -80, width: 600, height: 600, borderRadius: "50%", background: "rgba(30,127,197,0.08)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "30%", right: "10%", width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.03)", pointerEvents: "none" }} />
 
-        <div style={{ position: "relative", maxWidth: 820, margin: "0 auto" }}>
+        <div style={{ position: "relative", maxWidth: 860, margin: "0 auto" }}>
+          {/* Badge */}
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)",
-            borderRadius: 999, padding: "7px 20px", fontSize: 12,
-            fontFamily: "'JetBrains Mono', monospace", color: "#ffffff",
-            letterSpacing: "0.1em", marginBottom: 36,
+            background: "rgba(125,211,252,0.12)", border: "1px solid rgba(125,211,252,0.3)",
+            borderRadius: 999, padding: "8px 22px", fontSize: 12,
+            fontFamily: "'JetBrains Mono', monospace", color: "#7dd3fc",
+            letterSpacing: "0.08em", marginBottom: 40,
           }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 8px #4ade80", display: "inline-block" }} />
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 10px #4ade80", display: "inline-block" }} />
             Conforme aux standards SFR · Certifié usage médical
           </div>
 
-          <h1 style={{ fontSize: "clamp(40px, 6vw, 66px)", fontWeight: 700, lineHeight: 1.1, color: "#ffffff", marginBottom: 28 }}>
-            Votre dictée médicale<br />
-            <span style={{ color: "#7dd3fc" }}>transformée en compte rendu</span><br />
-            en 30 secondes
+          <h1 style={{ fontSize: "clamp(42px, 6.5vw, 72px)", fontWeight: 700, lineHeight: 1.08, color: "#ffffff", marginBottom: 28, letterSpacing: "-0.02em" }}>
+            Fini les comptes rendus<br />
+            qui vous volent du temps.
           </h1>
-
-          <p style={{ fontSize: 19, lineHeight: 1.8, color: "rgba(255,255,255,0.82)", marginBottom: 48, maxWidth: 620, margin: "0 auto 48px" }}>
-            EchoScribe génère automatiquement des comptes rendus d'échographie structurés et conformes aux recommandations de la Société Française de Radiologie — sans effort, sans frappe.
+          <p style={{ fontSize: "clamp(17px, 2vw, 21px)", lineHeight: 1.75, color: "rgba(255,255,255,0.78)", marginBottom: 52, maxWidth: 640, margin: "0 auto 52px" }}>
+            Dictez votre examen. EchoScribe génère un compte rendu structuré et conforme SFR en <strong style={{ color: "#7dd3fc" }}>moins de 30 secondes</strong> — sans frappe, sans effort.
           </p>
 
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 40 }}>
+          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 44 }}>
             <Link href="/register" style={{
               background: "#ffffff", borderRadius: 12, color: "#1e3a5f",
-              textDecoration: "none", fontSize: 18, padding: "16px 40px",
+              textDecoration: "none", fontSize: 19, padding: "17px 44px",
               display: "inline-block", fontWeight: 700,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+              boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
+              letterSpacing: "-0.01em",
             }}>
-              Commencer gratuitement →
+              Démarrer gratuitement →
             </Link>
             <a href="#comment" style={{
-              background: "rgba(255,255,255,0.12)", border: "2px solid rgba(255,255,255,0.35)",
+              background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.3)",
               borderRadius: 12, color: "#ffffff", textDecoration: "none",
-              fontSize: 18, padding: "16px 36px", display: "inline-block", fontWeight: 600,
+              fontSize: 19, padding: "17px 36px", display: "inline-block", fontWeight: 500,
             }}>
-              Voir comment ça marche
+              ▶ Voir comment ça marche
             </a>
           </div>
 
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", fontFamily: "'JetBrains Mono', monospace" }}>
-            7 jours d'essai gratuit · Aucune carte requise · Résiliable en un clic
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em" }}>
+            7 jours gratuits · Aucune carte requise · Résiliable en un clic
           </p>
+
+          {/* App preview mockup */}
+          <div style={{
+            marginTop: 64, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
+            borderRadius: 20, padding: "28px 32px", maxWidth: 680, margin: "64px auto 0",
+            backdropFilter: "blur(8px)", textAlign: "left",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
+              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
+              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>EchoScribe — Compte rendu généré</span>
+            </div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, lineHeight: 2, color: "rgba(255,255,255,0.75)" }}>
+              <div><span style={{ color: "#7dd3fc", fontWeight: 700 }}>INDICATION :</span> Échographie abdominale — douleurs de l'hypocondre droit.</div>
+              <div style={{ marginTop: 8 }}><span style={{ color: "#7dd3fc", fontWeight: 700 }}>RÉSULTATS :</span> Foie de taille et d'échogénicité normales. Pas de dilatation des voies biliaires. Vésicule biliaire lithiasique avec calcul de 8 mm...</div>
+              <div style={{ marginTop: 8 }}><span style={{ color: "#7dd3fc", fontWeight: 700 }}>CONCLUSION :</span> Lithiase vésiculaire symptomatique. Avis chirurgical recommandé.</div>
+              <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+                <span style={{ background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "4px 12px", color: "#4ade80", fontSize: 11 }}>✓ Généré en 18 secondes</span>
+                <span style={{ background: "rgba(125,211,252,0.1)", border: "1px solid rgba(125,211,252,0.2)", borderRadius: 6, padding: "4px 12px", color: "#7dd3fc", fontSize: 11 }}>Conforme SFR</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* STATS */}
-      <section style={{ background: "#ffffff", borderBottom: "1px solid #c0d4e8", padding: "40px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, textAlign: "center" }}>
+      <section style={{ background: "#ffffff", borderTop: "1px solid #b8cfe4", borderBottom: "1px solid #b8cfe4", padding: "44px 24px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 0, textAlign: "center" }}>
           {[
-            { n: "< 30s", label: "Compte rendu généré" },
-            { n: "80+", label: "Corrections médicales auto" },
-            { n: "100%", label: "Conforme normes SFR" },
-            { n: "7 jours", label: "Essai gratuit sans CB" },
-          ].map((s) => (
-            <div key={s.n} style={{ padding: "8px 0" }}>
-              <div style={{ fontSize: 36, fontWeight: 700, color: "#1e3a5f", fontFamily: "'EB Garamond', serif" }}>{s.n}</div>
-              <div style={{ fontSize: 13, color: "#4a6a8a", fontFamily: "'JetBrains Mono', monospace", marginTop: 4 }}>{s.label}</div>
+            { n: "< 30s", label: "Compte rendu généré", sub: "contre 5-10 min manuellement" },
+            { n: "80+", label: "Corrections médicales", sub: "vocabulaire échographique" },
+            { n: "100%", label: "Conforme SFR", sub: "structure standardisée" },
+            { n: "7 jours", label: "Essai gratuit", sub: "sans carte bancaire" },
+          ].map((s, i) => (
+            <div key={s.n} style={{ padding: "12px 16px", borderRight: i < 3 ? "1px solid #e2eaf2" : "none" }}>
+              <div style={{ fontSize: 40, fontWeight: 700, color: "#1e3a5f", fontFamily: "'EB Garamond', serif", lineHeight: 1.1 }}>{s.n}</div>
+              <div style={{ fontSize: 14, color: "#1e3a5f", fontWeight: 600, marginTop: 6 }}>{s.label}</div>
+              <div style={{ fontSize: 11, color: "#8aaac8", fontFamily: "'JetBrains Mono', monospace", marginTop: 3 }}>{s.sub}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* PROBLÈME / SOLUTION */}
+      <section style={{ padding: "88px 24px", maxWidth: 1000, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+          <div>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#1e7fc5", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 16 }}>LE PROBLÈME</p>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#1e3a5f", lineHeight: 1.25, marginBottom: 24 }}>
+              Un radiologue passe en moyenne <span style={{ color: "#e55" }}>2 à 3 heures</span> par jour à rédiger des comptes rendus.
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "#4a6a8a", marginBottom: 20 }}>
+              La saisie manuelle est lente, répétitive et source d'erreurs. Elle vous éloigne de votre vraie valeur ajoutée : l'analyse et le diagnostic.
+            </p>
+            {["Terminologie complexe à orthographier", "Structures imposées à mémoriser", "Erreurs de frappe sous pression", "Temps perdu sur la mise en forme"].map((p) => (
+              <div key={p} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10, fontSize: 15, color: "#4a6a8a" }}>
+                <span style={{ color: "#e55", fontSize: 16 }}>✗</span> {p}
+              </div>
+            ))}
+          </div>
+          <div>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#4ade80", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 16 }}>LA SOLUTION</p>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#1e3a5f", lineHeight: 1.25, marginBottom: 24 }}>
+              EchoScribe rédige à votre place.<br /><span style={{ color: "#1e7fc5" }}>Vous validez. C'est tout.</span>
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: "#4a6a8a", marginBottom: 20 }}>
+              Dictez naturellement comme vous le faites avec un secrétaire — EchoScribe comprend, corrige et structure automatiquement.
+            </p>
+            {["Terminologie corrigée automatiquement", "Structure INDICATION / RÉSULTATS / CAT", "Zéro frappe, zéro relecture fastidieuse", "30 secondes par compte rendu"].map((p) => (
+              <div key={p} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10, fontSize: 15, color: "#1e3a5f" }}>
+                <span style={{ color: "#4ade80", fontSize: 16 }}>✓</span> {p}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* FEATURES */}
-      <section style={{ padding: "88px 24px", maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#1e7fc5", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>FONCTIONNALITÉS</p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: "#1e3a5f" }}>Tout ce dont vous avez besoin</h2>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-          {[
-            { icon: "🎙", title: "Dictée vocale intelligente", desc: "Dictez naturellement en français médical. Correction automatique de la terminologie échographique en temps réel (hyperéchogène, Wirsung, EU-TIRADS…)." },
-            { icon: "✦", title: "Correction médicale SFR", desc: "Plus de 80 corrections automatiques adaptées au vocabulaire de l'échographie. Filtrage intelligent des hésitations et instructions au patient." },
-            { icon: "⬡", title: "IA de dernière génération", desc: "Propulsé par les meilleurs modèles d'IA du marché pour des comptes rendus structurés INDICATION / RÉSULTATS / CONCLUSION / CAT en quelques secondes." },
-            { icon: "📋", title: "Compatible avec votre logiciel", desc: "Copie en un clic dans le presse-papiers. Compatible Doctolib, Mediboard, Crossway et tout traitement de texte." },
-            { icon: "🔒", title: "Sécurité & RGPD", desc: "Audio traité localement, jamais stocké sur nos serveurs. Texte supprimé automatiquement après 12h. Conforme RGPD." },
-            { icon: "📱", title: "Mobile & tablette", desc: "Optimisé pour smartphone et tablette. Dictez directement en salle d'échographie depuis n'importe quel appareil." },
-          ].map((f) => (
-            <div key={f.title} style={{
-              background: "#ffffff", border: "1px solid #c0d4e8", borderRadius: 16,
-              padding: "32px 28px", boxShadow: "0 2px 16px rgba(30,58,95,0.07)",
-            }}>
-              <div style={{ fontSize: 38, marginBottom: 18 }}>{f.icon}</div>
-              <h3 style={{ fontSize: 20, color: "#1e3a5f", marginBottom: 12, fontWeight: 700 }}>{f.title}</h3>
-              <p style={{ fontSize: 15, lineHeight: 1.75, color: "#4a6a8a" }}>{f.desc}</p>
-            </div>
-          ))}
+      <section style={{ background: "#f0f6fc", padding: "88px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 64 }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#1e7fc5", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FONCTIONNALITÉS</p>
+            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#1e3a5f", marginBottom: 12 }}>Tout ce dont vous avez besoin</h2>
+            <p style={{ fontSize: 17, color: "#4a6a8a", maxWidth: 520, margin: "0 auto" }}>Conçu par et pour les radiologues et échographistes francophones.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
+            {[
+              { icon: "🎙", title: "Dictée vocale intelligente", desc: "Dictez naturellement. Correction automatique de la terminologie échographique : hyperéchogène, Wirsung, EU-TIRADS, vésiculaire…" },
+              { icon: "⚡", title: "Génération en 30 secondes", desc: "L'IA structure votre dictée en compte rendu complet INDICATION / RÉSULTATS / CONCLUSION / CAT en moins de 30 secondes." },
+              { icon: "📋", title: "Copie en un clic", desc: "Formatage riche (gras, structure). Collez directement dans Doctolib, Mediboard, Crossway ou Word." },
+              { icon: "🔒", title: "Sécurité & RGPD", desc: "Audio traité localement, jamais stocké. Données supprimées après 12h. Conforme RGPD et secret médical." },
+              { icon: "✦", title: "80+ corrections SFR", desc: "Base de données médicale spécialisée en échographie. Filtrage automatique des hésitations et instructions au patient." },
+              { icon: "📱", title: "Partout, sur tous vos écrans", desc: "Smartphone, tablette, ordinateur. Utilisez EchoScribe en salle d'examen, à votre bureau ou en déplacement." },
+            ].map((f) => (
+              <div key={f.title} style={{
+                background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 16,
+                padding: "32px 28px", boxShadow: "0 2px 16px rgba(30,58,95,0.07)",
+              }}>
+                <div style={{ fontSize: 36, marginBottom: 16 }}>{f.icon}</div>
+                <h3 style={{ fontSize: 19, color: "#1e3a5f", marginBottom: 10, fontWeight: 700 }}>{f.title}</h3>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: "#4a6a8a" }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="comment" style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1e5a8a 100%)", padding: "88px 24px" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#7dd3fc", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>COMMENT ÇA MARCHE</p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: "#ffffff", marginBottom: 56 }}>
-            De la dictée au compte rendu en 4 étapes
-          </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <section id="comment" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "96px 24px" }}>
+        <div style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>COMMENT ÇA MARCHE</p>
+          <h2 style={{ fontSize: 36, fontWeight: 700, color: "#ffffff", marginBottom: 16 }}>De la dictée au compte rendu en 4 étapes</h2>
+          <p style={{ fontSize: 17, color: "rgba(255,255,255,0.6)", marginBottom: 60 }}>Aussi simple que de parler à un collègue.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {[
-              { n: "01", title: "Appuyez sur le micro", desc: "Dictez votre examen naturellement, y compris les instructions au patient — EchoScribe trie tout automatiquement." },
-              { n: "02", title: "L'IA corrige en temps réel", desc: "Filtrage des hésitations, correction de la terminologie médicale, détection du type d'examen (abdominal, pelvien, Doppler…)." },
-              { n: "03", title: "Générez le compte rendu", desc: "En un clic, l'IA structure un compte rendu complet INDICATION / RÉSULTATS / CONCLUSION / CAT en moins de 30 secondes." },
-              { n: "04", title: "Copiez et collez", desc: "Copiez le résultat dans votre logiciel, signez et validez. C'est prêt." },
+              { n: "01", title: "Appuyez sur le micro", desc: "Dictez votre examen naturellement — y compris les instructions au patient. EchoScribe trie tout automatiquement.", icon: "🎙" },
+              { n: "02", title: "L'IA corrige en temps réel", desc: "Terminologie médicale corrigée, hésitations filtrées, type d'examen détecté (abdominal, pelvien, Doppler, thyroïde…).", icon: "⚡" },
+              { n: "03", title: "Le compte rendu se génère", desc: "En un clic, un compte rendu structuré et complet est rédigé en moins de 30 secondes.", icon: "✦" },
+              { n: "04", title: "Copiez, collez, signez", desc: "Collez dans votre logiciel, relisez rapidement et signez. Votre compte rendu est prêt.", icon: "✅" },
             ].map((s) => (
               <div key={s.n} style={{
                 display: "flex", gap: 24, alignItems: "flex-start",
-                background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
-                borderRadius: 14, padding: "24px 28px", textAlign: "left",
+                background: "rgba(255,255,255,0.07)", border: "1px solid rgba(125,211,252,0.15)",
+                borderRadius: 16, padding: "26px 30px", textAlign: "left",
               }}>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 26, color: "#7dd3fc", fontWeight: 700, flexShrink: 0, minWidth: 48 }}>
-                  {s.n}
-                </span>
+                <div style={{ textAlign: "center", flexShrink: 0 }}>
+                  <div style={{ fontSize: 24 }}>{s.icon}</div>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#7dd3fc", fontWeight: 700, marginTop: 4 }}>{s.n}</div>
+                </div>
                 <div>
                   <div style={{ fontSize: 19, color: "#ffffff", fontWeight: 700, marginBottom: 6 }}>{s.title}</div>
-                  <div style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.72)" }}>{s.desc}</div>
+                  <div style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.68)" }}>{s.desc}</div>
                 </div>
               </div>
             ))}
+          </div>
+          <div style={{ marginTop: 52 }}>
+            <Link href="/register" style={{
+              display: "inline-block", padding: "17px 48px",
+              background: "#ffffff", borderRadius: 12,
+              color: "#1e3a5f", textDecoration: "none", fontSize: 18, fontWeight: 700,
+              boxShadow: "0 6px 24px rgba(0,0,0,0.2)",
+            }}>
+              Essayer gratuitement pendant 7 jours →
+            </Link>
           </div>
         </div>
       </section>
 
       {/* PRICING */}
-      <section id="tarifs" style={{ padding: "88px 24px", maxWidth: 900, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#1e7fc5", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>TARIFS</p>
+      <section id="tarifs" style={{ padding: "96px 24px", maxWidth: 920, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 60 }}>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#1e7fc5", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>TARIFS</p>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: "#1e3a5f", marginBottom: 12 }}>Simple et transparent</h2>
           <p style={{ fontSize: 17, color: "#4a6a8a" }}>7 jours d'essai gratuit · Résiliable à tout moment · Aucun frais caché</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 28 }}>
-          {/* Monthly */}
-          <div style={{ background: "#ffffff", border: "1px solid #c0d4e8", borderRadius: 20, padding: "40px 36px", boxShadow: "0 2px 16px rgba(30,58,95,0.08)" }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#8aaac8", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>Mensuel</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
-              <span style={{ fontSize: 52, fontWeight: 700, color: "#1e3a5f" }}>59€</span>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28 }}>
+          <div style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 24, padding: "44px 40px", boxShadow: "0 2px 20px rgba(30,58,95,0.08)" }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#8aaac8", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Mensuel</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
+              <span style={{ fontSize: 56, fontWeight: 700, color: "#1e3a5f", letterSpacing: "-0.02em" }}>59€</span>
               <span style={{ fontSize: 17, color: "#8aaac8" }}>/mois</span>
             </div>
-            <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 32, fontFamily: "'JetBrains Mono', monospace" }}>Résiliable à tout moment</p>
-            {["Dictée vocale illimitée", "IA de dernière génération", "Correction médicale SFR", "Historique 12h", "Support email"].map((f) => (
-              <div key={f} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#1e3a5f" }}>
-                <span style={{ color: "#1e7fc5", fontWeight: 700 }}>✓</span> {f}
+            <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Résiliable à tout moment</p>
+            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support email sous 24h"].map((f) => (
+              <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#1e3a5f" }}>
+                <span style={{ color: "#1e7fc5", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
               </div>
             ))}
             <Link href="/register?plan=monthly" style={{
-              display: "block", textAlign: "center", marginTop: 32, padding: "14px",
-              background: "#1e3a5f", borderRadius: 10, color: "#ffffff",
-              textDecoration: "none", fontSize: 16, fontWeight: 600,
+              display: "block", textAlign: "center", marginTop: 36, padding: "15px",
+              border: "2px solid #1e3a5f", borderRadius: 12, color: "#1e3a5f",
+              textDecoration: "none", fontSize: 16, fontWeight: 700,
             }}>
-              Démarrer l'essai →
+              Démarrer l'essai gratuit →
             </Link>
           </div>
 
-          {/* Yearly */}
-          <div style={{ background: "#1e3a5f", borderRadius: 20, padding: "40px 36px", position: "relative", boxShadow: "0 8px 40px rgba(30,58,95,0.35)" }}>
+          <div style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)" }}>
             <div style={{
-              position: "absolute", top: -15, left: "50%", transform: "translateX(-50%)",
-              background: "#1e7fc5", color: "#ffffff", borderRadius: 999,
-              padding: "5px 20px", fontSize: 12, fontWeight: 700,
+              position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
+              background: "linear-gradient(90deg, #1e7fc5, #38bdf8)", color: "#ffffff", borderRadius: 999,
+              padding: "6px 22px", fontSize: 12, fontWeight: 700,
               fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap",
-            }}>✦ MEILLEURE OFFRE — 25% d'économie</div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#8aaac8", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>Annuel</div>
+              boxShadow: "0 4px 16px rgba(30,127,197,0.4)",
+            }}>✦ MEILLEURE OFFRE — économisez 25%</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Annuel</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
-              <span style={{ fontSize: 52, fontWeight: 700, color: "#ffffff" }}>699€</span>
+              <span style={{ fontSize: 56, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.02em" }}>699€</span>
               <span style={{ fontSize: 17, color: "#8aaac8" }}>/an</span>
             </div>
-            <p style={{ fontSize: 14, color: "#7dd3fc", marginBottom: 6, fontFamily: "'JetBrains Mono', monospace" }}>Soit 58,25€/mois</p>
-            <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 32, fontFamily: "'JetBrains Mono', monospace" }}>Facturé annuellement · Résiliable</p>
-            {["Dictée vocale illimitée", "IA de dernière génération", "Correction médicale SFR", "Historique 12h", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
-              <div key={f} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#ffffff" }}>
-                <span style={{ color: "#7dd3fc", fontWeight: 700 }}>✓</span> {f}
+            <p style={{ fontSize: 14, color: "#7dd3fc", marginBottom: 6, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>Soit 58,25€/mois</p>
+            <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Facturé annuellement · Résiliable</p>
+            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
+              <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#ffffff" }}>
+                <span style={{ color: "#7dd3fc", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
               </div>
             ))}
             <Link href="/register?plan=yearly" style={{
-              display: "block", textAlign: "center", marginTop: 32, padding: "14px",
-              background: "#1e7fc5", borderRadius: 10, color: "#ffffff",
+              display: "block", textAlign: "center", marginTop: 36, padding: "15px",
+              background: "linear-gradient(90deg, #1e7fc5, #38bdf8)",
+              borderRadius: 12, color: "#ffffff",
               textDecoration: "none", fontSize: 16, fontWeight: 700,
+              boxShadow: "0 4px 16px rgba(30,127,197,0.4)",
             }}>
-              Démarrer l'essai →
+              Démarrer l'essai gratuit →
             </Link>
           </div>
         </div>
-        <p style={{ textAlign: "center", fontSize: 13, color: "#8aaac8", fontFamily: "'JetBrains Mono', monospace", marginTop: 32 }}>
-          Paiement sécurisé par Stripe · Facture TVA disponible · Remboursement 14 jours
+        <p style={{ textAlign: "center", fontSize: 13, color: "#8aaac8", fontFamily: "'JetBrains Mono', monospace", marginTop: 36 }}>
+          🔒 Paiement sécurisé par Stripe · Facture TVA disponible · Remboursement 14 jours
         </p>
       </section>
 
       {/* FAQ */}
-      <section style={{ background: "#ffffff", padding: "88px 24px" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#1e7fc5", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>FAQ</p>
+      <section style={{ background: "#f0f6fc", padding: "88px 24px" }}>
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#1e7fc5", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FAQ</p>
             <h2 style={{ fontSize: 36, fontWeight: 700, color: "#1e3a5f" }}>Questions fréquentes</h2>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {[
-              { q: "Mes données audio sont-elles conservées ?", a: "Non. L'audio est traité localement dans votre navigateur et n'est jamais stocké sur nos serveurs. Votre confidentialité est totalement préservée." },
-              { q: "EchoScribe est-il certifié dispositif médical ?", a: "EchoScribe est un outil d'aide à la rédaction. Le compte rendu généré doit être validé et signé par le médecin responsable. Il ne remplace pas le jugement clinique du praticien." },
-              { q: "Compatible avec quel logiciel médical ?", a: "Le résultat est copié dans le presse-papiers avec un formatage riche (HTML). Compatible avec Doctolib, Mediboard, Crossway et tout traitement de texte." },
-              { q: "Puis-je résilier à tout moment ?", a: "Oui, sans engagement ni pénalité. La résiliation se fait en un clic depuis votre espace facturation. Vous gardez l'accès jusqu'à la fin de la période payée." },
-              { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits sans carte de crédit requise. À la fin, choisissez un plan ou l'accès est suspendu automatiquement." },
-            ].map((item) => (
-              <div key={item.q} style={{ background: "#f4f8fc", border: "1px solid #c0d4e8", borderRadius: 12, padding: "22px 28px" }}>
-                <div style={{ fontSize: 17, color: "#1e3a5f", fontWeight: 700, marginBottom: 8 }}>{item.q}</div>
-                <div style={{ fontSize: 15, lineHeight: 1.7, color: "#4a6a8a" }}>{item.a}</div>
+              { q: "Mes données audio sont-elles conservées ?", a: "Non. L'audio est traité localement dans votre navigateur et n'est jamais envoyé ni stocké sur nos serveurs. Votre confidentialité et le secret médical sont totalement préservés." },
+              { q: "EchoScribe est-il certifié dispositif médical ?", a: "EchoScribe est un outil d'aide à la rédaction. Le compte rendu généré doit être relu, validé et signé par le médecin responsable. Il ne remplace pas le jugement clinique du praticien." },
+              { q: "Compatible avec quel logiciel médical ?", a: "Le compte rendu est copié avec un formatage riche (HTML). Compatible avec Doctolib, Mediboard, Crossway, Word et LibreOffice." },
+              { q: "Puis-je résilier à tout moment ?", a: "Oui, sans engagement ni pénalité. La résiliation se fait en un clic depuis votre espace facturation. Vous conservez l'accès jusqu'à la fin de la période payée." },
+              { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits, sans carte de crédit requise. À la fin de la période, vous choisissez un plan ou votre accès est suspendu automatiquement." },
+            ].map((item, i) => (
+              <div key={i} style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 14, padding: "24px 30px", boxShadow: "0 1px 8px rgba(30,58,95,0.05)" }}>
+                <div style={{ fontSize: 17, color: "#1e3a5f", fontWeight: 700, marginBottom: 10 }}>{item.q}</div>
+                <div style={{ fontSize: 15, lineHeight: 1.75, color: "#4a6a8a" }}>{item.a}</div>
               </div>
             ))}
           </div>
@@ -256,43 +329,51 @@ export default function LandingPage() {
       </section>
 
       {/* CTA FINAL */}
-      <section style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1e7fc5 100%)", textAlign: "center", padding: "96px 24px" }}>
-        <h2 style={{ fontSize: 40, fontWeight: 700, color: "#ffffff", marginBottom: 16 }}>
-          Prêt à gagner 2h par jour ?
-        </h2>
-        <p style={{ fontSize: 19, color: "rgba(255,255,255,0.78)", marginBottom: 44, maxWidth: 520, margin: "0 auto 44px" }}>
-          Rejoignez les radiologues et échographistes qui dictent et publient leurs comptes rendus en 30 secondes.
-        </p>
-        <Link href="/register" style={{
-          display: "inline-block", padding: "18px 52px",
-          background: "#ffffff", borderRadius: 12,
-          color: "#1e3a5f", textDecoration: "none", fontSize: 20, fontWeight: 700,
-          boxShadow: "0 6px 24px rgba(0,0,0,0.2)",
-        }}>
-          Commencer gratuitement →
-        </Link>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", fontFamily: "'JetBrains Mono', monospace", marginTop: 20 }}>
-          7 jours gratuits · Sans carte bancaire · Sans engagement
-        </p>
+      <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 50%, #1e7fc5 100%)", textAlign: "center", padding: "100px 24px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -80, right: -80, width: 400, height: 400, borderRadius: "50%", background: "rgba(125,211,252,0.05)", pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 640, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, color: "#ffffff", marginBottom: 20, lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+            Prêt à récupérer<br />2 heures par jour ?
+          </h2>
+          <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", marginBottom: 48, lineHeight: 1.7 }}>
+            Rejoignez les radiologues et échographistes qui ont transformé leur pratique avec EchoScribe.
+          </p>
+          <Link href="/register" style={{
+            display: "inline-block", padding: "19px 56px",
+            background: "#ffffff", borderRadius: 14,
+            color: "#1e3a5f", textDecoration: "none", fontSize: 20, fontWeight: 700,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+            letterSpacing: "-0.01em",
+          }}>
+            Commencer gratuitement →
+          </Link>
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.38)", fontFamily: "'JetBrains Mono', monospace", marginTop: 22 }}>
+            7 jours gratuits · Sans carte bancaire · Sans engagement
+          </p>
+        </div>
       </section>
 
       {/* FOOTER */}
       <footer style={{
-        background: "#132540", padding: "44px 24px", textAlign: "center",
-        fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 2,
+        background: "#080f1d", padding: "48px 24px", textAlign: "center",
+        fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 2.2,
       }}>
-        <div style={{ marginBottom: 16 }}>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 22, fontStyle: "italic", color: "#e2eaf2" }}>
+        <div style={{ marginBottom: 20 }}>
+          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 24, fontStyle: "italic", color: "#e2eaf2" }}>
             Echo<span style={{ fontStyle: "normal", color: "#1e7fc5" }}>Scribe</span>
           </span>
         </div>
-        <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", marginBottom: 16 }}>
-          <Link href="/mentions-legales" style={{ color: "#8aaac8", textDecoration: "none" }}>Mentions légales</Link>
-          <Link href="/cgu" style={{ color: "#8aaac8", textDecoration: "none" }}>CGU</Link>
-          <Link href="/confidentialite" style={{ color: "#8aaac8", textDecoration: "none" }}>Confidentialité</Link>
-          <Link href="/login" style={{ color: "#8aaac8", textDecoration: "none" }}>Connexion</Link>
+        <div style={{ display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
+          {[
+            { href: "/mentions-legales", label: "Mentions légales" },
+            { href: "/cgu", label: "CGU" },
+            { href: "/confidentialite", label: "Confidentialité" },
+            { href: "/login", label: "Connexion" },
+          ].map((l) => (
+            <Link key={l.href} href={l.href} style={{ color: "#4a6a8a", textDecoration: "none" }}>{l.label}</Link>
+          ))}
         </div>
-        <div style={{ color: "#4a6a8a" }}>© {new Date().getFullYear()} EchoScribe · Outil d'aide à la rédaction médicale · À valider par le médecin responsable</div>
+        <div style={{ color: "#2a4a6a" }}>© {new Date().getFullYear()} EchoScribe · Outil d'aide à la rédaction médicale · À valider par le médecin responsable</div>
       </footer>
     </div>
   );
