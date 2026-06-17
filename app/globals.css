@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #07101e;
+  --accent: #38bdf8;
+  --accent2: #4ade80;
+  --border: rgba(56,189,248,0.15);
+  --text: #c8d8ea;
+  --text-dim: #4a7a96;
+}
+
+body {
+  background: #07101e;
+  color: #c8d8ea;
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
