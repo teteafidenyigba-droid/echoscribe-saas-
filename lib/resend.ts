@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY!);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY ?? "re_placeholder");
+}
 const FROM = process.env.RESEND_FROM_EMAIL ?? "EchoScribe <noreply@echoscribe.fr>";
 
 function base(content: string) {
@@ -33,7 +35,7 @@ function base(content: string) {
 }
 
 export async function sendWelcomeEmail(to: string, name: string) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: "Bienvenue sur EchoScribe — votre essai de 7 jours commence",
@@ -49,7 +51,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
 
 export async function sendTrialStartEmail(to: string, name: string, trialEnd: Date) {
   const dateStr = trialEnd.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: "Votre essai EchoScribe est actif",
@@ -64,7 +66,7 @@ export async function sendTrialStartEmail(to: string, name: string, trialEnd: Da
 }
 
 export async function sendTrialReminderEmail(to: string, name: string) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: "⏰ Votre essai EchoScribe se termine dans 3 jours",
@@ -79,7 +81,7 @@ export async function sendTrialReminderEmail(to: string, name: string) {
 }
 
 export async function sendSubscriptionActiveEmail(to: string, name: string, plan: string) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: "✅ Votre abonnement EchoScribe est actif",
@@ -94,7 +96,7 @@ export async function sendSubscriptionActiveEmail(to: string, name: string, plan
 
 export async function sendCancellationEmail(to: string, name: string, endDate: Date) {
   const dateStr = endDate.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to,
     subject: "Votre abonnement EchoScribe a été annulé",
