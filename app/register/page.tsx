@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -86,7 +86,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function RegisterPage() {
+function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -124,90 +124,96 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div style={styles.page}>
-        <div style={styles.card}>
-          <Link href="/" style={styles.logo}>
-            Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
-          </Link>
-          <div style={styles.successBox}>
-            <div style={{ fontSize: 18, marginBottom: 10 }}>✓ Vérifiez votre email</div>
-            <p>Un lien de confirmation vous a été envoyé à <strong>{email}</strong>.</p>
-            <p style={{ marginTop: 8 }}>Cliquez sur le lien pour activer votre compte et démarrer votre essai de 7 jours.</p>
-          </div>
-          <p style={{ textAlign: "center", fontSize: 13, color: "#4a7a96", marginTop: 20, fontFamily: "'JetBrains Mono', monospace" }}>
-            Déjà un compte ? <Link href="/login" style={{ color: "#38bdf8" }}>Se connecter</Link>
-          </p>
+      <div style={styles.card}>
+        <Link href="/" style={styles.logo}>
+          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+        </Link>
+        <div style={styles.successBox}>
+          <div style={{ fontSize: 18, marginBottom: 10 }}>✓ Vérifiez votre email</div>
+          <p>Un lien de confirmation vous a été envoyé à <strong>{email}</strong>.</p>
+          <p style={{ marginTop: 8 }}>Cliquez sur le lien pour activer votre compte et démarrer votre essai de 7 jours.</p>
         </div>
+        <p style={{ textAlign: "center", fontSize: 13, color: "#4a7a96", marginTop: 20, fontFamily: "'JetBrains Mono', monospace" }}>
+          Déjà un compte ? <Link href="/login" style={{ color: "#38bdf8" }}>Se connecter</Link>
+        </p>
       </div>
     );
   }
 
   return (
+    <div style={styles.card}>
+      <Link href="/" style={styles.logo}>
+        Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+      </Link>
+      <h1 style={{ fontSize: 24, fontWeight: 600, color: "#e2eaf5", marginBottom: 4, textAlign: "center" }}>
+        Créer votre compte
+      </h1>
+      <p style={{ fontSize: 13, color: "#38bdf8", fontFamily: "'JetBrains Mono', monospace", marginBottom: 28, textAlign: "center" }}>
+        7 jours d'essai gratuit · {plan === "yearly" ? "349€/an" : "39€/mois"} ensuite
+      </p>
+
+      <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div>
+          <label style={styles.label}>Prénom et nom</label>
+          <input
+            type="text"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Dr. Marie Dupont"
+            style={styles.input}
+          />
+        </div>
+        <div>
+          <label style={styles.label}>Email professionnel</label>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="dr.dupont@clinique.fr"
+            style={styles.input}
+          />
+        </div>
+        <div>
+          <label style={styles.label}>Mot de passe (min. 8 caractères)</label>
+          <input
+            type="password"
+            required
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            style={styles.input}
+          />
+        </div>
+
+        {error && <div style={styles.errorBox}>{error}</div>}
+
+        <button type="submit" disabled={loading} style={styles.btn}>
+          {loading ? "Création du compte…" : "Démarrer l'essai gratuit →"}
+        </button>
+      </form>
+
+      <p style={{ fontSize: 11, color: "#2d4a5e", fontFamily: "'JetBrains Mono', monospace", marginTop: 14, textAlign: "center", lineHeight: 1.6 }}>
+        En vous inscrivant, vous acceptez nos{" "}
+        <Link href="/cgu" style={{ color: "#4a7a96" }}>CGU</Link> et notre{" "}
+        <Link href="/confidentialite" style={{ color: "#4a7a96" }}>politique de confidentialité</Link>.
+      </p>
+
+      <p style={{ textAlign: "center", fontSize: 14, color: "#4a7a96", marginTop: 16, fontFamily: "'JetBrains Mono', monospace" }}>
+        Déjà un compte ? <Link href="/login" style={{ color: "#38bdf8" }}>Se connecter</Link>
+      </p>
+    </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
     <div style={styles.page}>
-      <div style={styles.card}>
-        <Link href="/" style={styles.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
-        </Link>
-        <h1 style={{ fontSize: 24, fontWeight: 600, color: "#e2eaf5", marginBottom: 4, textAlign: "center" }}>
-          Créer votre compte
-        </h1>
-        <p style={{ fontSize: 13, color: "#38bdf8", fontFamily: "'JetBrains Mono', monospace", marginBottom: 28, textAlign: "center" }}>
-          7 jours d'essai gratuit · {plan === "yearly" ? "349€/an" : "39€/mois"} ensuite
-        </p>
-
-        <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div>
-            <label style={styles.label}>Prénom et nom</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Dr. Marie Dupont"
-              style={styles.input}
-            />
-          </div>
-          <div>
-            <label style={styles.label}>Email professionnel</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="dr.dupont@clinique.fr"
-              style={styles.input}
-            />
-          </div>
-          <div>
-            <label style={styles.label}>Mot de passe (min. 8 caractères)</label>
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              style={styles.input}
-            />
-          </div>
-
-          {error && <div style={styles.errorBox}>{error}</div>}
-
-          <button type="submit" disabled={loading} style={styles.btn}>
-            {loading ? "Création du compte…" : "Démarrer l'essai gratuit →"}
-          </button>
-        </form>
-
-        <p style={{ fontSize: 11, color: "#2d4a5e", fontFamily: "'JetBrains Mono', monospace", marginTop: 14, textAlign: "center", lineHeight: 1.6 }}>
-          En vous inscrivant, vous acceptez nos{" "}
-          <Link href="/cgu" style={{ color: "#4a7a96" }}>CGU</Link> et notre{" "}
-          <Link href="/confidentialite" style={{ color: "#4a7a96" }}>politique de confidentialité</Link>.
-        </p>
-
-        <p style={{ textAlign: "center", fontSize: 14, color: "#4a7a96", marginTop: 16, fontFamily: "'JetBrains Mono', monospace" }}>
-          Déjà un compte ? <Link href="/login" style={{ color: "#38bdf8" }}>Se connecter</Link>
-        </p>
-      </div>
+      <Suspense fallback={<div style={{ color: "#7bacc2" }}>Chargement…</div>}>
+        <RegisterForm />
+      </Suspense>
     </div>
   );
 }
