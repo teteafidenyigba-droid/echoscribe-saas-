@@ -351,8 +351,8 @@ export default function LandingPage() {
           <h2 style={{ fontSize: 36, fontWeight: 700, color: "#0d2540", marginBottom: 12 }}>Simple et transparent</h2>
           <p style={{ fontSize: 17, color: "#2a5070" }}>7 jours d'essai gratuit · Résiliable à tout moment · Aucun frais caché</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28 }}>
-          <div style={{ background: "#ffffff", border: "1.5px solid #7ab0d4", borderRadius: 24, padding: "44px 40px", boxShadow: "0 6px 28px rgba(10,95,168,0.13)" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "stretch" }}>
+          <div style={{ background: "#ffffff", border: "1.5px solid #7ab0d4", borderRadius: 24, padding: "44px 40px", boxShadow: "0 6px 28px rgba(10,95,168,0.13)", display: "flex", flexDirection: "column" }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#3a7aaa", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Mensuel</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
               <span style={{ fontSize: 56, fontWeight: 700, color: "#0d2540", letterSpacing: "-0.02em" }}>59€</span>
@@ -365,7 +365,7 @@ export default function LandingPage() {
               </div>
             ))}
             <Link href="/register?plan=monthly" style={{
-              display: "block", textAlign: "center", marginTop: 36, padding: "15px",
+              display: "block", textAlign: "center", marginTop: "auto", paddingTop: 36, padding: "15px",
               border: "2px solid #0d2540", borderRadius: 12, color: "#0d2540",
               textDecoration: "none", fontSize: 16, fontWeight: 700,
             }}>
@@ -373,7 +373,7 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="pricing-card" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)" }}>
+          <div className="pricing-card" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)", display: "flex", flexDirection: "column" }}>
             <div className="pricing-badge" style={{
               position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
               background: "linear-gradient(90deg, #1e7fc5, #38bdf8)", color: "#ffffff", borderRadius: 999,
@@ -394,7 +394,7 @@ export default function LandingPage() {
               </div>
             ))}
             <Link href="/register?plan=yearly" style={{
-              display: "block", textAlign: "center", marginTop: 36, padding: "15px",
+              display: "block", textAlign: "center", marginTop: "auto", paddingTop: 36, padding: "15px",
               background: "linear-gradient(90deg, #1e7fc5, #38bdf8)",
               borderRadius: 12, color: "#ffffff",
               textDecoration: "none", fontSize: 16, fontWeight: 700,
