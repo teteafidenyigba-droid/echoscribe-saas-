@@ -115,6 +115,28 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* VIDEO */}
+      <section style={{ background: "#f0f6fc", padding: "80px 24px", textAlign: "center" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#1e7fc5", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>DÉMONSTRATION</p>
+          <h2 style={{ fontSize: 34, fontWeight: 700, color: "#1e3a5f", marginBottom: 12 }}>Voyez EchoScribe en action</h2>
+          <p style={{ fontSize: 17, color: "#4a6a8a", marginBottom: 44 }}>De la dictée au compte rendu structuré en moins de 30 secondes.</p>
+          <div style={{
+            position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden",
+            borderRadius: 20, boxShadow: "0 12px 48px rgba(30,58,95,0.2)",
+            border: "1px solid #c8ddef",
+          }}>
+            <iframe
+              src="https://www.youtube.com/embed/vBfA1qF_a-0"
+              title="EchoScribe - L'IA au service de la radiologie"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* STATS */}
       <section style={{ background: "#ffffff", borderTop: "1px solid #b8cfe4", borderBottom: "1px solid #b8cfe4", padding: "44px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 0, textAlign: "center" }}>
