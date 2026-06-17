@@ -9,8 +9,8 @@ export default function LandingPage() {
           .nav-cta-text::after { content: "Essai gratuit →"; }
           .nav-cta-text { display: none; }
           .nav-cta-short { display: inline !important; }
-          .nav-login { display: none !important; }
-          .nav-cta { padding: 9px 16px !important; font-size: 14px !important; }
+          .nav-login { font-size: 13px !important; padding: 6px 10px !important; }
+          .nav-cta { padding: 8px 12px !important; font-size: 13px !important; }
           .problem-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
           .stat-item { border-right: none !important; border-bottom: 1px solid #e2eaf2; padding-bottom: 20px !important; }
           .stat-item:last-child { border-bottom: none; }
