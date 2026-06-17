@@ -125,7 +125,7 @@ export default function LandingPage() {
           style={{
             fontSize: 18,
             lineHeight: 1.75,
-            color: "#7bacc2",
+            color: "#c8d8ea",
             marginBottom: 40,
             maxWidth: 580,
             margin: "0 auto 40px",
@@ -167,7 +167,7 @@ export default function LandingPage() {
           </a>
         </div>
 
-        <p style={{ fontSize: 12, color: "#2d4a5e", fontFamily: "'JetBrains Mono', monospace", marginTop: 20 }}>
+        <p style={{ fontSize: 12, color: "#7bacc2", fontFamily: "'JetBrains Mono', monospace", marginTop: 20 }}>
           7 jours d'essai · Aucune carte requise · Résiliable en un clic
         </p>
       </section>
@@ -238,7 +238,7 @@ export default function LandingPage() {
               <h3 style={{ fontSize: 18, color: "#e2eaf5", marginBottom: 10, fontWeight: 600 }}>
                 {f.title}
               </h3>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#7bacc2" }}>{f.desc}</p>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#c8d8ea" }}>{f.desc}</p>
             </div>
           ))}
         </div>
@@ -290,7 +290,7 @@ export default function LandingPage() {
               </span>
               <div>
                 <div style={{ fontSize: 17, color: "#e2eaf5", fontWeight: 600, marginBottom: 6 }}>{s.title}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.7, color: "#7bacc2" }}>{s.desc}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.7, color: "#c8d8ea" }}>{s.desc}</div>
               </div>
             </div>
           ))}
@@ -302,7 +302,7 @@ export default function LandingPage() {
         <h2 style={{ textAlign: "center", fontSize: 32, fontWeight: 600, color: "#e2eaf5", marginBottom: 12 }}>
           Tarifs simples et transparents
         </h2>
-        <p style={{ textAlign: "center", fontSize: 16, color: "#7bacc2", marginBottom: 52 }}>
+        <p style={{ textAlign: "center", fontSize: 16, color: "#c8d8ea", marginBottom: 52 }}>
           7 jours d'essai gratuit inclus · Résiliable à tout moment · Aucun frais caché
         </p>
 
@@ -316,14 +316,14 @@ export default function LandingPage() {
               padding: "36px 32px",
             }}
           >
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#4a7a96", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7bacc2", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>
               Mensuel
             </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
               <span style={{ fontSize: 48, fontWeight: 600, color: "#e2eaf5" }}>59€</span>
               <span style={{ fontSize: 16, color: "#7bacc2" }}>/mois</span>
             </div>
-            <p style={{ fontSize: 13, color: "#4a7a96", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
+            <p style={{ fontSize: 13, color: "#7bacc2", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
               Puis 59€/mois · Résiliable à tout moment
             </p>
             {["Dictée vocale illimitée", "IA de dernière génération", "Correction médicale SFR", "Historique 12h", "Support email"].map((f) => (
@@ -388,7 +388,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 13, color: "#38bdf8", marginBottom: 8, fontFamily: "'JetBrains Mono', monospace" }}>
               Soit 58,25€/mois
             </p>
-            <p style={{ fontSize: 13, color: "#4a7a96", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
+            <p style={{ fontSize: 13, color: "#7bacc2", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
               Facturé annuellement · Résiliable à tout moment
             </p>
             {["Dictée vocale illimitée", "IA de dernière génération", "Correction médicale SFR", "Historique 12h", "Support prioritaire", "Accès aux nouvelles fonctionnalités"].map((f) => (
@@ -416,7 +416,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <p style={{ textAlign: "center", fontSize: 12, color: "#2d4a5e", fontFamily: "'JetBrains Mono', monospace", marginTop: 28 }}>
+        <p style={{ textAlign: "center", fontSize: 12, color: "#7bacc2", fontFamily: "'JetBrains Mono', monospace", marginTop: 28 }}>
           Paiement sécurisé par Stripe · Facture TVA française disponible · Remboursement 14 jours
         </p>
       </section>
@@ -479,7 +479,7 @@ export default function LandingPage() {
         <h2 style={{ fontSize: 32, fontWeight: 600, color: "#e2eaf5", marginBottom: 16 }}>
           Prêt à gagner du temps ?
         </h2>
-        <p style={{ fontSize: 16, color: "#7bacc2", marginBottom: 36 }}>
+        <p style={{ fontSize: 16, color: "#c8d8ea", marginBottom: 36 }}>
           Rejoignez les radiologues et échographistes qui utilisent déjà EchoScribe au quotidien.
         </p>
         <Link
@@ -497,7 +497,7 @@ export default function LandingPage() {
         >
           Commencer gratuitement →
         </Link>
-        <p style={{ fontSize: 12, color: "#2d4a5e", fontFamily: "'JetBrains Mono', monospace", marginTop: 16 }}>
+        <p style={{ fontSize: 12, color: "#7bacc2", fontFamily: "'JetBrains Mono', monospace", marginTop: 16 }}>
           7 jours gratuits · Sans carte bancaire · Sans engagement
         </p>
       </section>
@@ -510,7 +510,7 @@ export default function LandingPage() {
           textAlign: "center",
           fontFamily: "'JetBrains Mono', monospace",
           fontSize: 12,
-          color: "#2d4a5e",
+          color: "#7bacc2",
           lineHeight: 2,
         }}
       >
@@ -520,10 +520,10 @@ export default function LandingPage() {
           </span>
         </div>
         <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap", marginBottom: 16 }}>
-          <Link href="/mentions-legales" style={{ color: "#2d4a5e", textDecoration: "none" }}>Mentions légales</Link>
-          <Link href="/cgu" style={{ color: "#2d4a5e", textDecoration: "none" }}>CGU</Link>
-          <Link href="/confidentialite" style={{ color: "#2d4a5e", textDecoration: "none" }}>Confidentialité</Link>
-          <Link href="/login" style={{ color: "#2d4a5e", textDecoration: "none" }}>Connexion</Link>
+          <Link href="/mentions-legales" style={{ color: "#7bacc2", textDecoration: "none" }}>Mentions légales</Link>
+          <Link href="/cgu" style={{ color: "#7bacc2", textDecoration: "none" }}>CGU</Link>
+          <Link href="/confidentialite" style={{ color: "#7bacc2", textDecoration: "none" }}>Confidentialité</Link>
+          <Link href="/login" style={{ color: "#7bacc2", textDecoration: "none" }}>Connexion</Link>
         </div>
         <div>© {new Date().getFullYear()} EchoScribe · Outil d'aide à la rédaction médicale · À valider par le médecin responsable</div>
       </footer>
