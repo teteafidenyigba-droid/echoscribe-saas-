@@ -3,9 +3,33 @@ import Link from "next/link";
 export default function LandingPage() {
   return (
     <div style={{ background: "#dce8f5", minHeight: "100vh", color: "#1e3a5f", fontFamily: "'EB Garamond', Georgia, serif" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .nav-wrap { padding: 0 16px !important; }
+          .nav-cta-text::after { content: "Essai gratuit →"; }
+          .nav-cta-text { display: none; }
+          .nav-cta-short { display: inline !important; }
+          .nav-login { display: none !important; }
+          .nav-cta { padding: 9px 16px !important; font-size: 14px !important; }
+          .problem-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .stat-item { border-right: none !important; border-bottom: 1px solid #e2eaf2; padding-bottom: 20px !important; }
+          .stat-item:last-child { border-bottom: none; }
+          .hero-mockup { padding: 20px 16px !important; }
+          .hero-mockup-text { font-size: 11px !important; }
+          .pricing-badge { font-size: 10px !important; padding: 5px 14px !important; white-space: normal !important; text-align: center; }
+          .pricing-card { padding: 44px 24px !important; }
+          .how-step { padding: 20px 18px !important; gap: 16px !important; }
+          .faq-item { padding: 20px 20px !important; }
+        }
+        @media (max-width: 480px) {
+          .hero-btns a { width: 100%; text-align: center; box-sizing: border-box; }
+          .hero-btns { flex-direction: column !important; align-items: stretch !important; }
+          .logo-text { font-size: 22px !important; }
+        }
+      `}</style>
 
       {/* NAV */}
-      <nav style={{
+      <nav className="nav-wrap" style={{
         position: "sticky", top: 0, zIndex: 50,
         background: "rgba(220,232,245,0.96)", backdropFilter: "blur(16px)",
         borderBottom: "1px solid #b8cfe4", padding: "0 48px",
@@ -13,7 +37,7 @@ export default function LandingPage() {
         height: 70, boxShadow: "0 1px 12px rgba(30,58,95,0.1)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#1e3a5f", letterSpacing: "-0.01em" }}>
+          <span className="logo-text" style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#1e3a5f", letterSpacing: "-0.01em" }}>
             Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#1e7fc5" }}>Scribe</span>
           </span>
           <span style={{
@@ -23,16 +47,17 @@ export default function LandingPage() {
           }}>IA v5</span>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <Link href="/login" style={{ color: "#4a6a8a", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8 }}>
+          <Link className="nav-login" href="/login" style={{ color: "#4a6a8a", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8 }}>
             Connexion
           </Link>
-          <Link href="/register" style={{
+          <Link className="nav-cta" href="/register" style={{
             background: "linear-gradient(135deg, #1e3a5f, #1e5a8a)",
             borderRadius: 10, color: "#ffffff", textDecoration: "none",
             fontSize: 15, padding: "10px 24px", fontWeight: 600,
             boxShadow: "0 2px 10px rgba(30,58,95,0.35)",
           }}>
-            Essai gratuit 7 jours →
+            <span className="nav-cta-text">Essai gratuit 7 jours →</span>
+            <span className="nav-cta-short" style={{ display: "none" }}>Essai gratuit →</span>
           </Link>
         </div>
       </nav>
@@ -67,7 +92,7 @@ export default function LandingPage() {
             Dictez votre examen. EchoScribe génère un compte rendu structuré et conforme SFR en <strong style={{ color: "#7dd3fc" }}>moins de 30 secondes</strong> — sans frappe, sans effort.
           </p>
 
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 44 }}>
+          <div className="hero-btns" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 44 }}>
             <Link href="/register" style={{
               background: "#ffffff", borderRadius: 12, color: "#1e3a5f",
               textDecoration: "none", fontSize: 19, padding: "17px 44px",
@@ -91,7 +116,7 @@ export default function LandingPage() {
           </p>
 
           {/* App preview mockup */}
-          <div style={{
+          <div className="hero-mockup" style={{
             marginTop: 64, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
             borderRadius: 20, padding: "28px 32px", maxWidth: 680, margin: "64px auto 0",
             backdropFilter: "blur(8px)", textAlign: "left",
@@ -100,9 +125,9 @@ export default function LandingPage() {
               <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
               <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
               <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>EchoScribe — Compte rendu généré</span>
+              <span className="hero-mockup-text" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>EchoScribe — Compte rendu généré</span>
             </div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, lineHeight: 2, color: "rgba(255,255,255,0.75)" }}>
+            <div className="hero-mockup-text" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, lineHeight: 2, color: "rgba(255,255,255,0.75)" }}>
               <div><span style={{ color: "#7dd3fc", fontWeight: 700 }}>INDICATION :</span> Échographie abdominale — douleurs de l'hypocondre droit.</div>
               <div style={{ marginTop: 8 }}><span style={{ color: "#7dd3fc", fontWeight: 700 }}>RÉSULTATS :</span> Foie de taille et d'échogénicité normales. Pas de dilatation des voies biliaires. Vésicule biliaire lithiasique avec calcul de 8 mm...</div>
               <div style={{ marginTop: 8 }}><span style={{ color: "#7dd3fc", fontWeight: 700 }}>CONCLUSION :</span> Lithiase vésiculaire symptomatique. Avis chirurgical recommandé.</div>
@@ -146,7 +171,7 @@ export default function LandingPage() {
             { n: "100%", label: "Conforme SFR", sub: "structure standardisée" },
             { n: "7 jours", label: "Essai gratuit", sub: "sans carte bancaire" },
           ].map((s, i) => (
-            <div key={s.n} style={{ padding: "12px 16px", borderRight: i < 3 ? "1px solid #e2eaf2" : "none" }}>
+            <div key={s.n} className="stat-item" style={{ padding: "12px 16px", borderRight: i < 3 ? "1px solid #e2eaf2" : "none" }}>
               <div style={{ fontSize: 40, fontWeight: 700, color: "#1e3a5f", fontFamily: "'EB Garamond', serif", lineHeight: 1.1 }}>{s.n}</div>
               <div style={{ fontSize: 14, color: "#1e3a5f", fontWeight: 600, marginTop: 6 }}>{s.label}</div>
               <div style={{ fontSize: 11, color: "#8aaac8", fontFamily: "'JetBrains Mono', monospace", marginTop: 3 }}>{s.sub}</div>
@@ -157,7 +182,7 @@ export default function LandingPage() {
 
       {/* PROBLÈME / SOLUTION */}
       <section style={{ padding: "88px 24px", maxWidth: 1000, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+        <div className="problem-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
           <div>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#1e7fc5", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 16 }}>LE PROBLÈME</p>
             <h2 style={{ fontSize: 32, fontWeight: 700, color: "#1e3a5f", lineHeight: 1.25, marginBottom: 24 }}>
@@ -232,7 +257,7 @@ export default function LandingPage() {
               { n: "03", title: "Le compte rendu se génère", desc: "En un clic, un compte rendu structuré et complet est rédigé en moins de 30 secondes.", icon: "✦" },
               { n: "04", title: "Copiez, collez, signez", desc: "Collez dans votre logiciel, relisez rapidement et signez. Votre compte rendu est prêt.", icon: "✅" },
             ].map((s) => (
-              <div key={s.n} style={{
+              <div key={s.n} className="how-step" style={{
                 display: "flex", gap: 24, alignItems: "flex-start",
                 background: "rgba(255,255,255,0.07)", border: "1px solid rgba(125,211,252,0.15)",
                 borderRadius: 16, padding: "26px 30px", textAlign: "left",
@@ -290,8 +315,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)" }}>
-            <div style={{
+          <div className="pricing-card" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)" }}>
+            <div className="pricing-badge" style={{
               position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
               background: "linear-gradient(90deg, #1e7fc5, #38bdf8)", color: "#ffffff", borderRadius: 999,
               padding: "6px 22px", fontSize: 12, fontWeight: 700,
@@ -341,7 +366,7 @@ export default function LandingPage() {
               { q: "Puis-je résilier à tout moment ?", a: "Oui, sans engagement ni pénalité. La résiliation se fait en un clic depuis votre espace facturation. Vous conservez l'accès jusqu'à la fin de la période payée." },
               { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits, sans carte de crédit requise. À la fin de la période, vous choisissez un plan ou votre accès est suspendu automatiquement." },
             ].map((item, i) => (
-              <div key={i} style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 14, padding: "24px 30px", boxShadow: "0 1px 8px rgba(30,58,95,0.05)" }}>
+              <div key={i} className="faq-item" style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 14, padding: "24px 30px", boxShadow: "0 1px 8px rgba(30,58,95,0.05)" }}>
                 <div style={{ fontSize: 17, color: "#1e3a5f", fontWeight: 700, marginBottom: 10 }}>{item.q}</div>
                 <div style={{ fontSize: 15, lineHeight: 1.75, color: "#4a6a8a" }}>{item.a}</div>
               </div>
