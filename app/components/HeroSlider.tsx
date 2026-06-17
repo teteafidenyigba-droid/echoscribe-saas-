@@ -12,8 +12,9 @@ const slides = [
     icon: "🫁",
     badge: "Foie · Reins · Vésicule · Rate",
     color: "#38bdf8",
-    thumb: "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=120&h=80&fit=crop&auto=format",
     thumbLabel: "Abdominal",
+    thumbBg: "linear-gradient(135deg,#0a3a6a,#1a6aaa)",
+    thumbSvg: `<svg viewBox="0 0 90 58" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="58" fill="none"/><ellipse cx="45" cy="30" rx="22" ry="16" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.7"/><ellipse cx="45" cy="30" rx="14" ry="10" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.5"/><ellipse cx="45" cy="30" rx="6" ry="6" fill="#38bdf8" opacity="0.3"/><line x1="10" y1="30" x2="30" y2="30" stroke="#38bdf8" stroke-width="1" opacity="0.4"/><line x1="60" y1="30" x2="80" y2="30" stroke="#38bdf8" stroke-width="1" opacity="0.4"/><text x="45" y="54" text-anchor="middle" font-size="7" fill="#7dd3fc" font-family="monospace" opacity="0.8">ABDOMINAL</text></svg>`,
     sample: [
       { label: "INDICATION", text: "Douleurs de l'hypocondre droit. Bilan hépatique perturbé." },
       { label: "RÉSULTATS", text: "Foie de taille normale, échogénicité homogène. Vésicule lithiasique, calcul de 8 mm..." },
@@ -28,8 +29,9 @@ const slides = [
     icon: "🩺",
     badge: "Utérus · Ovaires · Obstétrique",
     color: "#f472b6",
-    thumb: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=120&h=80&fit=crop&auto=format",
     thumbLabel: "Gynécologie",
+    thumbBg: "linear-gradient(135deg,#6a0a4a,#c0186a)",
+    thumbSvg: `<svg viewBox="0 0 90 58" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="58" fill="none"/><ellipse cx="45" cy="26" rx="14" ry="18" fill="none" stroke="#f472b6" stroke-width="1.5" opacity="0.7"/><circle cx="45" cy="22" r="6" fill="#f472b6" opacity="0.25"/><ellipse cx="45" cy="22" r="3" fill="#f472b6" opacity="0.5"/><line x1="45" y1="44" x2="45" y2="52" stroke="#f472b6" stroke-width="1.5" opacity="0.5"/><circle cx="34" cy="20" r="4" fill="none" stroke="#f472b6" stroke-width="1" opacity="0.5"/><circle cx="56" cy="20" r="4" fill="none" stroke="#f472b6" stroke-width="1" opacity="0.5"/><text x="45" y="57" text-anchor="middle" font-size="7" fill="#f9a8d4" font-family="monospace" opacity="0.8">GYNECO</text></svg>`,
     sample: [
       { label: "INDICATION", text: "Suivi de grossesse. 12 SA. Dépistage T1." },
       { label: "RÉSULTATS", text: "Embryon unique, activité cardiaque présente à 162 bpm. LCC : 58 mm. Clarté nucale : 1,4 mm..." },
@@ -44,8 +46,9 @@ const slides = [
     icon: "❤️",
     badge: "ETT · Doppler · Fraction d'éjection",
     color: "#f87171",
-    thumb: "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=120&h=80&fit=crop&auto=format",
     thumbLabel: "Cardiologie",
+    thumbBg: "linear-gradient(135deg,#6a0a0a,#c01818)",
+    thumbSvg: `<svg viewBox="0 0 90 58" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="58" fill="none"/><path d="M45 42 C45 42 22 28 22 18 C22 12 27 8 33 10 C38 12 45 20 45 20 C45 20 52 12 57 10 C63 8 68 12 68 18 C68 28 45 42 45 42Z" fill="#f87171" opacity="0.3" stroke="#f87171" stroke-width="1.5"/><polyline points="8,29 20,29 26,18 32,38 38,24 44,32 50,24 56,38 62,18 68,29 82,29" fill="none" stroke="#fca5a5" stroke-width="1.2" opacity="0.7"/><text x="45" y="55" text-anchor="middle" font-size="7" fill="#fca5a5" font-family="monospace" opacity="0.8">CARDIO</text></svg>`,
     sample: [
       { label: "INDICATION", text: "Bilan cardiaque. Dyspnée d'effort. HTA connue." },
       { label: "RÉSULTATS", text: "VG non dilaté, fonction systolique conservée. FEVG estimée à 62%. Pas de trouble de la cinétique..." },
@@ -60,8 +63,9 @@ const slides = [
     icon: "🔬",
     badge: "Thyroïde · EU-TIRADS · Nodules",
     color: "#4ade80",
-    thumb: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=120&h=80&fit=crop&auto=format",
     thumbLabel: "Thyroïde",
+    thumbBg: "linear-gradient(135deg,#0a4a1a,#18882a)",
+    thumbSvg: `<svg viewBox="0 0 90 58" xmlns="http://www.w3.org/2000/svg"><rect width="90" height="58" fill="none"/><ellipse cx="36" cy="28" rx="14" ry="10" fill="none" stroke="#4ade80" stroke-width="1.5" opacity="0.7"/><ellipse cx="54" cy="28" rx="14" ry="10" fill="none" stroke="#4ade80" stroke-width="1.5" opacity="0.7"/><rect x="42" y="22" width="6" height="12" rx="3" fill="#4ade80" opacity="0.25"/><circle cx="32" cy="24" r="4" fill="#4ade80" opacity="0.3"/><circle cx="58" cy="32" r="3" fill="#4ade80" opacity="0.4" stroke="#4ade80" stroke-width="1"/><text x="45" y="55" text-anchor="middle" font-size="7" fill="#86efac" font-family="monospace" opacity="0.8">THYROÏDE</text></svg>`,
     sample: [
       { label: "INDICATION", text: "Nodule thyroïdien découvert fortuitement. TSH normale." },
       { label: "RÉSULTATS", text: "Nodule isthmique gauche hypoéchogène, 12 × 8 mm, contours irréguliers, vascularisation centrale. EU-TIRADS 4..." },
@@ -159,29 +163,17 @@ export default function HeroSlider() {
                 }}
               >
                 <div style={{
-                  position: "relative", borderRadius: 10, overflow: "hidden",
+                  position: "relative", borderRadius: 10, overflow: "hidden", width: 90, height: 62,
                   border: `2px solid ${i === current ? s.color : "rgba(255,255,255,0.15)"}`,
-                  boxShadow: i === current ? `0 0 14px ${s.color}66` : "none",
+                  boxShadow: i === current ? `0 0 16px ${s.color}88` : "none",
+                  background: s.thumbBg,
                   transition: "all 0.3s ease",
+                  opacity: i === current ? 1 : 0.5,
                 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={s.thumb}
-                    alt={s.thumbLabel}
-                    width={90}
-                    height={58}
-                    style={{ display: "block", objectFit: "cover", filter: i === current ? "none" : "brightness(0.45) saturate(0.5)" }}
+                  <div
+                    style={{ width: 90, height: 62 }}
+                    dangerouslySetInnerHTML={{ __html: s.thumbSvg }}
                   />
-                  <div style={{
-                    position: "absolute", bottom: 0, left: 0, right: 0,
-                    background: "linear-gradient(transparent, rgba(0,0,0,0.72))",
-                    padding: "6px 6px 4px",
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
-                    color: i === current ? s.color : "rgba(255,255,255,0.55)",
-                    fontWeight: 700, letterSpacing: "0.04em", textAlign: "center",
-                  }}>
-                    {s.thumbLabel}
-                  </div>
                 </div>
               </button>
             ))}
