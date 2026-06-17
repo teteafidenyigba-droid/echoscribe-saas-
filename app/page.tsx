@@ -26,6 +26,39 @@ export default function LandingPage() {
           .hero-btns { flex-direction: column !important; align-items: stretch !important; }
           .logo-text { font-size: 22px !important; }
         }
+        .feature-card {
+          transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        .feature-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 12px 36px rgba(10,95,168,0.22) !important;
+        }
+        .faq-card {
+          transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        .faq-card:hover {
+          border-color: #0a5fa8 !important;
+          box-shadow: 0 6px 24px rgba(10,95,168,0.15) !important;
+        }
+        .cta-btn-primary {
+          transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .cta-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 36px rgba(0,0,0,0.32) !important;
+        }
+        .section-label {
+          background: linear-gradient(90deg, #0a5fa8, #38a8e0);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .gradient-title {
+          background: linear-gradient(135deg, #0d2540 0%, #0a6abf 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
       `}</style>
 
       {/* NAV */}
@@ -87,21 +120,22 @@ export default function LandingPage() {
             Conforme aux standards SFR · Certifié usage médical
           </div>
 
-          <h1 style={{ fontSize: "clamp(42px, 6.5vw, 72px)", fontWeight: 700, lineHeight: 1.08, color: "#ffffff", marginBottom: 28, letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: "clamp(42px, 6.5vw, 72px)", fontWeight: 700, lineHeight: 1.08, color: "#ffffff", marginBottom: 28, letterSpacing: "-0.02em", textShadow: "0 2px 24px rgba(0,0,0,0.22)" }}>
             Fini les comptes rendus<br />
-            qui vous volent du temps.
+            <span style={{ background: "linear-gradient(90deg,#7dd3fc,#a5f3fc)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>qui vous volent du temps.</span>
           </h1>
           <p style={{ fontSize: "clamp(17px, 2vw, 21px)", lineHeight: 1.75, color: "rgba(255,255,255,0.78)", marginBottom: 52, maxWidth: 640, margin: "0 auto 52px" }}>
             Dictez votre examen. EchoScribe génère un compte rendu structuré et conforme SFR en <strong style={{ color: "#7dd3fc" }}>moins de 30 secondes</strong> — sans frappe, sans effort.
           </p>
 
           <div className="hero-btns" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 44 }}>
-            <Link href="/register" style={{
-              background: "#ffffff", borderRadius: 12, color: "#1e3a5f",
+            <Link className="cta-btn-primary" href="/register" style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #e8f4ff 100%)",
+              borderRadius: 14, color: "#0a4a8a",
               textDecoration: "none", fontSize: 19, padding: "17px 44px",
-              display: "inline-block", fontWeight: 700,
-              boxShadow: "0 6px 28px rgba(0,0,0,0.25)",
-              letterSpacing: "-0.01em",
+              display: "inline-block", fontWeight: 800,
+              boxShadow: "0 6px 28px rgba(0,0,0,0.28)",
+              letterSpacing: "-0.01em", border: "2px solid rgba(255,255,255,0.8)",
             }}>
               Démarrer gratuitement →
             </Link>
@@ -183,6 +217,23 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* TRUST BAR */}
+      <section style={{ background: "linear-gradient(90deg, #0a4a8a, #0a6abf, #1a90d8)", padding: "18px 24px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
+          {[
+            { icon: "🔒", text: "RGPD & Secret médical" },
+            { icon: "⚡", text: "< 30 secondes" },
+            { icon: "🎙", text: "Dictée vocale IA" },
+            { icon: "✦", text: "Conforme SFR" },
+            { icon: "🛡", text: "Données locales" },
+          ].map((t) => (
+            <div key={t.text} style={{ display: "flex", alignItems: "center", gap: 8, color: "#ffffff", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em" }}>
+              <span style={{ fontSize: 16 }}>{t.icon}</span> {t.text}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* PROBLÈME / SOLUTION */}
       <section style={{ padding: "88px 24px", maxWidth: 1000, margin: "0 auto" }}>
         <div className="problem-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
@@ -222,7 +273,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 64 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FONCTIONNALITÉS</p>
-            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#0d2540", marginBottom: 12 }}>Tout ce dont vous avez besoin</h2>
+            <h2 className="gradient-title" style={{ fontSize: 36, fontWeight: 700, marginBottom: 12 }}>Tout ce dont vous avez besoin</h2>
             <p style={{ fontSize: 17, color: "#2a5070", maxWidth: 520, margin: "0 auto" }}>Conçu par et pour les radiologues et échographistes francophones.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
@@ -233,12 +284,16 @@ export default function LandingPage() {
               { icon: "🔒", title: "Sécurité & RGPD", desc: "Audio traité localement, jamais stocké. Données supprimées après 12h. Conforme RGPD et secret médical." },
               { icon: "✦", title: "80+ corrections SFR", desc: "Base de données médicale spécialisée en échographie. Filtrage automatique des hésitations et instructions au patient." },
               { icon: "📱", title: "Partout, sur tous vos écrans", desc: "Smartphone, tablette, ordinateur. Utilisez EchoScribe en salle d'examen, à votre bureau ou en déplacement." },
-            ].map((f) => (
-              <div key={f.title} style={{
-                background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 16,
-                padding: "32px 28px", boxShadow: "0 4px 20px rgba(10,95,168,0.12)",
+            ].map((f, i) => (
+              <div key={f.title} className="feature-card" style={{
+                background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 20,
+                padding: "32px 28px", boxShadow: "0 4px 20px rgba(10,95,168,0.10)",
               }}>
-                <div style={{ fontSize: 36, marginBottom: 16 }}>{f.icon}</div>
+                <div style={{
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  width: 56, height: 56, borderRadius: 16, marginBottom: 20, fontSize: 26,
+                  background: ["linear-gradient(135deg,#e0f0ff,#c0dcf5)", "linear-gradient(135deg,#e8f5e0,#c8edc0)", "linear-gradient(135deg,#fff4e0,#ffe0b0)", "linear-gradient(135deg,#f0e0ff,#dcc0f0)", "linear-gradient(135deg,#e0f8ff,#b0e8f8)", "linear-gradient(135deg,#ffe0e8,#f8c0cc)"][i % 6],
+                }}>{f.icon}</div>
                 <h3 style={{ fontSize: 19, color: "#0d2540", marginBottom: 10, fontWeight: 700 }}>{f.title}</h3>
                 <p style={{ fontSize: 15, lineHeight: 1.75, color: "#2a5070" }}>{f.desc}</p>
               </div>
@@ -359,7 +414,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FAQ</p>
-            <h2 style={{ fontSize: 36, fontWeight: 700, color: "#1e3a5f" }}>Questions fréquentes</h2>
+            <h2 className="gradient-title" style={{ fontSize: 36, fontWeight: 700 }}>Questions fréquentes</h2>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {[
@@ -369,7 +424,7 @@ export default function LandingPage() {
               { q: "Puis-je résilier à tout moment ?", a: "Oui, sans engagement ni pénalité. La résiliation se fait en un clic depuis votre espace facturation. Vous conservez l'accès jusqu'à la fin de la période payée." },
               { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits, sans carte de crédit requise. À la fin de la période, vous choisissez un plan ou votre accès est suspendu automatiquement." },
             ].map((item, i) => (
-              <div key={i} className="faq-item" style={{ background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 14, padding: "24px 30px", boxShadow: "0 3px 14px rgba(10,95,168,0.1)" }}>
+              <div key={i} className="faq-item faq-card" style={{ background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 14, padding: "24px 30px", boxShadow: "0 3px 14px rgba(10,95,168,0.1)" }}>
                 <div style={{ fontSize: 17, color: "#0d2540", fontWeight: 700, marginBottom: 10 }}>{item.q}</div>
                 <div style={{ fontSize: 15, lineHeight: 1.75, color: "#2a5070" }}>{item.a}</div>
               </div>
@@ -388,12 +443,13 @@ export default function LandingPage() {
           <p style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", marginBottom: 48, lineHeight: 1.7 }}>
             Rejoignez les radiologues et échographistes qui ont transformé leur pratique avec EchoScribe.
           </p>
-          <Link href="/register" style={{
+          <Link className="cta-btn-primary" href="/register" style={{
             display: "inline-block", padding: "19px 56px",
-            background: "#ffffff", borderRadius: 14,
-            color: "#1e3a5f", textDecoration: "none", fontSize: 20, fontWeight: 700,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
-            letterSpacing: "-0.01em",
+            background: "linear-gradient(135deg, #ffffff 0%, #e8f4ff 100%)",
+            borderRadius: 14, color: "#0a4a8a",
+            textDecoration: "none", fontSize: 20, fontWeight: 800,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.28)",
+            letterSpacing: "-0.01em", border: "2px solid rgba(255,255,255,0.8)",
           }}>
             Commencer gratuitement →
           </Link>
