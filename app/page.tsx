@@ -223,36 +223,97 @@ export default function LandingPage() {
       </section>
 
       {/* PROBLÈME / SOLUTION */}
-      <section style={{ padding: "88px 24px", maxWidth: 1000, margin: "0 auto" }}>
-        <div className="problem-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
-          <div>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 16 }}>LE PROBLÈME</p>
-            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#0d2540", lineHeight: 1.25, marginBottom: 24 }}>
-              Un radiologue passe en moyenne <span style={{ color: "#e55" }}>2 à 3 heures</span> par jour à rédiger des comptes rendus.
-            </h2>
-            <p style={{ fontSize: 16, lineHeight: 1.8, color: "#2a5070", marginBottom: 20 }}>
-              La saisie manuelle est lente, répétitive et source d'erreurs. Elle vous éloigne de votre vraie valeur ajoutée : l'analyse et le diagnostic.
-            </p>
-            {["Terminologie complexe à orthographier", "Structures imposées à mémoriser", "Erreurs de frappe sous pression", "Temps perdu sur la mise en forme"].map((p) => (
-              <div key={p} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10, fontSize: 15, color: "#2a5070" }}>
-                <span style={{ color: "#e55", fontSize: 16 }}>✗</span> {p}
+      <section style={{ padding: "0 0 80px" }}>
+        <div style={{ textAlign: "center", padding: "72px 24px 52px" }}>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>POURQUOI ECHOSCRIBE ?</p>
+          <h2 className="gradient-title" style={{ fontSize: "clamp(28px,4vw,42px)", fontWeight: 700, marginBottom: 0 }}>
+            Avant. Après.
+          </h2>
+        </div>
+
+        <div className="problem-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
+
+          {/* AVANT — rouge sombre */}
+          <div style={{
+            background: "linear-gradient(145deg, #1a0808, #3a0f0f)",
+            borderRadius: "24px 0 0 24px", padding: "52px 44px",
+            position: "relative", overflow: "hidden",
+          }}>
+            <div style={{ position: "absolute", top: -40, right: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(239,68,68,0.06)" }} />
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 32,
+              background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)",
+              borderRadius: 999, padding: "6px 18px",
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "#fca5a5", letterSpacing: "0.14em",
+            }}>
+              ✗ AVANT ECHOSCRIBE
+            </div>
+            <div style={{ fontSize: "clamp(44px,6vw,72px)", fontWeight: 700, color: "#ef4444", fontFamily: "'EB Garamond', serif", lineHeight: 1, marginBottom: 8 }}>2–3h</div>
+            <div style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 36 }}>de rédaction par jour</div>
+            {[
+              { icon: "⏱", text: "5 à 10 min par compte rendu" },
+              { icon: "✎", text: "Saisie manuelle fastidieuse" },
+              { icon: "⚠", text: "Erreurs de terminologie fréquentes" },
+              { icon: "📋", text: "Structures à mémoriser et reproduire" },
+              { icon: "😓", text: "Fatigue cognitive en fin de journée" },
+            ].map((item) => (
+              <div key={item.text} style={{
+                display: "flex", gap: 14, alignItems: "flex-start", marginBottom: 16,
+                padding: "12px 16px", background: "rgba(239,68,68,0.07)",
+                borderRadius: 10, border: "1px solid rgba(239,68,68,0.15)",
+              }}>
+                <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{item.icon}</span>
+                <span style={{ fontSize: 15, color: "rgba(255,255,255,0.72)", lineHeight: 1.5 }}>{item.text}</span>
               </div>
             ))}
           </div>
-          <div>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#4ade80", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 16 }}>LA SOLUTION</p>
-            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#0d2540", lineHeight: 1.25, marginBottom: 24 }}>
-              EchoScribe rédige à votre place.<br /><span style={{ color: "#0a6abf" }}>Vous validez. C'est tout.</span>
-            </h2>
-            <p style={{ fontSize: 16, lineHeight: 1.8, color: "#2a5070", marginBottom: 20 }}>
-              Dictez naturellement comme vous le faites avec un secrétaire — EchoScribe comprend, corrige et structure automatiquement.
-            </p>
-            {["Terminologie corrigée automatiquement", "Structure INDICATION / RÉSULTATS / CAT", "Zéro frappe, zéro relecture fastidieuse", "30 secondes par compte rendu"].map((p) => (
-              <div key={p} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10, fontSize: 15, color: "#0d2540" }}>
-                <span style={{ color: "#4ade80", fontSize: 16 }}>✓</span> {p}
+
+          {/* APRÈS — vert sombre */}
+          <div style={{
+            background: "linear-gradient(145deg, #061a10, #0a3020)",
+            borderRadius: "0 24px 24px 0", padding: "52px 44px",
+            position: "relative", overflow: "hidden",
+          }}>
+            <div style={{ position: "absolute", top: -40, left: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(74,222,128,0.06)" }} />
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 32,
+              background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.3)",
+              borderRadius: 999, padding: "6px 18px",
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "#86efac", letterSpacing: "0.14em",
+            }}>
+              ✓ AVEC ECHOSCRIBE
+            </div>
+            <div style={{ fontSize: "clamp(44px,6vw,72px)", fontWeight: 700, color: "#4ade80", fontFamily: "'EB Garamond', serif", lineHeight: 1, marginBottom: 8 }}>&lt; 30s</div>
+            <div style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 36 }}>par compte rendu généré</div>
+            {[
+              { icon: "🎙", text: "Dictez naturellement, comme à un secrétaire" },
+              { icon: "⚡", text: "Compte rendu structuré en 30 secondes" },
+              { icon: "✦", text: "Terminologie médicale corrigée automatiquement" },
+              { icon: "📋", text: "Format INDICATION / RÉSULTATS / CONCLUSION / CAT" },
+              { icon: "✅", text: "Conforme SFR, prêt à relire et signer" },
+            ].map((item) => (
+              <div key={item.text} style={{
+                display: "flex", gap: 14, alignItems: "flex-start", marginBottom: 16,
+                padding: "12px 16px", background: "rgba(74,222,128,0.07)",
+                borderRadius: 10, border: "1px solid rgba(74,222,128,0.15)",
+              }}>
+                <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{item.icon}</span>
+                <span style={{ fontSize: 15, color: "rgba(255,255,255,0.82)", lineHeight: 1.5 }}>{item.text}</span>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* CTA centré */}
+        <div style={{ textAlign: "center", marginTop: 44 }}>
+          <Link href="/register" style={{
+            display: "inline-block", padding: "16px 44px",
+            background: "linear-gradient(135deg,#0a4a8a,#1a90d8)",
+            borderRadius: 12, color: "#ffffff", textDecoration: "none",
+            fontSize: 17, fontWeight: 700, boxShadow: "0 6px 24px rgba(10,74,138,0.35)",
+          }}>
+            Récupérer mes 2 heures par jour →
+          </Link>
         </div>
       </section>
 
