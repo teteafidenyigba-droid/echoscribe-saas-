@@ -4,9 +4,9 @@ export default function LandingPage() {
   return (
     <div
       style={{
-        background: "#07101e",
+        background: "#1a1f2e",
         backgroundImage:
-          "radial-gradient(ellipse at 15% 0%, rgba(14,50,82,0.55) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(8,30,60,0.45) 0%, transparent 55%)",
+          "radial-gradient(ellipse at 15% 0%, rgba(30,60,100,0.4) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(20,40,70,0.3) 0%, transparent 55%)",
         minHeight: "100vh",
         color: "#c8d8ea",
         fontFamily: "'EB Garamond', Georgia, serif",
@@ -18,7 +18,7 @@ export default function LandingPage() {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          background: "rgba(7,16,30,0.92)",
+          background: "rgba(26,31,46,0.95)",
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(56,189,248,0.15)",
           padding: "0 24px",
@@ -228,7 +228,7 @@ export default function LandingPage() {
             <div
               key={f.title}
               style={{
-                background: "rgba(255,255,255,0.03)",
+                background: "rgba(255,255,255,0.06)",
                 border: "1px solid rgba(56,189,248,0.15)",
                 borderRadius: 14,
                 padding: "28px 24px",
@@ -269,7 +269,7 @@ export default function LandingPage() {
                 display: "flex",
                 gap: 20,
                 alignItems: "flex-start",
-                background: "rgba(255,255,255,0.03)",
+                background: "rgba(255,255,255,0.06)",
                 border: "1px solid rgba(56,189,248,0.12)",
                 borderRadius: 14,
                 padding: "22px 24px",
@@ -310,7 +310,7 @@ export default function LandingPage() {
           {/* Monthly */}
           <div
             style={{
-              background: "rgba(255,255,255,0.03)",
+              background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(56,189,248,0.2)",
               borderRadius: 16,
               padding: "36px 32px",
@@ -452,7 +452,7 @@ export default function LandingPage() {
             <div
               key={item.q}
               style={{
-                background: "rgba(255,255,255,0.03)",
+                background: "rgba(255,255,255,0.06)",
                 border: "1px solid rgba(56,189,248,0.12)",
                 borderRadius: 12,
                 padding: "20px 24px",
