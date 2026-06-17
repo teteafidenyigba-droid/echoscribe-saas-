@@ -93,14 +93,23 @@ export default function HeroSlider() {
 
   return (
     <section style={{
-      background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 40%, #1a6aaa 80%, #1e7fc5 100%)",
-      padding: "90px 24px 80px", position: "relative", overflow: "hidden",
+      position: "relative", overflow: "hidden",
+      padding: "90px 24px 80px",
+      backgroundImage: "url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1600&auto=format&q=80')",
+      backgroundSize: "cover",
+      backgroundPosition: "center 30%",
     }}>
+      {/* Dark gradient overlay */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "linear-gradient(140deg, rgba(10,20,48,0.93) 0%, rgba(15,36,64,0.88) 40%, rgba(20,80,140,0.80) 80%, rgba(20,100,180,0.75) 100%)",
+        zIndex: 0,
+      }} />
       {/* Decorative blobs */}
-      <div style={{ position: "absolute", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "rgba(125,211,252,0.06)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: -150, left: -80, width: 600, height: 600, borderRadius: "50%", background: "rgba(30,127,197,0.08)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "rgba(125,211,252,0.04)", pointerEvents: "none", zIndex: 1 }} />
+      <div style={{ position: "absolute", bottom: -150, left: -80, width: 600, height: 600, borderRadius: "50%", background: "rgba(30,127,197,0.05)", pointerEvents: "none", zIndex: 1 }} />
 
-      <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
+      <div style={{ position: "relative", zIndex: 2, maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
 
         {/* LEFT — Text */}
         <div style={{ opacity: fading ? 0 : 1, transition: "opacity 0.4s ease" }}>
