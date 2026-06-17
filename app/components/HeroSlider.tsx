@@ -12,6 +12,8 @@ const slides = [
     icon: "🫁",
     badge: "Foie · Reins · Vésicule · Rate",
     color: "#38bdf8",
+    thumb: "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=120&h=80&fit=crop&auto=format",
+    thumbLabel: "Abdominal",
     sample: [
       { label: "INDICATION", text: "Douleurs de l'hypocondre droit. Bilan hépatique perturbé." },
       { label: "RÉSULTATS", text: "Foie de taille normale, échogénicité homogène. Vésicule lithiasique, calcul de 8 mm..." },
@@ -26,6 +28,8 @@ const slides = [
     icon: "🩺",
     badge: "Utérus · Ovaires · Obstétrique",
     color: "#f472b6",
+    thumb: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=120&h=80&fit=crop&auto=format",
+    thumbLabel: "Gynécologie",
     sample: [
       { label: "INDICATION", text: "Suivi de grossesse. 12 SA. Dépistage T1." },
       { label: "RÉSULTATS", text: "Embryon unique, activité cardiaque présente à 162 bpm. LCC : 58 mm. Clarté nucale : 1,4 mm..." },
@@ -40,6 +44,8 @@ const slides = [
     icon: "❤️",
     badge: "ETT · Doppler · Fraction d'éjection",
     color: "#f87171",
+    thumb: "https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=120&h=80&fit=crop&auto=format",
+    thumbLabel: "Cardiologie",
     sample: [
       { label: "INDICATION", text: "Bilan cardiaque. Dyspnée d'effort. HTA connue." },
       { label: "RÉSULTATS", text: "VG non dilaté, fonction systolique conservée. FEVG estimée à 62%. Pas de trouble de la cinétique..." },
@@ -54,6 +60,8 @@ const slides = [
     icon: "🔬",
     badge: "Thyroïde · EU-TIRADS · Nodules",
     color: "#4ade80",
+    thumb: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=120&h=80&fit=crop&auto=format",
+    thumbLabel: "Thyroïde",
     sample: [
       { label: "INDICATION", text: "Nodule thyroïdien découvert fortuitement. TSH normale." },
       { label: "RÉSULTATS", text: "Nodule isthmique gauche hypoéchogène, 12 × 8 mm, contours irréguliers, vascularisation centrale. EU-TIRADS 4..." },
@@ -137,18 +145,45 @@ export default function HeroSlider() {
             7 jours gratuits · Aucune carte requise · Résiliable en un clic
           </p>
 
-          {/* Dots */}
-          <div style={{ display: "flex", gap: 8, marginTop: 28 }}>
-            {slides.map((_, i) => (
+          {/* Image thumbnails nav */}
+          <div style={{ display: "flex", gap: 10, marginTop: 32, flexWrap: "wrap" }}>
+            {slides.map((s, i) => (
               <button
                 key={i}
                 onClick={() => { setFading(true); setTimeout(() => { setCurrent(i); setFading(false); }, 400); }}
                 style={{
-                  width: i === current ? 24 : 8, height: 8, borderRadius: 999, border: "none", cursor: "pointer",
-                  background: i === current ? slide.color : "rgba(255,255,255,0.25)",
-                  transition: "all 0.3s ease", padding: 0,
+                  padding: 0, border: "none", cursor: "pointer", borderRadius: 10,
+                  background: "transparent", outline: "none",
+                  transform: i === current ? "scale(1.05)" : "scale(1)",
+                  transition: "all 0.3s ease",
                 }}
-              />
+              >
+                <div style={{
+                  position: "relative", borderRadius: 10, overflow: "hidden",
+                  border: `2px solid ${i === current ? s.color : "rgba(255,255,255,0.15)"}`,
+                  boxShadow: i === current ? `0 0 14px ${s.color}66` : "none",
+                  transition: "all 0.3s ease",
+                }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={s.thumb}
+                    alt={s.thumbLabel}
+                    width={90}
+                    height={58}
+                    style={{ display: "block", objectFit: "cover", filter: i === current ? "none" : "brightness(0.45) saturate(0.5)" }}
+                  />
+                  <div style={{
+                    position: "absolute", bottom: 0, left: 0, right: 0,
+                    background: "linear-gradient(transparent, rgba(0,0,0,0.72))",
+                    padding: "6px 6px 4px",
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: 8,
+                    color: i === current ? s.color : "rgba(255,255,255,0.55)",
+                    fontWeight: 700, letterSpacing: "0.04em", textAlign: "center",
+                  }}>
+                    {s.thumbLabel}
+                  </div>
+                </div>
+              </button>
             ))}
           </div>
         </div>
