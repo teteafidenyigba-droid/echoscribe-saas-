@@ -6,26 +6,65 @@ export default function LandingPage() {
     <div style={{ background: "#b8d4ef", minHeight: "100vh", color: "#0d2540", fontFamily: "'EB Garamond', Georgia, serif" }}>
       <style>{`
         @media (max-width: 768px) {
-          .nav-wrap { padding: 0 16px !important; }
-          .nav-cta-text::after { content: "Essai gratuit →"; }
+          /* Nav */
+          .nav-wrap { padding: 0 16px !important; height: 60px !important; }
           .nav-cta-text { display: none; }
           .nav-cta-short { display: inline !important; }
-          .nav-login { font-size: 13px !important; padding: 6px 10px !important; }
-          .nav-cta { padding: 8px 12px !important; font-size: 13px !important; }
-          .problem-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .stat-item { border-right: none !important; border-bottom: 1px solid #c8dce8; padding-bottom: 20px !important; }
-          .stat-item:last-child { border-bottom: none; }
-          .hero-mockup { padding: 20px 16px !important; }
-          .hero-mockup-text { font-size: 11px !important; }
-          .pricing-badge { font-size: 10px !important; padding: 5px 14px !important; white-space: normal !important; text-align: center; }
-          .pricing-card { padding: 44px 24px !important; }
-          .how-step { padding: 20px 18px !important; gap: 16px !important; }
-          .faq-item { padding: 20px 20px !important; }
-        }
-        @media (max-width: 480px) {
-          .hero-btns a { width: 100%; text-align: center; box-sizing: border-box; }
-          .hero-btns { flex-direction: column !important; align-items: stretch !important; }
+          .nav-login { font-size: 13px !important; padding: 6px 12px !important; }
+          .nav-cta { padding: 7px 14px !important; font-size: 13px !important; }
           .logo-text { font-size: 22px !important; }
+
+          /* Sections padding */
+          .section-pad { padding-top: 56px !important; padding-bottom: 56px !important; }
+
+          /* Stats */
+          .stat-item { border-right: none !important; border-bottom: 1px solid #c8dce8 !important; padding-bottom: 20px !important; }
+          .stat-item:last-child { border-bottom: none !important; }
+
+          /* Problem/Solution */
+          .problem-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+          .problem-card { padding: 28px 22px !important; }
+
+          /* Pricing */
+          .pricing-grid { grid-template-columns: 1fr !important; }
+          .pricing-card-base { padding: 36px 24px !important; }
+          .pricing-badge {
+            font-size: 10px !important; padding: 5px 14px !important;
+            white-space: normal !important; text-align: center;
+            left: 50% !important; transform: translateX(-50%) !important;
+            width: max-content !important; max-width: 80% !important;
+          }
+
+          /* Features */
+          .features-grid { gap: 16px !important; }
+          .feature-card { padding: 24px 20px !important; }
+
+          /* How it works */
+          .how-step { padding: 20px 18px !important; gap: 14px !important; }
+
+          /* FAQ */
+          .faq-item { padding: 20px 20px !important; }
+
+          /* CTA final */
+          .cta-section { padding: 72px 20px !important; }
+
+          /* Video */
+          .video-section { padding: 56px 16px !important; }
+          .video-section h2 { font-size: 26px !important; }
+          .video-section p { font-size: 15px !important; }
+
+          /* Trust bar */
+          .trust-bar { gap: 18px !important; padding: 14px 16px !important; }
+          .trust-item { font-size: 11px !important; }
+        }
+
+        @media (max-width: 480px) {
+          .logo-text { font-size: 20px !important; }
+          .section-title { font-size: 24px !important; }
+          .cta-section a { font-size: 17px !important; padding: 15px 32px !important; }
+          .faq-item .faq-q { font-size: 15px !important; }
+          .how-step { flex-direction: row !important; }
+          .stat-num { font-size: 32px !important; }
         }
         .feature-card {
           transition: transform 0.22s ease, box-shadow 0.22s ease;
@@ -102,7 +141,7 @@ export default function LandingPage() {
       <HeroSlider />
 
       {/* VIDEO */}
-      <section style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
+      <section className="video-section section-pad" style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>DÉMONSTRATION</p>
           <h2 style={{ fontSize: 34, fontWeight: 700, color: "#1e3a5f", marginBottom: 12 }}>Voyez EchoScribe en action</h2>
@@ -133,7 +172,7 @@ export default function LandingPage() {
             { n: "7 jours", label: "Essai gratuit", sub: "sans carte bancaire" },
           ].map((s, i) => (
             <div key={s.n} className="stat-item" style={{ padding: "12px 16px", borderRight: i < 3 ? "1px solid #e2eaf2" : "none" }}>
-              <div style={{ fontSize: 40, fontWeight: 700, color: "#0a5fa8", fontFamily: "'EB Garamond', serif", lineHeight: 1.1 }}>{s.n}</div>
+              <div className="stat-num" style={{ fontSize: 40, fontWeight: 700, color: "#0a5fa8", fontFamily: "'EB Garamond', serif", lineHeight: 1.1 }}>{s.n}</div>
               <div style={{ fontSize: 14, color: "#0d2540", fontWeight: 700, marginTop: 6 }}>{s.label}</div>
               <div style={{ fontSize: 11, color: "#3a7aaa", fontFamily: "'JetBrains Mono', monospace", marginTop: 3 }}>{s.sub}</div>
             </div>
@@ -143,7 +182,7 @@ export default function LandingPage() {
 
       {/* TRUST BAR */}
       <section style={{ background: "linear-gradient(90deg, #0a4a8a, #0a6abf, #1a90d8)", padding: "18px 24px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
+        <div className="trust-bar" style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
           {[
             { icon: "🔒", text: "RGPD & Secret médical" },
             { icon: "⚡", text: "< 30 secondes" },
@@ -151,7 +190,7 @@ export default function LandingPage() {
             { icon: "✦", text: "Conforme SFR" },
             { icon: "🛡", text: "Données locales" },
           ].map((t) => (
-            <div key={t.text} style={{ display: "flex", alignItems: "center", gap: 8, color: "#ffffff", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em" }}>
+            <div key={t.text} className="trust-item" style={{ display: "flex", alignItems: "center", gap: 8, color: "#ffffff", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em" }}>
               <span style={{ fontSize: 16 }}>{t.icon}</span> {t.text}
             </div>
           ))}
@@ -159,14 +198,14 @@ export default function LandingPage() {
       </section>
 
       {/* PRICING */}
-      <section id="tarifs" style={{ padding: "80px 24px", maxWidth: 920, margin: "0 auto" }}>
+      <section id="tarifs" className="section-pad" style={{ padding: "80px 24px", maxWidth: 920, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>TARIFS</p>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: "#0d2540", marginBottom: 12 }}>Simple et transparent</h2>
           <p style={{ fontSize: 17, color: "#2a5070" }}>7 jours d'essai gratuit · Résiliable à tout moment · Aucun frais caché</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "stretch" }}>
-          <div style={{ background: "#ffffff", border: "1.5px solid #7ab0d4", borderRadius: 24, padding: "44px 40px", boxShadow: "0 6px 28px rgba(10,95,168,0.13)", display: "flex", flexDirection: "column" }}>
+        <div className="pricing-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "stretch" }}>
+          <div className="pricing-card-base" style={{ background: "#ffffff", border: "1.5px solid #7ab0d4", borderRadius: 24, padding: "44px 40px", boxShadow: "0 6px 28px rgba(10,95,168,0.13)", display: "flex", flexDirection: "column" }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#3a7aaa", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Mensuel</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
               <span style={{ fontSize: 56, fontWeight: 700, color: "#0d2540", letterSpacing: "-0.02em" }}>59€</span>
@@ -186,7 +225,7 @@ export default function LandingPage() {
               Démarrer l'essai gratuit →
             </Link>
           </div>
-          <div className="pricing-card" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)", display: "flex", flexDirection: "column" }}>
+          <div className="pricing-card pricing-card-base" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)", display: "flex", flexDirection: "column" }}>
             <div className="pricing-badge" style={{
               position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
               background: "linear-gradient(90deg, #1e7fc5, #38bdf8)", color: "#ffffff", borderRadius: 999,
@@ -223,7 +262,7 @@ export default function LandingPage() {
       </section>
 
       {/* PROBLÈME / SOLUTION */}
-      <section style={{ background: "#ffffff", padding: "88px 24px" }}>
+      <section className="section-pad" style={{ background: "#ffffff", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1060, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 60 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>POURQUOI ECHOSCRIBE ?</p>
@@ -235,7 +274,7 @@ export default function LandingPage() {
 
           <div className="problem-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
             {/* SANS */}
-            <div style={{ background: "#fff5f5", border: "1.5px solid #fecaca", borderRadius: 20, padding: "40px 36px" }}>
+            <div className="problem-card" style={{ background: "#fff5f5", border: "1.5px solid #fecaca", borderRadius: 20, padding: "40px 36px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: "#fee2e2", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>✗</div>
                 <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, color: "#dc2626", letterSpacing: "0.12em" }}>SANS ECHOSCRIBE</span>
@@ -257,7 +296,7 @@ export default function LandingPage() {
             </div>
 
             {/* AVEC */}
-            <div style={{ background: "#f0fdf4", border: "1.5px solid #86efac", borderRadius: 20, padding: "40px 36px" }}>
+            <div className="problem-card" style={{ background: "#f0fdf4", border: "1.5px solid #86efac", borderRadius: 20, padding: "40px 36px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>✓</div>
                 <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, color: "#16a34a", letterSpacing: "0.12em" }}>AVEC ECHOSCRIBE</span>
@@ -293,14 +332,14 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section style={{ background: "#d4e8f7", padding: "88px 24px" }}>
+      <section className="section-pad" style={{ background: "#d4e8f7", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 64 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FONCTIONNALITÉS</p>
             <h2 className="gradient-title" style={{ fontSize: 36, fontWeight: 700, marginBottom: 12 }}>Tout ce dont vous avez besoin</h2>
             <p style={{ fontSize: 17, color: "#2a5070", maxWidth: 520, margin: "0 auto" }}>Conçu par et pour les radiologues et échographistes francophones.</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
+          <div className="features-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
             {[
               { icon: "🎙", title: "Dictée vocale intelligente", desc: "Dictez naturellement. Correction automatique de la terminologie échographique : hyperéchogène, Wirsung, EU-TIRADS, vésiculaire…" },
               { icon: "⚡", title: "Génération en 30 secondes", desc: "L'IA structure votre dictée en compte rendu complet INDICATION / RÉSULTATS / CONCLUSION / CAT en moins de 30 secondes." },
@@ -327,7 +366,7 @@ export default function LandingPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="comment" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "96px 24px" }}>
+      <section id="comment" className="section-pad" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "96px 24px" }}>
         <div style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>COMMENT ÇA MARCHE</p>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: "#ffffff", marginBottom: 16 }}>De la dictée au compte rendu en 4 étapes</h2>
@@ -369,7 +408,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ background: "#e2f0fb", padding: "88px 24px" }}>
+      <section className="section-pad" style={{ background: "#e2f0fb", padding: "88px 24px" }}>
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FAQ</p>
@@ -384,7 +423,7 @@ export default function LandingPage() {
               { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits, sans carte de crédit requise. À la fin de la période, vous choisissez un plan ou votre accès est suspendu automatiquement." },
             ].map((item, i) => (
               <div key={i} className="faq-item faq-card" style={{ background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 14, padding: "24px 30px", boxShadow: "0 3px 14px rgba(10,95,168,0.1)" }}>
-                <div style={{ fontSize: 17, color: "#0d2540", fontWeight: 700, marginBottom: 10 }}>{item.q}</div>
+                <div className="faq-q" style={{ fontSize: 17, color: "#0d2540", fontWeight: 700, marginBottom: 10 }}>{item.q}</div>
                 <div style={{ fontSize: 15, lineHeight: 1.75, color: "#2a5070" }}>{item.a}</div>
               </div>
             ))}
@@ -393,7 +432,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA FINAL */}
-      <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 50%, #1e7fc5 100%)", textAlign: "center", padding: "100px 24px", position: "relative", overflow: "hidden" }}>
+      <section className="cta-section" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 50%, #1e7fc5 100%)", textAlign: "center", padding: "100px 24px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -80, right: -80, width: 400, height: 400, borderRadius: "50%", background: "rgba(125,211,252,0.05)", pointerEvents: "none" }} />
         <div style={{ position: "relative", maxWidth: 640, margin: "0 auto" }}>
           <h2 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, color: "#ffffff", marginBottom: 20, lineHeight: 1.15, letterSpacing: "-0.02em" }}>

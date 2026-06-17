@@ -22,3 +22,125 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* ─── RESPONSIVE MOBILE ─── */
+@media (max-width: 768px) {
+
+  /* Evite le débordement horizontal global */
+  body, html { overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    padding: 0 16px !important;
+    height: 60px !important;
+  }
+
+  /* Sections padding */
+  section {
+    padding-top: 52px !important;
+    padding-bottom: 52px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Grilles → 1 colonne */
+  .problem-grid,
+  .pricing-grid,
+  .hero-inner {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* Hero : cacher le panneau droit */
+  .hero-mockup-panel { display: none !important; }
+
+  /* Hero thumbnails */
+  .hero-thumbs button > div {
+    width: 76px !important;
+    height: 52px !important;
+  }
+  .hero-thumbs button > div img {
+    width: 76px !important;
+    height: 52px !important;
+  }
+
+  /* Titres */
+  h1 { font-size: clamp(28px, 7vw, 42px) !important; }
+  h2 { font-size: clamp(22px, 5vw, 32px) !important; }
+  h3 { font-size: 17px !important; }
+
+  /* Boutons hero */
+  .hero-btns-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .hero-btns-row a {
+    text-align: center !important;
+    font-size: 15px !important;
+    padding: 13px 16px !important;
+  }
+
+  /* Trust bar */
+  .trust-bar {
+    gap: 14px !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* Stats */
+  .stat-item {
+    border-right: none !important;
+    border-bottom: 1px solid #c8dce8 !important;
+    padding-bottom: 16px !important;
+  }
+  .stat-item:last-child { border-bottom: none !important; }
+  .stat-num { font-size: 32px !important; }
+
+  /* Pricing cards */
+  .pricing-card-base {
+    padding: 36px 22px !important;
+  }
+  .pricing-badge {
+    font-size: 10px !important;
+    padding: 5px 12px !important;
+    white-space: normal !important;
+    width: auto !important;
+    max-width: 85% !important;
+  }
+
+  /* Problem/Solution cards */
+  .problem-card { padding: 28px 20px !important; }
+
+  /* Feature cards */
+  .feature-card { padding: 24px 18px !important; }
+
+  /* How it works steps */
+  .how-step { padding: 18px 16px !important; gap: 14px !important; }
+
+  /* FAQ */
+  .faq-item { padding: 18px 16px !important; }
+  .faq-q { font-size: 15px !important; }
+
+  /* CTA final */
+  .cta-section { padding: 64px 20px !important; }
+  .cta-btn-primary {
+    font-size: 16px !important;
+    padding: 15px 28px !important;
+  }
+
+  /* Logo */
+  .logo-text { font-size: 22px !important; }
+  .nav-login { font-size: 13px !important; padding: 6px 12px !important; }
+  .nav-cta { font-size: 13px !important; padding: 7px 14px !important; }
+  .nav-cta-text { display: none !important; }
+  .nav-cta-short { display: inline !important; }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  h1 { font-size: clamp(24px, 8vw, 36px) !important; }
+  h2 { font-size: clamp(20px, 6vw, 28px) !important; }
+}
