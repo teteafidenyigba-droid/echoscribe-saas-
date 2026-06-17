@@ -104,7 +104,7 @@ body {
   transition: all 0.2s;
   white-space: nowrap;
 }
-.ai-btn.active-gemini { background: rgba(74,222,128,0.18); color: #4ade80; }
+.ai-btn.active-gemini { background: rgba(56,189,248,0.18); color: #38bdf8; }
 .ai-btn.active-claude { background: rgba(56,189,248,0.18); color: #38bdf8; }
 .ai-btn.active-openai { background: rgba(255,255,255,0.12); color: #e2eaf5; }
 
@@ -119,15 +119,15 @@ body {
   transform: none !important;
   border-radius: 0 !important;
   z-index: 100;
-  background: rgba(255,255,255,0.97);
+  background: rgba(240,248,255,0.97);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-top: 1px solid #d0dde8;
+  border-top: 1.5px solid #bfdbfe;
   border-left: none !important;
   border-right: none !important;
   display: flex;
   padding-bottom: var(--safe-bottom);
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 -4px 24px rgba(10,74,138,0.10);
 }
 .nav-tab {
   flex: 1;
@@ -146,7 +146,8 @@ body {
   text-transform: uppercase;
   transition: color 0.2s;
 }
-.nav-tab.active { color: #0f6e56; }
+.nav-tab.active { color: #0a5fa8; font-weight: 700; }
+.nav-tab.active .tab-icon { filter: drop-shadow(0 0 4px rgba(10,95,168,0.4)); }
 .nav-tab .tab-icon { font-size: 22px; line-height: 1; }
 .nav-tab .tab-badge {
   position: absolute;
@@ -182,12 +183,14 @@ body {
 /* ─── CARDS ─── */
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: 18px;
   padding: 24px 26px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(10,74,138,0.10), 0 1px 4px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease;
 }
+.card:hover { box-shadow: 0 6px 28px rgba(10,74,138,0.14), 0 2px 6px rgba(0,0,0,0.05); }
 .card-title {
   font-size: 9.5px;
   letter-spacing: 0.14em;
@@ -215,7 +218,7 @@ input[type="text"] {
   transition: border-color 0.2s;
   width: 100%;
 }
-input:focus { border-color: #0f6e56; box-shadow: 0 0 0 3px rgba(15,110,86,0.08); }
+input:focus { border-color: #0a5fa8; box-shadow: 0 0 0 3px rgba(10,95,168,0.08); }
 select {
   background: #f8fbfd;
   border: 1px solid #d0dde8;
@@ -254,7 +257,7 @@ select {
   white-space: nowrap;
   flex-shrink: 0;
 }
-.icon-btn:hover, .icon-btn:active { background: #e0f0e8; border-color: #0f6e56; color: #0f6e56; }
+.icon-btn:hover, .icon-btn:active { background: #e0f0e8; border-color: #0a5fa8; color: #0a5fa8; }
 .toggle-btn {
   background: #f0f4f8;
   border: 1px solid #d0dde8;
@@ -268,11 +271,11 @@ select {
   min-width: 52px;
   flex-shrink: 0;
 }
-.toggle-btn.on { background: #dcfce7; border-color: #86efac; color: #16a34a; }
+.toggle-btn.on { background: #dbeafe; border-color: #93c5fd; color: #0a6abf; }
 .primary-btn {
   width: 100%;
-  padding: 17px;
-  background: linear-gradient(135deg, #0f6e56 0%, #085041 100%);
+  padding: 18px;
+  background: linear-gradient(135deg, #0a4a8a 0%, #1a90d8 100%);
   border: none;
   border-radius: 14px;
   color: #ffffff;
@@ -280,13 +283,14 @@ select {
   font-family: 'EB Garamond', serif;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: all 0.22s ease;
   margin-bottom: 12px;
-  box-shadow: 0 4px 16px rgba(15,110,86,0.35), 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 24px rgba(10,74,138,0.4), 0 2px 6px rgba(0,0,0,0.1);
+  font-weight: 600;
 }
-.primary-btn:hover { background: linear-gradient(135deg, #1a8a6a 0%, #0f6e56 100%); box-shadow: 0 6px 24px rgba(15,110,86,0.45); transform: translateY(-1px); }
-.primary-btn:active { transform: translateY(0); }
-.primary-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.primary-btn:hover { background: linear-gradient(135deg, #1a6abf 0%, #38bdf8 100%); box-shadow: 0 10px 32px rgba(10,74,138,0.5); transform: translateY(-2px); }
+.primary-btn:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(10,74,138,0.3); }
+.primary-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* ─── MIC ZONE ─── */
 .mic-zone {
@@ -301,7 +305,7 @@ select {
   position: absolute;
   inset: -20px;
   border-radius: 50%;
-  border: 2px solid rgba(15,110,86,0.4);
+  border: 2px solid rgba(10,95,168,0.4);
   opacity: 0;
   pointer-events: none;
 }
@@ -312,15 +316,15 @@ select {
   100% { transform: scale(1.8); opacity: 0; }
 }
 .mic-btn {
-  width: 104px;
-  height: 104px;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #ffffff, #e8f5ee);
-  border: 2px solid #9ecfb8;
-  box-shadow: 0 6px 24px rgba(15,110,86,0.15), 0 2px 8px rgba(0,0,0,0.08);
+  background: linear-gradient(145deg, #ffffff, #e8f3fc);
+  border: 2.5px solid #7ab0d4;
+  box-shadow: 0 8px 32px rgba(10,95,168,0.18), 0 2px 8px rgba(0,0,0,0.06);
   cursor: pointer;
-  font-size: 36px;
-  transition: all 0.25s;
+  font-size: 38px;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -328,11 +332,15 @@ select {
   z-index: 1;
   -webkit-tap-highlight-color: transparent;
 }
-.mic-btn:hover { border-color: #0f6e56; box-shadow: 0 8px 32px rgba(15,110,86,0.25); }
+.mic-btn:hover {
+  border-color: #0a5fa8;
+  box-shadow: 0 12px 40px rgba(10,95,168,0.28);
+  transform: scale(1.04);
+}
 .mic-btn.listening {
-  background: linear-gradient(145deg, #0f6e56, #085041);
-  border-color: #0f6e56;
-  box-shadow: 0 0 40px rgba(15,110,86,0.4), 0 6px 24px rgba(15,110,86,0.2);
+  background: linear-gradient(145deg, #0a5fa8, #1e3a5f);
+  border-color: #0a4a8a;
+  box-shadow: 0 0 48px rgba(10,95,168,0.45), 0 8px 28px rgba(10,95,168,0.3);
 }
 .wave-bars {
   display: flex;
@@ -343,11 +351,11 @@ select {
 .bar {
   width: 3px;
   border-radius: 3px;
-  background: rgba(15,110,86,0.15);
+  background: rgba(10,95,168,0.15);
   min-height: 3px;
   transition: height 0.09s ease;
 }
-.bar.active { background: rgba(15,110,86,0.7); }
+.bar.active { background: rgba(10,95,168,0.7); }
 .mic-status {
   font-size: 13px;
   color: var(--text-dim);
@@ -374,18 +382,19 @@ select {
   cursor: text;
   transition: border-color 0.2s;
 }
-.transcription-box:focus { border-color: #0f6e56; box-shadow: 0 0 0 3px rgba(15,110,86,0.08); }
+.transcription-box:focus { border-color: #0a5fa8; box-shadow: 0 0 0 3px rgba(10,95,168,0.08); }
 .interim { color: rgba(56,189,248,0.5); font-style: italic; }
 
 /* ─── RESULT ─── */
 .result-card {
-  background: #f0faf4;
-  border: 1px solid #a8d8b8;
-  border-radius: 18px;
-  padding: 26px 28px;
+  background: #ffffff;
+  border: 1.5px solid #bfdbfe;
+  border-top: 4px solid #0a5fa8;
+  border-radius: 16px;
+  padding: 28px 30px;
   margin-bottom: 16px;
   animation: fadeIn 0.4s ease;
-  box-shadow: 0 2px 12px rgba(22,163,74,0.08);
+  box-shadow: 0 4px 24px rgba(10,74,138,0.12), 0 1px 4px rgba(0,0,0,0.05);
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -393,17 +402,17 @@ select {
 }
 .result-body { font-size: 15.5px; line-height: 1.9; }
 .result-body p { margin-bottom: 10px; }
-.result-body strong { color: #16a34a; font-weight: 600; }
+.result-body strong { color: #0a6abf; font-weight: 600; }
 .section-title {
   display: block;
   font-size: 15px;
   font-family: 'EB Garamond', serif;
   margin: 20px 0 6px;
   padding-top: 14px;
-  border-top: 1px solid #c8e6d0;
+  border-top: 1px solid #bfdbfe;
   color: #1a2e3d;
 }
-.section-title u { text-decoration-color: rgba(22,163,74,0.5); }
+.section-title u { text-decoration-color: rgba(10,106,191,0.5); }
 .section-title.first { margin-top: 0; border-top: none; padding-top: 0; }
 
 /* ─── SPINNER ─── */
@@ -418,8 +427,8 @@ select {
   width: 28px;
   height: 28px;
   margin: 0 auto 14px;
-  border: 2px solid #c8e0d4;
-  border-top-color: #0f6e56;
+  border: 2px solid #bfdbfe;
+  border-top-color: #0a5fa8;
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
 }
@@ -439,11 +448,11 @@ select {
   line-height: 1.6;
 }
 .info-box {
-  background: #e8f5ee;
-  border: 1px solid #9ecfb8;
+  background: #d4e8f7;
+  border: 1px solid #7ab0d4;
   border-radius: 10px;
   padding: 12px 16px;
-  color: #085041;
+  color: #1e3a5f;
   font-size: 12px;
   font-family: 'JetBrains Mono', monospace;
   margin-bottom: 12px;
@@ -477,7 +486,7 @@ select {
   border-bottom: 1px solid rgba(56,189,248,0.07);
 }
 .option-row:last-child { border-bottom: none; padding-bottom: 0; }
-.option-label { font-size: 13px; color: #c8d8ea; margin-bottom: 2px; }
+.option-label { font-size: 13px; color: #0d2540; margin-bottom: 2px; font-weight: 600; }
 .option-sub { font-size: 11px; color: #3d5a70; font-family: 'JetBrains Mono', monospace; }
 
 /* ─── HISTORY ─── */
@@ -494,8 +503,8 @@ select {
   transition: border-color 0.2s;
   background: #fff;
 }
-.history-item:hover { border-color: #0f6e56; background: #e8f5ee; }
-.history-meta { font-size: 11px; color: #16a34a; font-family: 'JetBrains Mono', monospace; }
+.history-item:hover { border-color: #0a5fa8; background: #d4e8f7; }
+.history-meta { font-size: 11px; color: #0a6abf; font-family: 'JetBrains Mono', monospace; }
 .history-snippet { font-size: 11px; color: #7a94a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
 .delete-btn {
   background: transparent;
@@ -608,7 +617,7 @@ select {
         </div>
         <div class="wave-bars" id="waveBars"></div>
         <p class="mic-status" id="micStatus">Appuyez sur le micro pour commencer</p>
-        <p id="keywordDetected" style="display:none;font-size:12px;color:#4ade80;font-family:'JetBrains Mono',monospace;">✦ Mot-clé détecté — génération en cours…</p>
+        <p id="keywordDetected" style="display:none;font-size:12px;color:#38bdf8;font-family:'JetBrains Mono',monospace;">✦ Mot-clé détecté — génération en cours…</p>
         <p id="continuousCountdown" style="display:none;font-size:12px;color:#38bdf8;font-family:'JetBrains Mono',monospace;">↺ Prochain patient dans <span id="countdownNum">3</span>s…</p>
       </div>
     </div>
@@ -650,16 +659,16 @@ select {
       <div class="row-between" style="margin-bottom:18px;flex-wrap:wrap;gap:8px;">
         <div style="display:flex;align-items:center;gap:10px;">
           <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent2);font-family:'JetBrains Mono',monospace;">✦ Compte rendu</span>
-          <span id="autoCopiedBadge" style="display:none;font-size:10px;color:#4ade80;font-family:'JetBrains Mono',monospace;">✓ Copié</span>
+          <span id="autoCopiedBadge" style="display:none;font-size:10px;color:#38bdf8;font-family:'JetBrains Mono',monospace;">✓ Copié</span>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(74,222,128,0.3);color:#86efac;">⎘ Copier</button>
-          <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.5);color:#4ade80;font-weight:600;">▶ Patient suivant</button>
+          <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(56,189,248,0.3);color:#93c5fd;">⎘ Copier</button>
+          <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(56,189,248,0.12);border-color:rgba(56,189,248,0.5);color:#38bdf8;font-weight:600;">▶ Patient suivant</button>
           <button class="icon-btn" onclick="reset()" style="color:#3d5a70;">↺ Nouveau</button>
         </div>
       </div>
       <div class="result-body" id="resultBody"></div>
-      <p style="margin-top:18px;font-size:11px;color:rgba(74,222,128,0.25);font-family:'JetBrains Mono',monospace;">Proposition à valider et signer par le médecin responsable</p>
+      <p style="margin-top:18px;font-size:11px;color:rgba(56,189,248,0.25);font-family:'JetBrains Mono',monospace;">Proposition à valider et signer par le médecin responsable</p>
     </div>
 
   </div>
@@ -681,7 +690,7 @@ select {
     <!-- AI + Model -->
     <div class="card">
       <span class="card-title">Moteur IA actif</span>
-      <div id="aiLabel" style="font-size:12px;color:#4ade80;font-family:'JetBrains Mono',monospace;margin-bottom:12px;">Gemini actif</div>
+      <div id="aiLabel" style="font-size:12px;color:#38bdf8;font-family:'JetBrains Mono',monospace;margin-bottom:12px;">Gemini actif</div>
 
       <div id="geminiModelSection">
         <span class="card-title" style="margin-bottom:8px;">Modèle Gemini</span>
@@ -1096,7 +1105,7 @@ function updateAiLabel() {
   const btnLabel = document.getElementById('generateBtnLabel');
   if (currentAI === 'gemini') {
     label.textContent = document.getElementById('modelSelect').value + ' actif';
-    label.style.color = '#4ade80';
+    label.style.color = '#38bdf8';
     if (btnLabel) btnLabel.textContent = 'Générer le compte rendu';
   } else if (currentAI === 'claude') {
     label.textContent = document.getElementById('claudeModelSelect').value + ' actif';
