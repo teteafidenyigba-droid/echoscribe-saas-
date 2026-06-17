@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Check active subscription (trial or active)
+    // Check active subscription in Supabase
     const { data: sub } = await supabase
       .from("subscriptions")
       .select("status, current_period_end, trial_end")
@@ -54,6 +54,37 @@ export async function middleware(request: NextRequest) {
           new Date(sub.current_period_end) > now));
 
     if (!hasAccess && pathname.startsWith("/app")) {
+      // Fallback: check Stripe directly if no sub in Supabase
+      // (handles webhook delay case)
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("stripe_customer_id")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.stripe_customer_id) {
+        try {
+          const stripeKey = process.env.STRIPE_SECRET_KEY!;
+          const stripeRes = await fetch(
+            `https://api.stripe.com/v1/subscriptions?customer=${profile.stripe_customer_id}&limit=1&status=all`,
+            {
+              headers: {
+                Authorization: `Bearer ${stripeKey}`,
+              },
+            }
+          );
+          const stripeData = await stripeRes.json();
+          const stripeSub = stripeData?.data?.[0];
+          if (
+            stripeSub &&
+            (stripeSub.status === "active" || stripeSub.status === "trialing")
+          ) {
+            // Has a valid Stripe subscription — let them in and sync via billing page
+            return supabaseResponse;
+          }
+        } catch {}
+      }
+
       return NextResponse.redirect(new URL("/billing", request.url));
     }
   }

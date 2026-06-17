@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         trial_period_days: 7,
         metadata: { supabase_uid: user.id, plan },
       },
-      success_url: `${appUrl}/billing?success=1`,
+      success_url: `${appUrl}/login`,
       cancel_url: `${appUrl}/billing?canceled=1`,
       locale: "fr",
       allow_promotion_codes: true,
