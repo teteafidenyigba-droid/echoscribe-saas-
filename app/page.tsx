@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <div style={{ background: "#ffffff", minHeight: "100vh", color: "#1e3a5f", fontFamily: "'EB Garamond', Georgia, serif" }}>
+    <div style={{ background: "#eef4fb", minHeight: "100vh", color: "#1e3a5f", fontFamily: "'EB Garamond', Georgia, serif" }}>
 
       {/* NAV */}
       <nav style={{
