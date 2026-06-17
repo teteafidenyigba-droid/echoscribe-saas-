@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroSlider from "./components/HeroSlider";
 
 export default function LandingPage() {
   return (
@@ -98,84 +99,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* HERO */}
-      <section style={{
-        background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 40%, #1a6aaa 80%, #1e7fc5 100%)",
-        padding: "110px 24px 90px", textAlign: "center", position: "relative", overflow: "hidden",
-      }}>
-        <div style={{ position: "absolute", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "rgba(125,211,252,0.06)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -150, left: -80, width: 600, height: 600, borderRadius: "50%", background: "rgba(30,127,197,0.08)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", top: "30%", right: "10%", width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.03)", pointerEvents: "none" }} />
-
-        <div style={{ position: "relative", maxWidth: 860, margin: "0 auto" }}>
-          {/* Badge */}
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(125,211,252,0.12)", border: "1px solid rgba(125,211,252,0.3)",
-            borderRadius: 999, padding: "8px 22px", fontSize: 12,
-            fontFamily: "'JetBrains Mono', monospace", color: "#7dd3fc",
-            letterSpacing: "0.08em", marginBottom: 40,
-          }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 10px #4ade80", display: "inline-block" }} />
-            Conforme aux standards SFR · Certifié usage médical
-          </div>
-
-          <h1 style={{ fontSize: "clamp(42px, 6.5vw, 72px)", fontWeight: 700, lineHeight: 1.08, color: "#ffffff", marginBottom: 28, letterSpacing: "-0.02em", textShadow: "0 2px 24px rgba(0,0,0,0.22)" }}>
-            Fini les comptes rendus<br />
-            <span style={{ background: "linear-gradient(90deg,#7dd3fc,#a5f3fc)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>qui vous volent du temps.</span>
-          </h1>
-          <p style={{ fontSize: "clamp(17px, 2vw, 21px)", lineHeight: 1.75, color: "rgba(255,255,255,0.78)", marginBottom: 52, maxWidth: 640, margin: "0 auto 52px" }}>
-            Dictez votre examen. EchoScribe génère un compte rendu structuré et conforme SFR en <strong style={{ color: "#7dd3fc" }}>moins de 30 secondes</strong> — sans frappe, sans effort.
-          </p>
-
-          <div className="hero-btns" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginBottom: 44 }}>
-            <Link className="cta-btn-primary" href="/register" style={{
-              background: "linear-gradient(135deg, #ffffff 0%, #e8f4ff 100%)",
-              borderRadius: 14, color: "#0a4a8a",
-              textDecoration: "none", fontSize: 19, padding: "17px 44px",
-              display: "inline-block", fontWeight: 800,
-              boxShadow: "0 6px 28px rgba(0,0,0,0.28)",
-              letterSpacing: "-0.01em", border: "2px solid rgba(255,255,255,0.8)",
-            }}>
-              Démarrer gratuitement →
-            </Link>
-            <a href="#comment" style={{
-              background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.3)",
-              borderRadius: 12, color: "#ffffff", textDecoration: "none",
-              fontSize: 19, padding: "17px 36px", display: "inline-block", fontWeight: 500,
-            }}>
-              ▶ Voir comment ça marche
-            </a>
-          </div>
-
-          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.42)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em" }}>
-            7 jours gratuits · Aucune carte requise · Résiliable en un clic
-          </p>
-
-          {/* App preview mockup */}
-          <div className="hero-mockup" style={{
-            marginTop: 64, background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
-            borderRadius: 20, padding: "28px 32px", maxWidth: 680, margin: "64px auto 0",
-            backdropFilter: "blur(8px)", textAlign: "left",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <span className="hero-mockup-text" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>EchoScribe — Compte rendu généré</span>
-            </div>
-            <div className="hero-mockup-text" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, lineHeight: 2, color: "rgba(255,255,255,0.75)" }}>
-              <div><span style={{ color: "#7dd3fc", fontWeight: 700 }}>INDICATION :</span> Échographie abdominale — douleurs de l'hypocondre droit.</div>
-              <div style={{ marginTop: 8 }}><span style={{ color: "#7dd3fc", fontWeight: 700 }}>RÉSULTATS :</span> Foie de taille et d'échogénicité normales. Pas de dilatation des voies biliaires. Vésicule biliaire lithiasique avec calcul de 8 mm...</div>
-              <div style={{ marginTop: 8 }}><span style={{ color: "#7dd3fc", fontWeight: 700 }}>CONCLUSION :</span> Lithiase vésiculaire symptomatique. Avis chirurgical recommandé.</div>
-              <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-                <span style={{ background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "4px 12px", color: "#4ade80", fontSize: 11 }}>✓ Généré en 18 secondes</span>
-                <span style={{ background: "rgba(125,211,252,0.1)", border: "1px solid rgba(125,211,252,0.2)", borderRadius: 6, padding: "4px 12px", color: "#7dd3fc", fontSize: 11 }}>Conforme SFR</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
 
       {/* VIDEO */}
       <section style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
