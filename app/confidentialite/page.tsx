@@ -53,9 +53,8 @@ const privacyContent = `
 <h3>2.3 Données médicales et dictées</h3>
 <p><strong>EchoScribe ne collecte pas et ne conserve pas les données médicales :</strong></p>
 <ul>
-  <li>Les enregistrements audio sont traités localement dans votre navigateur ou envoyés directement à l'API choisie (Whisper/OpenAI) — jamais stockés sur nos serveurs</li>
+  <li>Les enregistrements audio sont traités localement dans votre navigateur — jamais stockés sur nos serveurs</li>
   <li>Les transcriptions et comptes rendus sont stockés uniquement dans votre navigateur (IndexedDB), avec suppression automatique après 12 heures</li>
-  <li>Les clés API (Gemini, Claude, OpenAI) sont stockées uniquement dans le localStorage de votre navigateur</li>
 </ul>
 <h3>2.4 Données de navigation</h3>
 <ul>
@@ -99,7 +98,7 @@ const privacyContent = `
   <li><strong>Resend</strong> (emails transactionnels)</li>
   <li><strong>Vercel</strong> (hébergement)</li>
 </ul>
-<p>Les APIs IA (Google, Anthropic, OpenAI) ne reçoivent de données que via votre navigateur, avec vos propres clés API.</p>
+<p>Les modèles d'IA utilisés ne reçoivent que les données nécessaires à la génération du compte rendu, via une connexion sécurisée.</p>
 
 <h2>5. Durée de conservation</h2>
 <ul>

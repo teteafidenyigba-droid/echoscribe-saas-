@@ -206,8 +206,8 @@ export default function LandingPage() {
             },
             {
               icon: "⬡",
-              title: "Génération IA multi-modèles",
-              desc: "Choisissez votre moteur IA : Gemini, Claude ou GPT. Raisonnement approfondi pour des comptes rendus structurés INDICATION / RÉSULTATS / CONCLUSION / CAT.",
+              title: "Génération IA de pointe",
+              desc: "Propulsé par les meilleurs modèles d'IA du marché. Raisonnement approfondi pour des comptes rendus structurés INDICATION / RÉSULTATS / CONCLUSION / CAT.",
             },
             {
               icon: "📋",
@@ -326,7 +326,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 13, color: "#4a7a96", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
               Puis 59€/mois · Résiliable à tout moment
             </p>
-            {["Dictée vocale illimitée", "Gemini + Claude + GPT", "Correction médicale SFR", "Historique 12h", "Support email"].map((f) => (
+            {["Dictée vocale illimitée", "IA de dernière génération", "Correction médicale SFR", "Historique 12h", "Support email"].map((f) => (
               <div key={f} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 12, fontSize: 15, color: "#b0c4d8" }}>
                 <span style={{ color: "#4ade80", fontSize: 14 }}>✓</span> {f}
               </div>
@@ -391,7 +391,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 13, color: "#4a7a96", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
               Facturé annuellement · Résiliable à tout moment
             </p>
-            {["Dictée vocale illimitée", "Gemini + Claude + GPT", "Correction médicale SFR", "Historique 12h", "Support prioritaire", "Accès aux nouvelles fonctionnalités"].map((f) => (
+            {["Dictée vocale illimitée", "IA de dernière génération", "Correction médicale SFR", "Historique 12h", "Support prioritaire", "Accès aux nouvelles fonctionnalités"].map((f) => (
               <div key={f} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 12, fontSize: 15, color: "#b0c4d8" }}>
                 <span style={{ color: "#4ade80", fontSize: 14 }}>✓</span> {f}
               </div>
@@ -430,7 +430,7 @@ export default function LandingPage() {
           {[
             {
               q: "Mes données audio sont-elles conservées ?",
-              a: "Non. L'audio capturé par votre microphone est traité localement dans votre navigateur ou envoyé directement à l'API Whisper (OpenAI) si vous utilisez cette option. Aucun fichier audio n'est jamais conservé sur nos serveurs.",
+              a: "Non. L'audio capturé par votre microphone est traité localement dans votre navigateur. Aucun fichier audio n'est jamais conservé sur nos serveurs.",
             },
             {
               q: "EchoScribe est-il certifié dispositif médical ?",

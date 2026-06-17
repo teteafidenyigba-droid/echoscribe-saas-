@@ -78,7 +78,7 @@ const content = `
 
 <h2>6. Limitation de responsabilité</h2>
 <p>
-  L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées sur le service, mais ne garantit pas l'exhaustivité, l'exactitude ou l'actualité des contenus générés par les modèles d'intelligence artificielle tiers (Google Gemini, Anthropic Claude, OpenAI GPT).
+  L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées sur le service, mais ne garantit pas l'exhaustivité, l'exactitude ou l'actualité des contenus générés par les modèles d'intelligence artificielle.
 </p>
 
 <h2>7. Loi applicable et juridiction</h2>

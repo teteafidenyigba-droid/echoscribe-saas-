@@ -38,7 +38,7 @@ const cguContent = `
 <ul>
   <li>La transcription vocale de dictées médicales en temps réel ;</li>
   <li>La correction automatique de terminologie médicale échographique ;</li>
-  <li>La génération de comptes rendus structurés via des modèles d'IA tiers (Google Gemini, Anthropic Claude, OpenAI GPT).</li>
+  <li>La génération de comptes rendus structurés via des modèles d'IA de dernière génération.</li>
 </ul>
 
 <h2>3. Conditions d'accès</h2>
@@ -57,7 +57,7 @@ const cguContent = `
 <p>L'éditeur décline toute responsabilité pour tout dommage résultant d'une utilisation des comptes rendus sans validation médicale préalable.</p>
 
 <h2>5. Clés API et données</h2>
-<p>Le Service peut utiliser les clés API personnelles de l'Utilisateur (Google AI Studio, Anthropic, OpenAI) pour générer les comptes rendus. Ces clés sont stockées uniquement dans le navigateur de l'Utilisateur et ne transitent pas par les serveurs d'EchoScribe.</p>
+<p>Le Service utilise des modèles d'intelligence artificielle pour générer les comptes rendus. Les données saisies ne sont pas conservées au-delà de la session en cours.</p>
 <p>L'audio dicté est traité localement ou transmis directement à l'API choisie et n'est jamais conservé sur les serveurs d'EchoScribe.</p>
 
 <h2>6. Abonnement et facturation</h2>
