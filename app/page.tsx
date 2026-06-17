@@ -4,9 +4,9 @@ export default function LandingPage() {
   return (
     <div
       style={{
-        background: "#1a1f2e",
+        background: "#2e3550",
         backgroundImage:
-          "radial-gradient(ellipse at 15% 0%, rgba(30,60,100,0.4) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(20,40,70,0.3) 0%, transparent 55%)",
+          "radial-gradient(ellipse at 15% 0%, rgba(60,100,160,0.35) 0%, transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(40,70,120,0.25) 0%, transparent 55%)",
         minHeight: "100vh",
         color: "#c8d8ea",
         fontFamily: "'EB Garamond', Georgia, serif",
@@ -18,7 +18,7 @@ export default function LandingPage() {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          background: "rgba(26,31,46,0.95)",
+          background: "rgba(46,53,80,0.97)",
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(56,189,248,0.15)",
           padding: "0 24px",
