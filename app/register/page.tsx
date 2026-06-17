@@ -149,7 +149,7 @@ function RegisterForm() {
         Créer votre compte
       </h1>
       <p style={{ fontSize: 13, color: "#38bdf8", fontFamily: "'JetBrains Mono', monospace", marginBottom: 28, textAlign: "center" }}>
-        7 jours d'essai gratuit · {plan === "yearly" ? "349€/an" : "39€/mois"} ensuite
+        7 jours d'essai gratuit · {plan === "yearly" ? "699€/an" : "59€/mois"} ensuite
       </p>
 
       <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 14 }}>

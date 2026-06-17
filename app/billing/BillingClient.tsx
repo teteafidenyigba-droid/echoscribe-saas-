@@ -146,7 +146,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               <div style={s.planCard}>
                 <div style={s.planName}>Mensuel</div>
                 <div style={s.planPrice}>
-                  39€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/mois</span>
+                  59€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/mois</span>
                 </div>
                 <p style={s.planDesc}>7 jours d'essai gratuit inclus</p>
                 <button
@@ -161,9 +161,9 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               <div style={{ ...s.planCard, borderColor: "rgba(56,189,248,0.4)", background: "rgba(56,189,248,0.03)" }}>
                 <div style={{ ...s.planName, color: "#38bdf8" }}>Annuel · <span style={{ color: "#4ade80" }}>-25%</span></div>
                 <div style={s.planPrice}>
-                  349€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
+                  699€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
                 </div>
-                <p style={{ ...s.planDesc, color: "#38bdf8" }}>Soit 29€/mois · 7 jours d'essai</p>
+                <p style={{ ...s.planDesc, color: "#38bdf8" }}>Soit 58€/mois · 7 jours d'essai</p>
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}

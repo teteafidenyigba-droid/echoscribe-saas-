@@ -320,11 +320,11 @@ export default function LandingPage() {
               Mensuel
             </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
-              <span style={{ fontSize: 48, fontWeight: 600, color: "#e2eaf5" }}>39€</span>
+              <span style={{ fontSize: 48, fontWeight: 600, color: "#e2eaf5" }}>59€</span>
               <span style={{ fontSize: 16, color: "#7bacc2" }}>/mois</span>
             </div>
             <p style={{ fontSize: 13, color: "#4a7a96", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
-              Puis 39€/mois · Résiliable à tout moment
+              Puis 59€/mois · Résiliable à tout moment
             </p>
             {["Dictée vocale illimitée", "Gemini + Claude + GPT", "Correction médicale SFR", "Historique 12h", "Support email"].map((f) => (
               <div key={f} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 12, fontSize: 15, color: "#b0c4d8" }}>
@@ -382,11 +382,11 @@ export default function LandingPage() {
               Annuel
             </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
-              <span style={{ fontSize: 48, fontWeight: 600, color: "#e2eaf5" }}>349€</span>
+              <span style={{ fontSize: 48, fontWeight: 600, color: "#e2eaf5" }}>699€</span>
               <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
             </div>
             <p style={{ fontSize: 13, color: "#38bdf8", marginBottom: 8, fontFamily: "'JetBrains Mono', monospace" }}>
-              Soit 29,08€/mois
+              Soit 58,25€/mois
             </p>
             <p style={{ fontSize: 13, color: "#4a7a96", marginBottom: 28, fontFamily: "'JetBrains Mono', monospace" }}>
               Facturé annuellement · Résiliable à tout moment
@@ -435,10 +435,6 @@ export default function LandingPage() {
             {
               q: "EchoScribe est-il certifié dispositif médical ?",
               a: "EchoScribe est un outil d'aide à la rédaction. Le compte rendu généré est une proposition à valider et signer obligatoirement par le médecin responsable. Il ne se substitue pas au jugement clinique du praticien.",
-            },
-            {
-              q: "Puis-je utiliser mes propres clés API ?",
-              a: "Oui. EchoScribe fonctionne avec vos propres clés API Google (Gemini), Anthropic (Claude) et OpenAI. Ces clés sont stockées uniquement dans votre navigateur et ne transitent jamais par nos serveurs.",
             },
             {
               q: "Compatible avec quel logiciel médical ?",
