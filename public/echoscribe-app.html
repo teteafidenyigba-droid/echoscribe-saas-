@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 <style>
 @media print {
   body > *:not(#print-frame) { display: none !important; }
@@ -671,6 +672,7 @@ select {
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
           <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(10,95,168,0.3);color:#0a5fa8;">⎘ Copier</button>
           <button class="icon-btn" onclick="downloadPDF()" style="background:linear-gradient(135deg,#0a4a8a,#1a90d8);border:none;color:#fff;font-weight:600;">⬇ PDF</button>
+          <button class="icon-btn" onclick="downloadWord()" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border:none;color:#fff;font-weight:600;">⬇ Word</button>
           <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(10,95,168,0.12);border-color:rgba(10,95,168,0.4);color:#0a5fa8;font-weight:600;">▶ Patient suivant</button>
           <button class="icon-btn" onclick="reset()" style="color:#3d5a70;">↺ Nouveau</button>
         </div>
@@ -1925,6 +1927,88 @@ function downloadPDF() {
 
   const filename = 'CR_EchoScribe_' + now.toISOString().slice(0,10) + '.pdf';
   doc.save(filename);
+}
+
+function downloadWord() {
+  const body = document.getElementById('resultBody');
+  if (!body || !body.innerHTML.trim()) return;
+
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, Header, Footer, PageNumber } = docx;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+
+  const children = [];
+
+  // En-tête du document
+  children.push(new Paragraph({
+    children: [
+      new TextRun({ text: 'EchoScribe', bold: true, size: 36, color: '0a4a8a', font: 'Calibri' }),
+      new TextRun({ text: '  —  Compte rendu d\'échographie', size: 24, color: '2a5070', font: 'Calibri' }),
+    ],
+    spacing: { after: 100 },
+  }));
+  children.push(new Paragraph({
+    children: [
+      new TextRun({ text: 'Généré le ' + dateStr + ' à ' + timeStr + '  ·  À valider et signer par le médecin responsable', size: 16, color: '6a90b0', italics: true, font: 'Calibri' }),
+    ],
+    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '0a4a8a' } },
+    spacing: { after: 280 },
+  }));
+
+  // Contenu paragraphe par paragraphe
+  const paragraphs = body.querySelectorAll('p');
+  paragraphs.forEach(p => {
+    const isSection = p.classList.contains('section-title');
+    const raw = p.innerText.replace(/\s+/g, ' ').trim();
+    if (!raw) return;
+
+    if (isSection) {
+      children.push(new Paragraph({
+        children: [new TextRun({ text: raw.replace(/ :$/, ''), bold: true, size: 24, color: '0a4a8a', font: 'Calibri' })],
+        border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: 'bfdbfe' } },
+        spacing: { before: 240, after: 100 },
+      }));
+    } else if (raw.startsWith('•')) {
+      children.push(new Paragraph({
+        children: [new TextRun({ text: raw, size: 20, font: 'Calibri', color: '1a2e40' })],
+        spacing: { after: 60 },
+        indent: { left: 360 },
+      }));
+    } else {
+      // Gestion du gras inline **texte**
+      const parts = raw.split(/(\*\*[^*]+\*\*)/g);
+      const runs = parts.map(part => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return new TextRun({ text: part.slice(2, -2), bold: true, size: 20, font: 'Calibri', color: '0d2540' });
+        }
+        return new TextRun({ text: part, size: 20, font: 'Calibri', color: '1a2e40' });
+      });
+      children.push(new Paragraph({ children: runs, spacing: { after: 80 } }));
+    }
+  });
+
+  // Pied de page
+  children.push(new Paragraph({
+    children: [new TextRun({ text: 'EchoScribe · echoscribe.fr · Proposition à valider et signer par le médecin responsable', size: 14, color: '8aaccb', italics: true, font: 'Calibri' })],
+    border: { top: { style: BorderStyle.SINGLE, size: 4, color: 'bfdbfe' } },
+    spacing: { before: 400 },
+    alignment: AlignmentType.CENTER,
+  }));
+
+  const doc = new Document({
+    sections: [{ properties: {}, children }],
+  });
+
+  Packer.toBlob(doc).then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'CR_EchoScribe_' + now.toISOString().slice(0,10) + '.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
 }
 
 function copyResult() {
