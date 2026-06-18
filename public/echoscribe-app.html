@@ -9,6 +9,13 @@
 <title>EchoScribe v5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+@media print {
+  body > *:not(#print-frame) { display: none !important; }
+  #print-frame { display: block !important; position: static; }
+}
+</style>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -662,8 +669,9 @@ select {
           <span id="autoCopiedBadge" style="display:none;font-size:10px;color:#38bdf8;font-family:'JetBrains Mono',monospace;">✓ Copié</span>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(56,189,248,0.3);color:#93c5fd;">⎘ Copier</button>
-          <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(56,189,248,0.12);border-color:rgba(56,189,248,0.5);color:#38bdf8;font-weight:600;">▶ Patient suivant</button>
+          <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(10,95,168,0.3);color:#0a5fa8;">⎘ Copier</button>
+          <button class="icon-btn" onclick="downloadPDF()" style="background:linear-gradient(135deg,#0a4a8a,#1a90d8);border:none;color:#fff;font-weight:600;">⬇ PDF</button>
+          <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(10,95,168,0.12);border-color:rgba(10,95,168,0.4);color:#0a5fa8;font-weight:600;">▶ Patient suivant</button>
           <button class="icon-btn" onclick="reset()" style="color:#3d5a70;">↺ Nouveau</button>
         </div>
       </div>
@@ -1829,6 +1837,96 @@ function buildRichHTML(body) {
   html += '</div>';
   return html;
 }
+function downloadPDF() {
+  const body = document.getElementById('resultBody');
+  if (!body || !body.innerHTML.trim()) return;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+
+  const marginL = 20, marginR = 20, pageW = 210;
+  const contentW = pageW - marginL - marginR;
+  let y = 0;
+
+  // ── En-tête bleu ──
+  doc.setFillColor(10, 74, 138);
+  doc.rect(0, 0, pageW, 28, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(255, 255, 255);
+  doc.text('EchoScribe', marginL, 12);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(180, 210, 240);
+  doc.text('Outil d\'aide à la rédaction médicale', marginL, 18);
+  doc.setFontSize(8);
+  doc.setTextColor(200, 225, 245);
+  doc.text('Généré le ' + dateStr + ' à ' + timeStr, pageW - marginR, 12, { align: 'right' });
+  doc.text('À valider et signer par le médecin responsable', pageW - marginR, 18, { align: 'right' });
+
+  y = 36;
+
+  // ── Contenu ──
+  const paragraphs = body.querySelectorAll('p');
+  paragraphs.forEach(p => {
+    const isSection = p.classList.contains('section-title');
+    const text = p.innerText.replace(/\s+/g, ' ').trim();
+    if (!text) return;
+
+    if (isSection) {
+      // Ligne bleue avant chaque section
+      if (y > 36) { y += 3; doc.setDrawColor(10, 95, 168); doc.setLineWidth(0.3); doc.line(marginL, y, pageW - marginR, y); y += 5; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(10, 74, 138);
+      const lines = doc.splitTextToSize(text, contentW);
+      if (y + lines.length * 5 > 270) { doc.addPage(); y = 20; }
+      doc.text(lines, marginL, y);
+      y += lines.length * 5 + 2;
+    } else if (text.startsWith('•')) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      const lines = doc.splitTextToSize('  ' + text, contentW - 4);
+      if (y + lines.length * 5 > 270) { doc.addPage(); y = 20; }
+      doc.text(lines, marginL + 2, y);
+      y += lines.length * 5 + 1;
+    } else {
+      // Gras inline : **texte**
+      doc.setFontSize(10);
+      doc.setTextColor(40, 40, 40);
+      const parts = text.split(/(\*\*[^*]+\*\*)/g);
+      // Rendu simplifié : on affiche le texte nettoyé
+      const clean = text.replace(/\*\*/g, '');
+      const lines = doc.splitTextToSize(clean, contentW);
+      if (y + lines.length * 5 > 270) { doc.addPage(); y = 20; }
+      doc.setFont('helvetica', 'normal');
+      doc.text(lines, marginL, y);
+      y += lines.length * 5 + 1;
+    }
+  });
+
+  // ── Pied de page ──
+  const totalPages = doc.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFillColor(240, 247, 255);
+    doc.rect(0, 285, pageW, 12, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 130, 160);
+    doc.text('EchoScribe · echoscribe.fr · Proposition à valider et signer par le médecin responsable', marginL, 291);
+    doc.text('Page ' + i + '/' + totalPages, pageW - marginR, 291, { align: 'right' });
+  }
+
+  const filename = 'CR_EchoScribe_' + now.toISOString().slice(0,10) + '.pdf';
+  doc.save(filename);
+}
+
 function copyResult() {
   const body = document.getElementById('resultBody');
   const richHtml = buildRichHTML(body);
