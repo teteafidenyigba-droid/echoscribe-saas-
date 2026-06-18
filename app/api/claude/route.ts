@@ -49,7 +49,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Clé Anthropic non configurée" }, { status: 500 });
   }
 
-  const body = await request.text();
+  const bodyText = await request.text();
+  let bodyObj: Record<string, unknown>;
+  try { bodyObj = JSON.parse(bodyText); } catch { bodyObj = {}; }
+
+  // Normalise les paramètres thinking pour l'API Anthropic
+  const hasThinking = bodyObj.thinking && (bodyObj.thinking as Record<string, unknown>).type === "adaptive";
+  if (hasThinking) {
+    bodyObj.thinking = { type: "enabled", budget_tokens: 8000 };
+    delete bodyObj.output_config;
+  }
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -57,12 +66,18 @@ export async function POST(request: NextRequest) {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
       "anthropic-version": "2023-06-01",
+      "anthropic-beta": "interleaved-thinking-2025-05-14",
     },
-    body,
+    body: JSON.stringify(bodyObj),
   });
 
   const contentType = res.headers.get("content-type") ?? "application/json";
   const data = await res.text();
+
+  // Log erreur pour debug
+  if (!res.ok) {
+    console.error("[Claude proxy error]", res.status, data.slice(0, 300));
+  }
 
   return new NextResponse(data, {
     status: res.status,
