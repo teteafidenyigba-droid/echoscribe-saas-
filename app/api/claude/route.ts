@@ -17,7 +17,31 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (!sub) {
-    return NextResponse.json({ error: "Abonnement requis" }, { status: 403 });
+    // Fallback: vérifier Stripe directement si webhook en retard
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("stripe_customer_id")
+      .eq("id", user.id)
+      .single();
+
+    let hasStripeAccess = false;
+    if (profile?.stripe_customer_id) {
+      try {
+        const stripeRes = await fetch(
+          `https://api.stripe.com/v1/subscriptions?customer=${profile.stripe_customer_id}&limit=1&status=all`,
+          { headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` } }
+        );
+        const stripeData = await stripeRes.json();
+        const stripeSub = stripeData?.data?.[0];
+        if (stripeSub && (stripeSub.status === "active" || stripeSub.status === "trialing")) {
+          hasStripeAccess = true;
+        }
+      } catch {}
+    }
+
+    if (!hasStripeAccess) {
+      return NextResponse.json({ error: "Abonnement requis" }, { status: 403 });
+    }
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
