@@ -94,18 +94,18 @@ const s: Record<string, React.CSSProperties> = {
   page: {
     background: "#07101e",
     minHeight: "100vh",
-    fontFamily: "'Inter Tight', system-ui, sans-serif",
-    color: "#e2eaf5",
+    fontFamily: "'EB Garamond', Georgia, serif",
+    color: "#c8d8ea",
   },
   nav: {
-    borderBottom: "1px solid rgba(56,189,248,0.15)",
+    borderBottom: "1px solid rgba(56,189,248,0.1)",
     padding: "0 24px",
     height: 64,
     display: "flex",
     alignItems: "center",
   },
   logo: {
-    fontFamily: "'Fraunces', Georgia, serif",
+    fontFamily: "'EB Garamond', serif",
     fontSize: 22,
     fontStyle: "italic",
     color: "#e2eaf5",

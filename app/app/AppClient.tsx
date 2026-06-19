@@ -20,12 +20,12 @@ export default function AppClient({ user }: Props) {
   const displayName = user.name !== user.email ? user.name : user.email;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#0d1f35" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#b8d4ef" }}>
       {/* Top bar */}
       <div style={{
-        background: "rgba(13,31,53,0.97)",
+        background: "rgba(170,205,235,0.97)",
         backdropFilter: "blur(16px)",
-        borderBottom: "1px solid rgba(56,189,248,0.15)",
+        borderBottom: "1px solid #7ab0d4",
         padding: "0 20px",
         height: 60,
         display: "flex",
@@ -38,13 +38,13 @@ export default function AppClient({ user }: Props) {
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{
-            fontFamily: "'Fraunces', Georgia, serif",
+            fontFamily: "'EB Garamond', serif",
             fontSize: 28,
             fontStyle: "italic",
-            color: "#e2eaf5",
+            color: "#0d2540",
             letterSpacing: "-0.01em",
           }}>
-            Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+            Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
           </span>
           <span style={{
             background: "#1e3a5f",
@@ -53,7 +53,7 @@ export default function AppClient({ user }: Props) {
             fontSize: 9,
             letterSpacing: "0.16em",
             textTransform: "uppercase" as const,
-            color: "#ffffff",
+            color: "#7dd3fc",
             fontFamily: "'JetBrains Mono', monospace",
           }}>IA v5</span>
         </div>
@@ -63,7 +63,7 @@ export default function AppClient({ user }: Props) {
           <span style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 11,
-            color: "#4a7a96",
+            color: "#2a5070",
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap" as const,
@@ -77,7 +77,7 @@ export default function AppClient({ user }: Props) {
             color: "#ffffff",
             textDecoration: "none",
             padding: "7px 16px",
-            background: "#c45d4a",
+            background: "linear-gradient(135deg, #1e3a5f, #1e5a8a)",
             border: "none",
             borderRadius: 8,
             whiteSpace: "nowrap" as const,
@@ -88,9 +88,9 @@ export default function AppClient({ user }: Props) {
           <button onClick={handleLogout} style={{
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 11,
-            color: "#38bdf8",
+            color: "#0a5fa8",
             background: "transparent",
-            border: "1.5px solid #38bdf8",
+            border: "2px solid #0a5fa8",
             borderRadius: 8,
             padding: "5px 14px",
             cursor: "pointer",
