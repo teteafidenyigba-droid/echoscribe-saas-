@@ -48,6 +48,9 @@ export default function LandingPage() {
           /* CTA final */
           .cta-section { padding: 72px 20px !important; }
 
+          /* Spécificité */
+          .specificity-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+
           /* Video */
           .video-section { padding: 56px 16px !important; }
           .video-section h2 { font-size: 26px !important; }
@@ -137,6 +140,40 @@ export default function LandingPage() {
       </nav>
 
       <HeroSlider />
+
+      {/* SPÉCIFICITÉ ECHOSCRIBE */}
+      <section style={{ background: "linear-gradient(135deg, #0e4a5a 0%, #0d7a7a 100%)", padding: "72px 48px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
+          {/* Gauche */}
+          <div>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#4dd9c0", marginBottom: 16 }}>
+              LA SPÉCIFICITÉ ECHOSCRIBE
+            </p>
+            <h2 style={{ fontSize: "clamp(26px, 3.2vw, 40px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.15, marginBottom: 24 }}>
+              Il rédige le compte rendu —{" "}
+              <span style={{ fontStyle: "italic" }}>il ne se contente pas de transcrire.</span>
+            </h2>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.72)", lineHeight: 1.75 }}>
+              Dicter du texte, beaucoup d'outils le font. La spécificité d'EchoScribe est ailleurs : il connaît l'échographie et produit, à votre place, un compte rendu structuré et conforme, prêt à signer.
+            </p>
+          </div>
+          {/* Droite */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+            {[
+              { bold: "Un compte rendu structuré", text: "SFR/HAS — et non une transcription brute à reprendre." },
+              { bold: "Un vocabulaire échographique français", text: ": abdominal, vasculaire, pelvien, cervical, scrotal, MSK." },
+              { bold: "Clé en main", text: ": un simple code d'accès, aucun compte ni clé API à créer." },
+            ].map((item, i) => (
+              <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                <span style={{ color: "#4dd9c0", fontSize: 18, fontWeight: 700, marginTop: 2, flexShrink: 0 }}>✓</span>
+                <p style={{ fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: 0 }}>
+                  <strong style={{ color: "#ffffff" }}>{item.bold}</strong>{" "}{item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* VIDEO */}
       <section className="video-section section-pad" style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
