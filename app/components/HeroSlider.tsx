@@ -180,7 +180,7 @@ export default function HeroSlider() {
           </div>
 
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em", marginBottom: 0 }}>
-            7 jours gratuits · Aucune carte requise · Résiliable en un clic
+            7 jours gratuits · Sans engagement · Résiliable en un clic
           </p>
 
           {/* Thumbnails nav */}

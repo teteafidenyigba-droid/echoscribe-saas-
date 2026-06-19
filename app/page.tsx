@@ -377,7 +377,7 @@ export default function LandingPage() {
               { q: "Est-ce que ça marche avec mon logiciel métier ?", a: "Oui. Doctolib, HelloDoc, WEDA, Medistory, Axisante, Word… il suffit de copier-coller. La mise en page est conservée." },
               { q: "C'est certifié dispositif médical ?", a: "C'est un outil d'aide à la rédaction. Le compte rendu doit être relu et signé par le médecin. EchoScribe assiste — il ne remplace pas votre jugement clinique." },
               { q: "Je peux arrêter quand je veux ?", a: "Oui, sans engagement ni pénalité. Un clic dans votre espace facturation. Vous gardez l'accès jusqu'à la fin de la période payée." },
-              { q: "L'essai gratuit, c'est vraiment gratuit ?", a: "7 jours, sans carte bancaire. Aucun prélèvement automatique. À la fin, vous choisissez ou vous partez — sans friction." },
+              { q: "L'essai gratuit, c'est vraiment gratuit ?", a: "7 jours offerts, sans engagement. Aucun prélèvement automatique. À la fin, vous choisissez ou vous partez — sans friction." },
             ].map((item, i) => (
               <div key={i} className="faq-item faq-card" style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 14, padding: "22px 26px", boxShadow: "0 2px 10px rgba(10,95,168,0.07)" }}>
                 <div className="faq-q" style={{ fontSize: 16, color: "#0d2540", fontWeight: 700, marginBottom: 8 }}>{item.q}</div>
@@ -397,7 +397,7 @@ export default function LandingPage() {
             <em style={{ fontStyle: "italic", color: "#7dd3fc" }}>prend 30 secondes.</em>
           </h2>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.65)", marginBottom: 44, lineHeight: 1.7 }}>
-            Sans carte bancaire. Sans installation. Sans API à configurer.<br />Juste votre voix — et le compte rendu qui s'écrit.
+            Sans installation. Sans API à configurer.<br />Juste votre voix — et le compte rendu qui s'écrit.
           </p>
           <Link className="cta-btn-primary" href="/register" style={{
             display: "inline-block", padding: "18px 52px",
