@@ -243,42 +243,38 @@ export default function HeroSlider() {
 
         {/* RIGHT — Two-column demo card (desktop only) */}
         <div className="hero-mockup-panel" style={{ opacity: fading ? 0 : 1, transition: "opacity 0.4s ease" }}>
-          <div style={{
-            background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
-            borderRadius: 20, overflow: "hidden", backdropFilter: "blur(8px)",
-          }}>
+          <div style={{ background: "#fff", border: "1px solid #dde5e7", borderRadius: 18, overflow: "hidden", boxShadow: "0 8px 40px rgba(10,20,48,0.18)" }}>
             {/* Header */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-              {[1,2,3].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.18)", display: "inline-block" }} />)}
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.4)", marginLeft: 8 }}>EchoScribe — en direct</span>
-              <span style={{ marginLeft: "auto", background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "2px 10px", color: "#4ade80", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✓ 23s</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "11px 16px", borderBottom: "1px solid #e8eef0", background: "#f4f8fa" }}>
+              {[1,2,3].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#d0dde3", display: "inline-block" }} />)}
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#5b7a84", fontWeight: 600, marginLeft: 8 }}>EchoScribe — en direct</span>
+              <span style={{ marginLeft: "auto", background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.35)", borderRadius: 6, padding: "2px 10px", color: "#16a34a", fontSize: 10, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>✓ 23s</span>
             </div>
             {/* Two columns */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
               {/* Left — Dictation */}
-              <div style={{ padding: "14px 16px", borderRight: "1px solid rgba(255,255,255,0.08)" }}>
-                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: slide.color, marginBottom: 10 }}>① Ce que vous dictez</p>
-                <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.75 }}>
+              <div style={{ padding: "14px 16px", borderRight: "1px solid #e8eef0" }}>
+                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 10 }}>① Ce que vous dictez</p>
+                <p style={{ fontSize: 12, color: "#3c5a63", lineHeight: 1.75 }}>
                   «{" "}
                   {slide.dictation.map((seg, i) =>
                     seg.noise
-                      ? <span key={i} style={{ textDecoration: "line-through", textDecorationColor: slide.color, opacity: 0.5 }}>{seg.text}</span>
-                      : <span key={i}>{seg.text}</span>
+                      ? <span key={i} style={{ color: "#a0b4bc", textDecoration: "line-through", textDecorationColor: "#e05a3a" }}>{seg.text}</span>
+                      : <span key={i} style={{ color: "#14303a" }}>{seg.text}</span>
                   )}
                   »
                 </p>
               </div>
               {/* Right — CR */}
               <div style={{ padding: "14px 16px" }}>
-                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: slide.color, marginBottom: 10 }}>② Le compte rendu généré</p>
-                <div style={{ fontSize: 11.5, lineHeight: 1.65, color: "rgba(255,255,255,0.82)" }}>
+                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 10 }}>② Le compte rendu généré</p>
+                <div style={{ fontSize: 12, lineHeight: 1.65, color: "#3c5a63" }}>
                   {slide.cr.map((ln, i) =>
                     "sec" in ln ? (
-                      <div key={i} style={{ fontWeight: 700, color: slide.color, marginTop: i === 0 ? 0 : 8, marginBottom: 3, fontSize: 10, letterSpacing: ".04em" }}>{ln.sec}</div>
+                      <div key={i} style={{ fontWeight: 700, color: "#0e3c4c", marginTop: i === 0 ? 0 : 8, marginBottom: 3, fontSize: 11 }}>{ln.sec}</div>
                     ) : "organ" in ln ? (
                       <div key={i} style={{ marginBottom: 2 }}>
-                        <strong style={{ color: "rgba(255,255,255,0.95)" }}>{ln.organ} :</strong>{" "}
-                        <span>{ln.desc}</span>
+                        <strong style={{ color: "#14303a" }}>{ln.organ} :</strong>{" "}{ln.desc}
                       </div>
                     ) : (
                       <div key={i} style={{ marginBottom: 2 }}>• {"bullet" in ln ? ln.bullet : ""}</div>
@@ -287,11 +283,11 @@ export default function HeroSlider() {
                 </div>
               </div>
             </div>
-            {/* Footer buttons */}
-            <div style={{ padding: "10px 16px", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", gap: 8 }}>
-              <span style={{ background: "rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 12px", color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>📋 Copier</span>
-              <span style={{ background: "rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 12px", color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✎ Modifier</span>
-              <span style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.25)", borderRadius: 6, padding: "4px 12px", color: "#4ade80", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>Conforme SFR</span>
+            {/* Footer */}
+            <div style={{ padding: "10px 16px", borderTop: "1px solid #e8eef0", display: "flex", gap: 8, background: "#f9fbfc" }}>
+              <span style={{ background: "#eaf0f3", borderRadius: 6, padding: "4px 12px", color: "#5b7a84", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>📋 Copier</span>
+              <span style={{ background: "#eaf0f3", borderRadius: 6, padding: "4px 12px", color: "#5b7a84", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✎ Modifier</span>
+              <span style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "4px 12px", color: "#16a34a", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>Conforme SFR</span>
             </div>
           </div>
         </div>
