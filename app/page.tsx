@@ -142,11 +142,11 @@ export default function LandingPage() {
       <HeroSlider />
 
       {/* SPÉCIFICITÉ ECHOSCRIBE */}
-      <section style={{ background: "linear-gradient(135deg, #0e4a5a 0%, #0d7a7a 100%)", padding: "72px 48px" }}>
+      <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "72px 48px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
           {/* Gauche */}
           <div>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#4dd9c0", marginBottom: 16 }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#7dd3fc", marginBottom: 16 }}>
               LA SPÉCIFICITÉ ECHOSCRIBE
             </p>
             <h2 style={{ fontSize: "clamp(26px, 3.2vw, 40px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.15, marginBottom: 24 }}>
@@ -165,7 +165,7 @@ export default function LandingPage() {
               { bold: "Clé en main", text: ": un simple code d'accès, aucun compte ni clé API à créer." },
             ].map((item, i) => (
               <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-                <span style={{ color: "#4dd9c0", fontSize: 18, fontWeight: 700, marginTop: 2, flexShrink: 0 }}>✓</span>
+                <span style={{ color: "#7dd3fc", fontSize: 18, fontWeight: 700, marginTop: 2, flexShrink: 0 }}>✓</span>
                 <p style={{ fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: 0 }}>
                   <strong style={{ color: "#ffffff" }}>{item.bold}</strong>{" "}{item.text}
                 </p>
