@@ -242,7 +242,7 @@ export default function LandingPage() {
               <span style={{ fontSize: 17, color: "#3a7aaa" }}>/mois</span>
             </div>
             <p style={{ fontSize: 13, color: "#3a7aaa", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Résiliable à tout moment</p>
-            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support email sous 24h"].map((f) => (
+            {["Dictée vocale illimitée", "IA de dernière génération", "600+ corrections médicales SFR", "Historique 12h", "Support email sous 24h"].map((f) => (
               <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#0d2540" }}>
                 <span style={{ color: "#0a5fa8", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
               </div>
@@ -270,7 +270,7 @@ export default function LandingPage() {
             </div>
             <p style={{ fontSize: 14, color: "#7dd3fc", marginBottom: 6, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>Soit 58,25€/mois</p>
             <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Facturé annuellement · Résiliable</p>
-            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
+            {["Dictée vocale illimitée", "IA de dernière génération", "600+ corrections médicales SFR", "Historique 12h", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
               <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#ffffff" }}>
                 <span style={{ color: "#7dd3fc", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
               </div>
@@ -353,7 +353,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 0, textAlign: "center" }}>
           {[
             { n: "< 30s", label: "Compte rendu généré", sub: "contre 5-10 min manuellement" },
-            { n: "80+", label: "Corrections médicales", sub: "vocabulaire échographique" },
+            { n: "600+", label: "Corrections médicales", sub: "vocabulaire échographique" },
             { n: "100%", label: "Conforme SFR", sub: "structure standardisée" },
             { n: "7 jours", label: "Essai gratuit", sub: "sans carte bancaire" },
           ].map((s, i) => (
