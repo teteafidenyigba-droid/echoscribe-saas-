@@ -14,9 +14,18 @@ const slides = [
     color: "#38bdf8",
     thumbLabel: "Abdominal",
     thumbImg: "/thumb-abdo.jpg",
-    sample: [
-      { label: "RÉSULTATS", text: "Foie de taille normale, aux contours réguliers, sans lésion focale décelable.\nVésicule biliaire : alithiasique, à parois fines.\nReins : sans anomalie décelable." },
-      { label: "CONCLUSION", text: "• Échographie abdominale sans particularité." },
+    dictation: [
+      { text: "Bonjour, comment allez-vous ? — Ça va, un peu mal au ventre. Quels médicaments prenez-vous ? — Du paracétamol et un comprimé pour la tension. Allongez-vous, inspirez… ", noise: true },
+      { text: "Foie de taille normale, contours réguliers, sans lésion. Vésicule alithiasique. Reins sans anomalie. ", noise: false },
+      { text: "Vous pouvez vous rhabiller, c'est terminé.", noise: true },
+    ],
+    cr: [
+      { sec: "RÉSULTATS" },
+      { organ: "Foie", desc: "de taille normale, aux contours réguliers, sans lésion focale décelable." },
+      { organ: "Vésicule biliaire", desc: "alithiasique, à parois fines." },
+      { organ: "Reins", desc: "sans anomalie décelable." },
+      { sec: "CONCLUSION" },
+      { bullet: "Échographie abdominale sans particularité." },
     ],
   },
   {
@@ -29,9 +38,18 @@ const slides = [
     color: "#f472b6",
     thumbLabel: "Gynécologie",
     thumbImg: "/thumb-gyneco.jpg",
-    sample: [
-      { label: "RÉSULTATS", text: "Utérus en antéversion, contours réguliers, endomètre à 8 mm d'épaisseur.\nOvaires de taille normale, sans lésion décelable.\nCul-de-sac : absence d'épanchement." },
-      { label: "CONCLUSION", text: "• Échographie pelvienne sans anomalie décelable." },
+    dictation: [
+      { text: "Comment allez-vous ? Vous avez des douleurs ? — Oui pelviennes depuis 2 jours. Allongez-vous s'il vous plaît. ", noise: true },
+      { text: "Utérus en antéversion, contours réguliers, endomètre à 8 mm. Ovaires de taille normale, sans lésion. Pas d'épanchement. ", noise: false },
+      { text: "C'est terminé.", noise: true },
+    ],
+    cr: [
+      { sec: "RÉSULTATS" },
+      { organ: "Utérus", desc: "en antéversion, contours réguliers, endomètre à 8 mm d'épaisseur." },
+      { organ: "Ovaires", desc: "de taille normale, sans lésion décelable." },
+      { organ: "Cul-de-sac", desc: "absence d'épanchement." },
+      { sec: "CONCLUSION" },
+      { bullet: "Échographie pelvienne sans anomalie décelable." },
     ],
   },
   {
@@ -44,9 +62,19 @@ const slides = [
     color: "#f87171",
     thumbLabel: "Cardiologie",
     thumbImg: "/thumb-cardio.jpg",
-    sample: [
-      { label: "RÉSULTATS", text: "VG non dilaté, fonction systolique conservée. FEVG estimée à 62%.\nPas de trouble de la cinétique segmentaire.\nValvulopathie : fuite mitrale minime grade I." },
-      { label: "CONCLUSION", text: "• Fonction systolique conservée.\n• Hypertrophie concentrique modérée du VG." },
+    dictation: [
+      { text: "Vous avez des essoufflements depuis quand ? — Depuis 3 semaines à l'effort. Installez-vous, ne bougez plus. ", noise: true },
+      { text: "VG non dilaté, fonction systolique conservée, FEVG 62%. Pas de trouble de la cinétique. Fuite mitrale minime grade I. ", noise: false },
+      { text: "Respirez normalement, c'est bon.", noise: true },
+    ],
+    cr: [
+      { sec: "RÉSULTATS" },
+      { organ: "VG", desc: "non dilaté, fonction systolique conservée. FEVG estimée à 62%." },
+      { organ: "Cinétique", desc: "pas de trouble segmentaire." },
+      { organ: "Valves", desc: "fuite mitrale minime grade I." },
+      { sec: "CONCLUSION" },
+      { bullet: "Fonction systolique conservée." },
+      { bullet: "Hypertrophie concentrique modérée du VG." },
     ],
   },
   {
@@ -59,9 +87,19 @@ const slides = [
     color: "#4ade80",
     thumbLabel: "Thyroïde",
     thumbImg: "/thumb-thyroid.jpg",
-    sample: [
-      { label: "RÉSULTATS", text: "Thyroïde de taille normale, échostructure homogène.\nNodule du lobe droit : isoéchogène, 9 × 6 mm, contours réguliers, sans microcalcification.\nAires cervicales : absence d'adénopathie suspecte." },
-      { label: "CONCLUSION", text: "• Nodule du lobe droit classé EU-TIRADS 3.\n• Surveillance selon recommandations en vigueur." },
+    dictation: [
+      { text: "Penchez la tête en arrière s'il vous plaît, ne bougez plus. ", noise: true },
+      { text: "Thyroïde de taille normale, échostructure homogène. Nodule du lobe droit isoéchogène 9x6 mm, contours réguliers, sans microcalcification, EU-TIRADS 3. Pas d'adénopathie. ", noise: false },
+      { text: "C'est bon, terminé.", noise: true },
+    ],
+    cr: [
+      { sec: "RÉSULTATS" },
+      { organ: "Thyroïde", desc: "de taille normale, d'échostructure homogène." },
+      { organ: "Lobe droit", desc: "nodule isoéchogène 9 × 6 mm, contours réguliers, sans microcalcification." },
+      { organ: "Aires cervicales", desc: "absence d'adénopathie suspecte." },
+      { sec: "CONCLUSION" },
+      { bullet: "Nodule classé EU-TIRADS 3." },
+      { bullet: "Surveillance selon recommandations en vigueur." },
     ],
   },
 ];
@@ -203,38 +241,56 @@ export default function HeroSlider() {
           </div>
         </div>
 
-        {/* RIGHT — Mock compte rendu (desktop only) */}
+        {/* RIGHT — Two-column demo card (desktop only) */}
         <div className="hero-mockup-panel" style={{ opacity: fading ? 0 : 1, transition: "opacity 0.4s ease" }}>
           <div style={{
             background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
-            borderRadius: 20, padding: "28px", backdropFilter: "blur(8px)",
+            borderRadius: 20, overflow: "hidden", backdropFilter: "blur(8px)",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.2)" }} />
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.35)", marginLeft: 8 }}>EchoScribe — Compte rendu</span>
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 18px", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              {[1,2,3].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "rgba(255,255,255,0.18)", display: "inline-block" }} />)}
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.4)", marginLeft: 8 }}>EchoScribe — en direct</span>
               <span style={{ marginLeft: "auto", background: "rgba(74,222,128,0.15)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "2px 10px", color: "#4ade80", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✓ 23s</span>
             </div>
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 16,
-              background: `rgba(${slide.color === "#38bdf8" ? "56,189,248" : slide.color === "#f472b6" ? "244,114,182" : slide.color === "#f87171" ? "248,113,113" : "74,222,128"},0.12)`,
-              border: `1px solid ${slide.color}40`, borderRadius: 8, padding: "5px 12px",
-            }}>
-              <span style={{ fontSize: 16 }}>{slide.icon}</span>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: slide.color, fontWeight: 600 }}>{slide.badge}</span>
-            </div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 1.9, color: "rgba(255,255,255,0.82)" }}>
-              {slide.sample.map((s) => (
-                <div key={s.label} style={{ marginBottom: 10 }}>
-                  <span style={{ color: slide.color, fontWeight: 700 }}>{s.label} : </span>
-                  <span style={{ whiteSpace: "pre-line" }}>{s.text}</span>
+            {/* Two columns */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+              {/* Left — Dictation */}
+              <div style={{ padding: "14px 16px", borderRight: "1px solid rgba(255,255,255,0.08)" }}>
+                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: slide.color, marginBottom: 10 }}>① Ce que vous dictez</p>
+                <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.75 }}>
+                  «{" "}
+                  {slide.dictation.map((seg, i) =>
+                    seg.noise
+                      ? <span key={i} style={{ textDecoration: "line-through", textDecorationColor: slide.color, opacity: 0.5 }}>{seg.text}</span>
+                      : <span key={i}>{seg.text}</span>
+                  )}
+                  »
+                </p>
+              </div>
+              {/* Right — CR */}
+              <div style={{ padding: "14px 16px" }}>
+                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: slide.color, marginBottom: 10 }}>② Le compte rendu généré</p>
+                <div style={{ fontSize: 11.5, lineHeight: 1.65, color: "rgba(255,255,255,0.82)" }}>
+                  {slide.cr.map((ln, i) =>
+                    "sec" in ln ? (
+                      <div key={i} style={{ fontWeight: 700, color: slide.color, marginTop: i === 0 ? 0 : 8, marginBottom: 3, fontSize: 10, letterSpacing: ".04em" }}>{ln.sec}</div>
+                    ) : "organ" in ln ? (
+                      <div key={i} style={{ marginBottom: 2 }}>
+                        <strong style={{ color: "rgba(255,255,255,0.95)" }}>{ln.organ} :</strong>{" "}
+                        <span>{ln.desc}</span>
+                      </div>
+                    ) : (
+                      <div key={i} style={{ marginBottom: 2 }}>• {"bullet" in ln ? ln.bullet : ""}</div>
+                    )
+                  )}
                 </div>
-              ))}
+              </div>
             </div>
-            <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", gap: 8 }}>
-              <span style={{ background: "rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 12px", color: "rgba(255,255,255,0.5)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>📋 Copier</span>
-              <span style={{ background: "rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 12px", color: "rgba(255,255,255,0.5)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✎ Modifier</span>
+            {/* Footer buttons */}
+            <div style={{ padding: "10px 16px", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", gap: 8 }}>
+              <span style={{ background: "rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 12px", color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>📋 Copier</span>
+              <span style={{ background: "rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 12px", color: "rgba(255,255,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✎ Modifier</span>
               <span style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.25)", borderRadius: 6, padding: "4px 12px", color: "#4ade80", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>Conforme SFR</span>
             </div>
           </div>
