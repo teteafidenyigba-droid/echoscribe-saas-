@@ -108,26 +108,34 @@ export default function HeroSlider() {
       setTimeout(() => {
         setCurrent((c) => (c + 1) % slides.length);
         setFading(false);
-      }, 350);
-    }, 5000);
+      }, 400);
+    }, 9000);
     return () => clearInterval(timer);
   }, []);
 
   function goTo(i: number) {
     if (i === current) return;
     setFading(true);
-    setTimeout(() => { setCurrent(i); setFading(false); }, 350);
+    setTimeout(() => { setCurrent(i); setFading(false); }, 400);
   }
 
   const slide = slides[current];
 
   return (
     <section style={{
-      background: "radial-gradient(900px 520px at 88% -8%, #dcebef 0%, transparent 55%), radial-gradient(700px 480px at -5% 12%, #f3ece2 0%, transparent 55%), #fbfaf7",
-      padding: "0 24px",
+      position: "relative", overflow: "hidden",
+      padding: "70px 24px 60px",
+      backgroundImage: "url('/hero-bg.jpg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center 30%",
     }}>
+      <div style={{
+        position: "absolute", inset: 0, zIndex: 0,
+        background: "linear-gradient(140deg, rgba(10,20,48,0.93) 0%, rgba(15,36,64,0.88) 40%, rgba(20,80,140,0.80) 80%, rgba(20,100,180,0.75) 100%)",
+      }} />
       <style>{`
         .hero-inner {
+          position: relative; z-index: 2;
           max-width: 1140px; margin: 0 auto;
           display: grid; grid-template-columns: 1.05fr .95fr;
           gap: 48px; align-items: center; padding: 72px 0 60px;
@@ -151,21 +159,21 @@ export default function HeroSlider() {
 
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(21,98,122,.08)", border: "1px solid rgba(21,98,122,.22)",
+            background: "rgba(255,255,255,.10)", border: "1px solid rgba(255,255,255,.25)",
             borderRadius: 999, padding: "6px 16px", fontSize: 11,
-            fontFamily: "'JetBrains Mono', monospace", color: slide.color,
+            fontFamily: "'JetBrains Mono', monospace", color: "#a8d4e0",
             letterSpacing: "0.08em", marginBottom: 26, fontWeight: 600,
           }}>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#c45d4a", boxShadow: "0 0 8px #c45d4a", display: "inline-block" }} />
             {slide.specialty}
           </div>
 
-          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 600, lineHeight: 1.06, letterSpacing: "-.01em", color: "#14303a", marginBottom: 18 }}>
+          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(36px, 5vw, 56px)", fontWeight: 600, lineHeight: 1.06, letterSpacing: "-.01em", color: "#ffffff", marginBottom: 18 }}>
             {slide.headline}<br />
-            <em style={{ fontStyle: "italic", color: slide.color }}>{slide.subline}</em>
+            <em style={{ fontStyle: "italic", color: "#7ecfe0" }}>{slide.subline}</em>
           </h1>
 
-          <p style={{ fontSize: "clamp(15px, 1.8vw, 18px)", lineHeight: 1.65, color: "#3c4d53", marginBottom: 30, maxWidth: "34ch" }}>
+          <p style={{ fontSize: "clamp(15px, 1.8vw, 18px)", lineHeight: 1.65, color: "rgba(255,255,255,.75)", marginBottom: 30, maxWidth: "34ch" }}>
             {slide.desc}
           </p>
 
@@ -173,21 +181,21 @@ export default function HeroSlider() {
             <Link href="/register" style={{
               background: "#c45d4a", borderRadius: 11, color: "#fff",
               textDecoration: "none", fontSize: 15, padding: "13px 26px",
-              fontWeight: 600, boxShadow: "0 6px 16px rgba(196,93,74,.28)",
+              fontWeight: 600, boxShadow: "0 6px 20px rgba(196,93,74,.45)",
               display: "inline-block",
             }}>
               Commencer — 7 jours gratuits
             </Link>
             <a href="#fonctionnement" style={{
-              background: "transparent", border: "1px solid #dde5e7",
-              borderRadius: 11, color: "#14303a", textDecoration: "none",
+              background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.25)",
+              borderRadius: 11, color: "#fff", textDecoration: "none",
               fontSize: 15, padding: "13px 20px", fontWeight: 500, display: "inline-block",
             }}>
               Découvrir la spécificité
             </a>
           </div>
 
-          <p style={{ fontSize: 12, color: "#86969b", fontFamily: "'JetBrains Mono', monospace", marginBottom: 4 }}>
+          <p style={{ fontSize: 12, color: "rgba(255,255,255,.45)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 4 }}>
             Sans engagement · Sans carte requise
           </p>
 
