@@ -226,6 +226,72 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* PRICING */}
+      <section id="tarifs" className="section-pad" style={{ background: "#eaf4fb", padding: "80px 24px" }}>
+        <div style={{ maxWidth: 920, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 52 }}>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>TARIFS</p>
+          <h2 style={{ fontSize: 36, fontWeight: 700, color: "#0d2540", marginBottom: 12 }}>Simple et transparent</h2>
+          <p style={{ fontSize: 17, color: "#2a5070" }}>7 jours d'essai gratuit · Résiliable à tout moment · Aucun frais caché</p>
+        </div>
+        <div className="pricing-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "stretch" }}>
+          <div className="pricing-card-base" style={{ background: "#ffffff", border: "1.5px solid #7ab0d4", borderRadius: 24, padding: "44px 40px", boxShadow: "0 6px 28px rgba(10,95,168,0.13)", display: "flex", flexDirection: "column" }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#3a7aaa", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Mensuel</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
+              <span style={{ fontSize: 56, fontWeight: 700, color: "#0d2540", letterSpacing: "-0.02em" }}>59€</span>
+              <span style={{ fontSize: 17, color: "#3a7aaa" }}>/mois</span>
+            </div>
+            <p style={{ fontSize: 13, color: "#3a7aaa", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Résiliable à tout moment</p>
+            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support email sous 24h"].map((f) => (
+              <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#0d2540" }}>
+                <span style={{ color: "#0a5fa8", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
+              </div>
+            ))}
+            <Link href="/register?plan=monthly" style={{
+              display: "block", textAlign: "center", marginTop: "auto", paddingTop: 36, padding: "15px",
+              border: "2px solid #0d2540", borderRadius: 12, color: "#0d2540",
+              textDecoration: "none", fontSize: 16, fontWeight: 700,
+            }}>
+              Démarrer l'essai gratuit →
+            </Link>
+          </div>
+          <div className="pricing-card pricing-card-base" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)", display: "flex", flexDirection: "column" }}>
+            <div className="pricing-badge" style={{
+              position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
+              background: "linear-gradient(90deg, #1e7fc5, #38bdf8)", color: "#ffffff", borderRadius: 999,
+              padding: "6px 22px", fontSize: 12, fontWeight: 700,
+              fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap",
+              boxShadow: "0 4px 16px rgba(30,127,197,0.4)",
+            }}>✦ MEILLEURE OFFRE — économisez 25%</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Annuel</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
+              <span style={{ fontSize: 56, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.02em" }}>699€</span>
+              <span style={{ fontSize: 17, color: "#8aaac8" }}>/an</span>
+            </div>
+            <p style={{ fontSize: 14, color: "#7dd3fc", marginBottom: 6, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>Soit 58,25€/mois</p>
+            <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Facturé annuellement · Résiliable</p>
+            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
+              <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#ffffff" }}>
+                <span style={{ color: "#7dd3fc", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
+              </div>
+            ))}
+            <Link href="/register?plan=yearly" style={{
+              display: "block", textAlign: "center", marginTop: "auto", paddingTop: 36, padding: "15px",
+              background: "linear-gradient(90deg, #1e7fc5, #38bdf8)",
+              borderRadius: 12, color: "#ffffff",
+              textDecoration: "none", fontSize: 16, fontWeight: 700,
+              boxShadow: "0 4px 16px rgba(30,127,197,0.4)",
+            }}>
+              Démarrer l'essai gratuit →
+            </Link>
+          </div>
+        </div>
+        <p style={{ textAlign: "center", fontSize: 13, color: "#2a5070", fontFamily: "'JetBrains Mono', monospace", marginTop: 36 }}>
+          🔒 Paiement sécurisé par Stripe · Facture TVA disponible · Remboursement 14 jours
+        </p>
+        </div>
+      </section>
+
       {/* SPÉCIFICITÉ ECHOSCRIBE */}
       <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "72px 48px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
@@ -297,73 +363,6 @@ export default function LandingPage() {
               <div style={{ fontSize: 11, color: "#3a7aaa", fontFamily: "'JetBrains Mono', monospace", marginTop: 3 }}>{s.sub}</div>
             </div>
           ))}
-        </div>
-      </section>
-
-
-      {/* PRICING */}
-      <section id="tarifs" className="section-pad" style={{ background: "#eaf4fb", padding: "80px 24px" }}>
-        <div style={{ maxWidth: 920, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>TARIFS</p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: "#0d2540", marginBottom: 12 }}>Simple et transparent</h2>
-          <p style={{ fontSize: 17, color: "#2a5070" }}>7 jours d'essai gratuit · Résiliable à tout moment · Aucun frais caché</p>
-        </div>
-        <div className="pricing-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 28, alignItems: "stretch" }}>
-          <div className="pricing-card-base" style={{ background: "#ffffff", border: "1.5px solid #7ab0d4", borderRadius: 24, padding: "44px 40px", boxShadow: "0 6px 28px rgba(10,95,168,0.13)", display: "flex", flexDirection: "column" }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#3a7aaa", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Mensuel</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
-              <span style={{ fontSize: 56, fontWeight: 700, color: "#0d2540", letterSpacing: "-0.02em" }}>59€</span>
-              <span style={{ fontSize: 17, color: "#3a7aaa" }}>/mois</span>
-            </div>
-            <p style={{ fontSize: 13, color: "#3a7aaa", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Résiliable à tout moment</p>
-            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support email sous 24h"].map((f) => (
-              <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#0d2540" }}>
-                <span style={{ color: "#0a5fa8", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
-              </div>
-            ))}
-            <Link href="/register?plan=monthly" style={{
-              display: "block", textAlign: "center", marginTop: "auto", paddingTop: 36, padding: "15px",
-              border: "2px solid #0d2540", borderRadius: 12, color: "#0d2540",
-              textDecoration: "none", fontSize: 16, fontWeight: 700,
-            }}>
-              Démarrer l'essai gratuit →
-            </Link>
-          </div>
-          <div className="pricing-card pricing-card-base" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 100%)", borderRadius: 24, padding: "44px 40px", position: "relative", boxShadow: "0 12px 48px rgba(30,58,95,0.4)", display: "flex", flexDirection: "column" }}>
-            <div className="pricing-badge" style={{
-              position: "absolute", top: -16, left: "50%", transform: "translateX(-50%)",
-              background: "linear-gradient(90deg, #1e7fc5, #38bdf8)", color: "#ffffff", borderRadius: 999,
-              padding: "6px 22px", fontSize: 12, fontWeight: 700,
-              fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap",
-              boxShadow: "0 4px 16px rgba(30,127,197,0.4)",
-            }}>✦ MEILLEURE OFFRE — économisez 25%</div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 20 }}>Annuel</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 4 }}>
-              <span style={{ fontSize: 56, fontWeight: 700, color: "#ffffff", letterSpacing: "-0.02em" }}>699€</span>
-              <span style={{ fontSize: 17, color: "#8aaac8" }}>/an</span>
-            </div>
-            <p style={{ fontSize: 14, color: "#7dd3fc", marginBottom: 6, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>Soit 58,25€/mois</p>
-            <p style={{ fontSize: 13, color: "#8aaac8", marginBottom: 36, fontFamily: "'JetBrains Mono', monospace" }}>Facturé annuellement · Résiliable</p>
-            {["Dictée vocale illimitée", "IA de dernière génération", "80+ corrections médicales SFR", "Historique 12h", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
-              <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 14, fontSize: 16, color: "#ffffff" }}>
-                <span style={{ color: "#7dd3fc", fontWeight: 700, fontSize: 17 }}>✓</span> {f}
-              </div>
-            ))}
-            <Link href="/register?plan=yearly" style={{
-              display: "block", textAlign: "center", marginTop: "auto", paddingTop: 36, padding: "15px",
-              background: "linear-gradient(90deg, #1e7fc5, #38bdf8)",
-              borderRadius: 12, color: "#ffffff",
-              textDecoration: "none", fontSize: 16, fontWeight: 700,
-              boxShadow: "0 4px 16px rgba(30,127,197,0.4)",
-            }}>
-              Démarrer l'essai gratuit →
-            </Link>
-          </div>
-        </div>
-        <p style={{ textAlign: "center", fontSize: 13, color: "#2a5070", fontFamily: "'JetBrains Mono', monospace", marginTop: 36 }}>
-          🔒 Paiement sécurisé par Stripe · Facture TVA disponible · Remboursement 14 jours
-        </p>
         </div>
       </section>
 
