@@ -9,7 +9,7 @@ export default function ConfidentialitePage() {
     <div style={s.page}>
       <nav style={s.nav}>
         <Link href="/" style={s.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#c45d4a" }}>Scribe</span>
         </Link>
       </nav>
       <div style={s.content}>
@@ -147,13 +147,13 @@ const privacyContent = `
 
 const s: Record<string, React.CSSProperties> = {
   page: {
-    background: "#07101e",
+    background: "#fbfaf7",
     minHeight: "100vh",
     fontFamily: "'Inter Tight', system-ui, sans-serif",
-    color: "#c8d8ea",
+    color: "#14303a",
   },
   nav: {
-    borderBottom: "1px solid rgba(56,189,248,0.1)",
+    borderBottom: "1px solid #dde8eb",
     padding: "0 24px",
     height: 64,
     display: "flex",
@@ -163,7 +163,7 @@ const s: Record<string, React.CSSProperties> = {
     fontFamily: "'Fraunces', Georgia, serif",
     fontSize: 22,
     fontStyle: "italic",
-    color: "#e2eaf5",
+    color: "#14303a",
     textDecoration: "none",
   },
   content: {
@@ -174,16 +174,16 @@ const s: Record<string, React.CSSProperties> = {
   h1: {
     fontSize: 32,
     fontWeight: 600,
-    color: "#e2eaf5",
+    color: "#14303a",
     marginBottom: 36,
   },
   body: {
     fontSize: 16,
     lineHeight: 1.8,
-    color: "#b0c4d8",
+    color: "#3c5a63",
   },
   link: {
-    color: "#38bdf8",
+    color: "#15627a",
     textDecoration: "none",
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 13,
