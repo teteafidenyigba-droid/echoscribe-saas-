@@ -344,8 +344,7 @@ export default function LandingPage() {
       <section className="section-pad" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "72px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, color: "#ffffff", marginBottom: 48, lineHeight: 1.2 }}>
-            3 points forts.<br />
-            <span style={{ color: "#7dd3fc", fontStyle: "italic", fontWeight: 400 }}>Zéro effort de votre côté.</span>
+            3 points forts.
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
             {[
