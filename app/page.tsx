@@ -124,7 +124,7 @@ export default function LandingPage() {
       <section id="specificite" style={{ background: "linear-gradient(180deg,#0e3c4c,#15627a)", padding: "60px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 40, alignItems: "center" }}>
           <div>
-            <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase" as const, color: "#7fd3c4", marginBottom: 16 }}>La spécificité EchoScribe</p>
+            <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase" as const, color: "#c45d4a", marginBottom: 16 }}>La spécificité EchoScribe</p>
             <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(24px,3vw,34px)", fontWeight: 600, color: "#fff", lineHeight: 1.1 }}>
               Il rédige le compte rendu — il ne se contente pas de transcrire.
             </h2>
@@ -139,7 +139,7 @@ export default function LandingPage() {
               "Clé en main : créez votre compte en 2 minutes, dictez immédiatement.",
             ].map((pt) => (
               <div key={pt} style={{ display: "flex", gap: 12, alignItems: "flex-start", fontSize: 15, color: "#cfe3ea" }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2, color: "#7fd3c4" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2, color: "#c45d4a" }}>
                   <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
                 <span dangerouslySetInnerHTML={{ __html: pt.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
@@ -198,7 +198,7 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
-            <div className="problem-card" style={{ background: "#edf6f5", border: "1.5px solid #7fd3c4", borderRadius: 20, padding: "38px 34px" }}>
+            <div className="problem-card" style={{ background: "#edf6f5", border: "1.5px solid #a8cfd6", borderRadius: 20, padding: "38px 34px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 26 }}>
                 <div style={{ width: 34, height: 34, borderRadius: 9, background: "#c8eee9", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>✓</div>
                 <span style={{ fontSize: 11, fontWeight: 700, color: "#0e3c4c", letterSpacing: ".12em" }}>AVEC ECHOSCRIBE</span>
@@ -262,7 +262,7 @@ export default function LandingPage() {
       {/* HOW IT WORKS */}
       <section style={{ background: "linear-gradient(140deg, #0e3c4c 0%, #15627a 100%)", padding: "88px 24px" }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase" as const, color: "#7fd3c4", marginBottom: 14 }}>COMMENT ÇA MARCHE</p>
+          <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase" as const, color: "#c45d4a", marginBottom: 14 }}>COMMENT ÇA MARCHE</p>
           <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 34, fontWeight: 600, color: "#fff", marginBottom: 14 }}>Trois gestes, et le compte rendu est prêt</h2>
           <p style={{ fontSize: 16.5, color: "rgba(255,255,255,.6)", marginBottom: 52 }}>Aussi simple que de parler à un collègue.</p>
           <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20, textAlign: "left" }}>
@@ -272,7 +272,7 @@ export default function LandingPage() {
               { n: "3", title: "Collez & validez", desc: "Relisez, validez et collez dans Doctolib, Weda, HelloDoc… Aucun diagnostic posé par l'IA." },
             ].map((s) => (
               <div key={s.n} style={{ background: "rgba(255,255,255,.07)", border: "1px solid rgba(127,211,196,.18)", borderRadius: 16, padding: "26px 24px" }}>
-                <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#15627a", border: "1px solid #7fd3c4", display: "grid", placeItems: "center", marginBottom: 16, fontFamily: "'Fraunces',serif", fontSize: 15, fontWeight: 600, color: "#fff" }}>{s.n}</div>
+                <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#c45d4a", border: "none", display: "grid", placeItems: "center", marginBottom: 16, fontFamily: "'Fraunces',serif", fontSize: 15, fontWeight: 600, color: "#fff" }}>{s.n}</div>
                 <h3 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, color: "#fff", marginBottom: 8, fontWeight: 600 }}>{s.title}</h3>
                 <p style={{ fontSize: 14.5, color: "rgba(255,255,255,.68)", lineHeight: 1.65 }}>{s.desc}</p>
               </div>
@@ -399,7 +399,7 @@ export default function LandingPage() {
                 fontSize: 17, fontWeight: 500, border: "1px solid rgba(255,255,255,.25)",
               }}>Se connecter</Link>
             </div>
-            <svg viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" style={{ display: "block", width: "100%", height: 34, color: "#7fd3c4", opacity: .4, position: "absolute", left: 0, bottom: 0 }}>
+            <svg viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" style={{ display: "block", width: "100%", height: 34, color: "#c45d4a", opacity: .3, position: "absolute", left: 0, bottom: 0 }}>
               <path d="M0 20 Q 30 20 45 20 T 90 20 105 6 120 34 135 20 q 20 0 60 0 15-24 30 8 15-20 30 12 q 20 0 240 0 15 -28 30 6 15 -18 30 12 q 25 0 480 0" stroke="currentColor" strokeWidth="1.6" fill="none" opacity=".9"/>
             </svg>
           </div>
