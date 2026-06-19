@@ -454,31 +454,31 @@ export default function LandingPage() {
       {/* FEATURES */}
       <section className="section-pad" style={{ background: "#d4e8f7", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 64 }}>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FONCTIONNALITÉS</p>
-            <h2 className="gradient-title" style={{ fontSize: 36, fontWeight: 700, marginBottom: 12 }}>Tout ce dont vous avez besoin</h2>
-            <p style={{ fontSize: 17, color: "#2a5070", maxWidth: 520, margin: "0 auto" }}>Conçu par et pour les radiologues et échographistes francophones.</p>
+          <div style={{ marginBottom: 64 }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>LES ATOUTS</p>
+            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 800, color: "#0f2440", marginBottom: 0 }}>Ce qui rend EchoScribe unique</h2>
           </div>
           <div className="features-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
             {[
-              { icon: "🎙", title: "Dictée vocale intelligente", desc: "Dictez naturellement. Correction automatique de la terminologie échographique : hyperéchogène, Wirsung, EU-TIRADS, vésiculaire…" },
-              { icon: "⚡", title: "Génération en 30 secondes", desc: "L'IA structure votre dictée en compte rendu complet INDICATION / RÉSULTATS / CONCLUSION / CAT en moins de 30 secondes." },
-              { icon: "📋", title: "Copie en un clic", desc: "Formatage riche (gras, structure). Collez directement dans Doctolib, Mediboard, Crossway ou Word." },
-              { icon: "🔒", title: "Sécurité & RGPD", desc: "Audio traité localement, jamais stocké. Données supprimées après 12h. Conforme RGPD et secret médical." },
-              { icon: "✦", title: "80+ corrections SFR", desc: "Base de données médicale spécialisée en échographie. Filtrage automatique des hésitations et instructions au patient." },
-              { icon: "📱", title: "Partout, sur tous vos écrans", desc: "Smartphone, tablette, ordinateur. Utilisez EchoScribe en salle d'examen, à votre bureau ou en déplacement." },
+              { icon: "📊", title: "Le compte rendu, pas juste la dictée", desc: "Là où les autres transcrivent, EchoScribe rédige : structure, terminologie, conclusion et conduite à tenir, dans votre style.", bg: "linear-gradient(135deg,#e0f0ff,#c0dcf5)" },
+              { icon: "🛡", title: "Données anonymes, en local", desc: "Aucune donnée identifiante n'est saisie ni transmise. La dictée reste sur votre poste ; effacement automatique après 12 h.", bg: "linear-gradient(135deg,#e0f0ff,#c0dcf5)" },
+              { icon: "✅", title: "Conforme SFR / HAS", desc: "Dictionnaire de 600+ termes échographiques, classifications EU-TIRADS, BI-RADS, O-RADS, IOTA, Bosniak. Aucune mesure inventée.", bg: "linear-gradient(135deg,#e0f0ff,#c0dcf5)" },
+              { icon: "→", title: "Zéro configuration", desc: "Un simple code d'accès. Pas de compte chez un fournisseur d'IA, pas de clé API, pas de carte bancaire à renseigner ailleurs.", bg: "linear-gradient(135deg,#e0f0ff,#c0dcf5)" },
+              { icon: "+", title: "Compatible tout matériel", desc: "Fonctionne avec n'importe quel échographe et n'importe quel logiciel métier, par simple copier-coller. Rien à remplacer.", bg: "linear-gradient(135deg,#e0f0ff,#c0dcf5)" },
+              { icon: "💡", title: "Conçu par un médecin échographiste", desc: "Pensé sur le terrain, pour le terrain. Le ton, la structure et les exigences viennent d'une vraie pratique d'imagerie.", bg: "linear-gradient(135deg,#e0f0ff,#c0dcf5)" },
             ].map((f, i) => (
               <div key={f.title} className="feature-card" style={{
-                background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 20,
-                padding: "32px 28px", boxShadow: "0 4px 20px rgba(10,95,168,0.10)",
+                background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 20,
+                padding: "32px 28px", boxShadow: "0 2px 12px rgba(10,95,168,0.07)",
               }}>
                 <div style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  width: 56, height: 56, borderRadius: 16, marginBottom: 20, fontSize: 26,
-                  background: ["linear-gradient(135deg,#e0f0ff,#c0dcf5)", "linear-gradient(135deg,#e8f5e0,#c8edc0)", "linear-gradient(135deg,#fff4e0,#ffe0b0)", "linear-gradient(135deg,#f0e0ff,#dcc0f0)", "linear-gradient(135deg,#e0f8ff,#b0e8f8)", "linear-gradient(135deg,#ffe0e8,#f8c0cc)"][i % 6],
+                  width: 48, height: 48, borderRadius: 14, marginBottom: 20, fontSize: 20,
+                  background: ["linear-gradient(135deg,#dbeafe,#bfdbfe)", "linear-gradient(135deg,#dbeafe,#bfdbfe)", "linear-gradient(135deg,#dbeafe,#bfdbfe)", "linear-gradient(135deg,#dbeafe,#bfdbfe)", "linear-gradient(135deg,#dbeafe,#bfdbfe)", "linear-gradient(135deg,#dbeafe,#bfdbfe)"][i],
+                  color: "#1e40af",
                 }}>{f.icon}</div>
-                <h3 style={{ fontSize: 19, color: "#0d2540", marginBottom: 10, fontWeight: 700 }}>{f.title}</h3>
-                <p style={{ fontSize: 15, lineHeight: 1.75, color: "#2a5070" }}>{f.desc}</p>
+                <h3 style={{ fontSize: 18, color: "#0d2540", marginBottom: 10, fontWeight: 700, lineHeight: 1.3 }}>{f.title}</h3>
+                <p style={{ fontSize: 15, lineHeight: 1.75, color: "#4a6a8a" }}>{f.desc}</p>
               </div>
             ))}
           </div>
