@@ -403,39 +403,35 @@ export default function LandingPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="comment" className="section-pad" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "96px 24px" }}>
-        <div style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>COMMENT ÇA MARCHE</p>
-          <h2 style={{ fontSize: 36, fontWeight: 700, color: "#ffffff", marginBottom: 16 }}>De la dictée au compte rendu en 4 étapes</h2>
-          <p style={{ fontSize: 17, color: "rgba(255,255,255,0.6)", marginBottom: 60 }}>Aussi simple que de parler à un collègue.</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <section id="comment" className="section-pad" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "64px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>COMMENT ÇA MARCHE</p>
+            <h2 style={{ fontSize: 32, fontWeight: 700, color: "#ffffff" }}>De la dictée au compte rendu en 4 étapes</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16 }}>
             {[
-              { n: "01", title: "Appuyez sur le micro", desc: "Dictez votre examen naturellement — y compris les instructions au patient. EchoScribe trie tout automatiquement.", icon: "🎙" },
-              { n: "02", title: "L'IA corrige en temps réel", desc: "Terminologie médicale corrigée, hésitations filtrées, type d'examen détecté (abdominal, pelvien, Doppler, thyroïde…).", icon: "⚡" },
-              { n: "03", title: "Le compte rendu se génère", desc: "En un clic, un compte rendu structuré et complet est rédigé en moins de 30 secondes.", icon: "✦" },
-              { n: "04", title: "Copiez, collez, signez", desc: "Collez dans votre logiciel, relisez rapidement et signez. Votre compte rendu est prêt.", icon: "✅" },
+              { n: "01", title: "Appuyez sur le micro", desc: "Dictez naturellement, instructions patient incluses.", icon: "🎙" },
+              { n: "02", title: "L'IA corrige", desc: "Terminologie corrigée, hésitations filtrées, type d'examen détecté.", icon: "⚡" },
+              { n: "03", title: "Le CR se génère", desc: "Compte rendu structuré complet en moins de 30 secondes.", icon: "✦" },
+              { n: "04", title: "Copiez et signez", desc: "Collez dans votre logiciel, relisez, signez.", icon: "✅" },
             ].map((s) => (
               <div key={s.n} className="how-step" style={{
-                display: "flex", gap: 24, alignItems: "flex-start",
                 background: "rgba(255,255,255,0.07)", border: "1px solid rgba(125,211,252,0.15)",
-                borderRadius: 16, padding: "26px 30px", textAlign: "left",
+                borderRadius: 16, padding: "24px 20px", textAlign: "center",
               }}>
-                <div style={{ textAlign: "center", flexShrink: 0 }}>
-                  <div style={{ fontSize: 24 }}>{s.icon}</div>
-                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#7dd3fc", fontWeight: 700, marginTop: 4 }}>{s.n}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 19, color: "#ffffff", fontWeight: 700, marginBottom: 6 }}>{s.title}</div>
-                  <div style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(255,255,255,0.68)" }}>{s.desc}</div>
-                </div>
+                <div style={{ fontSize: 28, marginBottom: 8 }}>{s.icon}</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#7dd3fc", fontWeight: 700, marginBottom: 10 }}>{s.n}</div>
+                <div style={{ fontSize: 16, color: "#ffffff", fontWeight: 700, marginBottom: 8 }}>{s.title}</div>
+                <div style={{ fontSize: 13, lineHeight: 1.6, color: "rgba(255,255,255,0.6)" }}>{s.desc}</div>
               </div>
             ))}
           </div>
-          <div style={{ marginTop: 52 }}>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
             <Link href="/register" style={{
-              display: "inline-block", padding: "17px 48px",
+              display: "inline-block", padding: "15px 44px",
               background: "#ffffff", borderRadius: 12,
-              color: "#1e3a5f", textDecoration: "none", fontSize: 18, fontWeight: 700,
+              color: "#1e3a5f", textDecoration: "none", fontSize: 17, fontWeight: 700,
               boxShadow: "0 6px 24px rgba(0,0,0,0.2)",
             }}>
               Essayer gratuitement pendant 7 jours →
@@ -445,23 +441,23 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="section-pad" style={{ background: "#eaf4fb", padding: "88px 24px" }}>
-        <div style={{ maxWidth: 780, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FAQ</p>
-            <h2 className="gradient-title" style={{ fontSize: 36, fontWeight: 700 }}>Questions fréquentes</h2>
+      <section className="section-pad" style={{ background: "#eaf4fb", padding: "64px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>FAQ</p>
+            <h2 className="gradient-title" style={{ fontSize: 32, fontWeight: 700 }}>Questions fréquentes</h2>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {[
-              { q: "Mes données audio sont-elles conservées ?", a: "Non. L'audio est traité localement dans votre navigateur et n'est jamais envoyé ni stocké sur nos serveurs. Votre confidentialité et le secret médical sont totalement préservés." },
-              { q: "EchoScribe est-il certifié dispositif médical ?", a: "EchoScribe est un outil d'aide à la rédaction. Le compte rendu généré doit être relu, validé et signé par le médecin responsable. Il ne remplace pas le jugement clinique du praticien." },
-              { q: "Compatible avec quel logiciel médical ?", a: "Le compte rendu est copié avec un formatage riche (HTML). Compatible avec Doctolib, Mediboard, Crossway, Word et LibreOffice." },
-              { q: "Puis-je résilier à tout moment ?", a: "Oui, sans engagement ni pénalité. La résiliation se fait en un clic depuis votre espace facturation. Vous conservez l'accès jusqu'à la fin de la période payée." },
-              { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits, sans carte de crédit requise. À la fin de la période, vous choisissez un plan ou votre accès est suspendu automatiquement." },
+              { q: "Mes données audio sont-elles conservées ?", a: "Non. L'audio est traité localement et n'est jamais envoyé ni stocké sur nos serveurs. Secret médical totalement préservé." },
+              { q: "EchoScribe est-il certifié dispositif médical ?", a: "C'est un outil d'aide à la rédaction. Le CR généré doit être relu, validé et signé par le médecin responsable." },
+              { q: "Compatible avec quel logiciel médical ?", a: "Formatage riche (HTML). Compatible avec Doctolib, Mediboard, Crossway, Word et LibreOffice." },
+              { q: "Puis-je résilier à tout moment ?", a: "Oui, sans engagement ni pénalité, en un clic depuis votre espace facturation." },
+              { q: "Comment fonctionne l'essai gratuit ?", a: "7 jours gratuits, sans carte de crédit. À la fin, vous choisissez un plan ou l'accès est suspendu automatiquement." },
             ].map((item, i) => (
-              <div key={i} className="faq-item faq-card" style={{ background: "#ffffff", border: "1px solid #7ab0d4", borderRadius: 14, padding: "24px 30px", boxShadow: "0 3px 14px rgba(10,95,168,0.1)" }}>
-                <div className="faq-q" style={{ fontSize: 17, color: "#0d2540", fontWeight: 700, marginBottom: 10 }}>{item.q}</div>
-                <div style={{ fontSize: 15, lineHeight: 1.75, color: "#2a5070" }}>{item.a}</div>
+              <div key={i} className="faq-item faq-card" style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 14, padding: "22px 26px", boxShadow: "0 2px 10px rgba(10,95,168,0.07)" }}>
+                <div className="faq-q" style={{ fontSize: 16, color: "#0d2540", fontWeight: 700, marginBottom: 8 }}>{item.q}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.7, color: "#2a5070" }}>{item.a}</div>
               </div>
             ))}
           </div>
