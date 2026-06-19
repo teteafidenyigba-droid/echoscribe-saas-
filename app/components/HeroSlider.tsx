@@ -115,7 +115,7 @@ export default function HeroSlider() {
         setCurrent((c) => (c + 1) % slides.length);
         setFading(false);
       }, 400);
-    }, 4500);
+    }, 7000);
     return () => clearInterval(timer);
   }, []);
 
