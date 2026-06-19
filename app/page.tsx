@@ -142,17 +142,29 @@ export default function LandingPage() {
       <HeroSlider />
 
       {/* BANDEAU SÉPARATEUR */}
-      <div style={{ background: "#7dd3fc", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "center", gap: 0, flexWrap: "nowrap", overflow: "hidden" }}>
-        {[
-          "CR structuré SFR/HAS",
-          "Vocabulaire écho natif",
-          "Prêt à signer en 30s",
-          "Temps gagné = temps patient",
-        ].map((item, i) => (
-          <span key={i} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, color: "#0f2440", letterSpacing: "0.10em", textTransform: "uppercase", whiteSpace: "nowrap", padding: "0 24px", borderRight: i < 3 ? "1px solid rgba(15,36,64,0.25)" : "none" }}>
-            {item}
-          </span>
-        ))}
+      <div style={{ background: "#7dd3fc", padding: "16px 48px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 0 }}>
+          {[
+            "Compte rendu structuré SFR / HAS",
+            "Vocabulaire échographique natif",
+            "Prêt à signer en 30 secondes",
+            "Le temps gagné, c'est du temps patient",
+          ].map((item, i) => (
+            <span key={i} style={{
+              fontFamily: "'EB Garamond', Georgia, serif",
+              fontSize: 16,
+              fontStyle: "italic",
+              fontWeight: 500,
+              color: "#0a2240",
+              whiteSpace: "nowrap",
+              padding: "0 28px",
+              borderRight: i < 3 ? "1.5px solid rgba(10,34,64,0.22)" : "none",
+              lineHeight: 1,
+            }}>
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* SPÉCIALITÉS CIBLES */}
