@@ -188,12 +188,12 @@ export default function HeroSlider() {
 
           <div className="hero-btns-row">
             <Link href="/register" style={{
-              background: "linear-gradient(135deg,#ffffff,#e8f4ff)", borderRadius: 12, color: "#0a4a8a",
+              background: "#c45d4a", borderRadius: 12, color: "#fff",
               textDecoration: "none", fontSize: 16, padding: "14px 32px",
-              display: "inline-block", fontWeight: 800,
-              boxShadow: "0 6px 28px rgba(0,0,0,0.28)", border: "2px solid rgba(255,255,255,0.8)",
+              display: "inline-block", fontWeight: 700,
+              boxShadow: "0 6px 24px rgba(196,93,74,0.45)", border: "none",
             }}>
-              Démarrer gratuitement →
+              Essai gratuit 7 jours
             </Link>
             <a href="#comment" style={{
               background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.25)",
