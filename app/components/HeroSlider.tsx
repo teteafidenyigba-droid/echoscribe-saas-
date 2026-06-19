@@ -124,7 +124,7 @@ export default function HeroSlider() {
   return (
     <section style={{
       position: "relative", overflow: "hidden",
-      padding: "70px 24px 60px",
+      padding: "70px 48px 60px",
       backgroundImage: "url('/hero-bg.jpg')",
       backgroundSize: "cover",
       backgroundPosition: "center 30%",
@@ -136,9 +136,9 @@ export default function HeroSlider() {
       <style>{`
         .hero-inner {
           position: relative; z-index: 2;
-          max-width: 960px; margin: 0 auto;
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 40px; align-items: start; padding: 60px 0 52px;
+          max-width: 1280px; margin: 0 auto;
+          display: grid; grid-template-columns: 1.1fr 0.9fr;
+          gap: 64px; align-items: start; padding: 60px 0 52px;
           min-height: 480px;
         }
         .hero-thumbs { display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
