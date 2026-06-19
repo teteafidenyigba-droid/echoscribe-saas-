@@ -138,7 +138,8 @@ export default function HeroSlider() {
           position: relative; z-index: 2;
           max-width: 1140px; margin: 0 auto;
           display: grid; grid-template-columns: 1.05fr .95fr;
-          gap: 48px; align-items: center; padding: 72px 0 60px;
+          gap: 48px; align-items: start; padding: 72px 0 60px;
+          min-height: 520px;
         }
         .hero-thumbs { display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
         .hero-demo-card { display: block; }
@@ -155,7 +156,7 @@ export default function HeroSlider() {
 
       <div className="hero-inner">
         {/* LEFT — Slider text */}
-        <div style={{ opacity: fading ? 0 : 1, transition: "opacity 0.35s ease" }}>
+        <div style={{ opacity: fading ? 0 : 1, transition: "opacity 0.35s ease", minHeight: 420 }}>
 
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8,
