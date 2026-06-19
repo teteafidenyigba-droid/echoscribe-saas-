@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroSlider from "./components/HeroSlider";
 
 export default function LandingPage() {
   return (
@@ -82,80 +83,7 @@ export default function LandingPage() {
 
       <div id="top" />
 
-      {/* HERO */}
-      <section style={{
-        background: "radial-gradient(900px 520px at 88% -8%, #dcebef 0%, transparent 55%), radial-gradient(700px 480px at -5% 12%, #f3ece2 0%, transparent 55%), #fbfaf7",
-        padding: "0 24px",
-      }}>
-        <div className="hero-grid" style={{ maxWidth: 1140, margin: "0 auto", display: "grid", gridTemplateColumns: "1.05fr .95fr", gap: 48, alignItems: "center", padding: "72px 0 60px" }}>
-          {/* LEFT */}
-          <div>
-            <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 18 }}>
-              Dictée médicale pour l'échographie
-            </p>
-            <h1 className="hero-h1" style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: "clamp(38px,5vw,58px)", fontWeight: 600, lineHeight: 1.06, letterSpacing: "-.01em", color: "#14303a" }}>
-              Vous dictez.<br />
-              Le compte rendu <em style={{ fontStyle: "italic", color: "#15627a" }}>s'écrit.</em>
-            </h1>
-            <p style={{ fontSize: "clamp(16px,2vw,19px)", color: "#3c4d53", marginTop: 20, maxWidth: "34ch", lineHeight: 1.6 }}>
-              EchoScribe transforme votre voix, pendant l'examen, en compte rendu structuré conforme aux recommandations SFR / HAS — prêt à coller dans votre logiciel.
-            </p>
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" as const, marginTop: 30 }}>
-              <Link className="btn-clay" href="/register" style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                background: "#c45d4a", color: "#fff", textDecoration: "none",
-                padding: "13px 24px", borderRadius: 11, fontWeight: 600, fontSize: 15,
-                boxShadow: "0 6px 16px rgba(196,93,74,.28)",
-              }}>Commencer — 7 jours gratuits</Link>
-              <a href="#specificite" style={{
-                display: "inline-flex", alignItems: "center",
-                background: "transparent", color: "#14303a", textDecoration: "none",
-                padding: "13px 20px", borderRadius: 11, fontWeight: 600, fontSize: 15,
-                border: "1px solid #dde5e7",
-              }}>Découvrir la spécificité</a>
-            </div>
-            <div style={{ marginTop: 22, fontSize: 14, color: "#5b6b71", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" as const }}>
-              <span><strong style={{ color: "#14303a" }}>− 45 min</strong> par jour</span>
-              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#c4ced1", display: "inline-block" }} />
-              <span><strong style={{ color: "#14303a" }}>&lt; 60 s</strong> par compte rendu</span>
-              <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#c4ced1", display: "inline-block" }} />
-              <span>Sans engagement · Sans carte requise</span>
-            </div>
-          </div>
-
-          {/* RIGHT — Demo card */}
-          <div className="hero-demo" style={{ background: "#fff", border: "1px solid #dde5e7", borderRadius: 18, boxShadow: "0 1px 2px rgba(14,48,58,.05),0 14px 40px rgba(14,48,58,.07)", overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "11px 16px", borderBottom: "1px solid #dde5e7", background: "#f1f6f7" }}>
-              {[1,2,3].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#d7dee0", display: "inline-block" }} />)}
-              <span style={{ marginLeft: 8, fontSize: 12.5, color: "#5b6b71", fontWeight: 500 }}>EchoScribe — en direct</span>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-              <div style={{ padding: 18, borderRight: "1px solid #dde5e7", background: "#fcfdfd" }}>
-                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 11 }}>Ce que vous dictez</p>
-                <p style={{ fontSize: 13.5, color: "#4a5a60", lineHeight: 1.7 }}>
-                  «{" "}
-                  <span className="noise-text struck">Bonjour, comment allez-vous ? — Ça va, un peu mal au ventre.</span>{" "}
-                  <span className="noise-text struck">Quels médicaments prenez-vous ? — Du paracétamol et un comprimé pour la tension.</span>{" "}
-                  <span className="noise-text struck">Allongez-vous, inspirez…</span>{" "}
-                  Foie de taille normale, contours réguliers, sans lésion. Vésicule alithiasique. Reins sans anomalie.{" "}
-                  <span className="noise-text struck">Vous pouvez vous rhabiller, c'est terminé.</span>{" "}»
-                </p>
-              </div>
-              <div style={{ padding: 18 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 11 }}>Le compte rendu généré</p>
-                <div style={{ fontSize: 13, lineHeight: 1.65 }}>
-                  <span style={{ fontWeight: 700, color: "#15627a", display: "block", marginBottom: 4, fontSize: 12, letterSpacing: ".02em" }}>RÉSULTATS</span>
-                  <strong style={{ color: "#0e3c4c" }}>Foie :</strong> de taille normale, aux contours réguliers, sans lésion focale décelable.<br />
-                  <strong style={{ color: "#0e3c4c" }}>Vésicule biliaire :</strong> alithiasique, à parois fines.<br />
-                  <strong style={{ color: "#0e3c4c" }}>Reins :</strong> sans anomalie décelable.
-                  <span style={{ fontWeight: 700, color: "#15627a", display: "block", margin: "10px 0 4px", fontSize: 12, letterSpacing: ".02em" }}>CONCLUSION</span>
-                  <ul style={{ margin: 0, paddingLeft: 16 }}><li>Échographie abdominale sans particularité.</li></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
 
       {/* STATS */}
       <section style={{ background: "#fff", borderTop: "1px solid #dde5e7", borderBottom: "1px solid #dde5e7", padding: "40px 24px" }}>
