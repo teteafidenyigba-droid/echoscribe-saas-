@@ -175,7 +175,7 @@ export default function LandingPage() {
                 badge: "Foie · Reins · Vésicule",
               },
               {
-                icon: "🩻",
+                icon: "🔊",
                 title: "Échographiste",
                 color: "#a78bfa",
                 bg: "#f5f3ff",

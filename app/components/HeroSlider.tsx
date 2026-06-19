@@ -33,7 +33,7 @@ const slides = [
     label: "DICTÉE MÉDICALE POUR L'ÉCHOGRAPHISTE",
     h1: ["Vous explorez.", "Le compte rendu s'écrit."],
     desc: "EchoScribe capte votre dictée pendant l'examen, filtre les échanges patient, et génère un compte rendu structuré conforme aux recommandations — en moins de 30 secondes.",
-    icon: "🩻",
+    icon: "🔊",
     badge: "Abdominal · Pelvien · Obstétrique",
     color: "#a78bfa",
     thumbLabel: "Échographie",
