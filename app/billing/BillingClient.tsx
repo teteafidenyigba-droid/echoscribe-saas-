@@ -208,7 +208,7 @@ const s: Record<string, React.CSSProperties> = {
   page: {
     background: "#07101e",
     minHeight: "100vh",
-    fontFamily: "'EB Garamond', Georgia, serif",
+    fontFamily: "'Inter Tight', system-ui, sans-serif",
     color: "#c8d8ea",
   },
   nav: {
@@ -225,7 +225,7 @@ const s: Record<string, React.CSSProperties> = {
     height: 64,
   },
   logo: {
-    fontFamily: "'EB Garamond', serif",
+    fontFamily: "'Fraunces', Georgia, serif",
     fontSize: 22,
     fontStyle: "italic",
     color: "#e2eaf5",
@@ -352,7 +352,7 @@ const s: Record<string, React.CSSProperties> = {
     borderRadius: 10,
     color: "#7dd3fc",
     fontSize: 16,
-    fontFamily: "'EB Garamond', serif",
+    fontFamily: "'Fraunces', Georgia, serif",
     cursor: "pointer",
   },
   secondaryBtn: {

@@ -38,7 +38,7 @@ export default function AppClient({ user }: Props) {
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{
-            fontFamily: "'EB Garamond', serif",
+            fontFamily: "'Fraunces', Georgia, serif",
             fontSize: 28,
             fontStyle: "italic",
             color: "#0d2540",

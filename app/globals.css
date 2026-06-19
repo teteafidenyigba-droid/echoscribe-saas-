@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
-
 :root {
   --bg: #07101e;
   --accent: #38bdf8;
@@ -16,7 +14,14 @@
 body {
   background: #07101e;
   color: #c8d8ea;
-  font-family: 'EB Garamond', Georgia, serif;
+  font-family: 'Inter Tight', system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
 * {

@@ -3,7 +3,7 @@ import HeroSlider from "./components/HeroSlider";
 
 export default function LandingPage() {
   return (
-    <div style={{ background: "#b8d4ef", minHeight: "100vh", color: "#0d2540", fontFamily: "'EB Garamond', Georgia, serif" }}>
+    <div style={{ background: "#b8d4ef", minHeight: "100vh", color: "#0d2540", fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
       <style>{`
         @media (max-width: 768px) {
           /* Nav */
@@ -110,7 +110,7 @@ export default function LandingPage() {
         height: 70, boxShadow: "0 1px 16px rgba(13,37,64,0.18)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span className="logo-text" style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#0d2540", letterSpacing: "-0.01em" }}>
+          <span className="logo-text" style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 28, fontStyle: "italic", color: "#0d2540", letterSpacing: "-0.01em" }}>
             Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
           </span>
           <span style={{
@@ -172,7 +172,7 @@ export default function LandingPage() {
             { n: "7 jours", label: "Essai gratuit", sub: "sans carte bancaire" },
           ].map((s, i) => (
             <div key={s.n} className="stat-item" style={{ padding: "12px 16px", borderRight: i < 3 ? "1px solid #e2eaf2" : "none" }}>
-              <div className="stat-num" style={{ fontSize: 40, fontWeight: 700, color: "#0a5fa8", fontFamily: "'EB Garamond', serif", lineHeight: 1.1 }}>{s.n}</div>
+              <div className="stat-num" style={{ fontSize: 40, fontWeight: 700, color: "#0a5fa8", fontFamily: "'Fraunces', Georgia, serif", lineHeight: 1.1 }}>{s.n}</div>
               <div style={{ fontSize: 14, color: "#0d2540", fontWeight: 700, marginTop: 6 }}>{s.label}</div>
               <div style={{ fontSize: 11, color: "#3a7aaa", fontFamily: "'JetBrains Mono', monospace", marginTop: 3 }}>{s.sub}</div>
             </div>
@@ -463,7 +463,7 @@ export default function LandingPage() {
         fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 2.2,
       }}>
         <div style={{ marginBottom: 20 }}>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 24, fontStyle: "italic", color: "#e2eaf2" }}>
+          <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontStyle: "italic", color: "#e2eaf2" }}>
             Echo<span style={{ fontStyle: "normal", color: "#1e7fc5" }}>Scribe</span>
           </span>
         </div>

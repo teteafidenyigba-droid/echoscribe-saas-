@@ -14,7 +14,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
-    fontFamily: "'EB Garamond', Georgia, serif",
+    fontFamily: "'Inter Tight', system-ui, sans-serif",
   },
   card: {
     background: "rgba(255,255,255,0.03)",
@@ -26,7 +26,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   logo: {
     display: "block",
-    fontFamily: "'EB Garamond', serif",
+    fontFamily: "'Fraunces', Georgia, serif",
     fontSize: 24,
     fontStyle: "italic",
     color: "#e2eaf5",
@@ -80,7 +80,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 10,
     color: "#7dd3fc",
     fontSize: 17,
-    fontFamily: "'EB Garamond', serif",
+    fontFamily: "'Fraunces', Georgia, serif",
     cursor: "pointer",
     marginTop: 4,
   },
