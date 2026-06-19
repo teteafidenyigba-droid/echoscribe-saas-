@@ -53,7 +53,7 @@ export default function AppClient({ user }: Props) {
             fontSize: 9,
             letterSpacing: "0.16em",
             textTransform: "uppercase" as const,
-            color: "#7dd3fc",
+            color: "#ffffff",
             fontFamily: "'JetBrains Mono', monospace",
           }}>IA v5</span>
         </div>
@@ -77,7 +77,7 @@ export default function AppClient({ user }: Props) {
             color: "#ffffff",
             textDecoration: "none",
             padding: "7px 16px",
-            background: "linear-gradient(135deg, #1e3a5f, #1e5a8a)",
+            background: "#c45d4a",
             border: "none",
             borderRadius: 8,
             whiteSpace: "nowrap" as const,

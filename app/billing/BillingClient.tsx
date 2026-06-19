@@ -167,7 +167,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}
-                  style={{ ...s.primaryBtn, background: "#38bdf8" }}
+                  style={{ ...s.primaryBtn, background: "#c45d4a" }}
                 >
                   {loading === "yearly" ? "Redirection…" : "Commencer l'essai →"}
                 </button>
@@ -187,7 +187,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               style={{
                 display: "inline-block",
                 padding: "14px 32px",
-                background: "#38bdf8",
+                background: "#c45d4a",
                 border: "none",
                 borderRadius: 10,
                 color: "#ffffff",
@@ -353,7 +353,7 @@ const s: Record<string, React.CSSProperties> = {
   primaryBtn: {
     width: "100%",
     padding: "13px",
-    background: "#38bdf8",
+    background: "#c45d4a",
     border: "none",
     borderRadius: 10,
     color: "#ffffff",

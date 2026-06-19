@@ -96,9 +96,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   btn: {
     width: "100%", padding: "14px",
-    background: "linear-gradient(90deg,#0c2840,#0e3352)",
-    border: "1px solid rgba(56,189,248,0.45)", borderRadius: 10,
-    color: "#7dd3fc", fontSize: 17, fontFamily: "'Fraunces', Georgia, serif",
+    background: "#c45d4a",
+    border: "none", borderRadius: 10,
+    color: "#ffffff", fontSize: 17, fontFamily: "'Fraunces', Georgia, serif",
     cursor: "pointer", marginTop: 4,
   },
   footerText: { textAlign: "center", fontSize: 14, color: "#c8d8ea", marginTop: 20, fontFamily: "'JetBrains Mono', monospace" },
