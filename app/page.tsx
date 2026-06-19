@@ -148,7 +148,7 @@ export default function LandingPage() {
             "Compte rendu structuré SFR / HAS",
             "Vocabulaire échographique natif",
             "Prêt à signer en 30 secondes",
-            "Le temps gagné, c'est du temps patient",
+            "Le temps gagné, c'est du temps dédié au patient",
           ].map((item, i) => (
             <span key={i} style={{
               fontFamily: "'EB Garamond', Georgia, serif",
