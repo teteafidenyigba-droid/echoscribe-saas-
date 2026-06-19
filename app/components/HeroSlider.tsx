@@ -136,10 +136,10 @@ export default function HeroSlider() {
       <style>{`
         .hero-inner {
           position: relative; z-index: 2;
-          max-width: 1140px; margin: 0 auto;
-          display: grid; grid-template-columns: 1.05fr .95fr;
-          gap: 48px; align-items: start; padding: 72px 0 60px;
-          min-height: 520px;
+          max-width: 960px; margin: 0 auto;
+          display: grid; grid-template-columns: 1fr 1fr;
+          gap: 40px; align-items: start; padding: 60px 0 52px;
+          min-height: 480px;
         }
         .hero-thumbs { display: flex; gap: 10px; margin-top: 28px; flex-wrap: wrap; }
         .hero-demo-card { display: block; }
@@ -238,7 +238,7 @@ export default function HeroSlider() {
               {/* Dictation */}
               <div style={{ padding: "16px 18px", borderRight: "1px solid #dde5e7", background: "#fcfdfd" }}>
                 <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 10 }}>① Ce que vous dictez</p>
-                <p style={{ fontSize: 12.5, color: "#4a5a60", lineHeight: 1.75 }}>
+                <p style={{ fontSize: 14, color: "#4a5a60", lineHeight: 1.75 }}>
                   «{" "}
                   {slide.dictation.map((seg, i) =>
                     seg.noise
@@ -251,7 +251,7 @@ export default function HeroSlider() {
               {/* Compte rendu */}
               <div style={{ padding: "16px 18px" }}>
                 <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase" as const, color: "#1c7f9e", marginBottom: 10 }}>② Le compte rendu généré</p>
-                <div style={{ fontSize: 12.5, lineHeight: 1.6 }}>
+                <div style={{ fontSize: 14, lineHeight: 1.6 }}>
                   {slide.cr.map((ln, i) =>
                     "sec" in ln ? (
                       <span key={i} style={{ fontWeight: 700, color: slide.color, display: "block", margin: i === 0 ? "0 0 3px" : "8px 0 3px", fontSize: 11, letterSpacing: ".02em" }}>{ln.sec}</span>
