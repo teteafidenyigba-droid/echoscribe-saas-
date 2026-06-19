@@ -6,9 +6,9 @@ import Link from "next/link";
 const slides = [
   {
     specialty: "Radiologie · Échographie abdominale",
-    headline: "Radiologues,",
-    subline: "votre compte rendu en 30 secondes.",
-    desc: "Dictez votre échographie abdominale. EchoScribe structure automatiquement INDICATION, RÉSULTATS et CONCLUSION — conforme SFR, prêt à signer.",
+    label: "DICTÉE MÉDICALE POUR LA RADIOLOGIE",
+    h1: ["Vous dictez.", "Le compte rendu s'écrit."],
+    desc: "EchoScribe transforme votre voix, pendant l'examen, en compte rendu structuré conforme aux recommandations SFR / HAS — prêt à coller dans votre logiciel.",
     icon: "🫁",
     badge: "Foie · Reins · Vésicule · Rate",
     color: "#38bdf8",
@@ -30,9 +30,9 @@ const slides = [
   },
   {
     specialty: "Gynécologie · Échographie pelvienne",
-    headline: "Gynécologues,",
-    subline: "dictez, EchoScribe rédige.",
-    desc: "Examen pelvien, obstétrique, suivi de grossesse — EchoScribe reconnaît le contexte et génère un compte rendu structuré en moins de 30 secondes.",
+    label: "DICTÉE MÉDICALE POUR LA GYNÉCOLOGIE",
+    h1: ["Vous examinez.", "Le compte rendu s'écrit."],
+    desc: "EchoScribe capte votre dictée en salle, filtre les échanges patient, et génère un compte rendu pelvien structuré conforme HAS — en moins de 30 secondes.",
     icon: "🩺",
     badge: "Utérus · Ovaires · Obstétrique",
     color: "#f472b6",
@@ -54,9 +54,9 @@ const slides = [
   },
   {
     specialty: "Cardiologie · Échographie cardiaque",
-    headline: "Cardiologues,",
-    subline: "fini la saisie manuelle.",
-    desc: "Doppler, ETT, ETO — EchoScribe comprend le vocabulaire cardiologique et formate votre compte rendu en temps réel, sans frappe.",
+    label: "DICTÉE MÉDICALE POUR LA CARDIOLOGIE",
+    h1: ["Vous écoutez le cœur.", "Le compte rendu s'écrit."],
+    desc: "EchoScribe comprend le vocabulaire ETT / Doppler et structure votre compte rendu cardiologique en temps réel — FEVG, cinétique, valves — sans une frappe.",
     icon: "❤️",
     badge: "ETT · Doppler · Fraction d'éjection",
     color: "#f87171",
@@ -79,9 +79,9 @@ const slides = [
   },
   {
     specialty: "Endocrinologie · Échographie thyroïdienne",
-    headline: "Échographistes,",
-    subline: "votre temps vaut plus que ça.",
-    desc: "Thyroïde, parathyroïdes, nodules EU-TIRADS — EchoScribe maîtrise la terminologie et génère un compte rendu conforme en 30 secondes.",
+    label: "DICTÉE MÉDICALE POUR L'ENDOCRINOLOGIE",
+    h1: ["Vous explorez.", "Le compte rendu s'écrit."],
+    desc: "Nodules, EU-TIRADS, parathyroïdes — EchoScribe maîtrise la terminologie thyroïdienne et génère un compte rendu conforme en moins de 30 secondes.",
     icon: "🔬",
     badge: "Thyroïde · EU-TIRADS · Nodules",
     color: "#4ade80",
@@ -167,25 +167,22 @@ export default function HeroSlider() {
         {/* LEFT — Text */}
         <div style={{ opacity: fading ? 0 : 1, transition: "opacity 0.4s ease" }}>
 
-          <div className="hero-badge" style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(125,211,252,0.12)", border: "1px solid rgba(125,211,252,0.3)",
-            borderRadius: 999, padding: "7px 18px", fontSize: 11,
-            fontFamily: "'JetBrains Mono', monospace", color: "#7dd3fc",
-            letterSpacing: "0.08em", marginBottom: 28,
+          <p style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: ".16em",
+            textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)",
+            fontFamily: "'JetBrains Mono', monospace", marginBottom: 20,
           }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", boxShadow: "0 0 10px #4ade80", display: "inline-block" }} />
-            {slide.specialty}
-          </div>
+            {slide.label}
+          </p>
 
-          <h1 style={{ fontSize: "clamp(32px, 5vw, 58px)", fontWeight: 700, lineHeight: 1.1, color: "#ffffff", marginBottom: 18, letterSpacing: "-0.02em" }}>
-            {slide.headline}<br />
-            <span style={{ background: `linear-gradient(90deg, ${slide.color}, #a5f3fc)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-              {slide.subline}
-            </span>
+          <h1 style={{ fontSize: "clamp(32px, 4.5vw, 54px)", fontWeight: 800, lineHeight: 1.08, color: "#ffffff", marginBottom: 22, letterSpacing: "-0.02em" }}>
+            {slide.h1[0]}<br />
+            <em style={{ fontStyle: "italic", fontWeight: 800, color: slide.color }}>
+              {slide.h1[1]}
+            </em>
           </h1>
 
-          <p style={{ fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.75, color: "rgba(255,255,255,0.78)", marginBottom: 32, maxWidth: 500 }}>
+          <p style={{ fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.75, color: "rgba(255,255,255,0.72)", marginBottom: 32, maxWidth: 460 }}>
             {slide.desc}
           </p>
 
