@@ -13,7 +13,7 @@ function LegalPage({ title, content }: { title: string; content: string }) {
     <div style={s.page}>
       <nav style={s.nav}>
         <Link href="/" style={s.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#c45d4a" }}>Scribe</span>
+          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
         </Link>
       </nav>
       <div style={s.content}>
@@ -92,13 +92,13 @@ const content = `
 
 const s: Record<string, React.CSSProperties> = {
   page: {
-    background: "#fbfaf7",
+    background: "#07101e",
     minHeight: "100vh",
     fontFamily: "'Inter Tight', system-ui, sans-serif",
-    color: "#14303a",
+    color: "#e2eaf5",
   },
   nav: {
-    borderBottom: "1px solid #dde8eb",
+    borderBottom: "1px solid rgba(56,189,248,0.15)",
     padding: "0 24px",
     height: 64,
     display: "flex",
@@ -108,7 +108,7 @@ const s: Record<string, React.CSSProperties> = {
     fontFamily: "'Fraunces', Georgia, serif",
     fontSize: 22,
     fontStyle: "italic",
-    color: "#14303a",
+    color: "#e2eaf5",
     textDecoration: "none",
   },
   content: {
@@ -119,16 +119,16 @@ const s: Record<string, React.CSSProperties> = {
   h1: {
     fontSize: 32,
     fontWeight: 600,
-    color: "#14303a",
+    color: "#e2eaf5",
     marginBottom: 36,
   },
   body: {
     fontSize: 16,
     lineHeight: 1.8,
-    color: "#3c5a63",
+    color: "#b0c4d8",
   },
   link: {
-    color: "#15627a",
+    color: "#38bdf8",
     textDecoration: "none",
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 13,

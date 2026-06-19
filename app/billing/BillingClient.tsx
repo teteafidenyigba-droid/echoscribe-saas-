@@ -65,7 +65,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
       {/* NAV */}
       <nav style={s.nav}>
         <Link href="/" style={s.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#c45d4a" }}>Scribe</span>
+          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
         </Link>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span style={s.userEmail}>{user.email}</span>
@@ -74,7 +74,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               ← Application
             </Link>
           )}
-          <button onClick={handleLogout} style={{ ...s.navBtn, background: "transparent", color: "#15627a", cursor: "pointer", border: "1px solid #c8dce3" }}>
+          <button onClick={handleLogout} style={{ ...s.navBtn, background: "transparent", color: "#38bdf8", cursor: "pointer", border: "1px solid rgba(56,189,248,0.18)" }}>
             Déconnexion
           </button>
         </div>
@@ -108,9 +108,9 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               <span
                 style={{
                   ...s.badge,
-                  background: isActive ? "rgba(21,98,122,0.10)" : "rgba(196,93,74,0.10)",
-                  border: `1px solid ${isActive ? "rgba(21,98,122,0.35)" : "rgba(196,93,74,0.35)"}`,
-                  color: isActive ? "#15627a" : "#c45d4a",
+                  background: isActive ? "rgba(56,189,248,0.08)" : "rgba(56,189,248,0.10)",
+                  border: `1px solid ${isActive ? "rgba(21,98,122,0.35)" : "rgba(56,189,248,0.35)"}`,
+                  color: isActive ? "#38bdf8" : "#38bdf8",
                 }}
               >
                 {isTrialing ? "⏳ Essai en cours" : isActive ? "✓ Actif" : subscription.status === "canceled" ? "Annulé" : subscription.status}
@@ -146,7 +146,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               <div style={s.planCard}>
                 <div style={s.planName}>Mensuel</div>
                 <div style={s.planPrice}>
-                  59€ <span style={{ fontSize: 16, color: "#8aa0a6" }}>/mois</span>
+                  59€ <span style={{ fontSize: 16, color: "#4a7a96" }}>/mois</span>
                 </div>
                 <p style={s.planDesc}>7 jours d'essai gratuit inclus</p>
                 <button
@@ -159,15 +159,15 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               </div>
 
               <div style={{ ...s.planCard, borderColor: "rgba(196,93,74,0.4)", background: "rgba(196,93,74,0.03)" }}>
-                <div style={{ ...s.planName, color: "#c45d4a" }}>Annuel · <span style={{ color: "#15627a" }}>-25%</span></div>
+                <div style={{ ...s.planName, color: "#38bdf8" }}>Annuel · <span style={{ color: "#38bdf8" }}>-25%</span></div>
                 <div style={s.planPrice}>
-                  699€ <span style={{ fontSize: 16, color: "#8aa0a6" }}>/an</span>
+                  699€ <span style={{ fontSize: 16, color: "#4a7a96" }}>/an</span>
                 </div>
-                <p style={{ ...s.planDesc, color: "#c45d4a" }}>Soit 58€/mois · 7 jours d'essai</p>
+                <p style={{ ...s.planDesc, color: "#38bdf8" }}>Soit 58€/mois · 7 jours d'essai</p>
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}
-                  style={{ ...s.primaryBtn, background: "#c45d4a" }}
+                  style={{ ...s.primaryBtn, background: "#38bdf8" }}
                 >
                   {loading === "yearly" ? "Redirection…" : "Commencer l'essai →"}
                 </button>
@@ -187,7 +187,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               style={{
                 display: "inline-block",
                 padding: "14px 32px",
-                background: "#15627a",
+                background: "#38bdf8",
                 border: "none",
                 borderRadius: 10,
                 color: "#ffffff",
@@ -208,10 +208,10 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
 
 const s: Record<string, React.CSSProperties> = {
   page: {
-    background: "#fbfaf7",
+    background: "#07101e",
     minHeight: "100vh",
     fontFamily: "'Inter Tight', system-ui, sans-serif",
-    color: "#14303a",
+    color: "#e2eaf5",
   },
   nav: {
     position: "sticky",
@@ -219,7 +219,7 @@ const s: Record<string, React.CSSProperties> = {
     zIndex: 50,
     background: "rgba(251,250,247,0.95)",
     backdropFilter: "blur(20px)",
-    borderBottom: "1px solid #dde8eb",
+    borderBottom: "1px solid rgba(56,189,248,0.15)",
     padding: "0 24px",
     display: "flex",
     alignItems: "center",
@@ -230,19 +230,19 @@ const s: Record<string, React.CSSProperties> = {
     fontFamily: "'Fraunces', Georgia, serif",
     fontSize: 22,
     fontStyle: "italic",
-    color: "#14303a",
+    color: "#e2eaf5",
     textDecoration: "none",
   },
   userEmail: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
-    color: "#5b7a84",
+    color: "#4a7a96",
   },
   navBtn: {
-    background: "#f4f8f9",
-    border: "1px solid #c8dce3",
+    background: "rgba(0,0,0,0.35)",
+    border: "1px solid rgba(56,189,248,0.18)",
     borderRadius: 8,
-    color: "#15627a",
+    color: "#38bdf8",
     textDecoration: "none",
     fontSize: 13,
     padding: "7px 14px",
@@ -256,51 +256,51 @@ const s: Record<string, React.CSSProperties> = {
   h1: {
     fontSize: 32,
     fontWeight: 600,
-    color: "#14303a",
+    color: "#e2eaf5",
     marginBottom: 28,
     fontFamily: "'Fraunces', Georgia, serif",
   },
   h2: {
     fontSize: 22,
     fontWeight: 600,
-    color: "#14303a",
+    color: "#e2eaf5",
     margin: "36px 0 20px",
     fontFamily: "'Fraunces', Georgia, serif",
   },
   successBox: {
-    background: "rgba(21,98,122,0.07)",
-    border: "1px solid rgba(21,98,122,0.3)",
+    background: "rgba(56,189,248,0.07)",
+    border: "1px solid rgba(56,189,248,0.3)",
     borderRadius: 10,
     padding: "14px 18px",
-    color: "#15627a",
+    color: "#38bdf8",
     fontSize: 15,
     fontFamily: "'JetBrains Mono', monospace",
     marginBottom: 20,
   },
   infoBox: {
-    background: "rgba(196,93,74,0.07)",
-    border: "1px solid rgba(196,93,74,0.3)",
+    background: "rgba(56,189,248,0.07)",
+    border: "1px solid rgba(56,189,248,0.3)",
     borderRadius: 10,
     padding: "14px 18px",
-    color: "#c45d4a",
+    color: "#38bdf8",
     fontSize: 15,
     fontFamily: "'JetBrains Mono', monospace",
     marginBottom: 20,
   },
   card: {
-    background: "#ffffff",
-    border: "1px solid #dde8eb",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(56,189,248,0.15)",
     borderRadius: 14,
     padding: "24px",
     marginBottom: 24,
-    boxShadow: "0 2px 12px rgba(14,48,58,0.05)",
+    boxShadow: "0 2px 12px rgba(56,189,248,0.05)",
   },
   cardTitle: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 10,
     letterSpacing: "0.14em",
     textTransform: "uppercase",
-    color: "#8aa0a6",
+    color: "#4a7a96",
     marginBottom: 14,
   },
   badge: {
@@ -313,7 +313,7 @@ const s: Record<string, React.CSSProperties> = {
   dimText: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
-    color: "#8aa0a6",
+    color: "#4a7a96",
     textAlign: "center",
     marginTop: 16,
   },
@@ -324,16 +324,16 @@ const s: Record<string, React.CSSProperties> = {
     marginBottom: 16,
   },
   planCard: {
-    background: "#ffffff",
-    border: "1px solid #dde8eb",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(56,189,248,0.15)",
     borderRadius: 14,
     padding: "28px 24px",
-    boxShadow: "0 2px 12px rgba(14,48,58,0.05)",
+    boxShadow: "0 2px 12px rgba(56,189,248,0.05)",
   },
   planName: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 11,
-    color: "#5b7a84",
+    color: "#4a7a96",
     letterSpacing: "0.1em",
     textTransform: "uppercase",
     marginBottom: 12,
@@ -341,19 +341,19 @@ const s: Record<string, React.CSSProperties> = {
   planPrice: {
     fontSize: 38,
     fontWeight: 600,
-    color: "#14303a",
+    color: "#e2eaf5",
     marginBottom: 6,
   },
   planDesc: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
-    color: "#8aa0a6",
+    color: "#4a7a96",
     marginBottom: 20,
   },
   primaryBtn: {
     width: "100%",
     padding: "13px",
-    background: "#15627a",
+    background: "#38bdf8",
     border: "none",
     borderRadius: 10,
     color: "#ffffff",
@@ -364,10 +364,10 @@ const s: Record<string, React.CSSProperties> = {
   },
   secondaryBtn: {
     padding: "10px 20px",
-    background: "#f4f8f9",
-    border: "1px solid #c8dce3",
+    background: "rgba(0,0,0,0.35)",
+    border: "1px solid rgba(56,189,248,0.18)",
     borderRadius: 9,
-    color: "#15627a",
+    color: "#38bdf8",
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 13,
     cursor: "pointer",

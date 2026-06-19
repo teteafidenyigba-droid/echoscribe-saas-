@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --bg: #fbfaf7;
-  --accent: #15627a;
-  --accent2: #c45d4a;
-  --border: rgba(21,98,122,0.15);
-  --text: #14303a;
-  --text-dim: #5b7a84;
+  --bg: #07101e;
+  --accent: #38bdf8;
+  --accent2: #4ade80;
+  --border: rgba(56,189,248,0.15);
+  --text: #c8d8ea;
+  --text-dim: #4a7a96;
 }
 
 body {
-  background: #fbfaf7;
-  color: #14303a;
+  background: #07101e;
+  color: #c8d8ea;
   font-family: 'Inter Tight', system-ui, sans-serif;
 }
 
