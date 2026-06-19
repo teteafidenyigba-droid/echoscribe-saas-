@@ -147,6 +147,7 @@ export default function LandingPage() {
           "Compte rendu structuré SFR/HAS",
           "Vocabulaire échographique natif",
           "Prêt à signer en 30 secondes",
+          "Le temps gagné, c'est du temps dédié au patient",
         ].map((item, i) => (
           <span key={i} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: "#0f2440", letterSpacing: "0.12em", textTransform: "uppercase" }}>
             {i > 0 && <span style={{ marginRight: 40, opacity: 0.4 }}>·</span>}{item}
@@ -314,6 +315,7 @@ export default function LandingPage() {
               { bold: "Un compte rendu structuré", text: "SFR/HAS — et non une transcription brute à reprendre." },
               { bold: "Un vocabulaire échographique français", text: ": abdominal, vasculaire, pelvien, cervical, scrotal, MSK." },
               { bold: "Clé en main", text: ": un simple code d'accès, aucun compte ni clé API à créer." },
+              { bold: "Prêt à coller partout", text: ": Doctolib, HelloDoc, WEDA, Medistory, Axisante… mise en page conservée." },
             ].map((item, i) => (
               <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
                 <span style={{ color: "#7dd3fc", fontSize: 18, fontWeight: 700, marginTop: 2, flexShrink: 0 }}>✓</span>
