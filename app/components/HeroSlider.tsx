@@ -170,7 +170,7 @@ export default function HeroSlider() {
             }}>
               Essai gratuit 7 jours
             </Link>
-            <a href="#comment" style={{
+            <a href="#video" style={{
               background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.25)",
               borderRadius: 12, color: "#ffffff", textDecoration: "none",
               fontSize: 16, padding: "14px 24px", display: "inline-block", fontWeight: 500,

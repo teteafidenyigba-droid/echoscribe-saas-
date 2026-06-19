@@ -261,7 +261,7 @@ export default function LandingPage() {
       </section>
 
       {/* VIDEO */}
-      <section className="video-section section-pad" style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
+      <section id="video" className="video-section section-pad" style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>DÉMONSTRATION</p>
           <h2 style={{ fontSize: 34, fontWeight: 700, color: "#1e3a5f", marginBottom: 12 }}>Voyez EchoScribe en action</h2>
