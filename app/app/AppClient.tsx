@@ -46,16 +46,6 @@ export default function AppClient({ user }: Props) {
           }}>
             Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
           </span>
-          <span style={{
-            background: "#1e3a5f",
-            borderRadius: 999,
-            padding: "3px 10px",
-            fontSize: 9,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase" as const,
-            color: "#7dd3fc",
-            fontFamily: "'JetBrains Mono', monospace",
-          }}>IA v5</span>
         </div>
 
         {/* Right side */}

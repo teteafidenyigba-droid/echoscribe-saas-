@@ -113,11 +113,6 @@ export default function LandingPage() {
           <span className="logo-text" style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#0d2540", letterSpacing: "-0.01em" }}>
             Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
           </span>
-          <span style={{
-            background: "#1e3a5f", borderRadius: 999, padding: "3px 10px",
-            fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase" as const,
-            color: "#7dd3fc", fontFamily: "'JetBrains Mono', monospace",
-          }}>IA v5</span>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <Link className="nav-login" href="/login" style={{
@@ -127,10 +122,10 @@ export default function LandingPage() {
             Connexion
           </Link>
           <Link className="nav-cta" href="/register" style={{
-            background: "linear-gradient(135deg, #1e3a5f, #1e5a8a)",
+            background: "#c45d4a",
             borderRadius: 10, color: "#ffffff", textDecoration: "none",
             fontSize: 15, padding: "10px 24px", fontWeight: 600,
-            boxShadow: "0 2px 10px rgba(30,58,95,0.35)",
+            boxShadow: "0 2px 10px rgba(196,93,74,0.4)",
           }}>
             <span className="nav-cta-text">Essai gratuit 7 jours →</span>
             <span className="nav-cta-short" style={{ display: "none" }}>Essai gratuit →</span>
