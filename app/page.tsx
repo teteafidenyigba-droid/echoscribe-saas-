@@ -142,15 +142,15 @@ export default function LandingPage() {
       <HeroSlider />
 
       {/* BANDEAU SÉPARATEUR */}
-      <div style={{ background: "#7dd3fc", padding: "18px 48px", display: "flex", alignItems: "center", justifyContent: "center", gap: 40 }}>
+      <div style={{ background: "#7dd3fc", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "center", gap: 0, flexWrap: "nowrap", overflow: "hidden" }}>
         {[
-          "Compte rendu structuré SFR/HAS",
-          "Vocabulaire échographique natif",
-          "Prêt à signer en 30 secondes",
-          "Le temps gagné, c'est du temps dédié au patient",
+          "CR structuré SFR/HAS",
+          "Vocabulaire écho natif",
+          "Prêt à signer en 30s",
+          "Temps gagné = temps patient",
         ].map((item, i) => (
-          <span key={i} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: "#0f2440", letterSpacing: "0.12em", textTransform: "uppercase" }}>
-            {i > 0 && <span style={{ marginRight: 40, opacity: 0.4 }}>·</span>}{item}
+          <span key={i} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, color: "#0f2440", letterSpacing: "0.10em", textTransform: "uppercase", whiteSpace: "nowrap", padding: "0 24px", borderRight: i < 3 ? "1px solid rgba(15,36,64,0.25)" : "none" }}>
+            {item}
           </span>
         ))}
       </div>
