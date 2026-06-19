@@ -3,7 +3,7 @@ import HeroSlider from "./components/HeroSlider";
 
 export default function LandingPage() {
   return (
-    <div style={{ background: "#b8d4ef", minHeight: "100vh", color: "#0d2540", fontFamily: "'EB Garamond', Georgia, serif" }}>
+    <div style={{ background: "#eaf4fb", minHeight: "100vh", color: "#0d2540", fontFamily: "'EB Garamond', Georgia, serif" }}>
       <style>{`
         @media (max-width: 768px) {
           /* Nav */
@@ -107,8 +107,8 @@ export default function LandingPage() {
       {/* NAV */}
       <nav className="nav-wrap" style={{
         position: "sticky", top: 0, zIndex: 50,
-        background: "rgba(170,205,235,0.97)", backdropFilter: "blur(16px)",
-        borderBottom: "1px solid #7ab0d4", padding: "0 48px",
+        background: "rgba(234,244,251,0.97)", backdropFilter: "blur(16px)",
+        borderBottom: "1px solid #c8ddef", padding: "0 48px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         height: 70, boxShadow: "0 1px 16px rgba(13,37,64,0.18)",
       }}>
@@ -155,7 +155,7 @@ export default function LandingPage() {
       </div>
 
       {/* SPÉCIALITÉS CIBLES */}
-      <section style={{ background: "#eaf4fb", padding: "80px 48px" }}>
+      <section style={{ background: "#ffffff", padding: "80px 48px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#0a5fa8", marginBottom: 12, textAlign: "center" }}>
             CONÇU POUR VOTRE SPÉCIALITÉ
@@ -261,7 +261,7 @@ export default function LandingPage() {
       </section>
 
       {/* VIDEO */}
-      <section id="video" className="video-section section-pad" style={{ background: "#e2f0fb", padding: "80px 24px", textAlign: "center" }}>
+      <section id="video" className="video-section section-pad" style={{ background: "#eaf4fb", padding: "80px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>DÉMONSTRATION</p>
           <h2 style={{ fontSize: 34, fontWeight: 700, color: "#1e3a5f", marginBottom: 12 }}>Voyez EchoScribe en action</h2>
@@ -283,7 +283,7 @@ export default function LandingPage() {
       </section>
 
       {/* STATS */}
-      <section style={{ background: "#ffffff", borderTop: "2px solid #7ab0d4", borderBottom: "2px solid #7ab0d4", padding: "44px 24px" }}>
+      <section style={{ background: "#ffffff", borderTop: "1px solid #c8ddef", borderBottom: "1px solid #c8ddef", padding: "44px 24px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 0, textAlign: "center" }}>
           {[
             { n: "< 30s", label: "Compte rendu généré", sub: "contre 5-10 min manuellement" },
@@ -301,7 +301,7 @@ export default function LandingPage() {
       </section>
 
       {/* TRUST BAR */}
-      <section style={{ background: "linear-gradient(90deg, #0a4a8a, #0a6abf, #1a90d8)", padding: "18px 24px" }}>
+      <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "18px 24px" }}>
         <div className="trust-bar" style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
           {[
             { icon: "🔒", text: "RGPD & Secret médical" },
@@ -318,7 +318,8 @@ export default function LandingPage() {
       </section>
 
       {/* PRICING */}
-      <section id="tarifs" className="section-pad" style={{ padding: "80px 24px", maxWidth: 920, margin: "0 auto" }}>
+      <section id="tarifs" className="section-pad" style={{ background: "#eaf4fb", padding: "80px 24px" }}>
+        <div style={{ maxWidth: 920, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>TARIFS</p>
           <h2 style={{ fontSize: 36, fontWeight: 700, color: "#0d2540", marginBottom: 12 }}>Simple et transparent</h2>
@@ -379,6 +380,7 @@ export default function LandingPage() {
         <p style={{ textAlign: "center", fontSize: 13, color: "#2a5070", fontFamily: "'JetBrains Mono', monospace", marginTop: 36 }}>
           🔒 Paiement sécurisé par Stripe · Facture TVA disponible · Remboursement 14 jours
         </p>
+        </div>
       </section>
 
       {/* PROBLÈME / SOLUTION */}
@@ -452,7 +454,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="section-pad" style={{ background: "#d4e8f7", padding: "88px 24px" }}>
+      <section className="section-pad" style={{ background: "#ffffff", padding: "88px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ marginBottom: 64 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>LES ATOUTS</p>
@@ -528,7 +530,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="section-pad" style={{ background: "#e2f0fb", padding: "88px 24px" }}>
+      <section className="section-pad" style={{ background: "#eaf4fb", padding: "88px 24px" }}>
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>FAQ</p>

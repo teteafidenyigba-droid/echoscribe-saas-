@@ -20,12 +20,12 @@ export default function AppClient({ user }: Props) {
   const displayName = user.name !== user.email ? user.name : user.email;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#b8d4ef" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#eaf4fb" }}>
       {/* Top bar */}
       <div style={{
-        background: "rgba(170,205,235,0.97)",
+        background: "rgba(234,244,251,0.97)",
         backdropFilter: "blur(16px)",
-        borderBottom: "1px solid #7ab0d4",
+        borderBottom: "1px solid #c8ddef",
         padding: "0 20px",
         height: 60,
         display: "flex",
