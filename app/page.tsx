@@ -345,8 +345,8 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7dd3fc", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>SOUS LE CAPOT</p>
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, color: "#ffffff", marginBottom: 48, lineHeight: 1.2 }}>
-            Ce qu'on a mis dedans<br />
-            <span style={{ color: "#7dd3fc", fontStyle: "italic", fontWeight: 400 }}>pour que vous n'ayez rien à faire.</span>
+            600+ corrections.<br />
+            <span style={{ color: "#7dd3fc", fontStyle: "italic", fontWeight: 400 }}>Zéro effort de votre côté.</span>
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
             {[
