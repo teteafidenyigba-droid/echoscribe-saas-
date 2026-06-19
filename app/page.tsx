@@ -141,6 +141,19 @@ export default function LandingPage() {
 
       <HeroSlider />
 
+      {/* BANDEAU SÉPARATEUR */}
+      <div style={{ background: "#7dd3fc", padding: "18px 48px", display: "flex", alignItems: "center", justifyContent: "center", gap: 40 }}>
+        {[
+          "Compte rendu structuré SFR/HAS",
+          "Vocabulaire échographique natif",
+          "Prêt à signer en 30 secondes",
+        ].map((item, i) => (
+          <span key={i} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 700, color: "#0f2440", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+            {i > 0 && <span style={{ marginRight: 40, opacity: 0.4 }}>·</span>}{item}
+          </span>
+        ))}
+      </div>
+
       {/* SPÉCIFICITÉ ECHOSCRIBE */}
       <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "72px 48px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
