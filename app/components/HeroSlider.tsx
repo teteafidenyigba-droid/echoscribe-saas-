@@ -15,9 +15,8 @@ const slides = [
     thumbLabel: "Abdominal",
     thumbImg: "/thumb-abdo.jpg",
     sample: [
-      { label: "INDICATION", text: "Douleurs de l'hypocondre droit. Bilan hépatique perturbé." },
-      { label: "RÉSULTATS", text: "Foie de taille normale, échogénicité homogène. Vésicule lithiasique, calcul de 8 mm..." },
-      { label: "CONCLUSION", text: "Lithiase vésiculaire symptomatique. Avis chirurgical recommandé." },
+      { label: "RÉSULTATS", text: "Foie de taille normale, aux contours réguliers, sans lésion focale décelable.\nVésicule biliaire : alithiasique, à parois fines.\nReins : sans anomalie décelable." },
+      { label: "CONCLUSION", text: "• Échographie abdominale sans particularité." },
     ],
   },
   {
@@ -31,9 +30,8 @@ const slides = [
     thumbLabel: "Gynécologie",
     thumbImg: "/thumb-gyneco.jpg",
     sample: [
-      { label: "INDICATION", text: "Suivi de grossesse. 12 SA. Dépistage T1." },
-      { label: "RÉSULTATS", text: "Embryon unique, activité cardiaque présente à 162 bpm. LCC : 58 mm. Clarté nucale : 1,4 mm..." },
-      { label: "CONCLUSION", text: "Grossesse évolutive monofoetale. Morphologie T1 normale." },
+      { label: "RÉSULTATS", text: "Utérus en antéversion, contours réguliers, endomètre à 8 mm d'épaisseur.\nOvaires de taille normale, sans lésion décelable.\nCul-de-sac : absence d'épanchement." },
+      { label: "CONCLUSION", text: "• Échographie pelvienne sans anomalie décelable." },
     ],
   },
   {
@@ -47,9 +45,8 @@ const slides = [
     thumbLabel: "Cardiologie",
     thumbImg: "/thumb-cardio.jpg",
     sample: [
-      { label: "INDICATION", text: "Bilan cardiaque. Dyspnée d'effort. HTA connue." },
-      { label: "RÉSULTATS", text: "VG non dilaté, fonction systolique conservée. FEVG estimée à 62%. Pas de trouble de la cinétique..." },
-      { label: "CONCLUSION", text: "Fonction systolique conservée. Hypertrophie concentrique modérée du VG." },
+      { label: "RÉSULTATS", text: "VG non dilaté, fonction systolique conservée. FEVG estimée à 62%.\nPas de trouble de la cinétique segmentaire.\nValvulopathie : fuite mitrale minime grade I." },
+      { label: "CONCLUSION", text: "• Fonction systolique conservée.\n• Hypertrophie concentrique modérée du VG." },
     ],
   },
   {
@@ -63,9 +60,8 @@ const slides = [
     thumbLabel: "Thyroïde",
     thumbImg: "/thumb-thyroid.jpg",
     sample: [
-      { label: "INDICATION", text: "Nodule thyroïdien découvert fortuitement. TSH normale." },
-      { label: "RÉSULTATS", text: "Nodule isthmique gauche hypoéchogène, 12 × 8 mm, contours irréguliers, vascularisation centrale. EU-TIRADS 4..." },
-      { label: "CONCLUSION", text: "Nodule EU-TIRADS 4. Cytoponction recommandée." },
+      { label: "RÉSULTATS", text: "Thyroïde de taille normale, échostructure homogène.\nNodule du lobe droit : isoéchogène, 9 × 6 mm, contours réguliers, sans microcalcification.\nAires cervicales : absence d'adénopathie suspecte." },
+      { label: "CONCLUSION", text: "• Nodule du lobe droit classé EU-TIRADS 3.\n• Surveillance selon recommandations en vigueur." },
     ],
   },
 ];
@@ -231,7 +227,8 @@ export default function HeroSlider() {
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 1.9, color: "rgba(255,255,255,0.82)" }}>
               {slide.sample.map((s) => (
                 <div key={s.label} style={{ marginBottom: 10 }}>
-                  <span style={{ color: slide.color, fontWeight: 700 }}>{s.label} : </span>{s.text}
+                  <span style={{ color: slide.color, fontWeight: 700 }}>{s.label} : </span>
+                  <span style={{ whiteSpace: "pre-line" }}>{s.text}</span>
                 </div>
               ))}
             </div>
