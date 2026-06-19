@@ -300,22 +300,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* TRUST BAR */}
-      <section style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 60%, #1a6aaa 100%)", padding: "18px 24px" }}>
-        <div className="trust-bar" style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", alignItems: "center" }}>
-          {[
-            { icon: "🔒", text: "RGPD & Secret médical" },
-            { icon: "⚡", text: "< 30 secondes" },
-            { icon: "🎙", text: "Dictée vocale IA" },
-            { icon: "✦", text: "Conforme SFR" },
-            { icon: "🛡", text: "Données locales" },
-          ].map((t) => (
-            <div key={t.text} className="trust-item" style={{ display: "flex", alignItems: "center", gap: 8, color: "#ffffff", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em" }}>
-              <span style={{ fontSize: 16 }}>{t.icon}</span> {t.text}
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* PRICING */}
       <section id="tarifs" className="section-pad" style={{ background: "#eaf4fb", padding: "80px 24px" }}>
@@ -383,75 +367,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PROBLÈME / SOLUTION */}
-      <section className="section-pad" style={{ background: "#ffffff", padding: "88px 24px" }}>
-        <div style={{ maxWidth: 1060, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 60 }}>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 14 }}>POURQUOI ECHOSCRIBE ?</p>
-            <h2 style={{ fontSize: "clamp(28px,4vw,40px)", fontWeight: 700, color: "#0d2540", marginBottom: 0 }}>
-              2 à 3 heures de rédaction par jour.<br />
-              <span style={{ color: "#0a6abf" }}>EchoScribe vous les rend.</span>
-            </h2>
-          </div>
-
-          <div className="problem-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-            {/* SANS */}
-            <div className="problem-card" style={{ background: "#fff5f5", border: "1.5px solid #fecaca", borderRadius: 20, padding: "40px 36px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: "#fee2e2", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>✗</div>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, color: "#dc2626", letterSpacing: "0.12em" }}>SANS ECHOSCRIBE</span>
-              </div>
-              {[
-                ["5–10 min", "par compte rendu en saisie manuelle"],
-                ["Terminologie", "complexe, souvent mal orthographiée"],
-                ["Structure", "à reconstruire à chaque rapport"],
-                ["Relecture", "longue et source de stress"],
-                ["Concentration", "épuisée sur la frappe, pas le diagnostic"],
-              ].map(([bold, rest]) => (
-                <div key={bold} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 18, paddingBottom: 18, borderBottom: "1px solid #fee2e2" }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444", flexShrink: 0, marginTop: 7 }} />
-                  <p style={{ margin: 0, fontSize: 15, color: "#1a1a1a", lineHeight: 1.55 }}>
-                    <strong style={{ color: "#dc2626" }}>{bold}</strong> {rest}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* AVEC */}
-            <div className="problem-card" style={{ background: "#f0fdf4", border: "1.5px solid #86efac", borderRadius: 20, padding: "40px 36px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: "#dcfce7", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>✓</div>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, color: "#16a34a", letterSpacing: "0.12em" }}>AVEC ECHOSCRIBE</span>
-              </div>
-              {[
-                ["< 30 secondes", "par compte rendu, de la dictée à la signature"],
-                ["Terminologie", "corrigée automatiquement en temps réel"],
-                ["Structure SFR", "générée automatiquement (INDICATION / RÉSULTATS / CAT)"],
-                ["Validation", "rapide — relisez, cliquez, signez"],
-                ["Concentration", "sur ce qui compte : l'analyse et le diagnostic"],
-              ].map(([bold, rest]) => (
-                <div key={bold} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 18, paddingBottom: 18, borderBottom: "1px solid #bbf7d0" }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", flexShrink: 0, marginTop: 7 }} />
-                  <p style={{ margin: 0, fontSize: 15, color: "#1a1a1a", lineHeight: 1.55 }}>
-                    <strong style={{ color: "#16a34a" }}>{bold}</strong> {rest}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ textAlign: "center", marginTop: 48 }}>
-            <Link href="/register" style={{
-              display: "inline-block", padding: "16px 44px",
-              background: "linear-gradient(135deg,#0a4a8a,#1a90d8)",
-              borderRadius: 12, color: "#ffffff", textDecoration: "none",
-              fontSize: 17, fontWeight: 700, boxShadow: "0 6px 24px rgba(10,74,138,0.3)",
-            }}>
-              Récupérer mes 2 heures par jour →
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* FEATURES */}
       <section className="section-pad" style={{ background: "#ffffff", padding: "88px 24px" }}>
