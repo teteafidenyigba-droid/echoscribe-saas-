@@ -341,7 +341,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: 30, fontWeight: 800, color: "#0f2440", marginBottom: 8 }}>Voyez-le en action</h2>
           <p style={{ fontSize: 16, color: "#4a6a8a", marginBottom: 36, fontStyle: "italic" }}>De la dictée au compte rendu signable — en moins de 30 secondes.</p>
           <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 20, boxShadow: "0 12px 48px rgba(30,58,95,0.2)", border: "1px solid #c8ddef" }}>
-            <iframe src="https://www.youtube.com/embed/vBfA1qF_a-0" title="EchoScribe démo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }} />
+            <iframe src="https://www.youtube.com/embed/Z1wv-Ui6N94" title="EchoScribe démo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }} />
           </div>
         </div>
       </section>
