@@ -6,68 +6,74 @@ export default function LandingPage() {
     <div style={{ background: "#eaf4fb", minHeight: "100vh", color: "#0d2540", fontFamily: "'EB Garamond', Georgia, serif" }}>
       <style>{`
         @media (max-width: 768px) {
+          body, html { overflow-x: hidden; }
+
           /* Nav */
           .nav-wrap { padding: 0 16px !important; height: 60px !important; }
-          .nav-cta-text { display: none; }
+          .nav-cta-text { display: none !important; }
           .nav-cta-short { display: inline !important; }
           .nav-login { font-size: 13px !important; padding: 6px 12px !important; }
           .nav-cta { padding: 7px 14px !important; font-size: 13px !important; }
-          .logo-text { font-size: 22px !important; }
+          .logo-text { font-size: 20px !important; }
 
           /* Sections padding */
-          .section-pad { padding-top: 56px !important; padding-bottom: 56px !important; }
+          .section-pad { padding-top: 48px !important; padding-bottom: 48px !important; padding-left: 16px !important; padding-right: 16px !important; }
 
-          /* Stats */
-          .stat-item { border-right: none !important; border-bottom: 1px solid #c8dce8 !important; padding-bottom: 20px !important; }
-          .stat-item:last-child { border-bottom: none !important; }
-
-          /* Problem/Solution */
-          .problem-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-          .problem-card { padding: 28px 22px !important; }
+          /* Grilles → 1 colonne */
+          .pricing-grid,
+          .features-grid,
+          .specificity-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
 
           /* Pricing */
-          .pricing-grid { grid-template-columns: 1fr !important; }
-          .pricing-card-base { padding: 36px 24px !important; }
+          .pricing-card-base { padding: 32px 20px !important; }
           .pricing-badge {
-            font-size: 10px !important; padding: 5px 14px !important;
-            white-space: normal !important; text-align: center;
-            left: 50% !important; transform: translateX(-50%) !important;
-            width: max-content !important; max-width: 80% !important;
+            font-size: 10px !important; padding: 5px 12px !important;
+            white-space: normal !important; text-align: center !important;
+            width: max-content !important; max-width: 85% !important;
           }
 
           /* Features */
-          .features-grid { gap: 16px !important; }
-          .feature-card { padding: 24px 20px !important; }
+          .feature-card { padding: 22px 18px !important; }
 
-          /* How it works */
-          .how-step { padding: 20px 18px !important; gap: 14px !important; }
+          /* How it works — 1 col */
+          .how-grid { grid-template-columns: 1fr 1fr !important; }
+          .how-step { padding: 18px 16px !important; }
 
-          /* FAQ */
-          .faq-item { padding: 20px 20px !important; }
+          /* FAQ → 1 colonne */
+          .faq-grid { grid-template-columns: 1fr !important; }
+          .faq-item { padding: 18px 20px !important; }
+          .faq-q { font-size: 15px !important; }
 
-          /* CTA final */
-          .cta-section { padding: 72px 20px !important; }
+          /* Specialites → 1 col */
+          .specialites-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
 
-          /* Spécificité */
-          .specificity-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+          /* En pratique → 1 col */
+          .pratique-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+          /* Sous le capot → 1 col */
+          .capot-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+          /* Bandeau → scroll horizontal */
+          .bandeau-inner { overflow-x: auto !important; justify-content: flex-start !important; padding: 0 16px !important; }
+          .bandeau-inner span { flex-shrink: 0 !important; font-size: 13px !important; padding: 0 16px !important; }
 
           /* Video */
-          .video-section { padding: 56px 16px !important; }
-          .video-section h2 { font-size: 26px !important; }
-          .video-section p { font-size: 15px !important; }
+          .video-section { padding: 48px 16px !important; }
 
-          /* Trust bar */
-          .trust-bar { gap: 18px !important; padding: 14px 16px !important; }
-          .trust-item { font-size: 11px !important; }
+          /* CTA */
+          .cta-section { padding: 64px 20px !important; }
+          .cta-btn-primary { font-size: 17px !important; padding: 15px 32px !important; }
+
+          /* Stats */
+          .stat-item { border-right: none !important; border-bottom: 1px solid #c8dce8 !important; padding-bottom: 16px !important; }
+          .stat-item:last-child { border-bottom: none !important; }
+          .stat-num { font-size: 32px !important; }
         }
 
         @media (max-width: 480px) {
-          .logo-text { font-size: 20px !important; }
-          .section-title { font-size: 24px !important; }
-          .cta-section a { font-size: 17px !important; padding: 15px 32px !important; }
-          .faq-item .faq-q { font-size: 15px !important; }
-          .how-step { flex-direction: row !important; }
-          .stat-num { font-size: 32px !important; }
+          .logo-text { font-size: 18px !important; }
+          .how-grid { grid-template-columns: 1fr !important; }
+          .bandeau-inner span { font-size: 12px !important; padding: 0 12px !important; }
         }
         .feature-card {
           transition: transform 0.22s ease, box-shadow 0.22s ease;
@@ -143,7 +149,7 @@ export default function LandingPage() {
 
       {/* BANDEAU SÉPARATEUR */}
       <div style={{ background: "#7dd3fc", padding: "16px 48px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 0 }}>
+        <div className="bandeau-inner" style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 0 }}>
           {[
             "Compte rendu structuré SFR / HAS",
             "Vocabulaire échographique natif",
@@ -176,7 +182,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, color: "#0f2440", textAlign: "center", marginBottom: 52, lineHeight: 1.2 }}>
             Trois spécialités, un seul outil — taillé pour chacune.
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
+          <div className="specialites-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
             {[
               {
                 icon: "🫁",
@@ -313,7 +319,7 @@ export default function LandingPage() {
             Vous parlez. EchoScribe écrit.<br />
             <span style={{ color: "#0a6abf", fontStyle: "italic" }}>Vous signez.</span>
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
+          <div className="pratique-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
             {[
               { icon: "🎙", color: "#dbeafe", accent: "#1e40af", title: "Dictez comme vous parlez", body: "Pas besoin d'adapter votre dictée. Vous parlez naturellement — EchoScribe filtre les échanges avec le patient, les hésitations, les \"euh\"." },
               { icon: "⚡", color: "#fef9c3", accent: "#92400e", title: "30 secondes. Pas plus.", body: "Un clic. L'IA structure votre dictée en compte rendu complet : INDICATION, RÉSULTATS, CONCLUSION, CAT. Terminologie SFR corrigée, mesures préservées." },
@@ -346,7 +352,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, color: "#ffffff", marginBottom: 48, lineHeight: 1.2 }}>
             3 points forts.
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
+          <div className="capot-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
             {[
               { icon: "🔬", title: "600+ corrections médicales", body: "EU-TIRADS, BI-RADS, O-RADS, IOTA, Bosniak… chaque terminologie échographique est reconnue et correctement orthographiée. Aucune mesure inventée." },
               { icon: "🔒", title: "Vos données ne quittent pas votre poste", body: "L'audio est traité localement. Rien n'est stocké sur nos serveurs. Effacement automatique après 12h. Secret médical garanti." },
@@ -369,7 +375,7 @@ export default function LandingPage() {
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>LES VRAIES QUESTIONS</p>
             <h2 style={{ fontSize: 32, fontWeight: 800, color: "#0f2440" }}>Ce que vous vous demandez sûrement</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             {[
               { q: "Est-ce que mes données restent chez moi ?", a: "Oui, totalement. L'audio est traité dans votre navigateur et n'est jamais transmis. Effacement automatique après 12h. Secret médical garanti." },
               { q: "Est-ce que ça marche avec mon logiciel métier ?", a: "Oui. Doctolib, HelloDoc, WEDA, Medistory, Axisante, Word… il suffit de copier-coller. La mise en page est conservée." },
