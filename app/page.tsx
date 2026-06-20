@@ -182,7 +182,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, color: "#0f2440", textAlign: "center", marginBottom: 52, lineHeight: 1.2 }}>
             Trois spécialités, un seul outil — taillé pour chacune.
           </h2>
-          <div className="specialites-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28 }}>
+          <div className="specialites-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 28 }}>
             {[
               {
                 icon: "🫁",
@@ -319,7 +319,7 @@ export default function LandingPage() {
             Vous parlez. EchoScribe écrit.<br />
             <span style={{ color: "#0a6abf", fontStyle: "italic" }}>Vous signez.</span>
           </h2>
-          <div className="pratique-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
+          <div className="pratique-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
             {[
               { icon: "🎙", color: "#dbeafe", accent: "#1e40af", title: "Dictez comme vous parlez", body: "Pas besoin d'adapter votre dictée. Vous parlez naturellement — EchoScribe filtre les échanges avec le patient, les hésitations, les \"euh\"." },
               { icon: "⚡", color: "#fef9c3", accent: "#92400e", title: "30 secondes. Pas plus.", body: "Un clic. L'IA structure votre dictée en compte rendu complet : INDICATION, RÉSULTATS, CONCLUSION, CAT. Terminologie SFR corrigée, mesures préservées." },
@@ -352,7 +352,7 @@ export default function LandingPage() {
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, color: "#ffffff", marginBottom: 48, lineHeight: 1.2 }}>
             3 points forts.
           </h2>
-          <div className="capot-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
+          <div className="capot-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20 }}>
             {[
               { icon: "🔬", title: "600+ corrections médicales", body: "EU-TIRADS, BI-RADS, O-RADS, IOTA, Bosniak… chaque terminologie échographique est reconnue et correctement orthographiée. Aucune mesure inventée." },
               { icon: "🔒", title: "Vos données ne quittent pas votre poste", body: "L'audio est traité localement. Rien n'est stocké sur nos serveurs. Effacement automatique après 12h. Secret médical garanti." },
@@ -375,7 +375,7 @@ export default function LandingPage() {
             <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>LES VRAIES QUESTIONS</p>
             <h2 style={{ fontSize: 32, fontWeight: 800, color: "#0f2440" }}>Ce que vous vous demandez sûrement</h2>
           </div>
-          <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
             {[
               { q: "Est-ce que mes données restent chez moi ?", a: "Oui, totalement. L'audio est traité dans votre navigateur et n'est jamais transmis. Effacement automatique après 12h. Secret médical garanti." },
               { q: "Est-ce que ça marche avec mon logiciel métier ?", a: "Oui. Doctolib, HelloDoc, WEDA, Medistory, Axisante, Word… il suffit de copier-coller. La mise en page est conservée." },
