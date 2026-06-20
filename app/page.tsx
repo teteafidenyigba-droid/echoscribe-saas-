@@ -430,6 +430,11 @@ export default function LandingPage() {
             Echo<span style={{ fontStyle: "normal", color: "#1e7fc5" }}>Scribe</span>
           </span>
         </div>
+        <div style={{ marginBottom: 16 }}>
+          <a href="mailto:contact@echoscribe.fr" style={{ color: "#7dd3fc", textDecoration: "none", fontSize: 13 }}>
+            contact@echoscribe.fr
+          </a>
+        </div>
         <div style={{ display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
           {[
             { href: "/mentions-legales", label: "Mentions légales" },
