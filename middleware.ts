@@ -59,10 +59,13 @@ export async function middleware(request: NextRequest) {
       .single();
 
     const now = new Date();
+    const trialStillActive =
+      sub?.status === "trialing" &&
+      (!sub.trial_end || new Date(sub.trial_end) > now);
     const hasAccess =
       sub &&
       (sub.status === "active" ||
-        sub.status === "trialing" ||
+        trialStillActive ||
         (sub.status === "canceled" &&
           sub.current_period_end &&
           new Date(sub.current_period_end) > now));

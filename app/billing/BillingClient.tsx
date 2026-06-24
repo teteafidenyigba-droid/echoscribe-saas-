@@ -25,10 +25,12 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
   const router = useRouter();
   const supabase = createClient();
 
-  const isActive = subscription?.status === "active" || subscription?.status === "trialing";
-  const isTrialing = subscription?.status === "trialing";
+  const now = new Date();
   const trialEnd = subscription?.trial_end ? new Date(subscription.trial_end) : null;
   const periodEnd = subscription?.current_period_end ? new Date(subscription.current_period_end) : null;
+  const isTrialing = subscription?.status === "trialing";
+  const trialExpired = isTrialing && trialEnd !== null && trialEnd < now;
+  const isActive = (subscription?.status === "active" || (isTrialing && !trialExpired));
 
   async function handleCheckout(plan: "monthly" | "yearly") {
     setLoading(plan);
@@ -84,6 +86,12 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
         <h1 style={s.h1}>Mon abonnement</h1>
 
         {/* Banners */}
+        {trialExpired && (
+          <div style={{ ...s.errorBox, marginBottom: 20 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>⏰ Votre essai gratuit est terminé</div>
+            <p>Votre période d'essai de 7 jours a expiré le {trialEnd ? fmtDate(trialEnd) : ""}. Choisissez un abonnement ci-dessous pour retrouver l'accès à EchoScribe.</p>
+          </div>
+        )}
         {searchParams.success && (
           <div style={s.successBox}>
             ✓ Abonnement activé ! Votre essai de 7 jours commence maintenant.
@@ -113,7 +121,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                   color: isActive ? "#86efac" : "#fca5a5",
                 }}
               >
-                {isTrialing ? "⏳ Essai en cours" : isActive ? "✓ Actif" : subscription.status === "canceled" ? "Annulé" : subscription.status}
+                {trialExpired ? "⏰ Essai expiré" : isTrialing ? "⏳ Essai en cours" : isActive ? "✓ Actif" : subscription.status === "canceled" ? "Annulé" : subscription.status}
               </span>
               {isTrialing && trialEnd && (
                 <span style={s.dimText}>Essai gratuit jusqu'au {fmtDate(trialEnd)}</span>
@@ -262,6 +270,16 @@ const s: Record<string, React.CSSProperties> = {
     fontWeight: 600,
     color: "#e2eaf5",
     margin: "36px 0 20px",
+  },
+  errorBox: {
+    background: "rgba(239,68,68,0.08)",
+    border: "1px solid rgba(239,68,68,0.35)",
+    borderRadius: 10,
+    padding: "16px 18px",
+    color: "#fca5a5",
+    fontSize: 14,
+    fontFamily: "'JetBrains Mono', monospace",
+    lineHeight: 1.6,
   },
   successBox: {
     background: "rgba(74,222,128,0.07)",
