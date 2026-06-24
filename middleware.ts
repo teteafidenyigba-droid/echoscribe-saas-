@@ -37,7 +37,21 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Check active subscription in Supabase
+    // Charge le profil une seule fois (session + stripe)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("stripe_customer_id, active_session_id")
+      .eq("id", user.id)
+      .single();
+
+    // ── Vérification session unique ──
+    const esSid = request.cookies.get("es_sid")?.value;
+    if (profile?.active_session_id && profile.active_session_id !== esSid) {
+      // Un autre appareil est déjà connecté → déconnexion forcée
+      return NextResponse.redirect(new URL("/api/auth/force-signout", request.url));
+    }
+
+    // ── Vérification abonnement ──
     const { data: sub } = await supabase
       .from("subscriptions")
       .select("status, current_period_end, trial_end")
@@ -55,23 +69,12 @@ export async function middleware(request: NextRequest) {
 
     if (!hasAccess && pathname.startsWith("/app")) {
       // Fallback: check Stripe directly if no sub in Supabase
-      // (handles webhook delay case)
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("stripe_customer_id")
-        .eq("id", user.id)
-        .single();
-
       if (profile?.stripe_customer_id) {
         try {
           const stripeKey = process.env.STRIPE_SECRET_KEY!;
           const stripeRes = await fetch(
             `https://api.stripe.com/v1/subscriptions?customer=${profile.stripe_customer_id}&limit=1&status=all`,
-            {
-              headers: {
-                Authorization: `Bearer ${stripeKey}`,
-              },
-            }
+            { headers: { Authorization: `Bearer ${stripeKey}` } }
           );
           const stripeData = await stripeRes.json();
           const stripeSub = stripeData?.data?.[0];
@@ -79,7 +82,6 @@ export async function middleware(request: NextRequest) {
             stripeSub &&
             (stripeSub.status === "active" || stripeSub.status === "trialing")
           ) {
-            // Has a valid Stripe subscription — let them in and sync via billing page
             return supabaseResponse;
           }
         } catch {}

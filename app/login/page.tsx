@@ -3,15 +3,19 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  const autreAppareil = searchParams.get("error") === "autre_appareil";
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -24,50 +28,58 @@ export default function LoginPage() {
         : error.message);
       setLoading(false);
     } else {
+      // Enregistre la session unique → invalide les autres appareils
+      await fetch("/api/auth/session-init", { method: "POST" });
       router.push("/app");
       router.refresh();
     }
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <Link href="/" style={styles.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
-        </Link>
-        <h1 style={styles.title}>Connexion</h1>
-        <p style={styles.sub}>Accédez à votre espace de dictée</p>
+    <div style={styles.card}>
+      <Link href="/" style={styles.logo}>
+        Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+      </Link>
+      <h1 style={styles.title}>Connexion</h1>
+      <p style={styles.sub}>Accédez à votre espace de dictée</p>
 
-        <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div>
-            <label style={styles.label}>Email professionnel</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="dr.dupont@clinique.fr"
-              style={styles.input}
-            />
-          </div>
-          <div>
-            <label style={styles.label}>Mot de passe</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              style={styles.input}
-            />
-          </div>
+      {autreAppareil && (
+        <div style={styles.warningBox}>
+          <div style={{ fontSize: 15, marginBottom: 6, fontWeight: 600 }}>⚠️ Autre appareil connecté</div>
+          <p>Ce compte est déjà ouvert sur un autre appareil. Connectez-vous ici pour basculer la session sur cet appareil — l&apos;autre sera automatiquement déconnecté.</p>
+        </div>
+      )}
 
-          {error && <div style={styles.errorBox}>{error}</div>}
+      <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div>
+          <label style={styles.label}>Email professionnel</label>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="dr.dupont@clinique.fr"
+            style={styles.input}
+          />
+        </div>
+        <div>
+          <label style={styles.label}>Mot de passe</label>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            style={styles.input}
+          />
+        </div>
 
-          <button type="submit" disabled={loading} style={styles.btn}>
-            {loading ? "Connexion…" : "Se connecter →"}
-          </button>
-        </form>
+        {error && <div style={styles.errorBox}>{error}</div>}
+
+        <button type="submit" disabled={loading} style={styles.btn}>
+          {loading ? "Connexion…" : "Se connecter →"}
+        </button>
+      </form>
 
         <p style={styles.footerText}>
           Pas encore de compte ?{" "}
@@ -76,6 +88,15 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <div style={styles.page}>
+      <Suspense fallback={<div style={{ color: "#7bacc2" }}>Chargement…</div>}>
+        <LoginForm />
+      </Suspense>
     </div>
   );
 }
@@ -142,6 +163,17 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 14,
     outline: "none",
+  },
+  warningBox: {
+    background: "rgba(251,191,36,0.08)",
+    border: "1px solid rgba(251,191,36,0.35)",
+    borderRadius: 8,
+    padding: "12px 14px",
+    color: "#fde68a",
+    fontSize: 13,
+    fontFamily: "'JetBrains Mono', monospace",
+    lineHeight: 1.6,
+    marginBottom: 4,
   },
   errorBox: {
     background: "rgba(239,68,68,0.08)",
