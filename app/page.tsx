@@ -207,43 +207,9 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* RIGHT — mockup statique */}
+          {/* RIGHT — démo animée */}
           <div className="hero-mockup2">
-            <div style={{ background: "#fff", border: "1px solid #dde5e7", borderRadius: 18, overflow: "hidden", boxShadow: "0 8px 40px rgba(10,20,48,0.18)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "11px 16px", borderBottom: "1px solid #e8eef0", background: "#f4f8fa" }}>
-                {[1,2,3].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#d0dde3", display: "inline-block" }} />)}
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#5b7a84", fontWeight: 600, marginLeft: 8 }}>EchoScribe — en direct</span>
-                <span style={{ marginLeft: "auto", background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.35)", borderRadius: 6, padding: "2px 10px", color: "#16a34a", fontSize: 10, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>✓ 23s</span>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-                <div style={{ padding: "14px 16px", borderRight: "1px solid #e8eef0" }}>
-                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase", color: "#1c7f9e", marginBottom: 10 }}>① Ce que vous dictez</p>
-                  <p style={{ fontSize: 12, color: "#3c5a63", lineHeight: 1.75 }}>
-                    «{" "}
-                    <span style={{ color: "#a0b4bc", textDecoration: "line-through", textDecorationColor: "#e05a3a" }}>Allongez-vous, inspirez… Vous avez mal ici ? — Un peu, oui. Expirez. </span>
-                    <span style={{ color: "#14303a" }}>Foie de taille normale, contours réguliers, sans lésion. Vésicule alithiasique. Reins sans anomalie. </span>
-                    <span style={{ color: "#a0b4bc", textDecoration: "line-through", textDecorationColor: "#e05a3a" }}>Vous pouvez vous rhabiller.</span>
-                    {" "}»
-                  </p>
-                </div>
-                <div style={{ padding: "14px 16px" }}>
-                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase", color: "#1c7f9e", marginBottom: 10 }}>② Le compte rendu généré</p>
-                  <div style={{ fontSize: 12, lineHeight: 1.65, color: "#3c5a63" }}>
-                    <div style={{ fontWeight: 700, color: "#0e3c4c", marginBottom: 3, fontSize: 11 }}>RÉSULTATS</div>
-                    <div style={{ marginBottom: 2 }}><strong style={{ color: "#14303a" }}>Foie :</strong> de taille normale, contours réguliers, sans lésion.</div>
-                    <div style={{ marginBottom: 2 }}><strong style={{ color: "#14303a" }}>Vésicule :</strong> alithiasique, à parois fines.</div>
-                    <div style={{ marginBottom: 2 }}><strong style={{ color: "#14303a" }}>Reins :</strong> sans anomalie décelable.</div>
-                    <div style={{ fontWeight: 700, color: "#0e3c4c", marginTop: 8, marginBottom: 3, fontSize: 11 }}>CONCLUSION</div>
-                    <div>• Échographie abdominale sans particularité.</div>
-                  </div>
-                </div>
-              </div>
-              <div style={{ padding: "10px 16px", borderTop: "1px solid #e8eef0", display: "flex", gap: 8, background: "#f9fbfc" }}>
-                <span style={{ background: "#eaf0f3", borderRadius: 6, padding: "4px 12px", color: "#5b7a84", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>📋 Copier</span>
-                <span style={{ background: "#eaf0f3", borderRadius: 6, padding: "4px 12px", color: "#5b7a84", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✎ Modifier</span>
-                <span style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "4px 12px", color: "#16a34a", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>Conforme SFR</span>
-              </div>
-            </div>
+            <DemoAnimation />
           </div>
         </div>
       </section>
@@ -364,12 +330,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* DÉMO ANIMÉE */}
+      {/* VIDEO */}
       <section id="video" className="video-section section-pad" style={{ background: "#eaf4fb", padding: "64px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 860, margin: "0 auto" }}>
           <h2 style={{ fontSize: 30, fontWeight: 800, color: "#0f2440", marginBottom: 8 }}>Voyez-le en action</h2>
           <p style={{ fontSize: 16, color: "#4a6a8a", marginBottom: 36, fontStyle: "italic" }}>De la dictée au compte rendu signable — en moins de 30 secondes.</p>
-          <DemoAnimation />
+          <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 20, boxShadow: "0 12px 48px rgba(30,58,95,0.2)", border: "1px solid #c8ddef" }}>
+            <iframe src="https://www.youtube.com/embed/Z1wv-Ui6N94" title="EchoScribe démo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }} />
+          </div>
         </div>
       </section>
 
