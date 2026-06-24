@@ -106,7 +106,7 @@ function RegisterForm() {
     }
     setLoading(true);
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin;
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -116,6 +116,10 @@ function RegisterForm() {
     });
     if (error) {
       setError(error.message || error.name || JSON.stringify(error));
+      setLoading(false);
+    } else if (data.user && data.user.identities?.length === 0) {
+      // Email déjà utilisé — Supabase ne retourne pas d'erreur mais identities est vide
+      setError("Un compte existe déjà avec cette adresse email. Connectez-vous ou utilisez une autre adresse.");
       setLoading(false);
     } else {
       setSuccess(true);
