@@ -16,36 +16,53 @@ export async function GET(request: NextRequest) {
       const user = data.user;
       const name = user.user_metadata?.full_name ?? user.email ?? "";
 
+      const serviceSupabase = createServiceClient();
+
       // Create profile
-      await supabase.from("profiles").upsert({
+      await serviceSupabase.from("profiles").upsert({
         id: user.id,
         email: user.email,
         full_name: name,
         selected_plan: plan,
       });
 
-      // Start 7-day free trial in DB (service client bypasses RLS)
-      const serviceSupabase = createServiceClient();
+      // Start 7-day free trial — check first to avoid duplicate
       const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await serviceSupabase.from("subscriptions").upsert(
-        {
+      const { data: existing } = await serviceSupabase
+        .from("subscriptions")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (existing) {
+        // Already has a subscription row — update to trialing if inactive
+        await serviceSupabase
+          .from("subscriptions")
+          .update({
+            status: "trialing",
+            trial_start: new Date().toISOString(),
+            trial_end: trialEnd.toISOString(),
+          })
+          .eq("user_id", user.id)
+          .eq("status", "inactive");
+      } else {
+        // New user — insert fresh trial row
+        await serviceSupabase.from("subscriptions").insert({
           user_id: user.id,
           stripe_subscription_id: `local_trial_${user.id}`,
           status: "trialing",
           trial_start: new Date().toISOString(),
           trial_end: trialEnd.toISOString(),
-        },
-        { onConflict: "user_id" }
-      );
+        });
+      }
 
-      // Send welcome email (only if Resend is configured)
+      // Send welcome email
       if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_PLACEHOLDER')) {
         try {
           await sendWelcomeEmail(user.email!, name);
         } catch {}
       }
 
-      // Session init then redirect to app directly — no card required during trial
       return NextResponse.redirect(`${origin}/app`);
     }
   }
