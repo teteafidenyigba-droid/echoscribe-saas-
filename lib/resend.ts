@@ -80,6 +80,21 @@ export async function sendTrialReminderEmail(to: string, name: string) {
   });
 }
 
+export async function sendTrialExpiryEmail(to: string, name: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: "⏰ Votre essai EchoScribe est terminé — continuez sans interruption",
+    html: base(`
+      <h1>Votre essai gratuit est terminé</h1>
+      <p>Bonjour ${name},</p>
+      <p>Votre période d'essai de 7 jours a expiré aujourd'hui. <strong>Pour continuer à utiliser EchoScribe</strong>, choisissez un abonnement en cliquant ci-dessous.</p>
+      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/billing">Choisir mon abonnement →</a>
+      <p style="font-size:13px;color:#4a7a96;">Vos comptes rendus et paramètres sont conservés. Il vous suffit de vous abonner pour retrouver un accès immédiat.</p>
+    `),
+  });
+}
+
 export async function sendSubscriptionActiveEmail(to: string, name: string, plan: string) {
   await getResend().emails.send({
     from: FROM,
