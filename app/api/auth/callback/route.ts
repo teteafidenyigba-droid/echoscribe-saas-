@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { sendWelcomeEmail } from "@/lib/resend";
 
@@ -24,9 +24,10 @@ export async function GET(request: NextRequest) {
         selected_plan: plan,
       });
 
-      // Start 7-day free trial in DB (no Stripe required upfront)
+      // Start 7-day free trial in DB (service client bypasses RLS)
+      const serviceSupabase = createServiceClient();
       const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      await supabase.from("subscriptions").upsert(
+      await serviceSupabase.from("subscriptions").upsert(
         {
           user_id: user.id,
           stripe_subscription_id: `local_trial_${user.id}`,
