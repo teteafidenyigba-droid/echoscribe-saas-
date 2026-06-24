@@ -1009,175 +1009,7 @@ function applyMedicalCorrections(text) {
 // ══════════════════════════════════════════════════════
 // SYSTEM PROMPT
 // ══════════════════════════════════════════════════════
-const SYSTEM_PROMPT_BASE = `Tu es un assistant expert en radiologie spécialisé dans la rédaction de comptes rendus d'échographies (hors obstétrique). Ton objectif est de transformer des notes cliniques rapides en rapports médicaux structurés, professionnels et conformes aux standards de la Société Française de Radiologie (SFR).
-
-Ne cite pas tes sources et n'affiche aucun lien à la fin de ta réponse.
-Donne une réponse en texte brut, sans références ni liens cliquables.
-
-STRUCTURE DU COMPTE RENDU — pour chaque examen, respecte systématiquement :
-1. INDICATION : Reprends le contexte clinique PERTINENT de façon synthétique et brève (idéalement 1 à 2 phrases).
-2. RÉSULTATS : Description par organe ou région anatomique, avec un niveau de détail MODULÉ selon la pertinence clinique.
-3. CONCLUSION : Synthèse BRÈVE des seuls points cliniquement significatifs (une puce concise par point important).
-4. CAT : Conduite à tenir CONCISE et actionnable, selon les recommandations officielles (SFR, HAS, CNGOF, EASL, EAU…).
-
-NE JAMAIS inclure de section TECHNIQUE.
-
-RÈGLE ABSOLUE SUR LES CHIFFRES : N'écris une valeur chiffrée QUE si elle a été EXPLICITEMENT dictée dans la transcription du jour.
-
-COMPLÉTUDE DES ORGANES : Décris SYSTÉMATIQUEMENT TOUS les organes du champ d'exploration, même ceux non mentionnés.
-- Abdominal : Foie, Vésicule et voies biliaires, Pancréas, Rate, Reins, Aorte, Vessie.
-- Pelvien : Vessie, Utérus, Endomètre, Col, Ovaire droit, Ovaire gauche, Cul-de-sac de Douglas.
-- Cervical : Thyroïde (deux lobes et isthme), Ganglions cervicaux, Parathyroïdes.
-- Scrotal : Testicule droit, Testicule gauche, Épididymes, Cordon spermatique, Bourses.
-
-FORMATAGE OBLIGATOIRE :
-- Les titres de section en MAJUSCULES précédés de ## (ex: ## INDICATION ##)
-- Le nom de chaque organe entre double astérisques : **Foie :** **Reins :** etc.
-- Dans CONCLUSION et CAT : utiliser des points (• ) avec majuscule
-- Ne jamais utiliser de tirets ou bullets dans RÉSULTATS
-
-FILTRAGE : IGNORER instructions au patient, commentaires rassurants, mots déclencheurs de fin, hésitations.
-
-Ce compte rendu est une proposition à valider et signer par le médecin responsable.`;
-
-const FEWSHOT_EXAMPLES = [
-  { type:'abdominal', text:`EXEMPLE — ECHOGRAPHIE ABDOMINALE (stéatose) :
-
-INDICATION : Exploration d'une gêne de l'hypochondre droit associée à une décoloration.
-
-RÉSULTATS :
-
-**Foie :** Le foie présente des dimensions augmentées. Le parenchyme est discrètement hyperéchogène de manière diffuse, avec une atténuation postérieure, en rapport avec une surcharge graisseuse marquée. Les contours sont réguliers. Pas d'image nodulaire focale décelée.
-
-**Vésicule et voies biliaires :** La vésicule biliaire est de taille normale, alithiasique, aux parois fines. Il n'est pas mis en évidence de dilatation des voies biliaires intra ou extra-hépatiques.
-
-**Pancréas :** Le pancréas est de taille normale, sans anomalie morphologique particulière. Le canal de Wirsung n'est pas dilaté.
-
-**Rate :** La rate est de taille normale, d'échostructure homogène.
-
-**Reins :** Les reins sont de taille et de morphologie normales. Bonne différenciation corticomédullaire. Pas de dilatation des cavités pyélocalicielles ni d'image lithiasique.
-
-**Aorte et Vessie :** L'aorte abdominale est de calibre régulier. La vessie est de contenu transsonique avec des parois régulières.
-
-CONCLUSION :
-• Hépatomégalie associée à une stéatose hépatique diffuse marquée.
-• Absence d'anomalie des voies biliaires ou de lésion focale suspecte.
-
-CAT :
-• Bilan biologique hépatique complet (ASAT, ALAT, GGT, PAL, bilirubine).
-• Prise en charge des facteurs de risque métaboliques.` },
-  { type:'pelvien', text:`EXEMPLE — ECHOGRAPHIE PELVIENNE (contrôle DIU) :
-
-INDICATION : Contrôle de positionnement d'un dispositif intra-utérin hormonal.
-
-RÉSULTATS :
-
-**Vessie :** En réplétion suffisante, parois fines et régulières.
-
-**Utérus :** Rétroversé de contours réguliers. Myomètre d'aspect homogène.
-
-**Dispositif Intra-Utérin :** Le DIU est visualisé en cavité endométriale, son extrémité supérieure à distance du fond utérin.
-
-**Ovaire droit :** En situation latéro-utérine. Aspect plurifolliculaire avec follicule dominant.
-
-**Ovaire gauche :** En situation latéro-utérine. Aspect plurifolliculaire.
-
-**Cul-de-sac de Douglas :** Pas d'épanchement liquidien.
-
-CONCLUSION :
-• DIU en position basse, à distance du fond utérin.
-• Ovaires plurifolliculaires sans anomalie suspecte.
-
-CAT :
-• Consultation gynécologique recommandée pour évaluer un repositionnement.` },
-  { type:'cervical', text:`EXEMPLE — ECHOGRAPHIE CERVICALE :
-
-INDICATION : Caractérisation d'une masse cervicale droite.
-
-RÉSULTATS :
-
-**Thyroïde :** Volume normal. Échogénicité glandulaire sans particularité. Aucun nodule visualisé.
-
-**Exploration cervicale :** Formation kystique ovalaire dans le secteur ganglionnaire IIB droit, aux contours réguliers, au contenu finement échogène avec renforcement postérieur.
-
-**Ganglions cervicaux :** Pas d'adénomégalie cervicale significative en dehors de la lésion décrite.
-
-**Parathyroïdes :** Pas d'hypertrophie visualisée.
-
-CONCLUSION :
-• Thyroïde d'aspect normal, sans nodule.
-• Formation kystique du secteur IIB droit compatible avec un kyste post-infectieux.
-
-CAT :
-• Surveillance clinique et contrôle échographique à distance.` },
-  { type:'doppler-veineux', text:`EXEMPLE — ECO-DOPPLER VEINEUX (TVP proximale) :
-
-INDICATION : Œdème douloureux du mollet et de la cuisse gauches.
-
-RÉSULTATS :
-
-**Veine cave inférieure et veines iliaques :** Perméables, flux modulé.
-
-**Veine fémorale commune gauche :** Perméable, compressible.
-
-**Veine fémorale superficielle gauche :** Incompressible sur tout son trajet, matériel endoluminal hypoéchogène, sans flux au Doppler, en faveur d'une thrombose.
-
-**Veine poplitée gauche :** Également incompressible, thrombosée.
-
-**Veines jambières gauches :** Perméables.
-
-**Membre inférieur droit :** Réseaux profond et superficiel perméables et compressibles, sans thrombose.
-
-CONCLUSION :
-• Thrombose veineuse profonde proximale gauche, étendue aux veines fémorale superficielle et poplitée.
-• Absence de thrombose controlatérale ou du réseau superficiel.
-
-CAT :
-• Anticoagulation curative selon protocole.
-• Contention élastique. Recherche étiologique.` },
-  { type:'msk', text:`EXEMPLE — ECHOGRAPHIE MSK (épaule) :
-
-INDICATION : Douleur et impotence de l'épaule droite, suspicion d'atteinte de la coiffe.
-
-RÉSULTATS :
-
-**Tendon supra-épineux :** Perte de la continuité fibrillaire avec interruption transfixiante et rétraction modérée du moignon. Épanchement dans la bourse sous-acromio-deltoïdienne.
-
-**Tendons infra-épineux et sous-scapulaire :** Continuité conservée, échostructure normale.
-
-**Tendon du long biceps :** En place dans sa gouttière, sans luxation.
-
-**Articulation acromio-claviculaire :** Sans particularité.
-
-CONCLUSION :
-• Rupture transfixiante du tendon supra-épineux droit avec rétraction et bursite réactionnelle.
-• Reste de la coiffe des rotateurs sans particularité.
-
-CAT :
-• Avis orthopédique / chirurgien de l'épaule.
-• IRM ou arthro-IRM pour bilan pré-thérapeutique.` },
-];
-
-function detectExamType(t) {
-  t = (t || '').toLowerCase();
-  const types = [];
-  if(/doppler\s*veineux|thrombose|\btvp\b|\btvs\b|phl[ée]bite|saph[èe]ne|sol[ée]aire|poplit|jambi[èe]re|veine[s]? f[ée]moral|gastrocn[ée]mien|incompressible/.test(t)) types.push('doppler-veineux');
-  if(/ut[ée]rus|ovaire|ovarien|endom[èe]tre|myom[èe]tre|pelvien|\bdiu\b|annexe|douglas|prostate|endom[ée]triome|o-?rads|follicul/.test(t)) types.push('pelvien');
-  if(/thyro[ïi]d|cervical|ad[ée]nopath|ganglion|nodule thyro|parathyro|ti-?rads|isthme/.test(t)) types.push('cervical');
-  if(/testicule|scrotal|[ée]pididyme|varicoc[èe]le|hydroc[èe]le|\bbourse|cordon spermatique/.test(t)) types.push('scrotal');
-  if(/tendon|achille|coiffe|supra-?[ée]pineux|infra-?[ée]pineux|[ée]paule|bursite|enth[èe]se|rupture tendineuse|\bmuscle|articulaire|m[ée]nisque|genou|cheville/.test(t)) types.push('msk');
-  if(/\bfoie\b|h[ée]patique|v[ée]sicule|chol[ée]doque|chol[ée]cystite|pancr[ée]as|wirsung|\brate\b|spl[ée]no|\breins?\b|r[ée]nal|aorte|biliaire|cirrhose|st[ée]atose|bosniak/.test(t)) types.push('abdominal');
-  return [...new Set(types)];
-}
-
-let lastRouting = { label: 'tous types', count: 0 };
-function buildSystemPrompt(dictation) {
-  const types = detectExamType(dictation);
-  let chosen = types.length ? FEWSHOT_EXAMPLES.filter(e => types.includes(e.type)) : [];
-  if (!chosen.length) chosen = FEWSHOT_EXAMPLES;
-  lastRouting = { label: types.length ? types.join(' + ') : 'tous types', count: chosen.length };
-  return SYSTEM_PROMPT_BASE + '\n\n═══════════════════════════════\nEXEMPLES DE RÉFÉRENCE\n═══════════════════════════════\n\n' + chosen.map(e => e.text).join('\n\n---\n\n');
-}
+// System prompt et exemples gérés côté serveur via /api/proxy
 
 // ══════════════════════════════════════════════════════
 // STATE
@@ -1200,30 +1032,16 @@ function switchAI(ai) {
   ['btnGemini','btnGemini2'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'ai-btn' + (ai==='gemini' ? ' active-gemini' : ''); });
   ['btnClaude','btnClaude2'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'ai-btn' + (ai==='claude' ? ' active-claude' : ''); });
   ['btnOpenai','btnOpenai2'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'ai-btn' + (ai==='openai' ? ' active-openai' : ''); });
-  document.getElementById('geminiKeySection').style.display = ai === 'gemini' ? 'block' : 'none';
-  document.getElementById('claudeKeySection').style.display = ai === 'claude' ? 'block' : 'none';
-  document.getElementById('geminiModelSection').style.display = ai === 'gemini' ? 'block' : 'none';
-  document.getElementById('claudeModelSection').style.display = ai === 'claude' ? 'block' : 'none';
-  document.getElementById('openaiModelSection').style.display = ai === 'openai' ? 'block' : 'none';
   updateAiLabel();
 }
 
 function updateAiLabel() {
   const label = document.getElementById('aiLabel');
   const btnLabel = document.getElementById('generateBtnLabel');
-  if (currentAI === 'gemini') {
-    label.textContent = document.getElementById('modelSelect').value + ' actif';
-    label.style.color = '#38bdf8';
-    if (btnLabel) btnLabel.textContent = 'Générer le compte rendu';
-  } else if (currentAI === 'claude') {
-    label.textContent = document.getElementById('claudeModelSelect').value + ' actif';
-    label.style.color = '#38bdf8';
-    if (btnLabel) btnLabel.textContent = 'Générer le compte rendu';
-  } else {
-    label.textContent = document.getElementById('openaiModelSelect').value + ' actif';
-    label.style.color = '#e2eaf5';
-    if (btnLabel) btnLabel.textContent = 'Générer le compte rendu';
-  }
+  const names = { gemini: 'Gemini', claude: 'Claude', openai: 'GPT' };
+  label.textContent = (names[currentAI] || currentAI) + ' · serveur';
+  label.style.color = currentAI === 'openai' ? '#e2eaf5' : '#38bdf8';
+  if (btnLabel) btnLabel.textContent = 'Générer le compte rendu';
 }
 
 // ══════════════════════════════════════════════════════
@@ -1448,14 +1266,7 @@ function checkKeywords(text) {
 // ══════════════════════════════════════════════════════
 // GEMINI THINKING CONFIG
 // ══════════════════════════════════════════════════════
-function geminiThinkingConfig(modelId, enabled) {
-  if (modelId.startsWith('gemini-3')) {
-    return { thinkingLevel: enabled ? 'MEDIUM' : 'LOW' };
-  }
-  if (enabled) return { thinkingBudget: -1 };
-  if (modelId.includes('pro')) return null;
-  return { thinkingBudget: 0 };
-}
+// geminiThinkingConfig supprimé — géré côté serveur dans /api/proxy
 
 // ══════════════════════════════════════════════════════
 // MEDIA RECORDER
@@ -1683,25 +1494,16 @@ function startCountdown(seconds, onDone) {
 }
 
 // ══════════════════════════════════════════════════════
-// SSE STREAMING
+// TEXT/PLAIN STREAMING (proxy unifié)
 // ══════════════════════════════════════════════════════
-async function pumpSSE(res, extract, onDelta) {
+async function readPlainStream(res, onChunk) {
   const reader = res.body.getReader();
   const dec = new TextDecoder();
-  let buf = '';
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-    buf += dec.decode(value, { stream: true });
-    let idx;
-    while ((idx = buf.indexOf('\n')) >= 0) {
-      let line = buf.slice(0, idx); buf = buf.slice(idx + 1);
-      line = line.trim();
-      if (!line.startsWith('data:')) continue;
-      const d = line.slice(5).trim();
-      if (d === '[DONE]') return;
-      try { const j = JSON.parse(d); const t = extract(j); if (t) onDelta(t); } catch(e) {}
-    }
+    const chunk = dec.decode(value, { stream: true });
+    if (chunk) onChunk(chunk);
   }
 }
 function showResult() {
@@ -1731,13 +1533,14 @@ async function reformulate() {
     document.getElementById('transcriptionBox').innerHTML = esc(correctedText);
   }
 
-  const model = document.getElementById('modelSelect').value;
-  const sysPrompt = buildSystemPrompt(correctedText);
-  document.getElementById('routingInfo').textContent = '⊟ ' + lastRouting.label + ' · ' + lastRouting.count + ' exemple(s)';
+  document.getElementById('routingInfo').textContent = '';
   setError('');
   document.getElementById('spinner').style.display = 'block';
   document.getElementById('spinnerIcon').className = 'spinner';
-  document.getElementById('spinnerText').textContent = 'L\'IA rédige le compte rendu…';
+  const engineNames = { gemini: 'Gemini', claude: 'Claude', openai: 'GPT' };
+  document.getElementById('spinnerText').textContent =
+    (thinkingEnabled ? (engineNames[currentAI] || 'IA') + ' réfléchit puis rédige…'
+                     : (engineNames[currentAI] || 'IA') + ' rédige le compte rendu…');
   document.getElementById('reformBtn').disabled = true;
   document.getElementById('resultCard').style.display = 'none';
   document.getElementById('resultEmpty').style.display = 'none';
@@ -1746,132 +1549,35 @@ async function reformulate() {
 
   let fullText = '';
   try {
-    if (currentAI === 'claude') {
-      const claudeModel = document.getElementById('claudeModelSelect').value;
-      document.getElementById('spinnerText').textContent = thinkingEnabled ? 'Claude réfléchit puis rédige…' : 'Claude rédige le compte rendu…';
-      const claudeBody = {
-        model: claudeModel,
-        max_tokens: 8192,
-        system: sysPrompt,
-        messages: [{ role:'user', content: correctedText }]
-      };
-      if (thinkingEnabled) {
-        if (claudeModel.includes('haiku')) {
-          claudeBody.thinking = { type:'enabled', budget_tokens: 4000 };
-        } else {
-          claudeBody.thinking = { type:'adaptive' };
-          claudeBody.output_config = { effort:'medium' };
-          claudeBody.max_tokens = 16000;
-        }
-      }
-      claudeBody.stream = true;
-      const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(claudeBody)
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(()=>({}));
-        throw new Error(err.error?.message || 'Erreur API Claude ('+res.status+')');
-      }
-      let shown = false;
-      await pumpSSE(res,
-        j => (j.type==='content_block_delta' && j.delta?.type==='text_delta') ? j.delta.text : '',
-        t => { if (!shown) { beginStream(); shown=true; } fullText+=t; renderResult(fullText); });
-      if (!fullText) throw new Error('Réponse vide de Claude.');
+    const res = await fetch('/api/proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        engine: currentAI,
+        effort: thinkingEnabled ? 'medium' : 'low',
+        dictation: correctedText
+      })
+    });
 
-    } else if (currentAI === 'openai') {
-      const oaModel = document.getElementById('openaiModelSelect').value;
-      const OA_FALLBACK = [oaModel,'gpt-5.5','gpt-5.4','gpt-5.4-mini'].filter((v,i,a)=>a.indexOf(v)===i);
-      let lastMsg = '';
-      for (const tryModel of OA_FALLBACK) {
-        document.getElementById('spinnerText').textContent = thinkingEnabled ? 'GPT réfléchit puis rédige…' : 'GPT rédige le compte rendu…';
-        try {
-          const oaBody = {
-            model: tryModel,
-            max_completion_tokens: 16000,
-            reasoning_effort: thinkingEnabled ? 'medium' : 'low',
-            stream: true,
-            messages: [
-              { role:'system', content: sysPrompt },
-              { role:'user', content: correctedText }
-            ]
-          };
-          const res = await fetch('/api/openai', {
-            method: 'POST',
-            headers: { 'Content-Type':'application/json' },
-            body: JSON.stringify(oaBody)
-          });
-          if (!res.ok) {
-            const err = await res.json().catch(()=>({}));
-            const msg = err.error?.message || '';
-            lastMsg = msg || lastMsg;
-            if (res.status===429||res.status===503||res.status===500||res.status===404) continue;
-            throw new Error(msg || 'Erreur OpenAI ('+res.status+')');
-          }
-          fullText = ''; let shownOA = false;
-          await pumpSSE(res,
-            j => j.choices?.[0]?.delta?.content || '',
-            t => { if (!shownOA) { beginStream(); shownOA=true; } fullText+=t; renderResult(fullText); });
-          if (!fullText) continue;
-          break;
-        } catch(innerErr) {
-          if (OA_FALLBACK.indexOf(tryModel) < OA_FALLBACK.length-1) continue;
-          throw innerErr;
-        }
-      }
-      if (!fullText) throw new Error(lastMsg ? ('OpenAI : '+lastMsg) : 'OpenAI indisponible. Réessayez ou basculez sur un autre moteur.');
-
-    } else {
-      // GEMINI
-      const MODEL_FALLBACK = [model, model.includes('pro')? 'gemini-2.5-pro':'gemini-2.5-flash','gemini-3-flash-preview','gemini-2.5-flash','gemini-3.1-flash-lite'].filter((v,i,a)=>a.indexOf(v)===i);
-      for (const tryModel of MODEL_FALLBACK) {
-        document.getElementById('spinnerText').textContent = thinkingEnabled ? 'Gemini réfléchit puis rédige…' : 'Gemini rédige le compte rendu…';
-        try {
-          const genConfig = { maxOutputTokens: 8192 };
-          genConfig.temperature = tryModel.startsWith('gemini-3') ? 1.0 : 0.2;
-          const tcfg = geminiThinkingConfig(tryModel, thinkingEnabled);
-          if (tcfg) genConfig.thinkingConfig = tcfg;
-          const res = await fetch(`/api/gemini?model=${encodeURIComponent(tryModel)}`, {
-            method: 'POST',
-            headers: { 'Content-Type':'application/json' },
-            body: JSON.stringify({
-              system_instruction: { parts: [{ text: sysPrompt }] },
-              contents: [{ role:'user', parts: [{ text: correctedText }] }],
-              generationConfig: genConfig
-            })
-          });
-          if (!res.ok) {
-            const err = await res.json().catch(()=>({}));
-            const msg = err.error?.message || '';
-            if (res.status===429||res.status===503||res.status===404) continue;
-            throw new Error(msg || 'Erreur Gemini ('+res.status+')');
-          }
-          fullText = ''; let shownG = false;
-          await pumpSSE(res,
-            j => j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('') || '',
-            t => { if (!shownG) { beginStream(); shownG=true; } fullText+=t; renderResult(fullText); });
-          if (!fullText) continue;
-          break;
-        } catch(innerErr) {
-          if (MODEL_FALLBACK.indexOf(tryModel) < MODEL_FALLBACK.length-1) continue;
-          throw innerErr;
-        }
-      }
-      if (!fullText) throw new Error('Gemini surchargé. Réessayez dans 30s ou basculez sur ✦ Claude.');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Erreur serveur (' + res.status + ')');
     }
+
+    let shown = false;
+    await readPlainStream(res, chunk => {
+      fullText += chunk;
+      if (!shown) { beginStream(); shown = true; }
+      renderResult(fullText);
+    });
+
+    if (!fullText) throw new Error('Réponse vide. Réessayez ou changez de moteur IA.');
 
     renderResult(fullText);
     showResult();
     autoCopyResult();
     if (!continuousMode) document.getElementById('nextPatientBtn').style.display = 'inline-block';
-
-    const usedModel = currentAI==='gemini'
-      ? document.getElementById('modelSelect').value
-      : currentAI==='claude'
-        ? document.getElementById('claudeModelSelect').value
-        : document.getElementById('openaiModelSelect').value;
-    esSaveReport(correctedText, fullText, usedModel);
+    esSaveReport(correctedText, fullText, currentAI);
 
   } catch(e) {
     setError(e.message);
@@ -2154,9 +1860,7 @@ function reset() {
 // ══════════════════════════════════════════════════════
 document.getElementById('transcriptionBox').addEventListener('input', updateReformBtn);
 document.getElementById('transcriptionBox').addEventListener('input', esDraftOnInput);
-document.getElementById('modelSelect').addEventListener('change', updateAiLabel);
-document.getElementById('claudeModelSelect').addEventListener('change', updateAiLabel);
-document.getElementById('openaiModelSelect').addEventListener('change', updateAiLabel);
+// Les model selects ne pilotent plus l'API (choix géré côté serveur)
 
 // ══════════════════════════════════════════════════════
 // INIT

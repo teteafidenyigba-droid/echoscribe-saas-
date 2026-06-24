@@ -13,6 +13,15 @@ export default async function AppPage() {
     .eq("id", user.id)
     .single();
 
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("status")
+    .eq("user_id", user.id)
+    .in("status", ["active", "trialing"])
+    .single();
+
+  if (!sub) redirect("/billing");
+
   return (
     <AppClient
       user={{
