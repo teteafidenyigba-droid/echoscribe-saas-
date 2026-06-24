@@ -205,10 +205,10 @@ export default function LandingPage() {
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em", marginBottom: 16 }}>
               7 jours gratuits · Sans engagement · Résiliable en un clic
             </p>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", fontStyle: "italic", display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 16 }}>🩺</span>
-              Conçu par un médecin échographiste
-            </p>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 999, padding: "7px 16px" }}>
+              <span style={{ fontSize: 15 }}>🩺</span>
+              <span style={{ fontSize: 13, color: "#ffffff", fontStyle: "italic", fontWeight: 500 }}>Conçu par un médecin échographiste</span>
+            </div>
           </div>
 
           {/* RIGHT — démo animée */}
