@@ -4,6 +4,7 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY ?? "re_placeholder");
 }
 const FROM = process.env.RESEND_FROM_EMAIL ?? "EchoScribe <noreply@echoscribe.fr>";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://echoscribe.fr";
 
 function base(content: string) {
   return `<!DOCTYPE html>
@@ -11,27 +12,62 @@ function base(content: string) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-  body{background:#07101e;font-family:'Georgia',serif;color:#c8d8ea;margin:0;padding:0;}
-  .wrap{max-width:560px;margin:0 auto;padding:40px 24px;}
-  .logo{font-size:26px;font-style:italic;color:#e2eaf5;margin-bottom:32px;}
-  .logo span{font-style:normal;font-weight:700;color:#38bdf8;}
-  h1{font-size:22px;color:#e2eaf5;margin:0 0 16px;}
-  p{font-size:15px;line-height:1.7;color:#b0c4d8;margin:0 0 14px;}
-  .btn{display:inline-block;padding:13px 28px;background:linear-gradient(90deg,#0c2840,#0e3352);border:1px solid rgba(56,189,248,0.45);border-radius:10px;color:#7dd3fc;text-decoration:none;font-size:16px;margin:8px 0 24px;}
-  .divider{border:none;border-top:1px solid rgba(56,189,248,0.1);margin:28px 0;}
-  .footer{font-size:11px;color:#2d4a5e;line-height:1.8;}
-</style>
+<title>EchoScribe</title>
 </head>
-<body>
-<div class="wrap">
-  <div class="logo">Echo<span>Scribe</span></div>
-  ${content}
-  <hr class="divider">
-  <div class="footer">EchoScribe · Dictée échographique IA<br>Ce message est envoyé automatiquement, merci de ne pas y répondre.<br>Conformément au RGPD, vos données sont traitées selon notre <a href="${process.env.NEXT_PUBLIC_APP_URL}/confidentialite" style="color:#38bdf8;">politique de confidentialité</a>.</div>
-</div>
+<body style="margin:0;padding:0;background:#f0f4f8;font-family:Georgia,'Times New Roman',serif;">
+
+  <!-- Header -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0a1f38 0%,#0e3352 100%);">
+    <tr>
+      <td align="center" style="padding:36px 24px 28px;">
+        <div style="font-size:32px;font-style:italic;color:#e2eaf5;letter-spacing:-0.5px;">
+          Echo<span style="font-style:normal;font-weight:700;color:#38bdf8;">Scribe</span>
+        </div>
+        <div style="margin-top:12px;display:inline-block;border:1px solid rgba(56,189,248,0.4);border-radius:999px;padding:5px 16px;font-size:11px;color:#7dd3fc;font-family:'Courier New',monospace;letter-spacing:0.08em;">
+          IA v5 &nbsp;·&nbsp; Certifié usage médical
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Body -->
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding:0 24px 48px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:0 0 12px 12px;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="padding:40px 40px 32px;">
+              ${content}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 40px 32px;border-top:1px solid #e8eef4;">
+              <p style="margin:24px 0 0;font-size:11px;color:#94a3b8;font-family:'Courier New',monospace;line-height:1.8;">
+                EchoScribe · Dictée échographique IA<br>
+                Ce message est envoyé automatiquement, merci de ne pas y répondre.<br>
+                <a href="${APP_URL}/confidentialite" style="color:#38bdf8;text-decoration:none;">Politique de confidentialité</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
 </body>
 </html>`;
+}
+
+function btn(label: string, url: string) {
+  return `<a href="${url}" style="display:inline-block;margin:20px 0 8px;padding:14px 32px;background:linear-gradient(90deg,#0a1f38,#0e3352);border-radius:8px;color:#7dd3fc;text-decoration:none;font-size:15px;font-family:Georgia,serif;">${label}</a>`;
+}
+
+function h1(text: string) {
+  return `<h1 style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0f172a;font-family:Georgia,serif;">${text}</h1>`;
+}
+
+function p(text: string, small = false) {
+  return `<p style="margin:0 0 14px;font-size:${small ? "13px" : "15px"};line-height:1.7;color:${small ? "#64748b" : "#334155"};font-family:Georgia,serif;">${text}</p>`;
 }
 
 export async function sendWelcomeEmail(to: string, name: string) {
@@ -40,11 +76,44 @@ export async function sendWelcomeEmail(to: string, name: string) {
     to,
     subject: "Bienvenue sur EchoScribe — votre essai de 7 jours commence",
     html: base(`
-      <h1>Bienvenue, ${name} 👋</h1>
-      <p>Votre compte EchoScribe est créé. Vous bénéficiez d'un <strong>essai gratuit de 7 jours</strong> — aucun débit avant la fin de la période d'essai.</p>
-      <p>EchoScribe vous permet de générer des comptes rendus d'échographie structurés en 30 secondes par dictée vocale, conformément aux standards SFR.</p>
-      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/app">Accéder à l'application →</a>
-      <p style="font-size:13px;color:#4a7a96;">Si vous avez des questions, répondez simplement à cet email.</p>
+      ${h1("Bienvenue sur EchoScribe")}
+      ${p(`Bonjour ${name},`)}
+      ${p("Votre compte est créé. Vous bénéficiez d'un <strong>essai gratuit de 7 jours</strong>, sans carte bancaire requise.")}
+      ${p("EchoScribe transforme votre dictée en compte rendu d'échographie structuré en moins de <strong>30 secondes</strong>, conforme aux standards de la SFR.")}
+      ${btn("Accéder à l'application →", `${APP_URL}/app`)}
+      ${p("Si vous avez des questions, répondez simplement à cet email.", true)}
+    `),
+  });
+}
+
+export async function sendTrialReminderEmail(to: string, name: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: "⏰ Plus que 3 jours — votre essai EchoScribe se termine bientôt",
+    html: base(`
+      ${h1("Plus que 3 jours d'essai")}
+      ${p(`Bonjour ${name},`)}
+      ${p("Votre période d'essai gratuit se termine dans <strong>3 jours</strong>. Pour continuer à utiliser EchoScribe sans interruption, choisissez votre abonnement.")}
+      ${p("Vos comptes rendus et paramètres sont conservés.")}
+      ${btn("Choisir mon abonnement →", `${APP_URL}/billing`)}
+      ${p("Résiliable à tout moment depuis votre espace abonné.", true)}
+    `),
+  });
+}
+
+export async function sendTrialExpiryEmail(to: string, name: string) {
+  await getResend().emails.send({
+    from: FROM,
+    to,
+    subject: "Votre essai EchoScribe est terminé — continuez sans interruption",
+    html: base(`
+      ${h1("Votre essai gratuit est terminé")}
+      ${p(`Bonjour ${name},`)}
+      ${p("Votre période d'essai de 7 jours a expiré aujourd'hui. Pour retrouver un accès immédiat à EchoScribe, choisissez votre abonnement ci-dessous.")}
+      ${p("Vos comptes rendus et paramètres sont conservés et accessibles dès la souscription.")}
+      ${btn("Choisir mon abonnement →", `${APP_URL}/billing`)}
+      ${p("Paiement sécurisé par Stripe · Résiliable à tout moment.", true)}
     `),
   });
 }
@@ -56,41 +125,11 @@ export async function sendTrialStartEmail(to: string, name: string, trialEnd: Da
     to,
     subject: "Votre essai EchoScribe est actif",
     html: base(`
-      <h1>Votre essai gratuit est actif</h1>
-      <p>Bonjour ${name},</p>
-      <p>Votre abonnement d'essai EchoScribe est désormais actif. Il se terminera le <strong>${dateStr}</strong>.</p>
-      <p>Après cette date, votre abonnement sera automatiquement activé selon le plan choisi.</p>
-      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/app">Ouvrir EchoScribe →</a>
-    `),
-  });
-}
-
-export async function sendTrialReminderEmail(to: string, name: string) {
-  await getResend().emails.send({
-    from: FROM,
-    to,
-    subject: "⏰ Votre essai EchoScribe se termine dans 3 jours",
-    html: base(`
-      <h1>Plus que 3 jours d'essai</h1>
-      <p>Bonjour ${name},</p>
-      <p>Votre période d'essai gratuit se termine dans <strong>3 jours</strong>. Après cette date, votre abonnement sera automatiquement activé.</p>
-      <p>Pour modifier ou annuler votre abonnement, rendez-vous dans la gestion de votre compte.</p>
-      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/billing">Gérer mon abonnement →</a>
-    `),
-  });
-}
-
-export async function sendTrialExpiryEmail(to: string, name: string) {
-  await getResend().emails.send({
-    from: FROM,
-    to,
-    subject: "⏰ Votre essai EchoScribe est terminé — continuez sans interruption",
-    html: base(`
-      <h1>Votre essai gratuit est terminé</h1>
-      <p>Bonjour ${name},</p>
-      <p>Votre période d'essai de 7 jours a expiré aujourd'hui. <strong>Pour continuer à utiliser EchoScribe</strong>, choisissez un abonnement en cliquant ci-dessous.</p>
-      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/billing">Choisir mon abonnement →</a>
-      <p style="font-size:13px;color:#4a7a96;">Vos comptes rendus et paramètres sont conservés. Il vous suffit de vous abonner pour retrouver un accès immédiat.</p>
+      ${h1("Votre essai gratuit est actif")}
+      ${p(`Bonjour ${name},`)}
+      ${p(`Votre essai EchoScribe est actif jusqu'au <strong>${dateStr}</strong>.`)}
+      ${p("Profitez de ces 7 jours pour générer vos comptes rendus d'échographie par dictée vocale.")}
+      ${btn("Ouvrir EchoScribe →", `${APP_URL}/app`)}
     `),
   });
 }
@@ -101,10 +140,11 @@ export async function sendSubscriptionActiveEmail(to: string, name: string, plan
     to,
     subject: "✅ Votre abonnement EchoScribe est actif",
     html: base(`
-      <h1>Abonnement activé</h1>
-      <p>Bonjour ${name},</p>
-      <p>Votre abonnement <strong>${plan}</strong> est désormais actif. Vous avez accès complet à EchoScribe.</p>
-      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/app">Accéder à l'application →</a>
+      ${h1("Abonnement activé")}
+      ${p(`Bonjour ${name},`)}
+      ${p(`Votre abonnement <strong>${plan}</strong> est désormais actif. Vous avez accès complet à EchoScribe.`)}
+      ${btn("Accéder à l'application →", `${APP_URL}/app`)}
+      ${p("Vous pouvez gérer votre abonnement à tout moment depuis votre espace.", true)}
     `),
   });
 }
@@ -116,11 +156,11 @@ export async function sendCancellationEmail(to: string, name: string, endDate: D
     to,
     subject: "Votre abonnement EchoScribe a été annulé",
     html: base(`
-      <h1>Annulation confirmée</h1>
-      <p>Bonjour ${name},</p>
-      <p>Votre abonnement EchoScribe a bien été annulé. Vous conservez l'accès jusqu'au <strong>${dateStr}</strong>.</p>
-      <p>Vous pouvez vous réabonner à tout moment depuis votre espace.</p>
-      <a class="btn" href="${process.env.NEXT_PUBLIC_APP_URL}/billing">Se réabonner →</a>
+      ${h1("Annulation confirmée")}
+      ${p(`Bonjour ${name},`)}
+      ${p(`Votre abonnement EchoScribe a bien été annulé. Vous conservez l'accès jusqu'au <strong>${dateStr}</strong>.`)}
+      ${p("Vous pouvez vous réabonner à tout moment pour retrouver un accès immédiat.")}
+      ${btn("Se réabonner →", `${APP_URL}/billing`)}
     `),
   });
 }
