@@ -428,17 +428,18 @@ select {
 .wave-bars {
   display: flex;
   align-items: center;
-  gap: 4px;
-  height: 44px;
+  gap: 3px;
+  height: 56px;
 }
 .bar {
   width: 3px;
   border-radius: 3px;
-  background: rgba(10,95,168,0.15);
+  background: rgba(10,95,168,0.12);
   min-height: 3px;
-  transition: height 0.09s ease;
+  max-height: 52px;
+  transition: height 0.07s ease-out;
 }
-.bar.active { background: rgba(10,95,168,0.7); }
+.bar.active { background: rgba(10,95,168,0.82); }
 .mic-status {
   font-size: 13px;
   color: var(--text-dim);
@@ -1271,18 +1272,39 @@ function checkKeywords(text) {
 // ══════════════════════════════════════════════════════
 // MEDIA RECORDER
 // ══════════════════════════════════════════════════════
-function startRecording() {
+
+// Contraintes optimales pour la dictée médicale
+const MIC_CONSTRAINTS = {
+  audio: {
+    echoCancellation: true,
+    noiseSuppression: true,
+    autoGainControl: true,
+    sampleRate: { ideal: 48000 },
+    channelCount: { ideal: 1 },
+  }
+};
+
+async function openMicStream() {
+  if (!navigator.mediaDevices) return null;
+  try {
+    return await navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS);
+  } catch {
+    try { return await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { return null; }
+  }
+}
+
+function startRecording(stream) {
   audioChunks = [];
-  if (!navigator.mediaDevices) return;
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-    recordingStream = stream;
-    try {
-      const mimeType = ['audio/webm;codecs=opus','audio/webm','audio/ogg'].find(t => MediaRecorder.isTypeSupported(t)) || '';
-      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
-      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-      mediaRecorder.start(250);
-    } catch(e) { console.warn('MediaRecorder unavailable:', e); }
-  }).catch(() => {});
+  if (!stream) return;
+  recordingStream = stream;
+  try {
+    const mimeType = ['audio/webm;codecs=opus','audio/webm','audio/ogg']
+      .find(t => MediaRecorder.isTypeSupported(t)) || '';
+    const opts = mimeType ? { mimeType, audioBitsPerSecond: 128000 } : {};
+    mediaRecorder = new MediaRecorder(stream, opts);
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.start(100);
+  } catch(e) { console.warn('MediaRecorder unavailable:', e); }
 }
 
 async function stopRecordingAndTranscribe() {
@@ -1299,7 +1321,7 @@ async function stopRecordingAndTranscribe() {
         formData.append('file', blob, 'dictee.webm');
         formData.append('model', 'whisper-1');
         formData.append('language', 'fr');
-        formData.append('prompt', 'Compte rendu échographie médicale. Termes: foie, vésicule biliaire, cholédoque, tronc porte, pancréas, rate, reins, cortex, pyélocalicielle, parenchyme, hyperéchogène, anéchogène, Doppler, prostate, utérus, endomètre, ovaires, aorte, épanchement, lithiase, contours réguliers.');
+        formData.append('prompt', 'Compte rendu échographie médicale. Termes: foie, vésicule biliaire, cholédoque, voies biliaires, tronc porte, veines sus-hépatiques, pancréas, Wirsung, rate, reins, cortex rénal, pyélocalicielles, parenchyme, hyperéchogène, hypoéchogène, anéchogène, transsonique, hétérogène, Doppler, prostate, utérus, endomètre, ovaires, col utérin, Douglas, aorte, veine cave, épanchement, lithiase, contours réguliers, adénopathie, thyroïde, isthme, nodule, EU-TIRADS, O-RADS, Bosniak, LI-RADS, stéatose, cirrhose, hépatomégalie, splénomégalie, cholécystite, appendicite, thrombose, TVP, saphène, poplitée, fémorale, épididyme, testicule, cordon spermatique, bursite, tendon supra-épineux, coiffe des rotateurs.');
         const res = await fetch('/api/whisper', {
           method: 'POST',
           body: formData
@@ -1322,28 +1344,68 @@ async function stopRecordingAndTranscribe() {
 // WAVE ANIMATION
 // ══════════════════════════════════════════════════════
 function startWaveAnimation() {
+  // Utilise micStream s'il est déjà ouvert par startListening (flux partagé)
+  if (micStream) { startWaveFromStream(micStream); return; }
+  // Fallback : ouvre son propre flux (ex. appel standalone)
   if (!navigator.mediaDevices) { startSimpleWave(); return; }
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-    micStream = stream;
+  navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS)
+    .then(s => { micStream = s; startWaveFromStream(s); })
+    .catch(() => startSimpleWave());
+}
+
+function startWaveFromStream(stream) {
+  try {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioCtx.createMediaStreamSource(stream);
+
+    // GainNode : amplifie le signal pour le visualiseur (×3.5)
+    const gain = audioCtx.createGain();
+    gain.gain.value = 3.5;
+
+    // Compresseur : égalise voix forte et voix faible
+    const comp = audioCtx.createDynamicsCompressor();
+    comp.threshold.value = -40;
+    comp.knee.value = 20;
+    comp.ratio.value = 8;
+    comp.attack.value = 0.003;
+    comp.release.value = 0.1;
+
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 64;
-    audioCtx.createMediaStreamSource(stream).connect(analyser);
+    analyser.fftSize = 512;               // 256 bins, résolution ×4
+    analyser.smoothingTimeConstant = 0.7; // animation fluide
+    analyser.minDecibels = -90;
+    analyser.maxDecibels = -10;
+
+    source.connect(gain);
+    gain.connect(comp);
+    comp.connect(analyser);
+
     const bars = document.querySelectorAll('.bar');
-    const data = new Uint8Array(analyser.frequencyBinCount);
+    const N = bars.length; // 22
+    const data = new Uint8Array(analyser.frequencyBinCount); // 256 bins
+
+    // Mapping voix : bins 1-40 couvrent ~90-7500 Hz (plage dictée médicale)
+    const VOICE_BINS = 40;
+
     function animate() {
       animFrame = requestAnimationFrame(animate);
       analyser.getByteFrequencyData(data);
       bars.forEach((bar, i) => {
-        const val = data[i % data.length] / 255;
-        const h = Math.max(3, val * 36);
+        const binIdx = 1 + Math.round(i * (VOICE_BINS - 1) / (N - 1));
+        const raw = data[binIdx] / 255;
+        // Courbe racine carrée : amplifie visuellement les sons faibles
+        const scaled = Math.pow(raw, 0.5);
+        const h = Math.max(3, scaled * 52);
         bar.style.height = h + 'px';
-        bar.className = 'bar' + (val > 0.1 ? ' active' : '');
+        bar.className = 'bar' + (raw > 0.03 ? ' active' : '');
       });
     }
     animate();
-  }).catch(() => startSimpleWave());
+  } catch {
+    startSimpleWave();
+  }
 }
+
 function startSimpleWave() {
   const bars = document.querySelectorAll('.bar');
   let t = 0;
@@ -1351,18 +1413,21 @@ function startSimpleWave() {
     animFrame = requestAnimationFrame(animate);
     t += 0.08;
     bars.forEach((bar, i) => {
-      const h = 3 + 14 * Math.abs(Math.sin(t + i * 0.3));
+      const h = 3 + 16 * Math.abs(Math.sin(t + i * 0.3));
       bar.style.height = h + 'px';
       bar.className = 'bar active';
     });
   }
   animate();
 }
+
 function stopWaveAnimation() {
-  if (animFrame) cancelAnimationFrame(animFrame);
-  if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
-  if (audioCtx) { audioCtx.close(); audioCtx = null; }
-  document.querySelectorAll('.bar').forEach(b => { b.style.height='3px'; b.className='bar'; });
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  if (audioCtx) { audioCtx.close().catch(() => {}); audioCtx = null; }
+  analyser = null;
+  // Les tracks du flux partagé sont arrêtées par stopRecordingAndTranscribe
+  micStream = null;
+  document.querySelectorAll('.bar').forEach(b => { b.style.height = '3px'; b.className = 'bar'; });
 }
 
 // ══════════════════════════════════════════════════════
@@ -1386,12 +1451,16 @@ function toggleMic() {
   isListening ? stopListening() : startListening();
 }
 
-function startListening() {
+async function startListening() {
   setError('');
   const current = getPlainText();
   finalText = isPlaceholder(current) ? '' : current + ' ';
   document.getElementById('whisperBadge').style.display = 'none';
-  startRecording();
+
+  // Ouvre UN seul flux micro partagé entre recorder et visualiseur
+  const stream = await openMicStream();
+  if (stream) micStream = stream;
+  startRecording(stream);
   esStartAutosave();
   recognition = new SR();
   recognition.lang = 'fr-FR';
@@ -1433,10 +1502,10 @@ function startListening() {
 async function stopListening() {
   isListening = false;
   recognition && recognition.stop();
-  setMicUI(false);
+  setMicUI(false); // ferme AudioContext, null micStream — ne stoppe PAS les tracks
   esStopAutosave();
   if (mediaRecorder) {
-    const whisperText = await stopRecordingAndTranscribe();
+    const whisperText = await stopRecordingAndTranscribe(); // stoppe les tracks
     if (whisperText) {
       const corrected = applyMedicalCorrections(whisperText);
       finalText = corrected;
@@ -1444,6 +1513,10 @@ async function stopListening() {
       document.getElementById('whisperBadge').style.display = 'inline-block';
       updateReformBtn();
     }
+  } else if (recordingStream) {
+    // Pas de recorder (MediaRecorder indisponible) : stoppe les tracks directement
+    recordingStream.getTracks().forEach(t => t.stop());
+    recordingStream = null;
   }
   esSaveDraft();
 }
