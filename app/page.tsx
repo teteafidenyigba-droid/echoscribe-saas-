@@ -160,8 +160,8 @@ export default function LandingPage() {
           }
           .hero-inner2 {
             position: relative; z-index: 2;
-            max-width: 1080px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+            max-width: 1320px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
           }
           .hero-mockup2 { display: block; }
           @media (max-width: 768px) {
