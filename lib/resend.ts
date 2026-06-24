@@ -14,16 +14,27 @@ function base(content: string) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EchoScribe</title>
 </head>
-<body style="margin:0;padding:0;background:#f0f4f8;font-family:Georgia,'Times New Roman',serif;">
+<body style="margin:0;padding:0;background:#e8f0f7;font-family:Georgia,'Times New Roman',serif;">
 
   <!-- Header -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0a1f38 0%,#0e3352 100%);">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#e8f0f7;">
     <tr>
-      <td align="center" style="padding:36px 24px 28px;">
-        <div style="font-size:32px;font-style:italic;color:#e2eaf5;letter-spacing:-0.5px;">
-          Echo<span style="font-style:normal;font-weight:700;color:#38bdf8;">Scribe</span>
-        </div>
-        <div style="margin-top:12px;display:inline-block;border:1px solid rgba(56,189,248,0.4);border-radius:999px;padding:5px 16px;font-size:11px;color:#7dd3fc;font-family:'Courier New',monospace;letter-spacing:0.08em;">
+      <td align="center" style="padding:32px 24px 28px;">
+        <!-- Logo: ECG line + EchoScribe -->
+        <table cellpadding="0" cellspacing="0" style="display:inline-table;">
+          <tr>
+            <td valign="middle" style="padding-right:10px;">
+              <!-- ECG / heartbeat SVG -->
+              <svg width="36" height="24" viewBox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="0,12 6,12 9,4 12,20 15,8 18,16 21,12 36,12" fill="none" stroke="#c0392b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </td>
+            <td valign="middle">
+              <span style="font-size:28px;font-style:italic;font-family:Georgia,serif;color:#1a2e44;letter-spacing:-0.3px;">Echo</span><span style="font-size:28px;font-style:normal;font-weight:700;font-family:Georgia,serif;color:#2563a8;">Scribe</span>
+            </td>
+          </tr>
+        </table>
+        <div style="margin-top:10px;display:inline-block;border:1px solid rgba(37,99,168,0.3);border-radius:999px;padding:4px 14px;font-size:11px;color:#2563a8;font-family:'Courier New',monospace;letter-spacing:0.07em;">
           IA v5 &nbsp;·&nbsp; Certifié usage médical
         </div>
       </td>
