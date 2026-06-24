@@ -36,20 +36,16 @@ export async function POST(request: NextRequest) {
 
   let session;
   try {
+    // Trial already consumed locally — this checkout is for the paid subscription
     session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
       payment_method_types: ["card"],
-      payment_method_collection: "if_required",
       line_items: [{ price: planConfig.priceId, quantity: 1 }],
       subscription_data: {
-        trial_period_days: 7,
-        trial_settings: {
-          end_behavior: { missing_payment_method: "cancel" },
-        },
         metadata: { supabase_uid: user.id, plan },
       },
-      success_url: `${appUrl}/login`,
+      success_url: `${appUrl}/app`,
       cancel_url: `${appUrl}/billing?canceled=1`,
       locale: "fr",
       allow_promotion_codes: true,

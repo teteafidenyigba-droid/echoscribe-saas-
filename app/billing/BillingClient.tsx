@@ -99,7 +99,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
         )}
         {searchParams.welcome && (
           <div style={s.successBox}>
-            ✓ Compte créé ! Choisissez votre plan pour démarrer votre essai gratuit de 7 jours.
+            ✓ Bienvenue ! Votre essai de 7 jours est actif — accédez à l'application dès maintenant.
           </div>
         )}
         {searchParams.canceled && (
@@ -156,7 +156,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 <div style={s.planPrice}>
                   59€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/mois</span>
                 </div>
-                <p style={s.planDesc}>7 jours d'essai gratuit inclus</p>
+                <p style={s.planDesc}>Sans engagement · résiliable à tout moment</p>
                 <button
                   onClick={() => handleCheckout("monthly")}
                   disabled={!!loading}
@@ -171,7 +171,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 <div style={s.planPrice}>
                   699€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
                 </div>
-                <p style={{ ...s.planDesc, color: "#38bdf8" }}>Soit 58€/mois · 7 jours d'essai</p>
+                <p style={{ ...s.planDesc, color: "#38bdf8" }}>Soit 58€/mois · économisez 25%</p>
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}
@@ -183,7 +183,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
             </div>
 
             <p style={s.dimText}>
-              Paiement sécurisé par Stripe · Aucun débit pendant l'essai · Résiliable à tout moment
+              Paiement sécurisé par Stripe · Résiliable à tout moment
             </p>
           </>
         )}

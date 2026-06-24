@@ -48,19 +48,23 @@ export async function POST(request: NextRequest) {
       const user = await getUserFromCustomer(customerId);
       if (!user) break;
 
-      await supabase.from("subscriptions").upsert({
-        user_id: user.id,
-        stripe_subscription_id: sub.id,
-        stripe_customer_id: customerId,
-        status: sub.status,
-        price_id: sub.items.data[0]?.price.id,
-        current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
-        current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
-        trial_start: sub.trial_start ? new Date(sub.trial_start * 1000).toISOString() : null,
-        trial_end: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
-        cancel_at_period_end: sub.cancel_at_period_end,
-        canceled_at: sub.canceled_at ? new Date(sub.canceled_at * 1000).toISOString() : null,
-      });
+      // onConflict user_id: overwrites the local trial row when a real Stripe subscription is created
+      await supabase.from("subscriptions").upsert(
+        {
+          user_id: user.id,
+          stripe_subscription_id: sub.id,
+          stripe_customer_id: customerId,
+          status: sub.status,
+          price_id: sub.items.data[0]?.price.id,
+          current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
+          current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+          trial_start: sub.trial_start ? new Date(sub.trial_start * 1000).toISOString() : null,
+          trial_end: sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null,
+          cancel_at_period_end: sub.cancel_at_period_end,
+          canceled_at: sub.canceled_at ? new Date(sub.canceled_at * 1000).toISOString() : null,
+        },
+        { onConflict: "user_id" }
+      );
 
       if (event.type === "customer.subscription.created" && sub.status === "trialing") {
         try {
@@ -83,15 +87,18 @@ export async function POST(request: NextRequest) {
       const user = await getUserFromCustomer(customerId);
       if (!user) break;
 
-      await supabase.from("subscriptions").upsert({
-        user_id: user.id,
-        stripe_subscription_id: sub.id,
-        stripe_customer_id: customerId,
-        status: "canceled",
-        current_period_end: sub.current_period_end
-          ? new Date(sub.current_period_end * 1000).toISOString()
-          : null,
-      });
+      await supabase.from("subscriptions").upsert(
+        {
+          user_id: user.id,
+          stripe_subscription_id: sub.id,
+          stripe_customer_id: customerId,
+          status: "canceled",
+          current_period_end: sub.current_period_end
+            ? new Date(sub.current_period_end * 1000).toISOString()
+            : null,
+        },
+        { onConflict: "user_id" }
+      );
 
       try {
         const endDate = sub.current_period_end

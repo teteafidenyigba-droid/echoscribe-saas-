@@ -24,6 +24,19 @@ export async function GET(request: NextRequest) {
         selected_plan: plan,
       });
 
+      // Start 7-day free trial in DB (no Stripe required upfront)
+      const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      await supabase.from("subscriptions").upsert(
+        {
+          user_id: user.id,
+          stripe_subscription_id: `local_trial_${user.id}`,
+          status: "trialing",
+          trial_start: new Date().toISOString(),
+          trial_end: trialEnd.toISOString(),
+        },
+        { onConflict: "user_id" }
+      );
+
       // Send welcome email (only if Resend is configured)
       if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_PLACEHOLDER')) {
         try {
@@ -31,7 +44,8 @@ export async function GET(request: NextRequest) {
         } catch {}
       }
 
-      return NextResponse.redirect(`${origin}/billing?welcome=1&plan=${plan}`);
+      // Session init then redirect to app directly — no card required during trial
+      return NextResponse.redirect(`${origin}/app`);
     }
   }
 
