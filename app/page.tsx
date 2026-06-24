@@ -202,8 +202,12 @@ export default function LandingPage() {
                 ▶ Voir la démo
               </a>
             </div>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em" }}>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em", marginBottom: 16 }}>
               7 jours gratuits · Sans engagement · Résiliable en un clic
+            </p>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", fontStyle: "italic", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 16 }}>🩺</span>
+              Conçu par un médecin échographiste
             </p>
           </div>
 
