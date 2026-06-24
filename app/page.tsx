@@ -1,5 +1,4 @@
 import Link from "next/link";
-import HeroSlider from "./components/HeroSlider";
 
 export default function LandingPage() {
   return (
@@ -145,7 +144,108 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      <HeroSlider />
+      {/* HERO */}
+      <section style={{
+        position: "relative", overflow: "hidden",
+        padding: "80px 20px 70px",
+        backgroundImage: "url('/hero-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center 30%",
+      }}>
+        <style>{`
+          .hero-overlay2 {
+            position: absolute; inset: 0; z-index: 0;
+            background: linear-gradient(140deg, rgba(10,20,48,0.93) 0%, rgba(15,36,64,0.88) 40%, rgba(20,80,140,0.80) 80%, rgba(20,100,180,0.75) 100%);
+          }
+          .hero-inner2 {
+            position: relative; z-index: 2;
+            max-width: 1080px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+          }
+          .hero-mockup2 { display: block; }
+          @media (max-width: 768px) {
+            .hero-inner2 { grid-template-columns: 1fr !important; gap: 0 !important; }
+            .hero-mockup2 { display: none !important; }
+            .hero-btns2 a { flex: 1; text-align: center; font-size: 15px !important; padding: 13px 16px !important; }
+            section[data-hero2] { padding: 56px 16px 48px !important; }
+          }
+        `}</style>
+        <div className="hero-overlay2" />
+        <div className="hero-inner2">
+          {/* LEFT */}
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 20 }}>
+              DICTÉE MÉDICALE PAR INTELLIGENCE ARTIFICIELLE
+            </p>
+            <h1 style={{ fontSize: "clamp(32px, 4.5vw, 54px)", fontWeight: 800, lineHeight: 1.08, color: "#ffffff", marginBottom: 22, letterSpacing: "-0.02em" }}>
+              Vous dictez.<br />
+              <em style={{ fontStyle: "italic", fontWeight: 800, color: "#38bdf8" }}>Le compte rendu s&apos;écrit.</em>
+            </h1>
+            <p style={{ fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.75, color: "rgba(255,255,255,0.72)", marginBottom: 32, maxWidth: 460 }}>
+              EchoScribe transforme votre voix, pendant l&apos;examen, en compte rendu structuré conforme aux recommandations SFR / HAS — prêt à coller dans votre logiciel.
+            </p>
+            <div className="hero-btns2" style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
+              <Link href="/register" style={{
+                background: "#c45d4a", borderRadius: 12, color: "#fff",
+                textDecoration: "none", fontSize: 16, padding: "14px 32px",
+                display: "inline-block", fontWeight: 700,
+                boxShadow: "0 6px 24px rgba(196,93,74,0.45)",
+              }}>
+                Essai gratuit 7 jours
+              </Link>
+              <a href="#video" style={{
+                background: "rgba(255,255,255,0.1)", border: "2px solid rgba(255,255,255,0.25)",
+                borderRadius: 12, color: "#ffffff", textDecoration: "none",
+                fontSize: 16, padding: "14px 24px", display: "inline-block", fontWeight: 500,
+              }}>
+                ▶ Voir la démo
+              </a>
+            </div>
+            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em" }}>
+              7 jours gratuits · Sans engagement · Résiliable en un clic
+            </p>
+          </div>
+
+          {/* RIGHT — mockup statique */}
+          <div className="hero-mockup2">
+            <div style={{ background: "#fff", border: "1px solid #dde5e7", borderRadius: 18, overflow: "hidden", boxShadow: "0 8px 40px rgba(10,20,48,0.18)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "11px 16px", borderBottom: "1px solid #e8eef0", background: "#f4f8fa" }}>
+                {[1,2,3].map(i => <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: "#d0dde3", display: "inline-block" }} />)}
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#5b7a84", fontWeight: 600, marginLeft: 8 }}>EchoScribe — en direct</span>
+                <span style={{ marginLeft: "auto", background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.35)", borderRadius: 6, padding: "2px 10px", color: "#16a34a", fontSize: 10, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>✓ 23s</span>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+                <div style={{ padding: "14px 16px", borderRight: "1px solid #e8eef0" }}>
+                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase", color: "#1c7f9e", marginBottom: 10 }}>① Ce que vous dictez</p>
+                  <p style={{ fontSize: 12, color: "#3c5a63", lineHeight: 1.75 }}>
+                    «{" "}
+                    <span style={{ color: "#a0b4bc", textDecoration: "line-through", textDecorationColor: "#e05a3a" }}>Allongez-vous, inspirez… Vous avez mal ici ? — Un peu, oui. Expirez. </span>
+                    <span style={{ color: "#14303a" }}>Foie de taille normale, contours réguliers, sans lésion. Vésicule alithiasique. Reins sans anomalie. </span>
+                    <span style={{ color: "#a0b4bc", textDecoration: "line-through", textDecorationColor: "#e05a3a" }}>Vous pouvez vous rhabiller.</span>
+                    {" "}»
+                  </p>
+                </div>
+                <div style={{ padding: "14px 16px" }}>
+                  <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: ".13em", textTransform: "uppercase", color: "#1c7f9e", marginBottom: 10 }}>② Le compte rendu généré</p>
+                  <div style={{ fontSize: 12, lineHeight: 1.65, color: "#3c5a63" }}>
+                    <div style={{ fontWeight: 700, color: "#0e3c4c", marginBottom: 3, fontSize: 11 }}>RÉSULTATS</div>
+                    <div style={{ marginBottom: 2 }}><strong style={{ color: "#14303a" }}>Foie :</strong> de taille normale, contours réguliers, sans lésion.</div>
+                    <div style={{ marginBottom: 2 }}><strong style={{ color: "#14303a" }}>Vésicule :</strong> alithiasique, à parois fines.</div>
+                    <div style={{ marginBottom: 2 }}><strong style={{ color: "#14303a" }}>Reins :</strong> sans anomalie décelable.</div>
+                    <div style={{ fontWeight: 700, color: "#0e3c4c", marginTop: 8, marginBottom: 3, fontSize: 11 }}>CONCLUSION</div>
+                    <div>• Échographie abdominale sans particularité.</div>
+                  </div>
+                </div>
+              </div>
+              <div style={{ padding: "10px 16px", borderTop: "1px solid #e8eef0", display: "flex", gap: 8, background: "#f9fbfc" }}>
+                <span style={{ background: "#eaf0f3", borderRadius: 6, padding: "4px 12px", color: "#5b7a84", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>📋 Copier</span>
+                <span style={{ background: "#eaf0f3", borderRadius: 6, padding: "4px 12px", color: "#5b7a84", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>✎ Modifier</span>
+                <span style={{ background: "rgba(74,222,128,0.1)", border: "1px solid rgba(74,222,128,0.3)", borderRadius: 6, padding: "4px 12px", color: "#16a34a", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>Conforme SFR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* BANDEAU SÉPARATEUR */}
       <div style={{ background: "#7dd3fc", padding: "16px 48px" }}>
