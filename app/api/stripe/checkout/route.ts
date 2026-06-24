@@ -40,9 +40,13 @@ export async function POST(request: NextRequest) {
       customer: customerId,
       mode: "subscription",
       payment_method_types: ["card"],
+      payment_method_collection: "if_required",
       line_items: [{ price: planConfig.priceId, quantity: 1 }],
       subscription_data: {
         trial_period_days: 7,
+        trial_settings: {
+          end_behavior: { missing_payment_method: "cancel" },
+        },
         metadata: { supabase_uid: user.id, plan },
       },
       success_url: `${appUrl}/login`,
