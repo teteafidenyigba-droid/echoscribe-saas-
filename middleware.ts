@@ -47,7 +47,6 @@ export async function middleware(request: NextRequest) {
     // ── Vérification session unique ──
     const esSid = request.cookies.get("es_sid")?.value;
     if (profile?.active_session_id && profile.active_session_id !== esSid) {
-      // Un autre appareil est déjà connecté → déconnexion forcée
       return NextResponse.redirect(new URL("/api/auth/force-signout", request.url));
     }
 
@@ -71,12 +70,33 @@ export async function middleware(request: NextRequest) {
           new Date(sub.current_period_end) > now));
 
     if (!hasAccess && pathname.startsWith("/app")) {
-      // Fallback 1: aucune subscription du tout → activer le trial via route dédiée
+      // Fallback 1: aucune subscription → créer le trial directement depuis le middleware
       if (!sub) {
-        return NextResponse.redirect(new URL("/api/auth/activate-trial", request.url));
+        try {
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+          const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+          await fetch(`${supabaseUrl}/rest/v1/subscriptions?on_conflict=user_id`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": serviceKey,
+              "Authorization": `Bearer ${serviceKey}`,
+              "Prefer": "resolution=merge-duplicates",
+            },
+            body: JSON.stringify({
+              user_id: user.id,
+              stripe_subscription_id: `local_trial_${user.id}`,
+              status: "trialing",
+              trial_start: new Date().toISOString(),
+              trial_end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            }),
+          });
+        } catch {}
+        // Laisser passer — le trial vient d'être créé
+        return supabaseResponse;
       }
 
-      // Fallback 2: vérification directe Stripe si pas de sub en DB
+      // Fallback 2: vérification directe Stripe si sub expirée
       if (profile?.stripe_customer_id) {
         try {
           const stripeKey = process.env.STRIPE_SECRET_KEY!;
