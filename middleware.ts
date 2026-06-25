@@ -71,13 +71,9 @@ export async function middleware(request: NextRequest) {
           new Date(sub.current_period_end) > now));
 
     if (!hasAccess && pathname.startsWith("/app")) {
-      // Fallback 1: compte créé il y a moins de 7 jours → trial implicite
-      const accountCreatedAt = user.created_at ? new Date(user.created_at) : null;
-      const accountAgeDays = accountCreatedAt
-        ? (now.getTime() - accountCreatedAt.getTime()) / (1000 * 60 * 60 * 24)
-        : 999;
-      if (accountAgeDays < 7) {
-        return supabaseResponse;
+      // Fallback 1: aucune subscription du tout → activer le trial via route dédiée
+      if (!sub) {
+        return NextResponse.redirect(new URL("/api/auth/activate-trial", request.url));
       }
 
       // Fallback 2: vérification directe Stripe si pas de sub en DB
