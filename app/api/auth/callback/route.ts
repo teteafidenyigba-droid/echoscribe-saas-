@@ -1,8 +1,53 @@
-import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { sendWelcomeEmail } from "@/lib/resend";
 
 export const dynamic = "force-dynamic";
+
+async function createTrialSubscription(userId: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const trialStart = new Date().toISOString();
+
+  await fetch(`${supabaseUrl}/rest/v1/subscriptions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": serviceKey,
+      "Authorization": `Bearer ${serviceKey}`,
+      "Prefer": "resolution=merge-duplicates",
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      stripe_subscription_id: `local_trial_${userId}`,
+      status: "trialing",
+      trial_start: trialStart,
+      trial_end: trialEnd,
+    }),
+  });
+}
+
+async function upsertProfile(userId: string, email: string, name: string, plan: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+  await fetch(`${supabaseUrl}/rest/v1/profiles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": serviceKey,
+      "Authorization": `Bearer ${serviceKey}`,
+      "Prefer": "resolution=merge-duplicates",
+    },
+    body: JSON.stringify({
+      id: userId,
+      email,
+      full_name: name,
+      selected_plan: plan,
+    }),
+  });
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -16,45 +61,9 @@ export async function GET(request: NextRequest) {
       const user = data.user;
       const name = user.user_metadata?.full_name ?? user.email ?? "";
 
-      const serviceSupabase = createServiceClient();
-
-      // Create profile
-      await serviceSupabase.from("profiles").upsert({
-        id: user.id,
-        email: user.email,
-        full_name: name,
-        selected_plan: plan,
-      });
-
-      // Start 7-day free trial — check first to avoid duplicate
-      const trialEnd = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-      const { data: existing } = await serviceSupabase
-        .from("subscriptions")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (existing) {
-        // Already has a subscription row — update to trialing if inactive
-        await serviceSupabase
-          .from("subscriptions")
-          .update({
-            status: "trialing",
-            trial_start: new Date().toISOString(),
-            trial_end: trialEnd.toISOString(),
-          })
-          .eq("user_id", user.id)
-          .eq("status", "inactive");
-      } else {
-        // New user — insert fresh trial row
-        await serviceSupabase.from("subscriptions").insert({
-          user_id: user.id,
-          stripe_subscription_id: `local_trial_${user.id}`,
-          status: "trialing",
-          trial_start: new Date().toISOString(),
-          trial_end: trialEnd.toISOString(),
-        });
-      }
+      // Use direct REST API calls with service role to bypass RLS and cookie issues
+      await upsertProfile(user.id, user.email!, name, plan);
+      await createTrialSubscription(user.id);
 
       // Send welcome email
       if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_PLACEHOLDER')) {
