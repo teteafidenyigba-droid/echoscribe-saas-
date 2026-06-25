@@ -56,7 +56,7 @@ export async function middleware(request: NextRequest) {
       .from("subscriptions")
       .select("status, current_period_end, trial_end")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     const now = new Date();
     const trialStillActive =
@@ -71,7 +71,16 @@ export async function middleware(request: NextRequest) {
           new Date(sub.current_period_end) > now));
 
     if (!hasAccess && pathname.startsWith("/app")) {
-      // Fallback: check Stripe directly if no sub in Supabase
+      // Fallback 1: compte créé il y a moins de 7 jours → trial implicite
+      const accountCreatedAt = user.created_at ? new Date(user.created_at) : null;
+      const accountAgeDays = accountCreatedAt
+        ? (now.getTime() - accountCreatedAt.getTime()) / (1000 * 60 * 60 * 24)
+        : 999;
+      if (accountAgeDays < 7) {
+        return supabaseResponse;
+      }
+
+      // Fallback 2: vérification directe Stripe si pas de sub en DB
       if (profile?.stripe_customer_id) {
         try {
           const stripeKey = process.env.STRIPE_SECRET_KEY!;
