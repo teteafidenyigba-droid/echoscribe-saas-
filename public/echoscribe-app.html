@@ -402,6 +402,26 @@
   .card:has(#geminiModelSection) { display: none !important; }
   /* Cacher carte clés */
   .card:has(#geminiKey) { display: none !important; }
+
+  /* ── Bouton Générer : contraste sur fond bleu LinkedIn ── */
+  button.primary-btn {
+    background: #ffffff !important;
+    color: #0A66C2 !important;
+    border: 2px solid rgba(255,255,255,.4) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.6) inset !important;
+    letter-spacing: 0.03em;
+  }
+  button.primary-btn:hover:not(:disabled) {
+    background: #f0f7ff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.25) !important;
+  }
+  button.primary-btn:disabled {
+    background: rgba(255,255,255,.35) !important;
+    color: rgba(255,255,255,.7) !important;
+    box-shadow: none !important;
+  }
 </style>
 </head>
 <body>
@@ -2302,6 +2322,26 @@ function exportPDF() {
   .card:has(#geminiModelSection) { display: none !important; }
   /* Cacher carte clés */
   .card:has(#geminiKey) { display: none !important; }
+
+  /* ── Bouton Générer : contraste sur fond bleu LinkedIn ── */
+  button.primary-btn {
+    background: #ffffff !important;
+    color: #0A66C2 !important;
+    border: 2px solid rgba(255,255,255,.4) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.6) inset !important;
+    letter-spacing: 0.03em;
+  }
+  button.primary-btn:hover:not(:disabled) {
+    background: #f0f7ff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.25) !important;
+  }
+  button.primary-btn:disabled {
+    background: rgba(255,255,255,.35) !important;
+    color: rgba(255,255,255,.7) !important;
+    box-shadow: none !important;
+  }
 </style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
@@ -2320,6 +2360,26 @@ function exportWord() {
   .card:has(#geminiModelSection) { display: none !important; }
   /* Cacher carte clés */
   .card:has(#geminiKey) { display: none !important; }
+
+  /* ── Bouton Générer : contraste sur fond bleu LinkedIn ── */
+  button.primary-btn {
+    background: #ffffff !important;
+    color: #0A66C2 !important;
+    border: 2px solid rgba(255,255,255,.4) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.6) inset !important;
+    letter-spacing: 0.03em;
+  }
+  button.primary-btn:hover:not(:disabled) {
+    background: #f0f7ff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,.25) !important;
+  }
+  button.primary-btn:disabled {
+    background: rgba(255,255,255,.35) !important;
+    color: rgba(255,255,255,.7) !important;
+    box-shadow: none !important;
+  }
 </style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
