@@ -112,12 +112,14 @@
     color: #0d1f35 !important;
   }
   button.primary-btn {
-    background: #004182 !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 18px rgba(0,0,0,.28) !important;
+    background: #ffffff !important;
+    color: #004182 !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.18) !important;
   }
-  button.primary-btn:hover:not(:disabled) { background: #003166 !important; }
-  button.primary-btn:disabled { opacity: .5 !important; }
+  button.primary-btn:hover:not(:disabled) { background: #e8f0fa !important; }
+  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(0,65,130,.5) !important; }
   .result-card {
     background: #ffffff !important;
     border-left: 4px solid #0A66C2 !important;
@@ -330,7 +332,7 @@
   </div>
 
   <button class="primary-btn" id="reformBtn" onclick="reformulate()" disabled>
-    <span id="generateBtnLabel">Générer le compte rendu avec Gemini →</span>
+    <span id="generateBtnLabel">Générer le compte rendu →</span>
   </button>
   <p id="routingInfo" class="hint" style="text-align:center;margin:-6px 0 10px;color:#3d5a70;"></p>
 
