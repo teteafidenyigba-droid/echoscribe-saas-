@@ -391,101 +391,58 @@
     display: none !important;
   }
 
-  /* ══ PATCH VISUEL v9 — fond LinkedIn, lisibilité, sections ══ */
-
-  /* Fond LinkedIn blue */
+  /* ══ v11 : COULEURS SEULEMENT — structure intacte ══ */
   body { background: #0A66C2 !important; }
 
-  /* Cartes blanches opaques — lisibilité garantie */
-  .card,
-  div:has(> .transcription-box),
-  .result-card,
-  .spinner-wrap,
-  #historyCard {
+  .card {
     background: #ffffff !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border: 1px solid #dce8f5 !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,.13) !important;
+    border-color: #dce8f5 !important;
+    box-shadow: 0 2px 14px rgba(0,0,0,.12) !important;
     color: #0d1f35 !important;
   }
-  .card * { color: #0d1f35 !important; }
-  .label  { color: #5a7a9a !important; }
-  .hint   { color: #5a7a9a !important; }
-  .transcription-box { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+  .card .label        { color: #5a7a9a !important; }
+  .card .hint         { color: #8aabcf !important; }
+  .card h2, .card h3  { color: #0d1f35 !important; }
 
-  /* Header blanc opaque */
   .header {
     background: #ffffff !important;
     backdrop-filter: none !important;
-    border: 1px solid #dce8f5 !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
   }
-  .header * { color: #0d1f35 !important; }
-  h1 .echo { color: #0d1f35 !important; }
-  h1 span  { color: #0A66C2 !important; }
-  .badge   { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .header .badge      { background: #f0f6fc !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
 
-  /* AI Switcher */
-  #aiSwitcher { background: #f0f6fc !important; border-color: #dce8f5 !important; backdrop-filter: none !important; }
-  #aiSwitcher button { color: #5a7a9a !important; background: transparent !important; }
-  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+  div:has(> .transcription-box) {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
+  }
+  .transcription-box  { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
 
-  /* Micro */
-  .mic-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #0d1f35 !important; }
-  .mic-btn.listening { background: linear-gradient(145deg,#1a4fa0,#2563a8) !important; color: #fff !important; }
-  .mic-status { color: #5a7a9a !important; }
-
-  /* Bouton Générer — contraste fort */
-  button.primary-btn {
+  button.primary-btn  {
     background: #004182 !important;
     color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 18px rgba(0,0,0,.25) !important;
-    font-weight: 700 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
   }
-  button.primary-btn:hover:not(:disabled) { background: #003166 !important; transform: translateY(-1px) !important; }
-  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(255,255,255,.6) !important; }
-  button.primary-btn::after { display: none !important; }
+  button.primary-btn:disabled { background: rgba(0,65,130,.35) !important; }
 
-  /* Boutons icônes */
-  .icon-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #1a4fa0 !important; }
-  .icon-btn:hover { background: #e0edf8 !important; color: #0A66C2 !important; }
+  .result-card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
+    border-left: 4px solid #0A66C2 !important;
+  }
+  .result-body, .section-title { color: #0d1f35 !important; }
 
-  /* Toggles */
-  .toggle-btn    { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
-  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.35) !important; color: #15803d !important; }
-
-  /* Select */
-  select { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
-
-  /* Résultat */
-  .result-card { border-left: 4px solid #0A66C2 !important; }
-  .result-body { color: #0d1f35 !important; }
-  .result-body strong { color: #14532d !important; }
-  .section-title { color: #0d1f35 !important; border-top-color: #dce8f5 !important; }
-
-  /* Placeholder colonne droite */
   .container::after {
     background: rgba(255,255,255,.18) !important;
-    border: 1px solid rgba(255,255,255,.3) !important;
-    color: rgba(255,255,255,.65) !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+    color: rgba(255,255,255,.6) !important;
     backdrop-filter: none !important;
-    pointer-events: none !important;
   }
-
-  /* Paramètres + Historique : lignes 5-6, sous la zone principale */
-  .card:has(.toggle-btn) { display: block !important; grid-column: 1 / -1 !important; grid-row: 5 !important; }
-  #historyCard           { display: block !important; grid-column: 1 / -1 !important; grid-row: 6 !important; }
-  /* Permettre le scroll pour accéder aux sections en bas */
-
-  /* Erreur */
-  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
-
-  /* Spinner */
-  .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
-  .spinner-wrap { color: #5a7a9a !important; }
-  body      { overflow-y: auto !important; height: auto !important; }
-  .container { overflow-y: visible !important; height: auto !important; min-height: 100vh; }
 </style>
 </head>
 <body>
@@ -2375,101 +2332,58 @@ function exportPDF() {
   const body = document.getElementById('resultBody');
   const w = window.open('', '_blank');
   w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}
-  /* ══ PATCH VISUEL v9 — fond LinkedIn, lisibilité, sections ══ */
-
-  /* Fond LinkedIn blue */
+  /* ══ v11 : COULEURS SEULEMENT — structure intacte ══ */
   body { background: #0A66C2 !important; }
 
-  /* Cartes blanches opaques — lisibilité garantie */
-  .card,
-  div:has(> .transcription-box),
-  .result-card,
-  .spinner-wrap,
-  #historyCard {
+  .card {
     background: #ffffff !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border: 1px solid #dce8f5 !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,.13) !important;
+    border-color: #dce8f5 !important;
+    box-shadow: 0 2px 14px rgba(0,0,0,.12) !important;
     color: #0d1f35 !important;
   }
-  .card * { color: #0d1f35 !important; }
-  .label  { color: #5a7a9a !important; }
-  .hint   { color: #5a7a9a !important; }
-  .transcription-box { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+  .card .label        { color: #5a7a9a !important; }
+  .card .hint         { color: #8aabcf !important; }
+  .card h2, .card h3  { color: #0d1f35 !important; }
 
-  /* Header blanc opaque */
   .header {
     background: #ffffff !important;
     backdrop-filter: none !important;
-    border: 1px solid #dce8f5 !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
   }
-  .header * { color: #0d1f35 !important; }
-  h1 .echo { color: #0d1f35 !important; }
-  h1 span  { color: #0A66C2 !important; }
-  .badge   { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .header .badge      { background: #f0f6fc !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
 
-  /* AI Switcher */
-  #aiSwitcher { background: #f0f6fc !important; border-color: #dce8f5 !important; backdrop-filter: none !important; }
-  #aiSwitcher button { color: #5a7a9a !important; background: transparent !important; }
-  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+  div:has(> .transcription-box) {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
+  }
+  .transcription-box  { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
 
-  /* Micro */
-  .mic-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #0d1f35 !important; }
-  .mic-btn.listening { background: linear-gradient(145deg,#1a4fa0,#2563a8) !important; color: #fff !important; }
-  .mic-status { color: #5a7a9a !important; }
-
-  /* Bouton Générer — contraste fort */
-  button.primary-btn {
+  button.primary-btn  {
     background: #004182 !important;
     color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 18px rgba(0,0,0,.25) !important;
-    font-weight: 700 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
   }
-  button.primary-btn:hover:not(:disabled) { background: #003166 !important; transform: translateY(-1px) !important; }
-  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(255,255,255,.6) !important; }
-  button.primary-btn::after { display: none !important; }
+  button.primary-btn:disabled { background: rgba(0,65,130,.35) !important; }
 
-  /* Boutons icônes */
-  .icon-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #1a4fa0 !important; }
-  .icon-btn:hover { background: #e0edf8 !important; color: #0A66C2 !important; }
+  .result-card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
+    border-left: 4px solid #0A66C2 !important;
+  }
+  .result-body, .section-title { color: #0d1f35 !important; }
 
-  /* Toggles */
-  .toggle-btn    { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
-  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.35) !important; color: #15803d !important; }
-
-  /* Select */
-  select { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
-
-  /* Résultat */
-  .result-card { border-left: 4px solid #0A66C2 !important; }
-  .result-body { color: #0d1f35 !important; }
-  .result-body strong { color: #14532d !important; }
-  .section-title { color: #0d1f35 !important; border-top-color: #dce8f5 !important; }
-
-  /* Placeholder colonne droite */
   .container::after {
     background: rgba(255,255,255,.18) !important;
-    border: 1px solid rgba(255,255,255,.3) !important;
-    color: rgba(255,255,255,.65) !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+    color: rgba(255,255,255,.6) !important;
     backdrop-filter: none !important;
-    pointer-events: none !important;
   }
-
-  /* Paramètres + Historique : lignes 5-6, sous la zone principale */
-  .card:has(.toggle-btn) { display: block !important; grid-column: 1 / -1 !important; grid-row: 5 !important; }
-  #historyCard           { display: block !important; grid-column: 1 / -1 !important; grid-row: 6 !important; }
-  /* Permettre le scroll pour accéder aux sections en bas */
-
-  /* Erreur */
-  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
-
-  /* Spinner */
-  .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
-  .spinner-wrap { color: #5a7a9a !important; }
-  body      { overflow-y: auto !important; height: auto !important; }
-  .container { overflow-y: visible !important; height: auto !important; min-height: 100vh; }
 </style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
@@ -2477,101 +2391,58 @@ function exportPDF() {
 function exportWord() {
   const body = document.getElementById('resultBody');
   const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}
-  /* ══ PATCH VISUEL v9 — fond LinkedIn, lisibilité, sections ══ */
-
-  /* Fond LinkedIn blue */
+  /* ══ v11 : COULEURS SEULEMENT — structure intacte ══ */
   body { background: #0A66C2 !important; }
 
-  /* Cartes blanches opaques — lisibilité garantie */
-  .card,
-  div:has(> .transcription-box),
-  .result-card,
-  .spinner-wrap,
-  #historyCard {
+  .card {
     background: #ffffff !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border: 1px solid #dce8f5 !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,.13) !important;
+    border-color: #dce8f5 !important;
+    box-shadow: 0 2px 14px rgba(0,0,0,.12) !important;
     color: #0d1f35 !important;
   }
-  .card * { color: #0d1f35 !important; }
-  .label  { color: #5a7a9a !important; }
-  .hint   { color: #5a7a9a !important; }
-  .transcription-box { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+  .card .label        { color: #5a7a9a !important; }
+  .card .hint         { color: #8aabcf !important; }
+  .card h2, .card h3  { color: #0d1f35 !important; }
 
-  /* Header blanc opaque */
   .header {
     background: #ffffff !important;
     backdrop-filter: none !important;
-    border: 1px solid #dce8f5 !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
   }
-  .header * { color: #0d1f35 !important; }
-  h1 .echo { color: #0d1f35 !important; }
-  h1 span  { color: #0A66C2 !important; }
-  .badge   { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .header .badge      { background: #f0f6fc !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
 
-  /* AI Switcher */
-  #aiSwitcher { background: #f0f6fc !important; border-color: #dce8f5 !important; backdrop-filter: none !important; }
-  #aiSwitcher button { color: #5a7a9a !important; background: transparent !important; }
-  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+  div:has(> .transcription-box) {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
+  }
+  .transcription-box  { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
 
-  /* Micro */
-  .mic-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #0d1f35 !important; }
-  .mic-btn.listening { background: linear-gradient(145deg,#1a4fa0,#2563a8) !important; color: #fff !important; }
-  .mic-status { color: #5a7a9a !important; }
-
-  /* Bouton Générer — contraste fort */
-  button.primary-btn {
+  button.primary-btn  {
     background: #004182 !important;
     color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 18px rgba(0,0,0,.25) !important;
-    font-weight: 700 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
   }
-  button.primary-btn:hover:not(:disabled) { background: #003166 !important; transform: translateY(-1px) !important; }
-  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(255,255,255,.6) !important; }
-  button.primary-btn::after { display: none !important; }
+  button.primary-btn:disabled { background: rgba(0,65,130,.35) !important; }
 
-  /* Boutons icônes */
-  .icon-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #1a4fa0 !important; }
-  .icon-btn:hover { background: #e0edf8 !important; color: #0A66C2 !important; }
+  .result-card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border-color: #dce8f5 !important;
+    border-left: 4px solid #0A66C2 !important;
+  }
+  .result-body, .section-title { color: #0d1f35 !important; }
 
-  /* Toggles */
-  .toggle-btn    { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
-  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.35) !important; color: #15803d !important; }
-
-  /* Select */
-  select { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
-
-  /* Résultat */
-  .result-card { border-left: 4px solid #0A66C2 !important; }
-  .result-body { color: #0d1f35 !important; }
-  .result-body strong { color: #14532d !important; }
-  .section-title { color: #0d1f35 !important; border-top-color: #dce8f5 !important; }
-
-  /* Placeholder colonne droite */
   .container::after {
     background: rgba(255,255,255,.18) !important;
-    border: 1px solid rgba(255,255,255,.3) !important;
-    color: rgba(255,255,255,.65) !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+    color: rgba(255,255,255,.6) !important;
     backdrop-filter: none !important;
-    pointer-events: none !important;
   }
-
-  /* Paramètres + Historique : lignes 5-6, sous la zone principale */
-  .card:has(.toggle-btn) { display: block !important; grid-column: 1 / -1 !important; grid-row: 5 !important; }
-  #historyCard           { display: block !important; grid-column: 1 / -1 !important; grid-row: 6 !important; }
-  /* Permettre le scroll pour accéder aux sections en bas */
-
-  /* Erreur */
-  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
-
-  /* Spinner */
-  .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
-  .spinner-wrap { color: #5a7a9a !important; }
-  body      { overflow-y: auto !important; height: auto !important; }
-  .container { overflow-y: visible !important; height: auto !important; min-height: 100vh; }
 </style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
