@@ -332,6 +332,203 @@
 
   /* ── Footer ── */
   .footer { opacity: 0.6; }
+
+  /* ════════════════════════════════════════════
+     FULL-PAGE LAYOUT — deux colonnes, zéro scroll
+     CSS only — code V5 intact
+  ════════════════════════════════════════════ */
+
+  body {
+    height: 100vh !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    display: block !important;
+    align-items: unset !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 62px auto 1fr 54px;
+    gap: 10px;
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  /* ── Header compact horizontal ── */
+  .header {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    text-align: left !important;
+    margin-bottom: 0 !important;
+    padding: 8px 16px !important;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.85);
+    box-shadow: 0 2px 14px rgba(10,40,80,.08);
+  }
+  .header .badge { margin: 0 !important; padding: 3px 12px !important; font-size: 9.5px !important; }
+  .header .logo { margin: 0 !important; }
+  .header h1 { font-size: 22px !important; }
+  .header .subtitle { display: none !important; }
+  .header .tag { display: none !important; }
+  .header #aiSwitcher { margin: 0 0 0 auto !important; }
+  .header #aiLabel { display: none !important; }
+
+  /* ── Cacher modèle + options (restent accessibles via JS) ── */
+  .card:has(#geminiModelSection) { display: none !important; }
+  .card:has(.toggle-btn) { display: none !important; }
+  #draftBanner { display: none !important; }
+  .footer { display: none !important; }
+  #routingInfo { display: none !important; }
+  #historyCard { display: none !important; }
+
+  /* ── Carte micro : colonne gauche, ligne 2, horizontal ── */
+  .card:has(.mic-zone) {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0 !important;
+    padding: 12px 18px !important;
+    display: flex;
+    align-items: center;
+  }
+  .mic-zone {
+    flex-direction: row !important;
+    padding: 0 !important;
+    gap: 14px !important;
+    align-items: center;
+    width: 100%;
+  }
+  .mic-wrapper { flex-shrink: 0; }
+  .mic-btn {
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 22px !important;
+  }
+  .pulse-ring { inset: -10px !important; }
+  .wave-bars { height: 26px !important; order: 3; }
+  .mic-status {
+    flex: 1 !important;
+    text-align: left !important;
+    font-size: 13px !important;
+  }
+  #keywordDetected, #continuousCountdown { order: 4; }
+
+  /* ── Transcription : colonne gauche, ligne 3 ── */
+  div:has(> .transcription-box) {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(255,255,255,.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 18px;
+    padding: 14px 16px !important;
+    box-shadow: 0 2px 12px rgba(10,40,80,.07);
+  }
+  .transcription-box {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    resize: none !important;
+    border-radius: 10px !important;
+  }
+  .row-space { flex-shrink: 0; margin-bottom: 8px; }
+  .hint { flex-shrink: 0; margin-top: 6px !important; }
+
+  /* ── Bouton Générer : colonne gauche, ligne 4 ── */
+  button.primary-btn {
+    grid-column: 1;
+    grid-row: 4;
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100%;
+    border-radius: 14px !important;
+  }
+
+  /* ── Spinner : overlay sur transcription ── */
+  .spinner-wrap {
+    grid-column: 1;
+    grid-row: 3;
+    z-index: 10;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    border-radius: 18px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+  }
+
+  /* ── Erreur : overlay sur transcription ── */
+  .error-box {
+    grid-column: 1;
+    grid-row: 3;
+    z-index: 11;
+    margin: 0 !important;
+    align-self: start;
+  }
+
+  /* ── Colonne droite : placeholder toujours visible ── */
+  .container::after {
+    content: '📋\A\A Le compte rendu\A apparaîtra ici\A après la génération';
+    white-space: pre;
+    grid-column: 2;
+    grid-row: 2 / 5;
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.8);
+    border-radius: 20px;
+    box-shadow: 0 2px 20px rgba(10,40,80,.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgba(26,79,160,.35);
+    font-size: 14px;
+    font-style: italic;
+    line-height: 2;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Résultat : colonne droite, toutes les lignes ── */
+  .result-card {
+    grid-column: 2 !important;
+    grid-row: 2 / 5 !important;
+    margin: 0 !important;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    border-left: 4px solid var(--accent2) !important;
+    border-radius: 20px !important;
+    z-index: 1;
+  }
+  .result-body { flex: 1; overflow-y: auto; }
+
+  /* ── Boutons export PDF/Word dans result card ── */
+  .es-export-btn {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-color: var(--accent) !important;
+    font-weight: 600 !important;
+  }
+  .es-export-btn:hover {
+    background: var(--accent2) !important;
+    border-color: var(--accent2) !important;
+  }
   ::-webkit-scrollbar { width: 4px; }
 
   /* ════════════════════════════════════════════
@@ -2354,6 +2551,25 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
   await esCheckDraft();       // propose la reprise d'un brouillon récent
   setInterval(() => { esPurge().then(esRenderHistory); }, 5*60*1000); // purge périodique
 })();
+
+function exportPDF() {
+  const body = document.getElementById('resultBody');
+  const w = window.open('', '_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}</style></head><body>' + body.innerHTML + '</body></html>');
+  w.document.close(); w.focus();
+  setTimeout(() => { w.print(); w.close(); }, 350);
+}
+
+function exportWord() {
+  const body = document.getElementById('resultBody');
+  const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}strong{font-weight:700}</style></head><body>' + body.innerHTML + '</body></html>';
+  const blob = new Blob(['﻿' + content], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'compte-rendu-echoscribe.doc';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
