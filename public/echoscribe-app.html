@@ -1301,7 +1301,6 @@ async function esClearAll() {
 // Restore saved keys on load
 (function(){
   const lastAI = localStorage.getItem('es_last_ai') || 'gemini';
-  if(gk || ck) document.getElementById('savedBadge').style.display = 'inline';
   // Restore last used AI
   setTimeout(() => switchAI(lastAI), 50);
 })();
