@@ -1774,10 +1774,7 @@ async function stopRecordingAndTranscribe() {
           body:formData
         });
         document.getElementById('spinner').style.display='none';
-        if(!res.ok) {
-          if(res.status===429) setError('⚠ Whisper : limite OpenAI atteinte (429). Patientez 30s puis réessayez, ou vérifiez vos crédits sur platform.openai.com');
-          resolve(null); return;
-        }
+        if(!res.ok) { resolve(null); return; }
         const data = await res.json();
         resolve(data.text || null);
       } catch(e) {
@@ -1826,11 +1823,8 @@ function startListening() {
     if(e.error==='not-allowed') {
       setError('Accès micro refusé. Cliquez sur 🔒 dans la barre d\'adresse → Autoriser le micro.');
       isListening=false; setMicUI(false);
-    } else if(e.error==='no-speech') {
-      // Silence temporaire — onend relancera automatiquement
-    } else if(e.error==='network') {
-      setError('⚠ SpeechRecognition : erreur réseau Google (error: network). Vérifiez que chrome://flags/#enable-webrtc-hide-local-ips-with-mdns est désactivé, ou utilisez Edge.');
-      isListening=false; setMicUI(false);
+    } else if(e.error==='no-speech' || e.error==='network') {
+      // Silence ou réseau temporaire — onend relancera automatiquement
     } else if(e.error!=='aborted') {
       setError('Erreur micro : '+e.error);
       isListening=false; setMicUI(false);
