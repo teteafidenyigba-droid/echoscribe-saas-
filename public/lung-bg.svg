@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 480" width="500" height="480">
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Trachée -->
+    <path d="M250,15 L250,90" stroke-width="10" opacity="0.9"/>
+    <path d="M250,90 Q210,105 185,130" stroke-width="7" opacity="0.9"/>
+    <path d="M250,90 Q290,105 315,130" stroke-width="7" opacity="0.9"/>
+
+    <!-- Poumon gauche (contour) -->
+    <path d="M185,130 Q140,148 112,180 Q75,220 68,270 Q62,325 88,368 Q112,408 150,422 Q185,432 205,415 Q222,398 220,368 Q217,332 198,308 Q180,285 183,248 Q186,210 185,130Z"
+          stroke-width="4" fill="rgba(255,255,255,0.07)" opacity="0.85"/>
+
+    <!-- Bronches gauche niveau 1 -->
+    <path d="M185,155 Q160,172 148,200" stroke-width="3.5" opacity="0.8"/>
+    <path d="M183,190 Q155,205 138,235" stroke-width="3" opacity="0.75"/>
+    <path d="M183,228 Q160,243 148,272" stroke-width="2.5" opacity="0.7"/>
+    <path d="M185,265 Q165,280 158,308" stroke-width="2.2" opacity="0.65"/>
+    <path d="M190,300 Q175,315 172,340" stroke-width="2" opacity="0.6"/>
+
+    <!-- Bronches gauche niveau 2 -->
+    <path d="M148,200 Q125,215 115,242" stroke-width="2.5" opacity="0.7"/>
+    <path d="M138,235 Q115,250 105,278" stroke-width="2.2" opacity="0.65"/>
+    <path d="M148,272 Q128,288 120,315" stroke-width="2" opacity="0.6"/>
+    <path d="M115,242 Q98,258 92,285" stroke-width="1.8" opacity="0.55"/>
+    <path d="M105,278 Q90,295 86,322" stroke-width="1.6" opacity="0.5"/>
+
+    <!-- Poumon droit (contour) -->
+    <path d="M315,130 Q360,148 388,180 Q425,220 432,270 Q438,325 412,368 Q388,408 350,422 Q315,432 295,415 Q278,398 280,368 Q283,332 302,308 Q320,285 317,248 Q314,210 315,130Z"
+          stroke-width="4" fill="rgba(255,255,255,0.07)" opacity="0.85"/>
+
+    <!-- Bronches droit niveau 1 -->
+    <path d="M315,155 Q340,172 352,200" stroke-width="3.5" opacity="0.8"/>
+    <path d="M317,190 Q345,205 362,235" stroke-width="3" opacity="0.75"/>
+    <path d="M317,228 Q340,243 352,272" stroke-width="2.5" opacity="0.7"/>
+    <path d="M315,265 Q335,280 342,308" stroke-width="2.2" opacity="0.65"/>
+    <path d="M310,300 Q325,315 328,340" stroke-width="2" opacity="0.6"/>
+
+    <!-- Bronches droit niveau 2 -->
+    <path d="M352,200 Q375,215 385,242" stroke-width="2.5" opacity="0.7"/>
+    <path d="M362,235 Q385,250 395,278" stroke-width="2.2" opacity="0.65"/>
+    <path d="M352,272 Q372,288 380,315" stroke-width="2" opacity="0.6"/>
+    <path d="M385,242 Q402,258 408,285" stroke-width="1.8" opacity="0.55"/>
+    <path d="M395,278 Q410,295 414,322" stroke-width="1.6" opacity="0.5"/>
+  </g>
+</svg>
