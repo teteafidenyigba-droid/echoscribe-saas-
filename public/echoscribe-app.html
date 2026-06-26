@@ -390,6 +390,18 @@
   #draftBanner {
     display: none !important;
   }
+
+  /* ── FIXES ── */
+  body {
+    background: #0A66C2 !important;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255,255,255,.14) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(0,30,80,.3) 0%, transparent 50%) !important;
+  }
+  /* Cacher carte modèle (distincte de la carte clés) */
+  .card:has(#geminiModelSection) { display: none !important; }
+  /* Cacher carte clés */
+  .card:has(#geminiKey) { display: none !important; }
 </style>
 </head>
 <body>
@@ -2278,13 +2290,37 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 function exportPDF() {
   const body = document.getElementById('resultBody');
   const w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}</style></head><body>' + body.innerHTML + '</body></html>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}
+  /* ── FIXES ── */
+  body {
+    background: #0A66C2 !important;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255,255,255,.14) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(0,30,80,.3) 0%, transparent 50%) !important;
+  }
+  /* Cacher carte modèle (distincte de la carte clés) */
+  .card:has(#geminiModelSection) { display: none !important; }
+  /* Cacher carte clés */
+  .card:has(#geminiKey) { display: none !important; }
+</style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
 }
 function exportWord() {
   const body = document.getElementById('resultBody');
-  const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}</style></head><body>' + body.innerHTML + '</body></html>';
+  const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}
+  /* ── FIXES ── */
+  body {
+    background: #0A66C2 !important;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255,255,255,.14) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(0,30,80,.3) 0%, transparent 50%) !important;
+  }
+  /* Cacher carte modèle (distincte de la carte clés) */
+  .card:has(#geminiModelSection) { display: none !important; }
+  /* Cacher carte clés */
+  .card:has(#geminiKey) { display: none !important; }
+</style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
