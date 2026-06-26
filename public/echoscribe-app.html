@@ -290,6 +290,8 @@
 
   /* Hide radio inputs */
   #tab-dictee, #tab-history, #tab-params { display: none; }
+  .es-export-btn { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; font-weight: 600; }
+  .es-export-btn:hover { background: var(--accent2) !important; border-color: var(--accent2) !important; }
 </style>
 </head>
 <body>
@@ -2098,6 +2100,41 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
   await esCheckDraft();       // propose la reprise d'un brouillon récent
   setInterval(() => { esPurge().then(esRenderHistory); }, 5*60*1000); // purge périodique
 })();
+
+// ── Export PDF ──────────────────────────────
+function exportPDF() {
+  const body = document.getElementById('resultBody');
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Compte rendu EchoScribe</title>
+  <style>
+    body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}
+    strong{font-weight:700} p{margin-bottom:8px}
+    .section-title{font-weight:700;text-decoration:underline;margin-top:18px;display:block}
+    @media print{@page{margin:2cm}}
+  </style></head><body>${body.innerHTML}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(() => { w.print(); w.close(); }, 350);
+}
+
+// ── Export Word (.doc) ──────────────────────
+function exportWord() {
+  const body = document.getElementById('resultBody');
+  const content = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:w="urn:schemas-microsoft-com:office:word"
+    xmlns="http://www.w3.org/TR/REC-html40">
+    <head><meta charset="UTF-8">
+    <style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}
+    strong{font-weight:700}</style></head>
+    <body>${body.innerHTML}</body></html>`;
+  const blob = new Blob(['﻿' + content], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'compte-rendu-echoscribe.doc';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
 </script>
 <nav id="bnav">
   <label for="tab-dictee" id="bnav-dictee">
