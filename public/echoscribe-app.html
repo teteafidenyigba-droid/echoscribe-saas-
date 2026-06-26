@@ -288,6 +288,36 @@
     font-weight: 700;
   }
 
+
+  /* ── Layout fixes ── */
+
+  /* Transcription wrapper → white card */
+  div:has(> .transcription-box) {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+    margin: 0 !important;
+  }
+
+  /* Right placeholder: force center */
+  .container::after {
+    font-size: 13px !important;
+    padding: 24px;
+    line-height: 2 !important;
+  }
+
+  /* Result card header: fix colors for light theme */
+  #resultCard span[style*="accent2"] { color: var(--accent) !important; }
+  #copyBtn { border-color: var(--border) !important; color: var(--text-mid) !important; }
+  #nextPatientBtn { background: rgba(22,163,74,.1) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
+
+  /* Bottom note in result card */
+  #resultCard > p:last-child { color: var(--text-dim) !important; opacity: 0.5; }
+
+  /* Spinner in left column */
+  .spinner-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow-sm); }
   /* Hide radio inputs */
   #tab-dictee, #tab-history, #tab-params { display: none; }
   .es-export-btn { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; font-weight: 600; }
