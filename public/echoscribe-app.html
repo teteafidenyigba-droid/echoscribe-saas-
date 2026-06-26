@@ -144,6 +144,14 @@
   .mic-btn { border-color: rgba(56,189,248,.3) !important; }
   .whisper-badge { background: rgba(168,85,247,.15) !important; border-color: rgba(168,85,247,.4) !important; color: #c084fc !important; }
   #routingInfo { color: rgba(255,255,255,.6) !important; }
+
+  /* Clés API gérées par le serveur — champs masqués */
+  .card:has(#geminiKey),
+  .card:has(#openaiKey),
+  .card:has(#claudeKey),
+  #claudeKeySection,
+  #openaiKeySection,
+  #geminiKeySection { display: none !important; }
 </style>
 </head>
 <body>
