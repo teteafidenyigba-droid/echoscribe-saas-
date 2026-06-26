@@ -1,929 +1,287 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#07101e">
-<title>EchoScribe v5</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoScribe v5 — Dictée Échographique</title>
 <style>
-@media print {
-  body > *:not(#print-frame) { display: none !important; }
-  #print-frame { display: block !important; position: static; }
-}
-</style>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #b8d4ef;
-  --surface: #ffffff;
-  --surface2: #d4e8f7;
-  --border: #7ab0d4;
-  --border2: #5a90c4;
-  --accent: #0a5fa8;
-  --accent2: #0a6abf;
-  --accent3: #1a90d8;
-  --text: #0d2540;
-  --text-dim: #2a5070;
-  --text-mid: #1a4a7a;
-  --danger: #dc2626;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-top: env(safe-area-inset-top, 0px);
-}
-html { height: 100%; }
-body {
-  background: var(--bg);
-  background-image:
-    radial-gradient(ellipse at 20% 0%, rgba(170,210,240,0.7) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(140,190,230,0.5) 0%, transparent 50%);
-  font-family: 'EB Garamond', Georgia, serif;
-  color: var(--text);
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-}
-
-/* ─── TOP BAR ─── */
-.top-bar {
-  display: none;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.brand-logo {
-  font-family: 'EB Garamond', serif;
-  font-size: 22px;
-  font-style: italic;
-  color: #e2eaf5;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-}
-.brand-logo span { font-style: normal; font-weight: 600; color: var(--accent); }
-.brand-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(56,189,248,0.07);
-  border: 1px solid rgba(56,189,248,0.2);
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-}
-.badge-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 6px var(--accent);
-  transition: box-shadow 0.3s;
-  flex-shrink: 0;
-}
-.badge-dot.active { box-shadow: 0 0 12px var(--accent), 0 0 24px rgba(56,189,248,0.4); }
-
-/* AI Switcher in top bar */
-.ai-switcher-bar {
-  display: flex;
-  border: 1.5px solid #7ab0d4;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255,255,255,0.5);
-}
-.ai-btn {
-  padding: 5px 12px;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  font-family: 'JetBrains Mono', monospace;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  color: #2a5070;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.ai-btn.active-gemini { background: #0a5fa8; color: #fff; }
-.ai-btn.active-claude { background: #0a5fa8; color: #fff; }
-.ai-btn.active-openai { background: #0a5fa8; color: #fff; }
-
-/* ─── BOTTOM NAV ─── */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  transform: none !important;
-  border-radius: 0 !important;
-  z-index: 100;
-  background: rgba(240,248,255,0.97);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-top: 1.5px solid #bfdbfe;
-  border-left: none !important;
-  border-right: none !important;
-  display: flex;
-  padding-bottom: var(--safe-bottom);
-  box-shadow: 0 -4px 24px rgba(10,74,138,0.10);
-}
-.nav-tab {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 12px 4px 10px;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-.nav-tab.active { color: #0a5fa8; font-weight: 700; }
-.nav-tab.active .tab-icon { filter: drop-shadow(0 0 4px rgba(10,95,168,0.4)); }
-.nav-tab .tab-icon { font-size: 22px; line-height: 1; }
-.nav-tab .tab-badge {
-  position: absolute;
-  top: 6px;
-  right: calc(50% - 18px);
-  min-width: 16px;
-  height: 16px;
-  background: var(--accent2);
-  border-radius: 999px;
-  font-size: 9px;
-  color: #07101e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  font-weight: 700;
-}
-.nav-tab { position: relative; }
-
-/* ─── CONTENT ─── */
-.content {
-  flex: 1;
-  padding: 16px 24px calc(80px + var(--safe-bottom)) 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ─── WORKSPACE 2 COLONNES ─── */
-.workspace {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  flex: 1;
-  min-height: 0;
-}
-.workspace-col {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-.workspace-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 300px;
-  margin-bottom: 0;
-}
-.workspace-card .transcription-box {
-  flex: 1;
-  min-height: 180px;
-  resize: none;
-}
-.workspace-card .result-scroll {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 180px;
-}
-
-/* ─── MIC COMPACT ─── */
-.mic-bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 14px 22px;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 20px rgba(10,74,138,0.10);
-}
-.mic-bar .mic-btn {
-  width: 62px; height: 62px; font-size: 24px;
-  flex-shrink: 0;
-}
-.mic-bar .wave-bars { height: 32px; flex: 1; }
-.mic-bar .bar { }
-.mic-bar .mic-status { font-size: 12px; white-space: nowrap; }
-.mic-bar-right { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
-
-/* ─── RÉSULTAT VIDE ─── */
-.result-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  gap: 12px;
-  color: #a0b8cc;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  text-align: center;
-  padding: 24px;
-}
-.result-empty .result-empty-icon { font-size: 36px; opacity: 0.35; }
-
-@media (max-width: 768px) {
-  .workspace { grid-template-columns: 1fr; }
-  .content { padding: 12px 12px calc(76px + var(--safe-bottom)) 12px; }
-}
-
-/* ─── PANELS ─── */
-.panel { display: none; }
-.panel.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-
-/* ─── CARDS ─── */
-.card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 24px 26px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 20px rgba(10,74,138,0.10), 0 1px 4px rgba(0,0,0,0.04);
-  transition: box-shadow 0.2s ease;
-}
-.card:hover { box-shadow: 0 6px 28px rgba(10,74,138,0.14), 0 2px 6px rgba(0,0,0,0.05); }
-.card-title {
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-  display: block;
-  margin-bottom: 12px;
-}
-.row { display: flex; gap: 8px; }
-.row-between { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-
-/* ─── INPUTS ─── */
-input[type="password"],
-input[type="text"] {
-  flex: 1;
-  background: #f8fbfd;
-  border: 1px solid #d0dde8;
-  border-radius: 9px;
-  padding: 10px 14px;
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-input:focus { border-color: #0a5fa8; box-shadow: 0 0 0 3px rgba(10,95,168,0.08); }
-select {
-  background: #f8fbfd;
-  border: 1px solid #d0dde8;
-  border-radius: 9px;
-  padding: 10px 14px;
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  outline: none;
-  cursor: pointer;
-  width: 100%;
-  transition: border-color 0.2s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-.hint {
-  font-size: 11px;
-  color: #2d4a5e;
-  margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.5;
-}
-.hint a { color: var(--accent); text-decoration: none; }
-
-/* ─── BUTTONS ─── */
-.icon-btn {
-  background: #f0f4f8;
-  border: 1px solid #d0dde8;
-  border-radius: 9px;
-  color: #4a6a80;
-  font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  padding: 8px 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.icon-btn:hover, .icon-btn:active { background: #e0f0e8; border-color: #0a5fa8; color: #0a5fa8; }
-.toggle-btn {
-  background: #f0f4f8;
-  border: 1px solid #d0dde8;
-  border-radius: 20px;
-  color: #7a94a8;
-  font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
-  padding: 6px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 52px;
-  flex-shrink: 0;
-}
-.toggle-btn.on { background: #dbeafe; border-color: #93c5fd; color: #0a6abf; }
-.primary-btn {
-  width: 100%;
-  padding: 18px;
-  background: linear-gradient(135deg, #0a4a8a 0%, #1a90d8 100%);
-  border: none;
-  border-radius: 14px;
-  color: #ffffff;
-  font-size: 18px;
-  font-family: 'EB Garamond', serif;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: all 0.22s ease;
-  margin-bottom: 12px;
-  box-shadow: 0 6px 24px rgba(10,74,138,0.4), 0 2px 6px rgba(0,0,0,0.1);
-  font-weight: 600;
-}
-.primary-btn:hover { background: linear-gradient(135deg, #1a6abf 0%, #38bdf8 100%); box-shadow: 0 10px 32px rgba(10,74,138,0.5); transform: translateY(-2px); }
-.primary-btn:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(10,74,138,0.3); }
-.primary-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* ─── MIC ZONE ─── */
-.mic-zone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 36px 0 28px;
-  gap: 20px;
-}
-.mic-wrapper { position: relative; }
-.pulse-ring {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  border: 2px solid rgba(10,95,168,0.4);
-  opacity: 0;
-  pointer-events: none;
-}
-.pulse-ring.active { animation: pulse-ring 1.4s ease-out infinite; }
-.pulse-ring.delay { animation: pulse-ring 1.4s ease-out 0.5s infinite; }
-@keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.55; }
-  100% { transform: scale(1.8); opacity: 0; }
-}
-.mic-btn {
-  width: 112px;
-  height: 112px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #ffffff, #e8f3fc);
-  border: 2.5px solid #7ab0d4;
-  box-shadow: 0 8px 32px rgba(10,95,168,0.18), 0 2px 8px rgba(0,0,0,0.06);
-  cursor: pointer;
-  font-size: 38px;
-  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
-  -webkit-tap-highlight-color: transparent;
-}
-.mic-btn:hover {
-  border-color: #0a5fa8;
-  box-shadow: 0 12px 40px rgba(10,95,168,0.28);
-  transform: scale(1.04);
-}
-.mic-btn.listening {
-  background: linear-gradient(145deg, #0a5fa8, #1e3a5f);
-  border-color: #0a4a8a;
-  box-shadow: 0 0 48px rgba(10,95,168,0.45), 0 8px 28px rgba(10,95,168,0.3);
-}
-.wave-bars {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  height: 56px;
-}
-.bar {
-  width: 3px;
-  border-radius: 3px;
-  background: rgba(10,95,168,0.12);
-  min-height: 3px;
-  max-height: 52px;
-  transition: height 0.07s ease-out;
-}
-.bar.active { background: rgba(10,95,168,0.82); }
-.mic-status {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-  text-align: center;
-  letter-spacing: 0.03em;
-}
-.mic-status.active { color: var(--accent); }
-
-/* ─── TRANSCRIPTION ─── */
-.transcription-box {
-  background: #f8fbfd;
-  border: 1px solid #d0dde8;
-  border-radius: 12px;
-  min-height: 140px;
-  padding: 16px 18px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13.5px;
-  line-height: 1.8;
-  color: #1a2e3d;
-  white-space: pre-wrap;
-  word-break: break-word;
-  outline: none;
-  cursor: text;
-  transition: border-color 0.2s;
-}
-.transcription-box:focus { border-color: #0a5fa8; box-shadow: 0 0 0 3px rgba(10,95,168,0.08); }
-.interim { color: rgba(56,189,248,0.5); font-style: italic; }
-
-/* ─── RESULT ─── */
-.result-card {
-  background: #ffffff;
-  border: 1.5px solid #bfdbfe;
-  border-top: 4px solid #0a5fa8;
-  border-radius: 16px;
-  padding: 28px 30px;
-  margin-bottom: 16px;
-  animation: fadeIn 0.4s ease;
-  box-shadow: 0 4px 24px rgba(10,74,138,0.12), 0 1px 4px rgba(0,0,0,0.05);
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.result-body { font-size: 15.5px; line-height: 1.9; }
-.result-body p { margin-bottom: 10px; }
-.result-body strong { color: #0a6abf; font-weight: 600; }
-.section-title {
-  display: block;
-  font-size: 15px;
-  font-family: 'EB Garamond', serif;
-  margin: 20px 0 6px;
-  padding-top: 14px;
-  border-top: 1px solid #bfdbfe;
-  color: #1a2e3d;
-}
-.section-title u { text-decoration-color: rgba(10,106,191,0.5); }
-.section-title.first { margin-top: 0; border-top: none; padding-top: 0; }
-
-/* ─── SPINNER ─── */
-.spinner-wrap {
-  text-align: center;
-  padding: 28px 0;
-  color: var(--text-dim);
-  font-size: 13px;
-  font-family: 'JetBrains Mono', monospace;
-}
-.spinner {
-  width: 28px;
-  height: 28px;
-  margin: 0 auto 14px;
-  border: 2px solid #bfdbfe;
-  border-top-color: #0a5fa8;
-  border-radius: 50%;
-  animation: spin 0.75s linear infinite;
-}
-.spinner.whisper-spin { border-top-color: #7c3aed; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ─── ERROR ─── */
-.error-box {
-  background: #fff0f0;
-  border: 1px solid #fca5a5;
-  border-radius: 10px;
-  padding: 14px 18px;
-  color: #b91c1c;
-  font-size: 13px;
-  font-family: 'JetBrains Mono', monospace;
-  margin-bottom: 12px;
-  line-height: 1.6;
-}
-.info-box {
-  background: #d4e8f7;
-  border: 1px solid #7ab0d4;
-  border-radius: 10px;
-  padding: 12px 16px;
-  color: #1e3a5f;
-  font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-/* ─── BADGES ─── */
-.whisper-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  background: rgba(168,85,247,0.12);
-  border: 1px solid rgba(168,85,247,0.3);
-  border-radius: 999px;
-  font-size: 10px;
-  color: var(--accent3);
-  font-family: 'JetBrains Mono', monospace;
-}
-.saved-badge {
-  font-size: 11px;
-  color: var(--accent2);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-/* ─── OPTION ROW ─── */
-.option-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(56,189,248,0.07);
-}
-.option-row:last-child { border-bottom: none; padding-bottom: 0; }
-.option-label { font-size: 13px; color: #0d2540; margin-bottom: 2px; font-weight: 600; }
-.option-sub { font-size: 11px; color: #3d5a70; font-family: 'JetBrains Mono', monospace; }
-
-/* ─── HISTORY ─── */
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border: 1px solid #d0dde8;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  background: #fff;
-}
-.history-item:hover { border-color: #0a5fa8; background: #d4e8f7; }
-.history-meta { font-size: 11px; color: #0a6abf; font-family: 'JetBrains Mono', monospace; }
-.history-snippet { font-size: 11px; color: #7a94a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-.delete-btn {
-  background: transparent;
-  border: 1px solid #fca5a5;
-  border-radius: 6px;
-  color: #ef4444;
-  font-size: 13px;
-  padding: 4px 8px;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.delete-btn:hover { background: #fff0f0; }
-
-/* ─── DRAFT BANNER ─── */
-.draft-banner {
-  background: rgba(56,189,248,0.08);
-  border: 1px solid rgba(56,189,248,0.3);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 12px;
-  font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  color: #7dd3fc;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* ─── SECTION HEADER ─── */
-.section-header {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #2d4a5e;
-  font-family: 'JetBrains Mono', monospace;
-  margin: 20px 0 10px;
-}
-
-/* ─── DIVIDER ─── */
-.divider { border: none; border-top: 1px solid rgba(56,189,248,0.1); margin: 14px 0; }
-
-/* ─── FOOTER ─── */
-.footer {
-  text-align: center;
-  font-size: 10px;
-  color: #a8b8c8;
-  padding: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.8;
-}
-
-/* ─── SCROLLBAR ─── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: #c0d4e4; border-radius: 4px; }
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 480px) {
-  .brand-badge { display: none; }
-  .content { padding: 12px 12px calc(76px + var(--safe-bottom)) 12px; }
-  .card { padding: 14px 16px; }
-  .ai-btn { padding: 5px 8px; font-size: 9.5px; }
-  .history-snippet { max-width: 130px; }
-}
-@media (min-width: 700px) {
-  .bottom-nav { max-width: 100%; left: 0; transform: none; border-radius: 0; border-left: none; border-right: none; }
-}
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #07101e; --surface: rgba(255,255,255,0.03);
+    --border: rgba(56,189,248,0.15); --accent: #38bdf8;
+    --accent2: #4ade80; --text: #c8d8ea;
+    --text-dim: #4a7a96; --text-mid: #7bacc2;
+  }
+  body { background: var(--bg); background-image: radial-gradient(ellipse at 15% 0%,rgba(14,50,82,0.45) 0%,transparent 55%), radial-gradient(ellipse at 85% 100%,rgba(8,30,60,0.35) 0%,transparent 55%); font-family:'EB Garamond',Georgia,serif; color:var(--text); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:40px 16px 60px; }
+  .container { width:100%; max-width:760px; }
+  .header { text-align:center; margin-bottom:44px; }
+  .badge { display:inline-flex; align-items:center; gap:8px; background:rgba(56,189,248,0.07); border:1px solid rgba(56,189,248,0.2); border-radius:999px; padding:5px 18px; margin-bottom:18px; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-dim); font-family:'JetBrains Mono',monospace; }
+  .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); transition:box-shadow 0.3s; }
+  .badge-dot.active { box-shadow:0 0 14px var(--accent),0 0 28px rgba(56,189,248,0.4); }
+  h1 { font-size:38px; font-weight:400; font-style:italic; color:#e2eaf5; letter-spacing:-0.02em; margin-bottom:6px; }
+  h1 span { font-style:normal; font-weight:600; color:var(--accent); }
+  .subtitle { font-size:13px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; }
+  .tag { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:999px; font-size:10px; letter-spacing:0.1em; font-family:'JetBrains Mono',monospace; text-transform:uppercase; }
+  .tag-gemini { background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.25); color:var(--accent2); }
+  .tag-whisper { background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.25); color:#c084fc; margin-left:6px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:14px; }
+  .label { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); font-family:'JetBrains Mono',monospace; display:block; margin-bottom:10px; }
+  .row { display:flex; gap:8px; }
+  .row-space { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .hint { font-size:11px; color:#2d4a5e; margin-top:6px; font-family:'JetBrains Mono',monospace; }
+  input[type="password"],input[type="text"] { flex:1; background:rgba(0,0,0,0.35); border:1px solid rgba(56,189,248,0.18); border-radius:8px; padding:10px 14px; color:var(--text); font-family:'JetBrains Mono',monospace; font-size:13px; outline:none; transition:border-color 0.2s; }
+  input:focus { border-color:rgba(56,189,248,0.45); }
+  select { background:rgba(0,0,0,0.35); border:1px solid rgba(56,189,248,0.18); border-radius:8px; padding:10px 14px; color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12px; outline:none; cursor:pointer; width:100%; transition:border-color 0.2s; appearance:none; }
+  .icon-btn { background:rgba(255,255,255,0.05); border:1px solid rgba(56,189,248,0.18); border-radius:8px; color:var(--text-mid); font-size:12px; padding:8px 14px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .icon-btn:hover { background:rgba(56,189,248,0.1); border-color:rgba(56,189,248,0.4); }
+  .toggle-btn { background:rgba(0,0,0,0.3); border:1px solid rgba(56,189,248,0.2); border-radius:20px; color:#4a7a96; font-size:11px; font-family:'JetBrains Mono',monospace; padding:6px 16px; cursor:pointer; transition:all 0.2s; min-width:52px; }
+  .toggle-btn.on { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.4); color:#4ade80; }
+  .primary-btn { width:100%; padding:14px; background:linear-gradient(90deg,#0c2840,#0e3352); border:1px solid rgba(56,189,248,0.45); border-radius:10px; color:#7dd3fc; font-size:15px; font-family:'EB Garamond',serif; letter-spacing:0.05em; cursor:pointer; transition:all 0.2s; margin-bottom:14px; }
+  .primary-btn:hover { background:linear-gradient(90deg,#0e3050,#103b60); }
+  .primary-btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .mic-zone { display:flex; flex-direction:column; align-items:center; padding:28px 0 20px; gap:18px; }
+  .mic-wrapper { position:relative; }
+  .pulse-ring { position:absolute; inset:-18px; border-radius:50%; border:2px solid rgba(56,189,248,0.5); opacity:0; pointer-events:none; }
+  .pulse-ring.active { animation:pulse-ring 1.3s ease-out infinite; }
+  .pulse-ring.delay { animation:pulse-ring 1.3s ease-out 0.45s infinite; }
+  @keyframes pulse-ring { 0%{transform:scale(1);opacity:0.6;} 100%{transform:scale(1.7);opacity:0;} }
+  .mic-btn { width:84px; height:84px; border-radius:50%; background:radial-gradient(circle,#0f2233,#07101e); border:2px solid rgba(56,189,248,0.3); cursor:pointer; font-size:30px; transition:all 0.25s; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; }
+  .mic-btn.listening { background:radial-gradient(circle,#1a4d6b,#0f2d44); border-color:var(--accent); box-shadow:0 0 30px rgba(56,189,248,0.3); }
+  .wave-bars { display:flex; align-items:center; gap:3px; height:40px; }
+  .bar { width:3px; border-radius:3px; background:rgba(56,189,248,0.12); min-height:3px; transition:height 0.09s ease; }
+  .bar.active { background:rgba(56,189,248,0.7); }
+  .mic-status { font-size:13px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; text-align:center; }
+  .mic-status.active { color:var(--accent); }
+  .transcription-box { background:rgba(0,0,0,0.25); border:1px solid var(--border); border-radius:10px; min-height:140px; padding:14px 16px; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.7; color:#b8cede; white-space:pre-wrap; word-break:break-word; outline:none; cursor:text; }
+  .transcription-box:focus { border-color:rgba(56,189,248,0.35); }
+  .interim { color:rgba(56,189,248,0.5); font-style:italic; }
+  .whisper-badge { display:inline-block; padding:2px 8px; background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.3); border-radius:999px; font-size:10px; color:#c084fc; font-family:'JetBrains Mono',monospace; margin-bottom:8px; }
+  .result-card { background:rgba(74,222,128,0.03); border:1px solid rgba(74,222,128,0.25); border-radius:12px; padding:24px 28px; margin-bottom:14px; animation:fadeIn 0.35s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+  .result-body { font-size:15.5px; line-height:1.85; }
+  .result-body p { margin-bottom:10px; }
+  .result-body strong { color:#86efac; font-weight:600; }
+  .section-title { display:block; font-size:15px; font-family:'EB Garamond',serif; margin:20px 0 6px; padding-top:14px; border-top:1px solid rgba(74,222,128,0.12); color:#c8d8ea; }
+  .section-title u { text-decoration-color: rgba(74,222,128,0.6); }
+  .section-title.first { margin-top:0; border-top:none; padding-top:0; }
+  .spinner-wrap { text-align:center; padding:24px 0; color:var(--text-dim); font-size:13px; font-family:'JetBrains Mono',monospace; }
+  .spinner { width:26px; height:26px; margin:0 auto 12px; border:2px solid rgba(74,222,128,0.15); border-top-color:var(--accent2); border-radius:50%; animation:spin 0.75s linear infinite; }
+  .spinner.whisper-spin { border-top-color:#c084fc; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+  .error-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.35); border-radius:10px; padding:14px 18px; color:#fca5a5; font-size:13px; font-family:'JetBrains Mono',monospace; margin-bottom:14px; line-height:1.6; }
+  .footer { text-align:center; font-size:11px; color:#1e3448; margin-top:40px; font-family:'JetBrains Mono',monospace; line-height:1.8; }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-thumb { background:rgba(56,189,248,0.2); border-radius:4px; }
 </style>
 </head>
 <body>
+<div class="container">
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="brand">
-    <div class="brand-logo">Echo<span>Scribe</span></div>
-    <div class="brand-badge">
-      <div class="badge-dot" id="badgeDot"></div>
-      IA v5
+  <div class="header">
+    <div class="badge"><div class="badge-dot" id="badgeDot"></div>Dictée Échographique IA v5</div>
+    <h1>Echo<span>Scribe</span></h1>
+    <p class="subtitle">Whisper · Correction médicale · Gemini &amp; Claude</p>
+    <span class="tag tag-whisper">◈ Whisper</span>
+    <div id="aiSwitcher" style="display:inline-flex;align-items:center;gap:0;margin-top:10px;border:1px solid rgba(255,255,255,0.12);border-radius:999px;overflow:hidden;background:rgba(0,0,0,0.3);">
+      <button id="btnGemini" onclick="switchAI('gemini')"
+        style="padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer;border:none;background:rgba(74,222,128,0.18);color:#4ade80;transition:all 0.2s;">
+        ⬡ Gemini
+      </button>
+      <button id="btnClaude" onclick="switchAI('claude')"
+        style="padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#4a7a96;transition:all 0.2s;">
+        ✦ Claude
+      </button>
+      <button id="btnOpenai" onclick="switchAI('openai')"
+        style="padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#4a7a96;transition:all 0.2s;">
+        ◍ OpenAI
+      </button>
     </div>
-  </div>
-  <div class="ai-switcher-bar">
-    <button class="ai-btn" id="btnGemini" onclick="switchAI('gemini')">⬡ Gemini</button>
-    <button class="ai-btn active-claude" id="btnClaude" onclick="switchAI('claude')">✦ Claude</button>
-    <button class="ai-btn" id="btnOpenai" onclick="switchAI('openai')">◍ GPT</button>
-  </div>
-</div>
-
-<!-- MAIN CONTENT -->
-<main class="content">
-
-  <!-- ══════════════════ PANEL: DICTÉE ══════════════════ -->
-  <div class="panel active" id="panel-dictee">
-
-    <!-- Draft banner -->
-    <div class="draft-banner" id="draftBanner" style="display:none;">
-      <span>↺ Brouillon récupéré (<span id="draftTime"></span>)</span>
-      <div style="display:flex;gap:6px;margin-left:auto;">
-        <button class="icon-btn" style="font-size:11px;padding:3px 8px;" onclick="esRestoreDraft()">Restaurer</button>
-        <button class="icon-btn" style="font-size:11px;padding:3px 8px;color:#3d5a70;" onclick="esDismissDraft()">Ignorer</button>
-      </div>
-    </div>
-
-    <!-- ── MIC COMPACT ── -->
-    <div class="mic-bar">
-      <div class="mic-wrapper" style="flex-shrink:0;">
-        <div class="pulse-ring" id="ring1"></div>
-        <div class="pulse-ring delay" id="ring2"></div>
-        <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎙</button>
-      </div>
-      <div class="mic-bar-right">
-        <p class="mic-status" id="micStatus">Appuyez sur le micro pour commencer</p>
-        <div class="wave-bars" id="waveBars"></div>
-        <p id="keywordDetected" style="display:none;font-size:11px;color:#38bdf8;font-family:'JetBrains Mono',monospace;">✦ Mot-clé détecté — génération en cours…</p>
-        <p id="continuousCountdown" style="display:none;font-size:11px;color:#38bdf8;font-family:'JetBrains Mono',monospace;">↺ Prochain patient dans <span id="countdownNum">3</span>s…</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
-        <button class="primary-btn" id="reformBtn" onclick="reformulate()" disabled style="margin:0;padding:10px 20px;font-size:14px;border-radius:10px;width:auto;white-space:nowrap;">
-          <span id="generateBtnLabel">Générer →</span>
-        </button>
-        <p id="routingInfo" style="font-size:10px;color:#3d5a70;font-family:'JetBrains Mono',monospace;text-align:center;margin:0;"></p>
-      </div>
-    </div>
-
-    <!-- ── WORKSPACE 2 COLONNES ── -->
-    <div class="workspace">
-
-      <!-- GAUCHE : Transcription -->
-      <div class="workspace-col">
-        <div class="card workspace-card">
-          <div class="row-between" style="margin-bottom:10px;flex-shrink:0;">
-            <span class="card-title" style="margin:0;">🎙 Transcription</span>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <span id="whisperBadge" style="display:none;" class="whisper-badge">◈ Whisper</span>
-              <button class="icon-btn" onclick="clearDictation(false)" style="font-size:11px;padding:5px 10px;">Effacer</button>
-            </div>
-          </div>
-          <div class="transcription-box" id="transcriptionBox" contenteditable="true" spellcheck="false">
-            <span style="color:#2d4a5e;font-style:italic;">La transcription apparaîtra ici… Dictez normalement, y compris les instructions au patient.</span>
-          </div>
-          <p class="hint" style="margin-top:8px;flex-shrink:0;">Termes médicaux corrigés automatiquement · Instructions patient filtrées</p>
-        </div>
-      </div>
-
-      <!-- DROITE : Compte rendu -->
-      <div class="workspace-col">
-        <div class="card workspace-card" style="border-top:3px solid #0a5fa8;">
-          <div class="row-between" style="margin-bottom:10px;flex-shrink:0;flex-wrap:wrap;gap:6px;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span class="card-title" style="margin:0;">✦ Compte rendu</span>
-              <span id="autoCopiedBadge" style="display:none;font-size:10px;color:#0a6abf;font-family:'JetBrains Mono',monospace;">✓ Copié</span>
-            </div>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-              <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(10,95,168,0.3);color:#0a5fa8;font-size:11px;padding:5px 10px;">⎘ Copier</button>
-              <button class="icon-btn" onclick="downloadPDF()" style="background:linear-gradient(135deg,#0a4a8a,#1a90d8);border:none;color:#fff;font-weight:600;font-size:11px;padding:5px 10px;">⬇ PDF</button>
-              <button class="icon-btn" onclick="downloadWord()" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border:none;color:#fff;font-weight:600;font-size:11px;padding:5px 10px;">⬇ Word</button>
-              <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(10,95,168,0.12);border-color:rgba(10,95,168,0.4);color:#0a5fa8;font-weight:600;font-size:11px;padding:5px 10px;">▶ Suivant</button>
-              <button class="icon-btn" onclick="reset()" style="color:#3d5a70;font-size:11px;padding:5px 10px;">↺</button>
-            </div>
-          </div>
-
-          <!-- Error -->
-          <div class="error-box" id="errorBox" style="display:none;flex-shrink:0;"></div>
-
-          <!-- Zone de contenu -->
-          <div class="result-scroll" id="resultScroll">
-            <!-- État vide -->
-            <div class="result-empty" id="resultEmpty">
-              <div class="result-empty-icon">📋</div>
-              <div>Le compte rendu apparaîtra ici<br>après la génération</div>
-            </div>
-            <!-- Spinner -->
-            <div class="spinner-wrap" id="spinner" style="display:none;">
-              <div class="spinner" id="spinnerIcon"></div>
-              <span id="spinnerText">L'IA rédige le compte rendu…</span>
-            </div>
-            <!-- Résultat -->
-            <div id="resultCard" style="display:none;">
-              <div class="result-body" id="resultBody"></div>
-              <p style="margin-top:16px;font-size:10px;color:#a0b8cc;font-family:'JetBrains Mono',monospace;">Proposition à valider et signer par le médecin responsable</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /workspace -->
-
+    <p id="aiLabel" style="font-size:11px;color:#4a7a96;font-family:'JetBrains Mono',monospace;margin-top:6px;">Gemini actif</p>
   </div>
 
-  <!-- ══════════════════ PANEL: HISTORIQUE ══════════════════ -->
-  <div class="panel" id="panel-historique">
-    <div class="card">
-      <div class="row-between" style="margin-bottom:14px;">
-        <span class="card-title" style="margin:0;">Historique · <span id="historyCount">0</span> CR <span style="color:#2d4a5e;">(12 h)</span></span>
-        <button class="icon-btn" onclick="esClearAll()" style="font-size:10px;padding:3px 8px;color:#7a4a4a;border-color:rgba(239,68,68,0.25);">🗑 Tout effacer</button>
-      </div>
-      <div id="historyList"></div>
+
+  <!-- Modèle -->
+  <div class="card">
+    <div id="geminiModelSection">
+      <span class="label">Modèle Gemini</span>
+      <select id="modelSelect">
+        <option value="gemini-3.1-pro-preview" selected>gemini-3.1-pro 🆕 (raisonnement, finesse max)</option>
+        <option value="gemini-3-flash-preview">gemini-3-flash (rapide, équilibré)</option>
+        <option value="gemini-2.5-flash">gemini-2.5-flash ✦ (stable)</option>
+        <option value="gemini-2.5-pro">gemini-2.5-pro (puissant)</option>
+        <option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite (rapide &amp; économique)</option>
+      </select>
+    </div>
+    <div id="claudeModelSection" style="display:none;">
+      <span class="label">Modèle Claude</span>
+      <select id="claudeModelSelect">
+        <option value="claude-opus-4-8">claude-opus-4-8 🆕 (le plus puissant)</option>
+        <option value="claude-opus-4-7">claude-opus-4-7</option>
+        <option value="claude-sonnet-4-6" selected>claude-sonnet-4-6 ✦ (recommandé)</option>
+        <option value="claude-opus-4-6">claude-opus-4-6</option>
+        <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (rapide)</option>
+      </select>
+    </div>
+    <div id="openaiModelSection" style="display:none;">
+      <span class="label">Modèle OpenAI</span>
+      <select id="openaiModelSelect">
+        <option value="gpt-5.5" selected>gpt-5.5 🆕 (frontière, finesse max)</option>
+        <option value="gpt-5.4">gpt-5.4 (puissant)</option>
+        <option value="gpt-5.4-mini">gpt-5.4-mini (rapide &amp; économique)</option>
+      </select>
+      <p class="hint" style="margin-top:8px;">Utilise la clé OpenAI ci-dessus (même clé que Whisper).</p>
     </div>
   </div>
 
-  <!-- ══════════════════ PANEL: PARAMÈTRES ══════════════════ -->
-  <div class="panel" id="panel-params">
-
-    <!-- AI + Model -->
-    <div class="card">
-      <span class="card-title">Moteur IA actif</span>
-      <div style="display:flex;gap:8px;margin:10px 0 14px;">
-        <button class="ai-btn" id="btnGemini2" onclick="switchAI('gemini')" style="flex:1;border:1.5px solid #7ab0d4;border-radius:8px;padding:8px 4px;font-size:11px;">⬡ Gemini</button>
-        <button class="ai-btn active-claude" id="btnClaude2" onclick="switchAI('claude')" style="flex:1;border:1.5px solid #7ab0d4;border-radius:8px;padding:8px 4px;font-size:11px;">✦ Claude</button>
-        <button class="ai-btn" id="btnOpenai2" onclick="switchAI('openai')" style="flex:1;border:1.5px solid #7ab0d4;border-radius:8px;padding:8px 4px;font-size:11px;">◍ GPT</button>
-      </div>
-      <div id="aiLabel" style="font-size:12px;color:#0a5fa8;font-family:'JetBrains Mono',monospace;margin-bottom:12px;">claude-sonnet-4-6 actif</div>
-
-      <div id="geminiModelSection">
-        <span class="card-title" style="margin-bottom:8px;">Modèle Gemini</span>
-        <select id="modelSelect">
-          <option value="gemini-3.1-pro-preview" selected>gemini-3.1-pro 🆕 (raisonnement, finesse max)</option>
-          <option value="gemini-3-flash-preview">gemini-3-flash (rapide, équilibré)</option>
-          <option value="gemini-2.5-flash">gemini-2.5-flash ✦ (stable)</option>
-          <option value="gemini-2.5-pro">gemini-2.5-pro (puissant)</option>
-          <option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite (rapide &amp; économique)</option>
-        </select>
-      </div>
-      <div id="claudeModelSection" style="display:none;">
-        <span class="card-title" style="margin-bottom:8px;">Modèle Claude</span>
-        <select id="claudeModelSelect">
-          <option value="claude-opus-4-8">claude-opus-4-8 🆕 (le plus puissant)</option>
-          <option value="claude-opus-4-7">claude-opus-4-7</option>
-          <option value="claude-sonnet-4-6" selected>claude-sonnet-4-6 ✦ (recommandé)</option>
-          <option value="claude-opus-4-6">claude-opus-4-6</option>
-          <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (rapide)</option>
-        </select>
-      </div>
-      <div id="openaiModelSection" style="display:none;">
-        <span class="card-title" style="margin-bottom:8px;">Modèle OpenAI</span>
-        <select id="openaiModelSelect">
-          <option value="gpt-5.5" selected>gpt-5.5 🆕 (frontière, finesse max)</option>
-          <option value="gpt-5.4">gpt-5.4 (puissant)</option>
-          <option value="gpt-5.4-mini">gpt-5.4-mini (rapide &amp; économique)</option>
-        </select>
-        <p class="hint" style="margin-top:8px;">Utilise la clé OpenAI (même clé que Whisper).</p>
-      </div>
-    </div>
-
-    <!-- API Keys (hidden - managed server-side) -->
-    <div style="display:none;">
-      <div id="geminiKeySection"><input type="hidden" id="geminiKey" value="" /></div>
-      <div id="claudeKeySection"><input type="hidden" id="claudeKey" value="" /></div>
-      <input type="hidden" id="openaiKey" value="" />
-      <span id="savedBadge"></span>
-    </div>
-
-    <!-- Options -->
-    <div class="card">
-      <span class="card-title">Options de dictée</span>
-
-      <div class="option-row">
+  <!-- Options -->
+  <div class="card">
+    <span class="label">Options de dictée</span>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
-          <div class="option-label">Raisonnement approfondi</div>
-          <div class="option-sub">Le modèle réfléchit avant de rédiger</div>
+          <div style="font-size:13px;color:#c8d8ea;margin-bottom:3px;">Raisonnement approfondi (thinking)</div>
+          <div style="font-size:11px;color:#3d5a70;font-family:'JetBrains Mono',monospace;">Le modèle réfléchit avant de rédiger — CONCLUSION/CAT plus fines, un peu plus lent</div>
         </div>
         <button class="toggle-btn on" id="thinkingToggle" onclick="toggleThinking()">ON</button>
       </div>
-
-      <div class="option-row">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
-          <div class="option-label">Mode continu</div>
-          <div class="option-sub">Micro se relance automatiquement</div>
+          <div style="font-size:13px;color:#c8d8ea;margin-bottom:3px;">Mode continu</div>
+          <div style="font-size:11px;color:#3d5a70;font-family:'JetBrains Mono',monospace;">Micro se relance automatiquement après chaque compte rendu</div>
         </div>
         <button class="toggle-btn" id="continuousToggle" onclick="toggleContinuous()">OFF</button>
       </div>
-
-      <div class="option-row" style="flex-direction:column;align-items:stretch;gap:10px;">
-        <div class="row-between">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <div>
-            <div class="option-label">Mots-clés déclencheurs</div>
-            <div class="option-sub">Génération automatique dès détection</div>
+            <div style="font-size:13px;color:#c8d8ea;margin-bottom:3px;">Mots-clés déclencheurs</div>
+            <div style="font-size:11px;color:#3d5a70;font-family:'JetBrains Mono',monospace;">Génération automatique dès détection</div>
           </div>
           <button class="toggle-btn on" id="keywordToggle" onclick="toggleKeywords()">ON</button>
         </div>
         <input type="text" id="keywordInput"
           value="c'est terminé, fin d'examen, générer le compte rendu, terminer"
-          style="font-size:12px;color:#7bacc2;"
+          style="width:100%;font-size:12px;color:#7bacc2;box-sizing:border-box;"
           placeholder="expressions séparées par des virgules" />
       </div>
     </div>
-
-    <div class="footer">
-      Whisper (OpenAI) · Web Speech API · Gemini (Google) · Claude (Anthropic)<br>
-      Audio non conservé · Texte local supprimé après 12 h · Usage médical local uniquement
-    </div>
-
   </div>
 
-</main>
+  <!-- Micro -->
+  <div class="card">
+    <div class="mic-zone">
+      <div class="mic-wrapper">
+        <div class="pulse-ring" id="ring1"></div>
+        <div class="pulse-ring delay" id="ring2"></div>
+        <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎙</button>
+      </div>
+      <div class="wave-bars" id="waveBars"></div>
+      <p class="mic-status" id="micStatus">Appuyez sur le micro pour commencer</p>
+      <p id="keywordDetected" style="display:none;font-size:12px;color:#4ade80;font-family:'JetBrains Mono',monospace;margin-top:2px;">✦ Mot-clé détecté — génération en cours…</p>
+      <p id="continuousCountdown" style="display:none;font-size:12px;color:#38bdf8;font-family:'JetBrains Mono',monospace;margin-top:2px;">↺ Prochain patient dans <span id="countdownNum">3</span>s…</p>
+    </div>
+  </div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button class="nav-tab active" id="tab-dictee" onclick="switchTab('dictee')">
-    <span class="tab-icon">🎙</span>
-    <span>Dictée</span>
+  <!-- Bandeau de récupération de brouillon -->
+  <div id="draftBanner" style="display:none;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;font-family:'JetBrains Mono',monospace;color:#7dd3fc;">
+    ↺ Brouillon non terminé récupéré (<span id="draftTime"></span>).
+    <button class="icon-btn" style="font-size:11px;padding:2px 8px;margin-left:6px;" onclick="esRestoreDraft()">Restaurer</button>
+    <button class="icon-btn" style="font-size:11px;padding:2px 8px;color:#3d5a70;" onclick="esDismissDraft()">Ignorer</button>
+  </div>
+
+  <!-- Transcription -->
+  <div style="margin-bottom:14px;">
+    <div class="row-space">
+      <span class="label" style="margin:0;">Transcription</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span id="whisperBadge" style="display:none;" class="whisper-badge">◈ Whisper</span>
+        <button class="icon-btn" onclick="clearDictation(true)" style="font-size:11px;padding:4px 10px;">Effacer</button>
+      </div>
+    </div>
+    <div class="transcription-box" id="transcriptionBox" contenteditable="true" spellcheck="false">
+      <span style="color:#2d4a5e;font-style:italic;">La transcription apparaîtra ici… Dictez normalement, y compris les instructions au patient.</span>
+    </div>
+    <p class="hint">Termes médicaux corrigés automatiquement · Instructions patient filtrées par l'IA</p>
+  </div>
+
+  <button class="primary-btn" id="reformBtn" onclick="reformulate()" disabled>
+    <span id="generateBtnLabel">Générer le compte rendu avec Gemini →</span>
   </button>
-  <button class="nav-tab" id="tab-historique" onclick="switchTab('historique')">
-    <span class="tab-icon">📋</span>
-    <span>Historique</span>
-    <span class="tab-badge" id="historyBadge" style="display:none;">0</span>
-  </button>
-  <button class="nav-tab" id="tab-params" onclick="switchTab('params')">
-    <span class="tab-icon">⚙️</span>
-    <span>Paramètres</span>
-  </button>
-</nav>
+  <p id="routingInfo" class="hint" style="text-align:center;margin:-6px 0 10px;color:#3d5a70;"></p>
+
+  <div class="spinner-wrap" id="spinner" style="display:none;">
+    <div class="spinner" id="spinnerIcon"></div>
+    <span id="spinnerText">L'IA rédige le compte rendu…</span>
+  </div>
+
+  <div class="result-card" id="resultCard" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent2);font-family:'JetBrains Mono',monospace;">✦ Compte rendu</span>
+        <span id="autoCopiedBadge" style="display:none;font-size:10px;color:#4ade80;font-family:'JetBrains Mono',monospace;">✓ Copié automatiquement</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="icon-btn" id="copyBtn" onclick="copyResult()" style="border-color:rgba(74,222,128,0.3);color:#86efac;">⎘ Copier</button>
+        <button class="icon-btn" id="nextPatientBtn" onclick="nextPatient()" style="display:none;background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.5);color:#4ade80;font-weight:600;">▶ Patient suivant</button>
+        <button class="icon-btn" onclick="reset()" style="color:#3d5a70;">↺ Nouveau</button>
+      </div>
+    </div>
+    <div class="result-body" id="resultBody"></div>
+    <p style="margin-top:18px;font-size:11px;color:rgba(74,222,128,0.25);font-family:'JetBrains Mono',monospace;">Proposition à valider et signer par le médecin responsable</p>
+  </div>
+
+  <div class="error-box" id="errorBox" style="display:none;"></div>
+
+  <!-- Historique local (texte seul · purge auto 12h) -->
+  <div class="card" id="historyCard">
+    <div class="row-space" style="margin-bottom:12px;">
+      <span class="label" style="margin:0;">Historique · <span id="historyCount">0</span> CR <span style="color:#2d4a5e;">(supprimés après 12 h)</span></span>
+      <button class="icon-btn" onclick="esClearAll()" style="font-size:10px;padding:3px 8px;color:#7a4a4a;border-color:rgba(239,68,68,0.25);">🗑 Tout effacer</button>
+    </div>
+    <div id="historyList"></div>
+  </div>
+
+  <p class="footer">
+    Whisper (OpenAI) · Web Speech API · Gemini (Google) · Claude (Anthropic)<br>
+    Audio non conservé · Texte conservé localement et supprimé après 12 h · Usage médical local uniquement
+  </p>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════════
-// TAB NAVIGATION
-// ══════════════════════════════════════════════════════
-function switchTab(name) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  document.getElementById('tab-' + name).classList.add('active');
-  if (name === 'historique') { esRenderHistory(); }
-}
-
-// ══════════════════════════════════════════════════════
 // DICTIONNAIRE DE CORRECTION ÉCHOGRAPHIQUE
+// Termes souvent mal reconnus → correction automatique
 // ══════════════════════════════════════════════════════
 const MEDICAL_CORRECTIONS = [
+
+  // ════════════════════════════════════════════════════════
+  // ARTEFACTS VOCAUX ET HÉSITATIONS
+  // ════════════════════════════════════════════════════════
   [/\beuh\b/gi,''], [/\beut\b/gi,''], [/\bhm\b/gi,''],
   [/\balors voilà\b/gi,''], [/\bdonc voilà\b/gi,''],
   [/\bon va dire\b/gi,''], [/\battends\b/gi,''],
+  [/\bj'ai pas dit que\b/gi,''], [/\bmais j'ai pas dit que\b/gi,''],
+  [/\bj'ai dit que\b/gi,''], [/\bon note que\b/gi,''],
+  [/\bje veux dire\b/gi,''], [/\bc'est-à-dire\b/gi,''],
+
+  // ════════════════════════════════════════════════════════
+  // MESURES — SFR recommande mm ou cm selon les standards
+  // ════════════════════════════════════════════════════════
   [/\b(\d+)\s*centimètre(s)?\b/gi,'$1 cm'],
   [/\b(\d+)\s*millimètre(s)?\b/gi,'$1 mm'],
+  [/\bton (\d+)\s*cm\b/gi,'$1 cm'],
+  [/\btonne (\d+)\b/gi,'$1'],
+  [/\btant (\d+)\b/gi,'$1'],
   [/\b(\d+)\s*virgule\s*(\d+)\b/gi,'$1,$2'],
   [/\bzéro virgule (\d+)\b/gi,'0,$1'],
+
+  // ════════════════════════════════════════════════════════
+  // TERMINOLOGIE GÉNÉRALE ÉCHOGRAPHIQUE (CERF/SFR)
+  // Mode B — sémiologie élémentaire
+  // ════════════════════════════════════════════════════════
+
+  // Échogénicité — Lexique officiel SFR/ACR
   [/\bécho structure\b/gi,'échostructure'],
   [/\bécho génicité\b/gi,'échogénicité'],
   [/\bhyper échogène\b/gi,'hyperéchogène'],
@@ -932,9 +290,26 @@ const MEDICAL_CORRECTIONS = [
   [/\bané chogène\b/gi,'anéchogène'],
   [/\banécho gène\b/gi,'anéchogène'],
   [/\bécho gène\b/gi,'échogène'],
+  [/\bmarkedly hypoéchogène\b/gi,'nettement hypoéchogène'],
+
+  // Artefacts acoustiques — sémiologie élémentaire (J Radiol 2002)
   [/\bcône d ombre\b/gi,"cône d'ombre"],
   [/\bartefact\b/gi,'artéfact'],
+
+  // Caractéristiques morphologiques générales
+  [/\bcontour(s)? régulier(s|ière)?\b/gi,'contours réguliers'],
+  [/\bcontour(s)? irrégulier(s|ière)?\b/gi,'contours irréguliers'],
+  [/\bdes constructeurs\b/gi,'de contours'],
+  [/\bconstructeur\b/gi,'contours'],
+  [/\bvascularisation doppler\b/gi,'vascularisation au Doppler'],
+  [/\bhyper hémie\b/gi,'hyperhémie'],
+
+  // Structures liquidienne vs solide
   [/\btrans sonique\b/gi,'transsonique'],
+
+  // ════════════════════════════════════════════════════════
+  // DOPPLER — terminologie officielle SFR/HAS
+  // ════════════════════════════════════════════════════════
   [/\bdopé leur\b/gi,'Doppler'],
   [/\bécho doppler\b/gi,'écho-Doppler'],
   [/\bécho-doppler\b/gi,'écho-Doppler'],
@@ -942,61 +317,194 @@ const MEDICAL_CORRECTIONS = [
   [/\bdoppler couleur\b/gi,'Doppler couleur'],
   [/\bdoppler énergie\b/gi,'Doppler énergie'],
   [/\bdoppler pulsé\b/gi,'Doppler pulsé'],
+  [/\bdoppler continu\b/gi,'Doppler continu'],
+  [/\bindice de résistance\b/gi,'index de résistance'],
+  [/\bindice de pulsatilité\b/gi,'index de pulsatilité'],
   [/\bhépato pète\b/gi,'hépatopète'],
   [/\bhépato fuge\b/gi,'hépatofuge'],
+  [/\bhomologue respiratoire\b/gi,'modulation respiratoire'],
+
+  // ════════════════════════════════════════════════════════
+  // FOIE — Référentiel SFR/SIAD (Société Imagerie Abdominale Digestive)
+  // ════════════════════════════════════════════════════════
+
+  // Morphologie — termes standardisés SFR
+  [/\bfraîche hépatique\b/gi,'flèche hépatique'],
+  [/\bPathé col\b/gi,'flèche hépatique'],
+  [/\bpaté col\b/gi,'flèche hépatique'],
+  [/\bpathé col\b/gi,'flèche hépatique'],
   [/\bhépato mégalie\b/gi,'hépatomégalie'],
+  [/\bsegment (I|II|III|IV|V|VI|VII|VIII)\b/g,'segment $1'],
+
+  // Parenchyme hépatique
   [/\blocale focale\b/gi,'lésion focale'],
   [/\blesion focale\b/gi,'lésion focale'],
+  [/\bhémato gène\b/gi,'hémangiome'],
+  [/\bhépatocarcinome\b/gi,'hépatocarcinome'],
+
+  // Système porte — terminologie SFR
+  [/\bpatopède\b/gi,'tronc porte'],
+  [/\bpato pède\b/gi,'tronc porte'],
+  [/\bveines sus hépatiques\b/gi,'veines sus-hépatiques'],
+  [/\bveine sus hépatique\b/gi,'veine sus-hépatique'],
   [/\bVCI\b/g,'veine cave inférieure'],
+  [/\bepanchement intra péritonéal\b/gi,'épanchement intrapéritonéal'],
+
+  // LI-RADS — surveillance CHC (recommandations HAS/SFR 2024)
   [/\bli rads\b/gi,'LI-RADS'],
   [/\blie rads\b/gi,'LI-RADS'],
+
+  // ════════════════════════════════════════════════════════
+  // VOIES BILIAIRES — terminologie officielle SFR
+  // ════════════════════════════════════════════════════════
   [/\bvesicule biliaire\b/gi,'vésicule biliaire'],
+  [/\bsludge biliaire\b/gi,'sludge biliaire'],
   [/\bcholé cystite\b/gi,'cholécystite'],
   [/\bmurphy\b/gi,'Murphy'],
   [/\bcoledoc\b/gi,'cholédoque'],
   [/\bcholé doc\b/gi,'cholédoque'],
   [/\bcholé doque\b/gi,'cholédoque'],
+  [/\bvoies biliaires intra hépatiques\b/gi,'voies biliaires intrahépatiques'],
+  [/\bvoies biliaires extra hépatiques\b/gi,'voies biliaires extrahépatiques'],
   [/\bicterus\b/gi,'ictère'],
+
+  // ════════════════════════════════════════════════════════
+  // PANCRÉAS — terminologie SFR/SIAD
+  // ════════════════════════════════════════════════════════
   [/\bwirsung\b/gi,'Wirsung'],
   [/\bvie song\b/gi,'Wirsung'],
   [/\bvi song\b/gi,'Wirsung'],
+  [/\bvir song\b/gi,'Wirsung'],
   [/\bpseudo kyste\b/gi,'pseudokyste'],
+
+  // ════════════════════════════════════════════════════════
+  // RATE — terminologie SFR
+  // ════════════════════════════════════════════════════════
   [/\bspléno mégalie\b/gi,'splénomégalie'],
+  [/\bspléno rénal\b/gi,'splénorenal'],
+  [/\bhépato rénal\b/gi,'hépatorénal'],
+
+  // ════════════════════════════════════════════════════════
+  // REINS ET VOIES URINAIRES — référentiel SFR/AFU
+  // ════════════════════════════════════════════════════════
+  [/\baxarénal\b/gi,'axe rénal'],
+  [/\baxa rénal\b/gi,'axe rénal'],
+  [/\baxa rénale\b/gi,'axe rénal'],
+  [/\baxe rénale\b/gi,'axe rénal'],
+  [/\bindex au cortical\b/gi,'index cortical'],
+  [/\bindice cortical\b/gi,'index cortical'],
+  [/\bcortico médullaire\b/gi,'corticomédullaire'],
+  [/\bdifférenciation cortico médullaire\b/gi,'différenciation corticomédullaire'],
   [/\bcavités pyélo calicielles\b/gi,'cavités pyélocalicielles'],
   [/\bpyélo calicielle\b/gi,'pyélocalicielle'],
+  [/\bcavités pièces qualicielles\b/gi,'cavités pyélocalicielles'],
   [/\bhydro néphrose\b/gi,'hydronéphrose'],
   [/\bBosniak\b/gi,'Bosniak'],
   [/\bbosniac\b/gi,'Bosniak'],
+  [/\bangio myo lipome\b/gi,'angiomyolipome'],
+  [/\bjunction urétéro-pyélique\b/gi,'jonction urétéro-pyélique'],
+  [/\bjonction vésico urétérale\b/gi,'jonction vésico-urétérale'],
+
+  // ════════════════════════════════════════════════════════
+  // AORTE ET VAISSEAUX ABDOMINAUX — HAS recommande dépistage AAA
+  // ════════════════════════════════════════════════════════
   [/\bané vrisme\b/gi,'anévrisme'],
+
+  // ════════════════════════════════════════════════════════
+  // VESSIE — terminologie SFR
+  // ════════════════════════════════════════════════════════
   [/\brésidu post mictionnel\b/gi,'résidu post-mictionnel'],
   [/\bRPM\b/g,'résidu post-mictionnel'],
+  [/\blesion bourgeonnante\b/gi,'lésion bourgeonnante'],
+
+  // ════════════════════════════════════════════════════════
+  // PROSTATE — terminologie SFR/AFU
+  // ════════════════════════════════════════════════════════
+  [/\bvolumestatique\b/gi,'volume prostatique'],
+  [/\blobo médian\b/gi,'lobe médian'],
+  [/\blobo médien\b/gi,'lobe médian'],
   [/\bpi rads\b/gi,'PI-RADS'],
+
+  // ════════════════════════════════════════════════════════
+  // UTÉRUS — directive qualité SFR/CNGOF 2015
+  // ════════════════════════════════════════════════════════
   [/\bmyo mètre\b/gi,'myomètre'],
   [/\bendo mètre\b/gi,'endomètre'],
   [/\badéno myose\b/gi,'adénomyose'],
+  [/\bkyste sous endométrial\b/gi,'kyste sous-endométrial'],
+  [/\bleiomyome\b/gi,'léiomyome'],
+  [/\bclassification ESHRE\b/gi,'classification ESHRE-ESGE'],
   [/\bstérilet\b/gi,'DIU'],
+  [/\bCOL utérin\b/gi,'col utérin'],
+
+  // ════════════════════════════════════════════════════════
+  // OVAIRES — terminologie SFR/CNGOF
+  // ════════════════════════════════════════════════════════
   [/\blatéro utérine\b/gi,'latéro-utérine'],
   [/\bendo métriome\b/gi,'endométriome'],
   [/\bhydrosalinx\b/gi,'hydrosalpinx'],
+  [/\bSOP\b/g,'SOP'],
+  [/\bCDO\b/g,'cul-de-sac de Douglas'],
   [/\bcul de sac de Douglas\b/gi,'cul-de-sac de Douglas'],
   [/\bpauci folliculaire\b/gi,'paucifolliculaire'],
+
+  // ════════════════════════════════════════════════════════
+  // ÉCHO-DOPPLER VEINEUX — recommandations HAS/SFR
+  // Terminologie standardisée thrombose veineuse
+  // ════════════════════════════════════════════════════════
   [/\btibio fibulaire\b/gi,'tibio-fibulaire'],
   [/\bsaphène interne\b/gi,'grande veine saphène'],
   [/\bsaphène externe\b/gi,'petite veine saphène'],
+
+  // ════════════════════════════════════════════════════════
+  // ÉCHO-DOPPLER ARTÉRIEL — recommandations HAS/SFR
+  // ════════════════════════════════════════════════════════
+  [/\bartériopathie oblitérante\b/gi,'artériopathie oblitérante des membres inférieurs'],
+  [/\bplaque d'athérome\b/gi,"plaque d'athérome"],
+
+  // ════════════════════════════════════════════════════════
+  // THYROÏDE ET COU — EU-TIRADS (SFR 2017), terminologie ACR
+  // ════════════════════════════════════════════════════════
   [/\beurotirades\b/gi,'EU-TIRADS'],
   [/\beu tirads\b/gi,'EU-TIRADS'],
   [/\bti rads\b/gi,'TI-RADS'],
   [/\bgoître\b/gi,'goitre'],
+  [/\bcalcifications coquille d'œuf\b/gi,"calcifications en coquille d'œuf"],
+  [/\bsecteur IIB\b/gi,'secteur IIB'],
+
+  // ════════════════════════════════════════════════════════
+  // SEIN — Lexique ACR BI-RADS (version française SFR/HAS)
+  // ════════════════════════════════════════════════════════
   [/\bbi rads\b/gi,'BI-RADS'],
   [/\bbirads\b/gi,'BI-RADS'],
+  [/\bACR 4a\b/gi,'ACR 4a'],
+  [/\bACR 4b\b/gi,'ACR 4b'],
+  [/\bACR 4c\b/gi,'ACR 4c'],
   [/\badéno fibrome\b/gi,'adénofibrome'],
+  [/\bcarcinome canalaire\b/gi,'carcinome canalaire infiltrant'],
+  [/\bcarcinome lobulaire\b/gi,'carcinome lobulaire infiltrant'],
+  [/\bglanglion sentinelle\b/gi,'ganglion sentinelle'],
+
+  // ════════════════════════════════════════════════════════
+  // APPAREIL LOCOMOTEUR MSK — terminologie SFR/SOFMER
+  // ════════════════════════════════════════════════════════
   [/\btendon achille\b/gi,"tendon d'Achille"],
   [/\btendon achilléen\b/gi,"tendon d'Achille"],
+
+  // ════════════════════════════════════════════════════════
+  // SCROTUM ET TESTICULES — terminologie SFR
+  // ════════════════════════════════════════════════════════
+  [/\bhy drocèle\b/gi,'hydrocèle'],
+
+  // ════════════════════════════════════════════════════════
+  // CORRECTIONS PHONÉTIQUES — normalisation de casse des acronymes
+  // ════════════════════════════════════════════════════════
   [/\bACR quatre\b/gi,'ACR 4'],
   [/\bACR trois\b/gi,'ACR 3'],
   [/\bACR cinq\b/gi,'ACR 5'],
   [/\bACR deux\b/gi,'ACR 2'],
   [/\bo rads\b/gi,'O-RADS'],
+
 ];
 
 function applyMedicalCorrections(text) {
@@ -1010,45 +518,597 @@ function applyMedicalCorrections(text) {
 // ══════════════════════════════════════════════════════
 // SYSTEM PROMPT
 // ══════════════════════════════════════════════════════
-// System prompt et exemples gérés côté serveur via /api/proxy
+const SYSTEM_PROMPT_BASE = `Tu es un assistant expert en radiologie spécialisé dans la rédaction de comptes rendus d'échographies (hors obstétrique). Ton objectif est de transformer des notes cliniques rapides en rapports médicaux structurés, professionnels et conformes aux standards de la Société Française de Radiologie (SFR).
 
-// ══════════════════════════════════════════════════════
-// STATE
+Ne cite pas tes sources et n'affiche aucun lien à la fin de ta réponse.
+Donne une réponse en texte brut, sans références ni liens cliquables.
+
+STRUCTURE DU COMPTE RENDU — pour chaque examen, respecte systématiquement :
+1. INDICATION : Reprends le contexte clinique PERTINENT de façon synthétique et brève (idéalement 1 à 2 phrases). Conserve uniquement les éléments cliniquement déterminants (motif, symptôme principal, antécédent ou traitement pertinent, latéralité, ancienneté) et écarte le superflu. Reste concise SANS jamais omettre un élément de contexte déterminant pour l'interprétation.
+2. RÉSULTATS : Description par organe ou région anatomique, avec un niveau de détail MODULÉ selon la pertinence clinique (concis pour le normal, détaillé pour les anomalies — voir règle dédiée).
+3. CONCLUSION : Synthèse BRÈVE des seuls points cliniquement significatifs (une puce concise par point important), avec classification si pertinente (BI-RADS, EU-TIRADS, O-RADS, Bosniak, etc.). Ne pas reparaphraser tout le corps des RÉSULTATS ; aller à l'essentiel SANS omettre un diagnostic ou une anomalie importante.
+4. CAT : Conduite à tenir CONCISE et actionnable, selon les recommandations officielles (SFR, HAS, CNGOF, EASL, EAU…). Ne retenir que les recommandations pertinentes (avis spécialisé, examen complémentaire discriminant, surveillance) SANS listes redondantes ni mesures de principe superflues — mais sans omettre une recommandation essentielle à la prise en charge.
+
+NE JAMAIS inclure de section TECHNIQUE — aller directement de INDICATION à RÉSULTATS.
+
+RÈGLE ABSOLUE SUR LES CHIFFRES (priorité maximale) :
+- Les comptes rendus de référence ci-dessous ont été VOLONTAIREMENT écrits SANS aucune valeur chiffrée. Ils illustrent uniquement la STRUCTURE, le STYLE et le RAISONNEMENT clinique attendus.
+- Tu ne dois JAMAIS reprendre, deviner, estimer ou inventer un chiffre à partir de ces exemples.
+- N'écris une valeur chiffrée (mm, cm, cc, mm³, %, MHz, vitesse, date, score numérique, grade chiffré) QUE si elle a été EXPLICITEMENT dictée dans la transcription du jour.
+- En l'absence de chiffre dicté, décris TOUJOURS en termes qualitatifs (taille normale, augmentée, calibre habituel, volume dans les limites normales, paroi épaissie, etc.) sans aucun nombre.
+
+COMPLÉTUDE DES ORGANES (règle importante, à appliquer à chaque compte rendu) :
+- Décris SYSTÉMATIQUEMENT TOUS les organes et structures du champ d'exploration correspondant (voir GESTION DES SPÉCIALITÉS ci-dessous), même ceux qui n'ont PAS été mentionnés dans la dictée.
+- Un organe non dicté et sans anomalie doit être décrit comme normal, en termes qualitatifs et sans chiffre.
+- Ne te limite JAMAIS aux seuls organes cités. Exemples de champ minimal à couvrir intégralement :
+  * Abdominal : Foie, Vésicule et voies biliaires, Pancréas, Rate, Reins, Aorte, Vessie.
+  * Pelvien : Vessie, Utérus, Endomètre, Col, Ovaire droit, Ovaire gauche, Cul-de-sac de Douglas.
+  * Cervical : Thyroïde (deux lobes et isthme), Ganglions cervicaux, Parathyroïdes.
+  * Scrotal : Testicule droit, Testicule gauche, Épididymes, Cordon spermatique, Bourses.
+  * Doppler veineux : exploration systématique vein par vein des deux membres.
+- Reproduis INTÉGRALEMENT le niveau de complétude des comptes rendus de référence ci-dessous (tous les organes y sont décrits, jamais un compte rendu tronqué).
+
+NIVEAU DE DÉTAIL MODULÉ DANS LES RÉSULTATS (règle importante) :
+- Organe NORMAL / sans anomalie : UNE phrase synthétique mais complète, reprenant les critères de normalité essentiels propres à l'organe (taille, contours, échostructure, et le point clé attendu pour cet organe). Des phrases concises et informatives, JAMAIS télégraphiques, mais sans délayer ni multiplier les redites.
+- ANOMALIE / organe pathologique : description COMPLÈTE et riche (localisation précise, taille si dictée, forme, contours, échostructure, vascularisation au Doppler, signes associés, retentissement éventuel). C'est là que le détail doit être développé.
+- En résumé : le détail suit la pertinence clinique — économe sur le normal, exhaustif sur le pathologique. Ne jamais sacrifier une information essentielle au nom de la concision.
+
+AUTRES RÈGLES DE RÉDACTION :
+- Expansion des notes : Si l'utilisateur écrit "Organe RAS", "normal" ou simplement le nom de l'organe, rédige une description de normalité QUALITATIVE standard. Exemple pour le foie : "Le foie est de taille normale, de contours réguliers, d'échostructure homogène sans lésion focale décelable." — aucun chiffre inventé.
+- Si un organe n'est pas dicté et que l'examen est "normal" ou "RAS", le décrire qualitativement sans mesures chiffrées.
+- Précision chirurgicale : Utilise toujours les termes médicaux exacts (hyperéchogène, anéchogène, contours réguliers, vascularisation au Doppler, etc.).
+- Classifications : Intègre les scores officiels si les données le permettent (EU-TIRADS pour la thyroïde, ACR BI-RADS pour le sein, O-RADS pour les ovaires, critères IOTA, classification de Bosniak via TDM/IRM, etc.).
+- Style : Ton formel, phrases concises et sans fioritures, MAIS compte rendu TOUJOURS complet (tous les organes du champ décrits, même normaux).
+- FORMATAGE OBLIGATOIRE DU COMPTE RENDU :
+  * Les titres de section (INDICATION, RÉSULTATS, CONCLUSION, CAT) doivent être écrits en MAJUSCULES précédés de ## (ex: ## INDICATION ##)
+  * Le nom de chaque organe en début de paragraphe doit être entre double astérisques : **Foie :** **Vésicule biliaire :** **Reins :** etc.
+  * Dans la section CONCLUSION : utiliser des points (• ) et non des tirets ni une numérotation. Mettre une MAJUSCULE au premier mot après le point.
+  * Dans la section CAT : utiliser également des points (• ) avec majuscule au premier mot.
+  * NE JAMAIS inclure de section TECHNIQUE. Aller directement de INDICATION à RÉSULTATS.
+  * Ne jamais utiliser de tirets ou bullets dans RÉSULTATS — uniquement des paragraphes par organe.
+  * Respecter strictement cette mise en forme à chaque compte rendu.
+
+GESTION DES SPÉCIALITÉS :
+- Abdominal : Foie, Vésicule, Voies biliaires, Pancréas, Rate, Reins, Aorte, Vessie.
+- Pelvien (Gynéco/Uro) : Utérus (myomètre, endomètre), Ovaires, Prostate, Volume vésical.
+- Thyroïde/Cou : Échogénicité, nodules (contours, halo, vascularisation), adénopathies.
+- Appareil Locomoteur (MSK) : Tendons, muscles, épanchements articulaires, bourses séreuses.
+- Vasculaire : Perméabilité, compressibilité, analyse des flux Doppler.
+
+SÉCURITÉ ET LIMITES :
+- NE JAMAIS inventer de données non fournies.
+- Ce compte rendu est une proposition à valider et signer par le médecin responsable.
+- EXCLUSION : Échographie obstétricale → décliner poliment.
+
+Intelligence Clinique : Analyse les anomalies dictées pour générer une Conclusion pertinente et une CAT adaptée aux recommandations médicales actuelles.
+
+FILTRAGE DES DONNÉES CONVERSATIONNELLES — phase silencieuse avant toute rédaction :
+- IGNORER : instructions au patient (inspirez, expirez, tournez, ne bougez plus, relevez le bras, allongez-vous, déshabillez-vous, vous pouvez vous rhabiller, allez uriner, revenez…)
+- IGNORER : commentaires rassurants non sémiologiques (tout est normal, c'est bon, pas de problème, c'est beau)
+- IGNORER : mots déclencheurs de fin de dictée (c'est terminé, fin d'examen, terminer, générer…)
+- IGNORER : faux départs, hésitations (euh, donc, alors voilà, attends, hm)
+- EXTRAIRE ET CONSERVER : les éléments cliniques PERTINENTS du contexte (motif, symptômes principaux, antécédents et traitements pertinents, latéralité, ancienneté, contexte de surveillance), les organes et caractéristiques sémiologiques, localisations, anomalies, et les mesures UNIQUEMENT si explicitement dictées.
+- Le filtrage retire les artefacts conversationnels, les instructions au patient et les détails superflus — mais JAMAIS un élément clinique déterminant du contexte.
+
+Rédige directement le compte rendu structuré sans mentionner ce qui a été ignoré.
+
+
+
+═══════════════════════════════════════════
+EXEMPLES DE COMPTES RENDUS DE RÉFÉRENCE
+(Reproduis ce style, ce niveau de détail et cette structure — SANS section TECHNIQUE et SANS aucune valeur chiffrée : ils illustrent la structure, le style et le raisonnement, jamais des chiffres à recopier)
+═══════════════════════════════════════════
+
+`;
+
+const FEWSHOT_EXAMPLES = [
+  { type:'abdominal', text:`EXEMPLE 1 — ECHOGRAPHIE ABDOMINALE (stéatose + ictère) :
+
+INDICATION : Exploration d'une gêne de l'hypochondre droit associée à une décoloration (ictère/selles décolorées).
+
+RÉSULTATS :
+
+Foie : Le foie présente des dimensions augmentées. Le parenchyme est discrètement hyperéchogène de manière diffuse, avec une atténuation postérieure, en rapport avec une surcharge graisseuse marquée. Les contours sont réguliers. Pas d'image nodulaire focale décelée.
+
+Système vasculaire hépatique : Le tronc porte est perméable, avec un flux hépatopète et des vitesses circulatoires normales. Les veines sus-hépatiques sont visualisées et présentent un calibre normal.
+
+Vésicule et voies biliaires : La vésicule biliaire est de taille normale, alithiasique, aux parois fines. Il n'est pas mis en évidence de dilatation des voies biliaires intra ou extra-hépatiques.
+
+Pancréas : Le pancréas est de taille normale, sans anomalie morphologique particulière décelable. Le canal de Wirsung n'est pas dilaté.
+
+Rate : La rate est de taille normale, d'échostructure homogène.
+
+Reins : Les reins sont de taille et de morphologie normales. Bonne différenciation cortico-médullaire. Pas de dilatation des cavités pyélocalicielles ni d'image lithiasique.
+
+Aorte et Vessie : L'aorte abdominale est de calibre régulier. La vessie est de contenu transsonique avec des parois régulières.
+
+CONCLUSION :
+• Hépatomégalie associée à une stéatose hépatique diffuse marquée.
+• Absence d'anomalie des voies biliaires ou de lésion focale suspecte.
+• Perméabilité normale du tronc porte.
+
+CAT :
+• Bilan biologique hépatique complet (ASAT, ALAT, GGT, PAL, bilirubine totale et conjuguée).
+• Prise en charge des facteurs de risque métaboliques.
+• Surveillance échographique ou IRM hépatique selon évolution.` },
+  { type:'abdominal', text:`EXEMPLE 2 — ECHOGRAPHIE ABDOMINALE COMPLETE (douleurs HCD) :
+
+INDICATION : Douleurs de l'hypochondre droit.
+
+RÉSULTATS :
+
+Foie : De taille normale. Les contours sont réguliers. Le parenchyme est d'échogénicité normale, isoéchogène et homogène, sans lésion focale suspecte décelable. Le tronc porte est perméable avec un flux hépatopète. Les veines sus-hépatiques présentent un calibre et un flux habituels.
+
+Vésicule et Voies Biliaires : La vésicule biliaire est de taille normale, alithiasique, à parois fines. Les voies biliaires intra et extra-hépatiques ne sont pas dilatées.
+
+Pancréas : De morphologie normale, sans anomalie focale. Le canal de Wirsung n'est pas dilaté.
+
+Rate : De taille normale, d'échostructure homogène.
+
+Reins : Les deux reins sont de taille normale, en position lombaire habituelle. Bonne différenciation cortico-médullaire. Absence de dilatation des cavités pyélocalicielles. Pas d'image lithiasique ou kystique objectivée.
+
+Aorte et VCI : L'aorte abdominale est de calibre régulier. La veine cave inférieure est perméable avec une modulation respiratoire conservée.
+
+Vessie : En réplétion suffisante. Les parois sont fines et régulières. Le contenu est transsonique, sans image de diverticule ou de lésion bourgeonnante endovésicale.
+
+Tube digestif : Pas de dilatation des anses intestinales. On note une stase stercorale au niveau du côlon gauche, sans épaississement pariétal décelable. Péristaltisme conservé.
+
+Autres : Pas d'épanchement liquidien intrapéritonéal.
+
+CONCLUSION :
+• Examen échographique abdominal dans les limites de la normale.
+• Stase stercorale colique gauche sans signe de complication ou d'obstacle organique visualisé.
+
+CAT :
+• Prise en charge symptomatique de la stase stercorale.
+• Si douleurs persistantes : bilan hépatique et CRP.` },
+  { type:'pelvien', text:`EXEMPLE 3 — ECHOGRAPHIE PELVIENNE (contrôle DIU) :
+
+INDICATION : Contrôle de positionnement d'un dispositif intra-utérin hormonal.
+
+RÉSULTATS :
+
+Vessie : En réplétion suffisante, parois fines et régulières. Absence d'image de lithiase ou de lésion endovésicale.
+
+Utérus : Utérus rétroversé de contours réguliers. Myomètre d'aspect homogène.
+
+Dispositif Intra-Utérin : Le DIU est visualisé en cavité endométriale, normalement inséré, son extrémité supérieure à distance du fond utérin.
+
+Ovaire droit : En situation latéro-utérine. Aspect plurifolliculaire avec follicule dominant.
+
+Ovaire gauche : En situation latéro-utérine. Aspect plurifolliculaire.
+
+Cul-de-sac de Douglas : Pas d'épanchement liquidien.
+
+CONCLUSION :
+• DIU en position basse, à distance du fond utérin.
+• Utérus rétroversé de morphologie normale.
+• Ovaires plurifolliculaires sans anomalie suspecte, avec follicule dominant à droite.
+
+CAT :
+• Position basse du DIU pouvant diminuer l'efficacité contraceptive.
+• Consultation gynécologique recommandée pour évaluer un repositionnement ou un changement de dispositif.` },
+  { type:'doppler-veineux', text:`EXEMPLE 4 — ECO-DOPPLER VEINEUX (TVP distale) :
+
+INDICATION : Suspicion de thrombose veineuse profonde et/ou superficielle du membre inférieur droit. Douleur de survenue brutale. Patient sous anticoagulant.
+
+RÉSULTATS :
+
+Veine cave inférieure : Libre et perméable, flux spontané avec bonne modulation respiratoire.
+
+Veines iliaques externes et internes (droite et gauche) : Pas d'anomalie.
+
+Veines fémorales communes (droite et gauche) : Pas d'anomalie.
+
+Veines fémorales superficielles, poplitées et tronc tibio-fibulaire (droite et gauche) : Perméables, sans signe direct ou indirect de thrombose veineuse récente ou semi-récente.
+
+Veines jambières (tibiales antérieures, tibiales postérieures, fibulaires) (droite et gauche) : Pas d'anomalie.
+
+Veines gastrocnémiennes (droite et gauche) : Pas d'anomalie.
+
+Veine soléaire droite : Incompressible, en faveur d'une thrombose veineuse profonde distale.
+
+Réseau veineux superficiel (grande et petite veines saphènes) (droite et gauche) : Libre et perméable, sans signe direct ou indirect de thrombose.
+
+CONCLUSION :
+• Thrombose veineuse profonde distale au dépens de la veine soléaire droite.
+• Pas d'argument pour une thrombose veineuse proximale ni superficielle associée.
+
+CAT :
+• Poursuite du traitement anticoagulant.
+• Port de bas de contention.
+• Consultation d'un angiologue pour le suivi.` },
+  { type:'doppler-veineux', text:`EXEMPLE 5 — ECO-DOPPLER VEINEUX NORMAL :
+
+INDICATION : Suspicion de thrombose veineuse des membres inférieurs.
+
+RÉSULTATS :
+
+Veine cave inférieure : Libre et perméable. Flux spontané avec bonne modulation respiratoire.
+
+Veines iliaques externes et internes (droite et gauche) : Libres, perméables, sans signe direct ou indirect de thrombose veineuse récente ou semi-récente. Flux spontané avec bonne modulation respiratoire.
+
+Veines fémorales communes (droite et gauche) : Libres, perméables, sans signe direct ou indirect de thrombose. Flux spontané avec bonne modulation respiratoire.
+
+Veines fémorales superficielles (droite et gauche) : Libres, perméables, sans signe direct ou indirect de thrombose.
+
+Veines poplitées et tronc tibio-fibulaire (droite et gauche) : Libres, perméables, sans signe de thrombose.
+
+Veines jambières (tibiales antérieures, tibiales postérieures, fibulaires) (droite et gauche) : Libres, perméables, sans anomalie.
+
+Veines soléaires et gastrocnémiennes (droite et gauche) : Libres, perméables, sans signe de thrombose.
+
+Réseau superficiel (grande et petite veines saphènes) (droite et gauche) : Libres, perméables, sans signe de thrombose.
+
+CONCLUSION :
+• Absence de thrombose veineuse du réseau profond (proximal et distal) et du réseau superficiel (TVP/TVS négatives).` },
+  { type:'pelvien', text:`EXEMPLE 6 — ECHOGRAPHIE PELVIENNE (bilan endométriose/adénomyose) :
+
+INDICATION : Douleurs pelviennes chroniques. Ménorragies, métrorragies. Dysménorrhées sévères. Dyspareunie profonde. Troubles digestifs et urinaires. Infertilité.
+
+RÉSULTATS :
+
+Compartiment antérieur : Espace prévésical, récessus vésico-utérin et septum vésico-vaginal sans anomalie décelée. Vessie à contenu transsonique, paroi fine, sans image diverticulaire ni lésion polypoïde. Uretères non dilatés.
+
+Compartiment moyen : Pas d'anomalie vaginale. Pas de nodule des culs-de-sac vaginaux.
+
+Utérus : Antéversé, antéfléchi, contours réguliers. Myomètre homogène. Pas d'anomalie morphologique ni vasculaire au Doppler couleur. Éléments en faveur d'adénomyose : asymétrie antéro-postérieure, kystes sous-endométriaux, halo hyperéchogène, aspect strié du myomètre, vascularisation peignée au Doppler énergie, altération de la zone jonctionnelle. Présence de dilatations veineuses myométriales et péri-utérines évocatrices de varicose utérine. Indices Doppler utérins dans les limites attendues.
+
+Col : Échostructure homogène. Muqueuse endocervicale fine, régulière et hyperéchogène.
+
+Endomètre : Ligne de vacuité régulière et continue. Pas d'image d'addition. Absence de flux vasculaire anormal au Doppler. Aspect compatible avec la phase proliférative ou sécrétoire.
+
+Ovaire droit : En situation latéro-utérine. Quelques follicules antraux. Pas d'anomalie spécifique.
+
+Ovaire gauche : En situation latéro-utérine. Quelques follicules antraux. Pas d'anomalie spécifique.
+
+Trompes : Pas de dilatation visualisée.
+
+Compartiment postérieur : Septum recto-vaginal, rectum, ligaments utéro-sacrés et torus sans anomalie. Pas d'épanchement dans le cul-de-sac de Douglas.
+
+CONCLUSION :
+• Aspect échographique pouvant évoquer une adénomyose et une varicose pelvienne.
+• Pas d'anomalie ovarienne, tubaire ou vésicale.
+• Absence d'épanchement pelvien.
+
+CAT :
+• Discussion d'une IRM pelvienne pour caractérisation de l'adénomyose.
+• Prise en charge spécialisée en cas de suspicion de congestion pelvienne.
+• Suivi gynécologique recommandé.` },
+  { type:'cervical', text:`EXEMPLE 7 — ECHOGRAPHIE CERVICALE (kyste post-infectieux) :
+
+INDICATION : Caractérisation d'une masse cervicale droite cliniquement inflammatoire, avec régression sous antibiothérapie.
+
+RÉSULTATS :
+
+Thyroïde : Volume normal. Échogénicité glandulaire sans particularité. Aucun nodule visualisé.
+
+Exploration cervicale : En regard de la tuméfaction clinique, dans le secteur ganglionnaire IIB droit, mise en évidence d'une formation liquidienne ovalaire, aux contours réguliers, limites nettes, au contenu finement échogène (ponctuations isoéchogènes), avec renforcement postérieur, en faveur d'une formation kystique.
+
+Ganglions cervicaux : Pas d'adénomégalie cervicale significative en dehors de la lésion décrite.
+
+Parathyroïdes : Pas d'hypertrophie visualisée.
+
+CONCLUSION :
+• Thyroïde d'aspect normal, sans nodule.
+• Formation kystique ovalaire du secteur ganglionnaire IIB droit correspondant à la tuméfaction clinique, d'aspect compatible avec un kyste à contenu inflammatoire ou résiduel post-infectieux dans le contexte favorablement évolutif sous antibiothérapie.
+
+CAT :
+• Surveillance clinique.
+• Contrôle échographique à distance pour vérifier la régression complète.
+• Réévaluation plus précoce en cas de réapparition de douleur, d'augmentation de volume ou de signes inflammatoires.` },
+  { type:'cervical', text:`EXEMPLE 8 — ECHOGRAPHIE CERVICALE (adénopathies bénignes) :
+
+INDICATION : Exploration d'une tuméfaction cervicale gauche évolutive. Bilan biologique sans particularité. Pas de symptôme clinique associé.
+
+RÉSULTATS :
+
+Zone de tuméfaction cervicale gauche : En région pré-tragienne gauche, formation nodulaire solide, hypoéchogène, homogène, ovalaire, contours réguliers, limites nettes, vascularisation principalement centrale.
+
+Région sous-maxillaire gauche : Quelques petites formations nodulaires de mêmes caractéristiques.
+
+Ganglions cervicaux : Région para-thyroïdienne gauche : ganglion d'aspect bénin, hile central hyperéchogène conservé. Secteur ganglionnaire VA gauche : ganglion non suspect. Absence d'adénopathie cervicale suspecte.
+
+Thyroïde : Volume normal. Parenchyme homogène. Aucun nodule visualisé.
+
+Glandes salivaires : Sous-maxillaires et parotides sans anomalie.
+
+CONCLUSION :
+• Formation nodulaire solide d'allure ganglionnaire bénigne en région pré-tragienne gauche, avec petites formations ganglionnaires satellites non suspectes.
+• Ganglions cervicaux bénins identifiés. Thyroïde normale.
+• Aspect global non évocateur de malignité.
+
+CAT :
+• Surveillance clinique.
+• Contrôle échographique selon évolution.` },
+  { type:'scrotal', text:`EXEMPLE 9 — ECHOGRAPHIE SCROTALE :
+
+INDICATION : (Préciser selon le contexte clinique).
+
+RÉSULTATS :
+
+Testicule droit : De taille normale, contours réguliers, échostructure homogène. Vascularisation Doppler conservée. Pas d'image nodulaire ni de calcification. Pas d'hématocèle ni d'hydrocèle significative. Épididyme de morphologie et d'échostructure habituelles.
+
+Testicule gauche : De taille normale, contours réguliers, échostructure homogène. Vascularisation Doppler conservée. Pas d'image nodulaire ni de calcification. Pas d'hématocèle ni d'hydrocèle significative. Épididyme de morphologie et d'échostructure habituelles.
+
+Vascularisation : Flux artériels et veineux bilatéraux bien identifiés, sans anomalie hémodynamique Doppler.
+
+Cordon spermatique : Aspect normal, pas de masse, pas de kyste du cordon.
+
+Bourses : Pas d'épanchement significatif. Pas d'image de varicocèle (calibre veineux normal, absence de reflux Doppler).
+
+CONCLUSION :
+• Examen scrotal sans anomalie décelable.` },
+  { type:'msk', text:`EXEMPLE 10 — ECHOGRAPHIE TENDON D'ACHILLE (MSK) :
+
+INDICATION : Douleur postérieure de cheville, suspicion de tendinopathie.
+
+RÉSULTATS :
+
+Tendon d'Achille : Épaisseur et échostructure normales. Continuité fibrillaire conservée. Absence de désorganisation fibrillaire ou de rupture.
+
+Enthèse calcanéenne : Aspect normal, sans enthésopathie ni calcification.
+
+Bourse rétro-achilléenne : Sans épanchement.
+
+Péri-tendon : Pas d'épanchement ni d'épaississement évoquant une paraténonite.
+
+Muscles du mollet : Aspect normal, sans défect ni hématome.
+
+Doppler : Absence d'hyperhémie intra ou péri-tendineuse.
+
+CONCLUSION :
+• Examen du tendon d'Achille sans anomalie décelable.
+
+CAT :
+• Si persistance des symptômes : repos relatif, glaçage, kinésithérapie avec travail excentrique.
+• Réévaluation clinique.` },
+  { type:'pelvien', text:`EXEMPLE 11 — ECHOGRAPHIE PELVIENNE (lésion ovarienne, classification O-RADS) :
+
+INDICATION : Bilan d'une masse latéro-utérine droite sur douleurs pelviennes. Patiente non ménopausée.
+
+RÉSULTATS :
+
+Conditions d'examen : Échographie réalisée par voie sus-pubienne et endovaginale après information et accord de la patiente.
+
+Utérus : Antéversé, contours réguliers, myomètre homogène.
+
+Endomètre : D'échostructure homogène, ligne de vacuité continue et régulière, sans image d'addition endométriale. Pas d'anomalie du torus, des ligaments utéro-sacrés, de l'espace vésico-utérin ou recto-utérin.
+
+Col : D'échostructure homogène, muqueuse endocervicale fine, régulière et hyperéchogène.
+
+Ovaire droit : Augmenté de volume, siège d'une formation kystique multiloculaire comportant plusieurs cloisons fines et une composante solide irrégulière avec quelques végétations. Vascularisation nette de la composante solide au Doppler couleur.
+
+Ovaire gauche : Plurifolliculaire, de localisation latéro-utérine, de taille et d'échostructure normales, sans formation suspecte.
+
+Cul-de-sac de Douglas : Absence d'épanchement significatif.
+
+CONCLUSION :
+• Masse ovarienne droite kystique multiloculaire complexe comportant une composante solide irrégulière vascularisée avec végétations.
+• Aspect suspect de malignité selon les critères simples IOTA (présence d'un critère malin, absence de critère bénin applicable), classé O-RADS élevé.
+• Absence d'épanchement pelvien.
+
+CAT :
+• Avis gynécologique spécialisé rapide, avec orientation en filière de gynécologie oncologique.
+• IRM pelvienne avec injection pour caractérisation locorégionale.
+• Bilan biologique tumoral et bilan d'extension à discuter selon l'avis spécialisé.` },
+  { type:'abdominal', text:`EXEMPLE 12 — ECHOGRAPHIE ABDOMINALE (cholécystite aiguë lithiasique) :
+
+INDICATION : Douleur fébrile de l'hypochondre droit depuis quelques jours.
+
+RÉSULTATS :
+
+Foie : Taille normale, contours réguliers, parenchyme homogène sans lésion focale. Tronc porte perméable avec un flux hépatopète et des vitesses circulatoires normales.
+
+Vésicule biliaire : Siège d'une image hyperéchogène avec cône d'ombre postérieur en faveur d'une lithiase enclavée dans le collet vésiculaire. Présence de signes de complication en faveur d'une cholécystite : paroi épaissie et feuilletée, signe de Murphy échographique, épaississement hyperéchogène de la graisse périvésiculaire. Discret épanchement péricholécystique.
+
+Voies biliaires : Cholédoque de calibre normal, non dilaté. Pas de dilatation des voies biliaires intrahépatiques.
+
+Pancréas : De taille normale, sans anomalie morphologique. Canal de Wirsung non dilaté.
+
+Aorte : De calibre régulier, sans ectasie ni anévrisme. Veine cave inférieure de calibre régulier, perméable.
+
+Rate : De taille normale, d'échostructure homogène.
+
+Reins droit et gauche : D'échostructure homogène, sans image kystique ni lithiasique, sans dilatation des cavités pyélocalicielles, bonne différenciation cortico-médullaire, de taille normale.
+
+Vessie : De taille normale, contenu transsonique, parois régulières.
+
+CONCLUSION :
+• Aspect en faveur d'une cholécystite aiguë lithiasique (lithiase enclavée au collet, paroi épaissie et feuilletée, signe de Murphy échographique positif, épanchement péricholécystique).
+• Absence de dilatation des voies biliaires.
+• Pas d'autre anomalie notable décelée.
+
+CAT :
+• Avis chirurgical, orientation vers le service des urgences.` },
+  { type:'doppler-veineux', text:`EXEMPLE 13 — ECO-DOPPLER VEINEUX (TVP proximale) :
+
+INDICATION : Œdème douloureux du mollet et de la cuisse gauches, d'apparition récente.
+
+RÉSULTATS :
+
+Veine cave inférieure et veines iliaques : Perméables, flux modulé.
+
+Veine fémorale commune gauche : Perméable, compressible.
+
+Veine fémorale superficielle gauche : Incompressible sur tout son trajet, matériel endoluminal hypoéchogène, sans flux au Doppler, en faveur d'une thrombose.
+
+Veine poplitée gauche : Également incompressible, thrombosée.
+
+Veines jambières gauches : Perméables.
+
+Membre inférieur droit : Réseaux profond et superficiel perméables et compressibles, sans thrombose.
+
+Réseau superficiel gauche (grande et petite saphènes) : Perméable, sans thrombose.
+
+CONCLUSION :
+• Thrombose veineuse profonde proximale gauche, étendue aux veines fémorale superficielle et poplitée.
+• Absence de thrombose controlatérale ou du réseau superficiel.
+
+CAT :
+• Anticoagulation curative selon protocole.
+• Contention élastique.
+• Recherche étiologique.
+• Échographie-Doppler de contrôle en cas de nouveaux symptômes ou d'aggravation (douleur, œdème, suspicion d'extension ou de récidive).` },
+  { type:'abdominal', text:`EXEMPLE 14 — ECHOGRAPHIE RENALE (kyste complexe, limite de la classification de Bosniak) :
+
+INDICATION : Caractérisation d'une formation kystique du rein droit.
+
+RÉSULTATS :
+
+Rein droit : De localisation lombaire habituelle, bonne différenciation cortico-médullaire. Dans le tiers moyen, présence d'une formation kystique comportant quelques cloisons fines et de fines calcifications pariétales, sans composante solide nettement individualisée au Doppler. Pas de dilatation des cavités pyélocalicielles, pas de syndrome de masse, pas de calcul.
+
+Rein gauche : De localisation lombaire habituelle, bonne différenciation cortico-médullaire, sans anomalie, pas de kyste, pas de dilatation des cavités pyélocalicielles ni de lithiase.
+
+Vessie : De taille normale, contenu transsonique, parois régulières.
+
+CONCLUSION :
+• Formation kystique rénale droite atypique (cloisons fines, fines calcifications pariétales).
+• L'échographie ne permet pas d'évaluer le rehaussement : une exploration complémentaire est conseillée pour caractérisation.
+• Pas d'autre anomalie décelée sur les voies urinaires.
+
+CAT :
+• Uroscanner avec injection (selon la fonction rénale) pour caractérisation de la formation kystique et classification de Bosniak, suivi d'un avis spécialisé si besoin.` },
+  { type:'msk', text:`EXEMPLE 15 — ECHOGRAPHIE DE L'EPAULE (rupture transfixiante du supra-épineux) :
+
+INDICATION : Douleur et impotence de l'épaule droite, suspicion d'atteinte de la coiffe.
+
+RÉSULTATS :
+
+Tendon supra-épineux : Perte de la continuité fibrillaire avec interruption transfixiante et rétraction modérée du moignon. Épanchement dans la bourse sous-acromio-deltoïdienne.
+
+Tendons infra-épineux et sous-scapulaire : Continuité conservée, échostructure normale.
+
+Tendon du long biceps : En place dans sa gouttière, sans luxation ni épanchement significatif de la gaine.
+
+Articulation acromio-claviculaire : Sans particularité.
+
+Examen réalisé de façon bilatérale et comparative.
+
+CONCLUSION :
+• Rupture transfixiante du tendon supra-épineux droit avec rétraction et bursite sous-acromio-deltoïdienne réactionnelle.
+• Reste de la coiffe des rotateurs sans particularité.
+
+CAT :
+• Avis orthopédique / chirurgien de l'épaule.
+• IRM ou arthro-IRM pour bilan pré-thérapeutique (taille de la rupture, trophicité musculaire) si une réparation est envisagée.` },
+  { type:'abdominal', text:`EXEMPLE 16 — ECHOGRAPHIE ABDOMINALE (cirrhose avec signes d'hypertension portale) :
+
+INDICATION : Surveillance d'une hépatopathie chronique.
+
+RÉSULTATS :
+
+Foie : Dysmorphique, contours irréguliers, bosselés, bord inférieur émoussé, avec hypertrophie du lobe gauche et du segment I et atrophie relative du lobe droit. Parenchyme hétérogène à granité grossier, sans nodule suspect individualisé à ce jour.
+
+Système porte : Tronc porte perméable mais dilaté, avec ralentissement du flux. Voies de dérivation porto-systémiques visibles.
+
+Rate : Augmentée de taille (splénomégalie), d'échostructure homogène.
+
+Épanchement : Lame d'ascite péri-hépatique et dans le cul-de-sac de Douglas.
+
+Vésicule biliaire : De taille normale, alithiasique, parois fines. Voies biliaires intra et extra-hépatiques fines.
+
+Pancréas : De taille normale, sans anomalie morphologique. Canal de Wirsung non dilaté.
+
+Aorte : De calibre régulier, sans ectasie ni anévrisme. Veine cave inférieure de calibre régulier, perméable.
+
+Reins droit et gauche : D'échostructure homogène, sans image kystique ni lithiasique, sans dilatation des cavités pyélocalicielles, bonne différenciation cortico-médullaire, de taille normale.
+
+Vessie : De taille normale, contenu transsonique, parois régulières.
+
+CONCLUSION :
+• Aspect en faveur d'une cirrhose hépatique avec signes d'hypertension portale (dysmorphie, splénomégalie, tronc porte dilaté, voies de dérivation, ascite).
+• Pas de nodule hépatique suspect individualisé sur cet examen.
+
+CAT :
+• Dépistage du carcinome hépatocellulaire par échographie semestrielle (± alpha-fœtoprotéine).
+• Évaluation de la fibrose (élastographie) et bilan d'hépatopathie.
+• FOGD à la recherche de varices œsophagiennes.
+• Avis hépatologique.` }
+];
+
+// Détection du type d'examen à partir de la dictée (pour le routage des exemples few-shot)
+function detectExamType(t){
+  t = (t || '').toLowerCase();
+  const types = [];
+  if(/doppler\s*veineux|thrombose|\btvp\b|\btvs\b|phl[ée]bite|saph[èe]ne|sol[ée]aire|poplit|jambi[èe]re|veine[s]? f[ée]moral|gastrocn[ée]mien|incompressible|veineux profond/.test(t)) types.push('doppler-veineux');
+  if(/ut[ée]rus|ovaire|ovarien|endom[èe]tre|myom[èe]tre|pelvien|\bdiu\b|annexe|douglas|prostate|endom[ée]triome|o-?rads|follicul/.test(t)) types.push('pelvien');
+  if(/thyro[ïi]d|cervical|ad[ée]nopath|ganglion|nodule thyro|parathyro|ti-?rads|isthme/.test(t)) types.push('cervical');
+  if(/testicule|scrotal|[ée]pididyme|varicoc[èe]le|hydroc[èe]le|\bbourse|cordon spermatique/.test(t)) types.push('scrotal');
+  if(/tendon|achille|coiffe|supra-?[ée]pineux|infra-?[ée]pineux|[ée]paule|bursite|enth[èe]se|rupture tendineuse|\bmuscle|articulaire|m[ée]nisque|genou|cheville/.test(t)) types.push('msk');
+  if(/\bfoie\b|h[ée]patique|v[ée]sicule|chol[ée]doque|chol[ée]cystite|pancr[ée]as|wirsung|\brate\b|spl[ée]no|\breins?\b|r[ée]nal|aorte|biliaire|cirrhose|st[ée]atose|bosniak/.test(t)) types.push('abdominal');
+  return [...new Set(types)];
+}
+
+let lastRouting = { label:'tous types', count:0 };
+
+// Assemble le system prompt : base + uniquement les exemples du/des type(s) détecté(s).
+function buildSystemPrompt(dictation){
+  const types = detectExamType(dictation);
+  let chosen = types.length ? FEWSHOT_EXAMPLES.filter(e => types.includes(e.type)) : [];
+  if(!chosen.length) chosen = FEWSHOT_EXAMPLES; // aucun type reconnu -> tous (sécurité qualité)
+  lastRouting = { label: types.length ? types.join(' + ') : 'tous types', count: chosen.length };
+  return SYSTEM_PROMPT_BASE + chosen.map(e => e.text).join('\n\n---\n\n');
+}
+
+
 // ══════════════════════════════════════════════════════
 const BARS = 22;
 const SECTIONS = ['INDICATION','RÉSULTATS','RÉSULTAT','CONCLUSION','CAT','CONDUITE'];
+
 let isListening = false, recognition = null, finalText = '';
-let currentAI = 'gemini';
+let currentAI = 'gemini'; // 'gemini' | 'claude' | 'openai'
+
+function switchAI(ai) {
+  currentAI = ai;
+  // Update switcher buttons
+  const btnG = document.getElementById('btnGemini');
+  const btnC = document.getElementById('btnClaude');
+  const btnO = document.getElementById('btnOpenai');
+  btnG.style.background = ai==='gemini' ? 'rgba(74,222,128,0.18)' : 'transparent';
+  btnG.style.color = ai==='gemini' ? '#4ade80' : '#4a7a96';
+  btnC.style.background = ai==='claude' ? 'rgba(56,189,248,0.18)' : 'transparent';
+  btnC.style.color = ai==='claude' ? '#38bdf8' : '#4a7a96';
+  btnO.style.background = ai==='openai' ? 'rgba(255,255,255,0.14)' : 'transparent';
+  btnO.style.color = ai==='openai' ? '#e2eaf5' : '#4a7a96';
+  // Show/hide key sections (OpenAI réutilise la clé Whisper, toujours visible)
+  // Show/hide model sections
+  document.getElementById('geminiModelSection').style.display = ai==='gemini' ? 'block' : 'none';
+  document.getElementById('claudeModelSection').style.display = ai==='claude' ? 'block' : 'none';
+  document.getElementById('openaiModelSection').style.display = ai==='openai' ? 'block' : 'none';
+  updateAiLabel();
+}
+
+// Label dynamique : reflète le modèle réellement sélectionné
+function updateAiLabel() {
+  const label = document.getElementById('aiLabel');
+  const btnLabel = document.getElementById('generateBtnLabel');
+  if(currentAI==='gemini') {
+    label.textContent = document.getElementById('modelSelect').value + ' actif';
+    label.style.color = '#4ade80';
+    if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec Gemini →';
+  } else if(currentAI==='claude') {
+    label.textContent = document.getElementById('claudeModelSelect').value + ' actif';
+    label.style.color = '#38bdf8';
+    if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec Claude →';
+  } else {
+    label.textContent = document.getElementById('openaiModelSelect').value + ' actif';
+    label.style.color = '#e2eaf5';
+    if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec OpenAI →';
+  }
+}
+
 let continuousMode = false, keywordsEnabled = true, keywordTriggered = false;
-let thinkingEnabled = true;
-let audioCtx = null, analyser = null, micStream = null, animFrame = null;
+let audioCtx = null, analyser = null, micStream = null, animFrame = null, waveInterval = null;
 let mediaRecorder = null, audioChunks = [], recordingStream = null;
 let countdownTimer = null;
 
 // ══════════════════════════════════════════════════════
-// AI SWITCH
+// PERSISTANCE INDEXEDDB — texte seul, autosuppression 12h
+// Stocke : transcription corrigée + compte rendu + métadonnées.
+// JAMAIS d'audio. Purge automatique au-delà de 12 heures.
 // ══════════════════════════════════════════════════════
-function switchAI(ai) {
-  currentAI = ai;
-  ['btnGemini','btnGemini2'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'ai-btn' + (ai==='gemini' ? ' active-gemini' : ''); });
-  ['btnClaude','btnClaude2'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'ai-btn' + (ai==='claude' ? ' active-claude' : ''); });
-  ['btnOpenai','btnOpenai2'].forEach(id => { const el = document.getElementById(id); if(el) el.className = 'ai-btn' + (ai==='openai' ? ' active-openai' : ''); });
-  updateAiLabel();
-}
-
-function updateAiLabel() {
-  const label = document.getElementById('aiLabel');
-  const btnLabel = document.getElementById('generateBtnLabel');
-  const names = { gemini: 'Gemini', claude: 'Claude', openai: 'GPT' };
-  label.textContent = (names[currentAI] || currentAI) + ' · serveur';
-  label.style.color = currentAI === 'openai' ? '#e2eaf5' : '#38bdf8';
-  if (btnLabel) btnLabel.textContent = 'Générer le compte rendu';
-}
-
-// ══════════════════════════════════════════════════════
-// INDEXEDDB PERSISTENCE
-// ══════════════════════════════════════════════════════
-const ES_DB = 'echoscribe', ES_VER = 1, ES_TTL = 12 * 60 * 60 * 1000;
+const ES_DB = 'echoscribe', ES_VER = 1, ES_TTL = 12 * 60 * 60 * 1000; // 12h en ms
 let esDB = null, autosaveTimer = null, draftDebounce = null, esPendingDraft = null;
 
 function esOpen() {
@@ -1056,12 +1116,12 @@ function esOpen() {
     const r = indexedDB.open(ES_DB, ES_VER);
     r.onupgradeneeded = e => {
       const db = e.target.result;
-      if (!db.objectStoreNames.contains('reports')) {
-        const s = db.createObjectStore('reports', { keyPath: 'id' });
-        s.createIndex('createdAt', 'createdAt');
+      if(!db.objectStoreNames.contains('reports')) {
+        const s = db.createObjectStore('reports', {keyPath:'id'});
+        s.createIndex('createdAt','createdAt');
       }
-      if (!db.objectStoreNames.contains('drafts')) {
-        db.createObjectStore('drafts', { keyPath: 'key' });
+      if(!db.objectStoreNames.contains('drafts')) {
+        db.createObjectStore('drafts', {keyPath:'key'});
       }
     };
     r.onsuccess = e => res(e.target.result);
@@ -1069,69 +1129,75 @@ function esOpen() {
   });
 }
 async function esReady() {
-  if (!esDB) { try { esDB = await esOpen(); } catch(e) { return null; } }
+  if(!esDB) { try { esDB = await esOpen(); } catch(e) { console.warn('IndexedDB indisponible :', e); return null; } }
   return esDB;
 }
 function esStore(name, mode) { return esDB.transaction(name, mode).objectStore(name); }
 async function esPut(store, obj) {
-  const db = await esReady(); if (!db) return;
-  return new Promise(res => { const r = esStore(store,'readwrite').put(obj); r.onsuccess=()=>res(); r.onerror=()=>res(); });
+  const db = await esReady(); if(!db) return;
+  return new Promise((res) => { const r = esStore(store,'readwrite').put(obj); r.onsuccess=()=>res(); r.onerror=()=>res(); });
 }
 async function esGetAll(store) {
-  const db = await esReady(); if (!db) return [];
-  return new Promise(res => { const r = esStore(store,'readonly').getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>res([]); });
+  const db = await esReady(); if(!db) return [];
+  return new Promise((res) => { const r = esStore(store,'readonly').getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>res([]); });
 }
 async function esGet(store, key) {
-  const db = await esReady(); if (!db) return null;
-  return new Promise(res => { const r = esStore(store,'readonly').get(key); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); });
+  const db = await esReady(); if(!db) return null;
+  return new Promise((res) => { const r = esStore(store,'readonly').get(key); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); });
 }
 async function esDelete(store, key) {
-  const db = await esReady(); if (!db) return;
-  return new Promise(res => { const r = esStore(store,'readwrite').delete(key); r.onsuccess=()=>res(); r.onerror=()=>res(); });
+  const db = await esReady(); if(!db) return;
+  return new Promise((res) => { const r = esStore(store,'readwrite').delete(key); r.onsuccess=()=>res(); r.onerror=()=>res(); });
 }
 async function esPurge() {
-  const db = await esReady(); if (!db) return;
+  const db = await esReady(); if(!db) return;
   const cutoff = Date.now() - ES_TTL;
-  for (const it of await esGetAll('reports')) { if ((it.createdAt||0) < cutoff) await esDelete('reports', it.id); }
+  for(const it of await esGetAll('reports')) { if((it.createdAt||0) < cutoff) await esDelete('reports', it.id); }
   const d = await esGet('drafts','current');
-  if (d && (d.updatedAt||0) < cutoff) await esDelete('drafts','current');
+  if(d && (d.updatedAt||0) < cutoff) await esDelete('drafts','current');
 }
 function esGuessType(txt) {
   const t = (txt||'').toLowerCase();
-  if (/doppler|veineu|art[ée]riel|thrombose|tvp|tvs|saph[èe]ne|caroti/.test(t)) return 'Écho-Doppler';
-  if (/ut[ée]rus|ovaire|endom[èe]tre|pelvien|prostate|diu/.test(t)) return 'Pelvienne';
-  if (/thyro[ïi]d|cervical|ganglion|nodule|adénopath/.test(t)) return 'Cervicale';
-  if (/testicule|scrotal|[ée]pididyme|varicoc[èe]le/.test(t)) return 'Scrotale';
-  if (/tendon|achille|muscle|articulaire|coiffe|bursite/.test(t)) return 'MSK';
-  if (/foie|h[ée]patique|v[ée]sicule|pancr[ée]as|\brate\b|\brein|aorte|wirsung/.test(t)) return 'Abdominale';
+  if(/doppler|veineu|art[ée]riel|thrombose|tvp|tvs|saph[èe]ne|caroti/.test(t)) return 'Écho-Doppler';
+  if(/ut[ée]rus|ovaire|endom[èe]tre|pelvien|prostate|diu/.test(t)) return 'Pelvienne';
+  if(/thyro[ïi]d|cervical|ganglion|nodule|adénopath/.test(t)) return 'Cervicale';
+  if(/testicule|scrotal|[ée]pididyme|varicoc[èe]le/.test(t)) return 'Scrotale';
+  if(/tendon|achille|muscle|articulaire|coiffe|bursite|enth[èe]se/.test(t)) return 'MSK';
+  if(/foie|h[ée]patique|v[ée]sicule|pancr[ée]as|\brate\b|\brein|aorte|wirsung/.test(t)) return 'Abdominale';
   return 'Échographie';
 }
+
+// ── Sauvegarde d'un compte rendu finalisé ──
 async function esSaveReport(transcription, report, model) {
   const id = Date.now();
-  await esPut('reports', { id, createdAt: id, type: esGuessType(report||transcription), model: model||'', transcription: transcription||'', report: report||'' });
-  await esDelete('drafts','current');
+  await esPut('reports', { id, createdAt:id, type:esGuessType(report||transcription), model:model||'', transcription:transcription||'', report:report||'' });
+  await esDelete('drafts','current'); // le brouillon devient un CR finalisé
   esPendingDraft = null;
   await esRenderHistory();
 }
+
+// ── Autosave du brouillon (transcription en cours) ──
 async function esSaveDraft() {
   const t = getPlainText();
-  if (!t || isPlaceholder(t)) return;
-  await esPut('drafts', { key:'current', updatedAt: Date.now(), transcription: t });
+  if(!t || isPlaceholder(t)) return;
+  await esPut('drafts', { key:'current', updatedAt:Date.now(), transcription:t });
 }
 function esStartAutosave() { esStopAutosave(); autosaveTimer = setInterval(esSaveDraft, 8000); }
-function esStopAutosave() { if (autosaveTimer) { clearInterval(autosaveTimer); autosaveTimer=null; } }
+function esStopAutosave() { if(autosaveTimer){ clearInterval(autosaveTimer); autosaveTimer=null; } }
 function esDraftOnInput() { clearTimeout(draftDebounce); draftDebounce = setTimeout(esSaveDraft, 1500); }
+
+// ── Récupération de brouillon au chargement ──
 async function esCheckDraft() {
   const d = await esGet('drafts','current');
-  if (d && d.transcription && (Date.now() - (d.updatedAt||0)) < ES_TTL) {
+  if(d && d.transcription && (Date.now() - (d.updatedAt||0)) < ES_TTL) {
     esPendingDraft = d;
     const dt = new Date(d.updatedAt);
     document.getElementById('draftTime').textContent = String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
-    document.getElementById('draftBanner').style.display = 'flex';
+    document.getElementById('draftBanner').style.display = 'block';
   }
 }
 function esRestoreDraft() {
-  if (!esPendingDraft) return;
+  if(!esPendingDraft) return;
   finalText = esPendingDraft.transcription;
   document.getElementById('transcriptionBox').innerHTML = esc(esPendingDraft.transcription);
   updateReformBtn();
@@ -1139,110 +1205,101 @@ function esRestoreDraft() {
 }
 function esDismissDraft() { document.getElementById('draftBanner').style.display='none'; esPendingDraft=null; }
 
+// ── Affichage de l'historique ──
 async function esRenderHistory() {
-  const wrap = document.getElementById('historyList'); if (!wrap) return;
+  const wrap = document.getElementById('historyList'); if(!wrap) return;
   await esPurge();
-  const items = (await esGetAll('reports')).sort((a,b) => b.createdAt - a.createdAt);
-  const badge = document.getElementById('historyBadge');
+  const items = (await esGetAll('reports')).sort((a,b)=>b.createdAt-a.createdAt);
   document.getElementById('historyCount').textContent = items.length;
-  if (items.length > 0) {
-    badge.textContent = items.length;
-    badge.style.display = 'flex';
-  } else {
-    badge.style.display = 'none';
-  }
-  if (items.length === 0) {
-    wrap.innerHTML = '<p style="font-size:12px;color:#3d5a70;font-family:\'JetBrains Mono\',monospace;padding:8px 0;">Aucun compte rendu enregistré.</p>';
+  if(items.length === 0) {
+    wrap.innerHTML = '<p style="font-size:12px;color:#3d5a70;font-family:\'JetBrains Mono\',monospace;">Aucun compte rendu enregistré.</p>';
     return;
   }
   wrap.innerHTML = items.map(it => {
     const d = new Date(it.createdAt);
     const hh = String(d.getHours()).padStart(2,'0'), mm = String(d.getMinutes()).padStart(2,'0');
-    const snippet = esc((it.report||'').replace(/[#*•]/g,'').replace(/\s+/g,' ').trim().slice(0,60));
-    return `<div class="history-item" onclick="esOpenReport(${it.id})">
-      <div style="flex:1;min-width:0;">
-        <div class="history-meta">${hh}:${mm} · ${esc(it.type)} · <span style="color:#4a7a96;">${esc(it.model||'')}</span></div>
-        <div class="history-snippet">${snippet}…</div>
+    const snippet = esc((it.report||'').replace(/[#*•]/g,'').replace(/\s+/g,' ').trim().slice(0,72));
+    return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border:1px solid rgba(56,189,248,0.12);border-radius:8px;margin-bottom:6px;">
+      <div style="cursor:pointer;flex:1;min-width:0;" onclick="esOpenReport(${it.id})" title="Rouvrir ce compte rendu">
+        <div style="font-size:12px;color:#86efac;font-family:'JetBrains Mono',monospace;">${hh}:${mm} · ${esc(it.type)}</div>
+        <div style="font-size:11px;color:#5a7a90;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${snippet}…</div>
       </div>
-      <button class="delete-btn" onclick="event.stopPropagation();esDeleteReport(${it.id})">🗑</button>
+      <button class="icon-btn" style="font-size:10px;padding:3px 8px;color:#7a4a4a;border-color:rgba(239,68,68,0.25);" onclick="esDeleteReport(${it.id})">🗑</button>
     </div>`;
   }).join('');
 }
-
 async function esOpenReport(id) {
-  const it = await esGet('reports', id); if (!it) return;
+  const it = await esGet('reports', id); if(!it) return;
   finalText = it.transcription || '';
   document.getElementById('transcriptionBox').innerHTML = esc(it.transcription || '');
   renderResult(it.report || '');
-  showResult();
+  document.getElementById('resultCard').style.display = 'block';
   document.getElementById('nextPatientBtn').style.display = 'none';
   document.getElementById('autoCopiedBadge').style.display = 'none';
   updateReformBtn();
-  switchTab('dictee');
+  document.getElementById('resultCard').scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function esDeleteReport(id) { await esDelete('reports', id); await esRenderHistory(); }
 async function esClearAll() {
-  if (!confirm('Effacer tout l\'historique local ?')) return;
-  for (const it of await esGetAll('reports')) await esDelete('reports', it.id);
+  if(!confirm('Effacer tout l\'historique local ?')) return;
+  for(const it of await esGetAll('reports')) await esDelete('reports', it.id);
   await esDelete('drafts','current');
   await esRenderHistory();
 }
 
-// ══════════════════════════════════════════════════════
-// WAVE BARS
-// ══════════════════════════════════════════════════════
-(function() {
+// Init bars
+(function(){
   const c = document.getElementById('waveBars');
-  for (let i = 0; i < BARS; i++) {
-    const b = document.createElement('div');
-    b.className = 'bar';
-    b.style.height = '3px';
-    c.appendChild(b);
-  }
+  for(let i=0;i<BARS;i++){const b=document.createElement('div');b.className='bar';b.style.height='3px';c.appendChild(b);}
 })();
 
-// ══════════════════════════════════════════════════════
-// KEY MANAGEMENT
-// ══════════════════════════════════════════════════════
-(function() {
-  const gk = localStorage.getItem('es_gemini_key');
-  const ck = localStorage.getItem('es_claude_key');
-  const ok = localStorage.getItem('es_openai_key');
+// Restore saved keys on load
+(function(){
   const lastAI = localStorage.getItem('es_last_ai') || 'gemini';
-  if (gk) document.getElementById('geminiKey').value = gk;
-  if (ck) document.getElementById('claudeKey').value = ck;
-  if (ok) document.getElementById('openaiKey').value = ok;
-  if (gk || ck || ok) document.getElementById('savedBadge').style.display = 'inline';
-  setTimeout(() => switchAI('claude'), 50);
+  if(gk || ck) document.getElementById('savedBadge').style.display = 'inline';
+  // Restore last used AI
+  setTimeout(() => switchAI(lastAI), 50);
 })();
 
 function toggleKey(id, btn) {
   const inp = document.getElementById(id);
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? 'Voir' : 'Masquer';
+  inp.type = inp.type==='password' ? 'text' : 'password';
+  btn.textContent = inp.type==='password' ? 'Afficher' : 'Masquer';
 }
 function clearSavedKeys() {
-  ['es_gemini_key','es_claude_key','es_openai_key','es_last_ai'].forEach(k => localStorage.removeItem(k));
-  ['geminiKey','claudeKey','openaiKey'].forEach(id => document.getElementById(id).value = '');
+  localStorage.removeItem('es_last_ai');
   document.getElementById('savedBadge').style.display = 'none';
   setError('');
   alert('Clés effacées de cet appareil.');
 }
 
-// ══════════════════════════════════════════════════════
-// TOGGLES
-// ══════════════════════════════════════════════════════
 function toggleContinuous() {
   continuousMode = !continuousMode;
   const btn = document.getElementById('continuousToggle');
   btn.textContent = continuousMode ? 'ON' : 'OFF';
   btn.className = continuousMode ? 'toggle-btn on' : 'toggle-btn';
 }
+
+// Raisonnement approfondi (thinking) — activé par défaut
+let thinkingEnabled = true;
 function toggleThinking() {
   thinkingEnabled = !thinkingEnabled;
   const btn = document.getElementById('thinkingToggle');
   btn.textContent = thinkingEnabled ? 'ON' : 'OFF';
   btn.className = thinkingEnabled ? 'toggle-btn on' : 'toggle-btn';
+}
+
+// Calcule le paramètre thinking adapté au modèle Gemini visé.
+// Gemini 3.x → thinkingLevel (LOW/MEDIUM/HIGH) ; série 2.5 → thinkingBudget (numérique).
+// Les deux ne peuvent JAMAIS coexister dans la même requête (erreur 400).
+function geminiThinkingConfig(modelId, enabled) {
+  if(modelId.startsWith('gemini-3')) {
+    return { thinkingLevel: enabled ? 'MEDIUM' : 'LOW' };
+  }
+  // Série 2.5 : -1 = dynamique (le modèle décide), 0 = désactivé (flash/lite uniquement)
+  if(enabled) return { thinkingBudget: -1 };
+  if(modelId.includes('pro')) return null; // 2.5-pro : thinking non désactivable → on omet
+  return { thinkingBudget: 0 };
 }
 function toggleKeywords() {
   keywordsEnabled = !keywordsEnabled;
@@ -1255,243 +1312,157 @@ function getKeywords() {
   return document.getElementById('keywordInput').value.split(',').map(k=>k.trim().toLowerCase()).filter(k=>k.length>2);
 }
 function checkKeywords(text) {
-  if (!keywordsEnabled || keywordTriggered) return;
+  if(!keywordsEnabled || keywordTriggered) return;
   const lower = text.toLowerCase();
-  if (getKeywords().some(k => lower.includes(k))) {
+  if(getKeywords().some(k=>lower.includes(k))) {
     keywordTriggered = true;
     document.getElementById('keywordDetected').style.display = 'block';
     setTimeout(() => { document.getElementById('keywordDetected').style.display='none'; reformulate(); }, 500);
   }
 }
+function setError(msg) {
+  const b = document.getElementById('errorBox');
+  b.style.display = msg ? 'block' : 'none';
+  b.textContent = msg ? '⚠ '+msg : '';
+}
+function getPlainText() { return document.getElementById('transcriptionBox').innerText.trim(); }
+function isPlaceholder(t) { return t.startsWith('La transcription apparaîtra'); }
+function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ══════════════════════════════════════════════════════
-// GEMINI THINKING CONFIG
-// ══════════════════════════════════════════════════════
-// geminiThinkingConfig supprimé — géré côté serveur dans /api/proxy
-
-// ══════════════════════════════════════════════════════
-// MEDIA RECORDER
-// ══════════════════════════════════════════════════════
-
-// Contraintes optimales pour la dictée médicale
-const MIC_CONSTRAINTS = {
-  audio: {
-    echoCancellation: true,
-    noiseSuppression: true,
-    autoGainControl: true,
-    sampleRate: { ideal: 48000 },
-    channelCount: { ideal: 1 },
-  }
-};
-
-async function openMicStream() {
-  if (!navigator.mediaDevices) return null;
-  try {
-    return await navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS);
-  } catch {
-    try { return await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { return null; }
-  }
+function setMicUI(on) {
+  document.getElementById('micBtn').classList.toggle('listening', on);
+  document.getElementById('micBtn').textContent = on ? '⏹' : '🎙';
+  document.getElementById('micStatus').classList.toggle('active', on);
+  document.getElementById('micStatus').textContent = on
+    ? 'Dictée en cours — parlez normalement' : 'Appuyez sur le micro pour commencer';
+  document.getElementById('ring1').classList.toggle('active', on);
+  document.getElementById('ring2').classList.toggle('active', on);
+  document.getElementById('badgeDot').classList.toggle('active', on);
+  if(on) startMeter(); else stopMeter();
 }
 
-function startRecording(stream) {
-  audioChunks = [];
-  if (!stream) return;
-  recordingStream = stream;
+function updateBars(level) {
+  const bars = document.querySelectorAll('.bar'), center=BARS/2;
+  bars.forEach((bar,i) => {
+    const dist=Math.abs(i-center)/center, base=1-dist*0.55;
+    const h = isListening ? Math.max(3, base*(0.4+Math.random()*0.6)*(level*0.4+6)) : 3;
+    bar.style.height=h+'px'; bar.className=isListening?'bar active':'bar';
+  });
+}
+async function startMeter() {
   try {
-    const mimeType = ['audio/webm;codecs=opus','audio/webm','audio/ogg']
-      .find(t => MediaRecorder.isTypeSupported(t)) || '';
-    const opts = mimeType ? { mimeType, audioBitsPerSecond: 128000 } : {};
-    mediaRecorder = new MediaRecorder(stream, opts);
-    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.start(100);
+    micStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    audioCtx = new AudioContext();
+    const src = audioCtx.createMediaStreamSource(micStream);
+    analyser = audioCtx.createAnalyser(); analyser.fftSize=256; src.connect(analyser);
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    const tick = () => { if(!isListening) return; analyser.getByteFrequencyData(data); updateBars(data.reduce((a,b)=>a+b,0)/data.length); animFrame=requestAnimationFrame(tick); };
+    tick();
+  } catch(e) { waveInterval = setInterval(()=>updateBars(30+Math.random()*40),90); }
+}
+function stopMeter() {
+  if(animFrame) cancelAnimationFrame(animFrame);
+  if(waveInterval) clearInterval(waveInterval);
+  if(micStream) micStream.getTracks().forEach(t=>t.stop());
+  if(audioCtx) audioCtx.close().catch(()=>{});
+  audioCtx=analyser=micStream=animFrame=waveInterval=null; updateBars(0);
+}
+
+// ── MediaRecorder for Whisper ──────────────────────
+async function startRecording() {
+  try {
+    recordingStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    audioChunks = [];
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+    mediaRecorder = new MediaRecorder(recordingStream, {mimeType});
+    mediaRecorder.ondataavailable = e => { if(e.data.size>0) audioChunks.push(e.data); };
+    mediaRecorder.start(250);
   } catch(e) { console.warn('MediaRecorder unavailable:', e); }
 }
 
 async function stopRecordingAndTranscribe() {
-  if (!mediaRecorder || mediaRecorder.state === 'inactive') return null;
-  return new Promise(resolve => {
+  if(!mediaRecorder || mediaRecorder.state==='inactive') return null;
+
+  return new Promise((resolve) => {
     mediaRecorder.onstop = async () => {
       try {
-        const blob = new Blob(audioChunks, { type: 'audio/webm' });
-        if (blob.size < 1000) { resolve(null); return; }
-        document.getElementById('spinner').style.display = 'block';
-        document.getElementById('spinnerIcon').className = 'spinner whisper-spin';
-        document.getElementById('spinnerText').textContent = 'Whisper transcrit l\'audio…';
+        const blob = new Blob(audioChunks, {type:'audio/webm'});
+        if(blob.size < 1000) { resolve(null); return; }
+
+        // Show Whisper spinner
+        document.getElementById('spinner').style.display='block';
+        document.getElementById('spinnerIcon').className='spinner whisper-spin';
+        document.getElementById('spinnerText').textContent='Whisper transcrit l\'audio…';
+
         const formData = new FormData();
         formData.append('file', blob, 'dictee.webm');
         formData.append('model', 'whisper-1');
         formData.append('language', 'fr');
-        formData.append('prompt', 'Compte rendu échographie médicale. Termes: foie, vésicule biliaire, cholédoque, voies biliaires, tronc porte, veines sus-hépatiques, pancréas, Wirsung, rate, reins, cortex rénal, pyélocalicielles, parenchyme, hyperéchogène, hypoéchogène, anéchogène, transsonique, hétérogène, Doppler, prostate, utérus, endomètre, ovaires, col utérin, Douglas, aorte, veine cave, épanchement, lithiase, contours réguliers, adénopathie, thyroïde, isthme, nodule, EU-TIRADS, O-RADS, Bosniak, LI-RADS, stéatose, cirrhose, hépatomégalie, splénomégalie, cholécystite, appendicite, thrombose, TVP, saphène, poplitée, fémorale, épididyme, testicule, cordon spermatique, bursite, tendon supra-épineux, coiffe des rotateurs.');
-        const res = await fetch('/api/whisper', {
-          method: 'POST',
-          body: formData
-        });
-        document.getElementById('spinner').style.display = 'none';
-        if (!res.ok) { resolve(null); return; }
+        formData.append('prompt', 'Compte rendu d\'échographie médicale. Termes: foie, vésicule biliaire, cholédoque, tronc porte, pancréas, rate, reins, cortex, pyélocalicielle, parenchyme, hyperéchogène, anéchogène, Doppler, prostate, utérus, endomètre, ovaires, aorte, épanchement, lithiase, contours réguliers.');
+
+        const res = await fetch('/api/relay/whisper', {method:'POST',body:formData});
+        document.getElementById('spinner').style.display='none';
+        if(!res.ok) { resolve(null); return; }
         const data = await res.json();
         resolve(data.text || null);
       } catch(e) {
-        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('spinner').style.display='none';
         resolve(null);
       }
     };
-    if (recordingStream) recordingStream.getTracks().forEach(t => t.stop());
+    if(recordingStream) recordingStream.getTracks().forEach(t=>t.stop());
     mediaRecorder.stop();
   });
 }
 
-// ══════════════════════════════════════════════════════
-// WAVE ANIMATION
-// ══════════════════════════════════════════════════════
-function startWaveAnimation() {
-  // Utilise micStream s'il est déjà ouvert par startListening (flux partagé)
-  if (micStream) { startWaveFromStream(micStream); return; }
-  // Fallback : ouvre son propre flux (ex. appel standalone)
-  if (!navigator.mediaDevices) { startSimpleWave(); return; }
-  navigator.mediaDevices.getUserMedia(MIC_CONSTRAINTS)
-    .then(s => { micStream = s; startWaveFromStream(s); })
-    .catch(() => startSimpleWave());
-}
-
-function startWaveFromStream(stream) {
-  try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const source = audioCtx.createMediaStreamSource(stream);
-
-    // GainNode : amplifie le signal pour le visualiseur (×3.5)
-    const gain = audioCtx.createGain();
-    gain.gain.value = 3.5;
-
-    // Compresseur : égalise voix forte et voix faible
-    const comp = audioCtx.createDynamicsCompressor();
-    comp.threshold.value = -40;
-    comp.knee.value = 20;
-    comp.ratio.value = 8;
-    comp.attack.value = 0.003;
-    comp.release.value = 0.1;
-
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 512;               // 256 bins, résolution ×4
-    analyser.smoothingTimeConstant = 0.7; // animation fluide
-    analyser.minDecibels = -90;
-    analyser.maxDecibels = -10;
-
-    source.connect(gain);
-    gain.connect(comp);
-    comp.connect(analyser);
-
-    const bars = document.querySelectorAll('.bar');
-    const N = bars.length; // 22
-    const data = new Uint8Array(analyser.frequencyBinCount); // 256 bins
-
-    // Mapping voix : bins 1-40 couvrent ~90-7500 Hz (plage dictée médicale)
-    const VOICE_BINS = 40;
-
-    function animate() {
-      animFrame = requestAnimationFrame(animate);
-      analyser.getByteFrequencyData(data);
-      bars.forEach((bar, i) => {
-        const binIdx = 1 + Math.round(i * (VOICE_BINS - 1) / (N - 1));
-        const raw = data[binIdx] / 255;
-        // Courbe racine carrée : amplifie visuellement les sons faibles
-        const scaled = Math.pow(raw, 0.5);
-        const h = Math.max(3, scaled * 52);
-        bar.style.height = h + 'px';
-        bar.className = 'bar' + (raw > 0.03 ? ' active' : '');
-      });
-    }
-    animate();
-  } catch {
-    startSimpleWave();
-  }
-}
-
-function startSimpleWave() {
-  const bars = document.querySelectorAll('.bar');
-  let t = 0;
-  function animate() {
-    animFrame = requestAnimationFrame(animate);
-    t += 0.08;
-    bars.forEach((bar, i) => {
-      const h = 3 + 16 * Math.abs(Math.sin(t + i * 0.3));
-      bar.style.height = h + 'px';
-      bar.className = 'bar active';
-    });
-  }
-  animate();
-}
-
-function stopWaveAnimation() {
-  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
-  if (audioCtx) { audioCtx.close().catch(() => {}); audioCtx = null; }
-  analyser = null;
-  // Les tracks du flux partagé sont arrêtées par stopRecordingAndTranscribe
-  micStream = null;
-  document.querySelectorAll('.bar').forEach(b => { b.style.height = '3px'; b.className = 'bar'; });
-}
-
-// ══════════════════════════════════════════════════════
-// SPEECH RECOGNITION
-// ══════════════════════════════════════════════════════
+// ── Speech Recognition ──────────────────────────
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-function setMicUI(active) {
-  document.getElementById('micBtn').className = 'mic-btn' + (active ? ' listening' : '');
-  document.getElementById('ring1').className = 'pulse-ring' + (active ? ' active' : '');
-  document.getElementById('ring2').className = 'pulse-ring delay' + (active ? ' active' : '');
-  document.getElementById('badgeDot').className = 'badge-dot' + (active ? ' active' : '');
-  document.getElementById('micStatus').className = 'mic-status' + (active ? ' active' : '');
-  document.getElementById('micStatus').textContent = active ? 'En écoute — parlez maintenant…' : 'Appuyez sur le micro pour commencer';
-  if (active) startWaveAnimation();
-  else stopWaveAnimation();
-}
-
 function toggleMic() {
-  if (!SR) { setError("Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome ou Edge."); return; }
+  if(!SR) { setError("Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome ou Edge."); return; }
   isListening ? stopListening() : startListening();
 }
 
-async function startListening() {
+function startListening() {
   setError('');
   const current = getPlainText();
-  finalText = isPlaceholder(current) ? '' : current + ' ';
-  document.getElementById('whisperBadge').style.display = 'none';
+  finalText = isPlaceholder(current) ? '' : current+' ';
+  document.getElementById('whisperBadge').style.display='none';
 
-  // Ouvre UN seul flux micro partagé entre recorder et visualiseur
-  const stream = await openMicStream();
-  if (stream) micStream = stream;
-  startRecording(stream);
-  esStartAutosave();
+  startRecording(); // Lance MediaRecorder en parallèle
+  esStartAutosave(); // Sauvegarde auto du brouillon pendant la dictée
+
   recognition = new SR();
-  recognition.lang = 'fr-FR';
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
-  recognition.onstart = () => { isListening = true; setMicUI(true); };
+  recognition.lang='fr-FR'; recognition.continuous=true;
+  recognition.interimResults=true; recognition.maxAlternatives=1;
+  recognition.onstart = () => { isListening=true; setMicUI(true); };
   recognition.onresult = (e) => {
-    let interim = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      const t = e.results[i][0].transcript;
-      if (e.results[i].isFinal) { finalText += t + ' '; checkKeywords(finalText); }
-      else { interim += t; checkKeywords(interim); }
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++) {
+      const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal){finalText+=t+' ';checkKeywords(finalText);}
+      else{interim+=t;checkKeywords(interim);}
     }
-    const box = document.getElementById('transcriptionBox');
-    box.innerHTML = esc(finalText) + (interim ? `<span class="interim">${esc(interim)}</span>` : '');
+    const box=document.getElementById('transcriptionBox');
+    box.innerHTML=esc(finalText)+(interim?`<span class="interim">${esc(interim)}</span>`:'');
     updateReformBtn();
   };
   recognition.onerror = (e) => {
-    if (e.error === 'not-allowed') {
-      setError("Accès micro refusé. Cliquez sur 🔒 dans la barre d'adresse → Autoriser le micro.");
-      isListening = false; setMicUI(false);
-    } else if (e.error !== 'no-speech' && e.error !== 'network' && e.error !== 'aborted') {
-      setError('Erreur micro : ' + e.error);
-      isListening = false; setMicUI(false);
+    if(e.error==='not-allowed') {
+      setError('Accès micro refusé. Cliquez sur 🔒 dans la barre d\'adresse → Autoriser le micro.');
+      isListening=false; setMicUI(false);
+    } else if(e.error==='no-speech' || e.error==='network') {
+      // Silence ou réseau temporaire — onend relancera automatiquement
+    } else if(e.error!=='aborted') {
+      setError('Erreur micro : '+e.error);
+      isListening=false; setMicUI(false);
     }
   };
   recognition.onend = () => {
-    document.querySelectorAll('.interim').forEach(el => el.remove());
-    if (isListening) {
-      setTimeout(() => { try { recognition.start(); } catch(e) { isListening=false; setMicUI(false); } }, 150);
+    document.querySelectorAll('.interim').forEach(el=>el.remove());
+    // Redémarrer si micro toujours actif (après no-speech ou mode continu)
+    if(isListening) {
+      setTimeout(()=>{try{recognition.start();}catch(e){isListening=false;setMicUI(false);}},150);
     } else {
       setMicUI(false);
     }
@@ -1500,450 +1471,412 @@ async function startListening() {
 }
 
 async function stopListening() {
-  isListening = false;
+  isListening=false;
   recognition && recognition.stop();
-  setMicUI(false); // ferme AudioContext, null micStream — ne stoppe PAS les tracks
+  setMicUI(false);
   esStopAutosave();
-  if (mediaRecorder) {
-    const whisperText = await stopRecordingAndTranscribe(); // stoppe les tracks
-    if (whisperText) {
+
+  // Tenter transcription Whisper
+  if(mediaRecorder) {
+    const whisperText = await stopRecordingAndTranscribe();
+    if(whisperText) {
       const corrected = applyMedicalCorrections(whisperText);
       finalText = corrected;
       document.getElementById('transcriptionBox').innerHTML = esc(corrected);
-      document.getElementById('whisperBadge').style.display = 'inline-block';
+      document.getElementById('whisperBadge').style.display='inline-block';
       updateReformBtn();
     }
-  } else if (recordingStream) {
-    // Pas de recorder (MediaRecorder indisponible) : stoppe les tracks directement
-    recordingStream.getTracks().forEach(t => t.stop());
-    recordingStream = null;
   }
-  esSaveDraft();
+  esSaveDraft(); // brouillon à jour après arrêt (avant éventuelle génération)
 }
 
-// ══════════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════════
-function esc(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function getPlainText() {
-  return document.getElementById('transcriptionBox').innerText || '';
-}
-function isPlaceholder(t) {
-  return t.includes('La transcription apparaîtra ici') || t.trim().length < 2;
-}
-function setError(msg) {
-  const b = document.getElementById('errorBox');
-  b.textContent = msg;
-  b.style.display = msg ? 'block' : 'none';
-}
 function updateReformBtn() {
-  const t = getPlainText();
-  document.getElementById('reformBtn').disabled = t.length < 4 || isPlaceholder(t);
-}
-function clearDictation(autoMic = false) {
-  finalText = '';
-  document.getElementById('transcriptionBox').innerHTML = '<span style="color:#2d4a5e;font-style:italic;">La transcription apparaîtra ici… Dictez normalement, y compris les instructions au patient.</span>';
-  document.getElementById('resultCard').style.display = 'none';
-  document.getElementById('resultEmpty').style.display = 'flex';
-  document.getElementById('whisperBadge').style.display = 'none';
-  esStopAutosave(); esDelete('drafts','current');
-  document.getElementById('routingInfo').textContent = '';
-  setError(''); updateReformBtn();
-  if (autoMic && !isListening) setTimeout(() => startListening(), 300);
-}
-function startCountdown(seconds, onDone) {
-  const wrap = document.getElementById('continuousCountdown');
-  const num = document.getElementById('countdownNum');
-  let remaining = seconds;
-  wrap.style.display = 'block';
-  num.textContent = remaining;
-  countdownTimer = setInterval(() => {
-    remaining--;
-    num.textContent = remaining;
-    if (remaining <= 0) { clearInterval(countdownTimer); wrap.style.display='none'; onDone(); }
-  }, 1000);
+  const t=getPlainText();
+  document.getElementById('reformBtn').disabled = t.length<4 || isPlaceholder(t);
 }
 
-// ══════════════════════════════════════════════════════
-// TEXT/PLAIN STREAMING (proxy unifié)
-// ══════════════════════════════════════════════════════
-async function readPlainStream(res, onChunk) {
+function clearDictation(autoMic = false) {
+  finalText='';
+  document.getElementById('transcriptionBox').innerHTML='<span style="color:#2d4a5e;font-style:italic;">La transcription apparaîtra ici… Dictez normalement, y compris les instructions au patient.</span>';
+  document.getElementById('resultCard').style.display='none';
+  document.getElementById('whisperBadge').style.display='none';
+  esStopAutosave(); esDelete('drafts','current'); // pas de brouillon orphelin
+  const ri=document.getElementById('routingInfo'); if(ri) ri.textContent='';
+  setError(''); updateReformBtn();
+  // Démarrer le micro automatiquement si demandé
+  if(autoMic && !isListening) {
+    setTimeout(() => startListening(), 300);
+  }
+}
+
+function startCountdown(seconds, onDone) {
+  const wrap=document.getElementById('continuousCountdown'), num=document.getElementById('countdownNum');
+  let remaining=seconds; wrap.style.display='block'; num.textContent=remaining;
+  countdownTimer=setInterval(()=>{remaining--;num.textContent=remaining;if(remaining<=0){clearInterval(countdownTimer);wrap.style.display='none';onDone();}},1000);
+}
+
+// ── Streaming SSE : lit un flux et appelle onDelta(texte) au fil de l'eau ──
+async function pumpSSE(res, extract, onDelta) {
   const reader = res.body.getReader();
   const dec = new TextDecoder();
-  while (true) {
+  let buf = '';
+  while(true) {
     const { done, value } = await reader.read();
-    if (done) break;
-    const chunk = dec.decode(value, { stream: true });
-    if (chunk) onChunk(chunk);
+    if(done) break;
+    buf += dec.decode(value, { stream:true });
+    let idx;
+    while((idx = buf.indexOf('\n')) >= 0) {
+      let line = buf.slice(0, idx); buf = buf.slice(idx + 1);
+      line = line.trim();
+      if(!line.startsWith('data:')) continue;
+      const d = line.slice(5).trim();
+      if(d === '[DONE]') return;
+      try { const j = JSON.parse(d); const t = extract(j); if(t) onDelta(t); } catch(e) { /* keepalive / chunk partiel */ }
+    }
   }
 }
-function showResult() {
-  document.getElementById('resultEmpty').style.display = 'none';
+// Affiche la carte résultat dès le premier morceau reçu (masque le spinner)
+function beginStream() {
   document.getElementById('spinner').style.display = 'none';
   document.getElementById('resultCard').style.display = 'block';
 }
-function beginStream() {
-  showResult();
-}
 
-// ══════════════════════════════════════════════════════
-// GENERATE
-// ══════════════════════════════════════════════════════
+// ── Génération du compte rendu ───────────────────
 async function reformulate() {
-  localStorage.setItem('es_last_ai', currentAI);
+  // Cles gerees cote serveur
 
+  // 1) Texte capturé avant l'arrêt de la dictée
   let text = getPlainText();
-  if (!text || isPlaceholder(text)) return;
-  if (isListening) await stopListening();
+  if(!text || isPlaceholder(text)) return;
+  // 2) Arrêt de l'écoute → déclenche éventuellement la transcription Whisper
+  if(isListening) await stopListening();
+  // 3) IMPORTANT : relire le texte APRÈS stopListening, car Whisper a pu
+  //    remplacer la transcription Web Speech par une version plus précise.
   text = getPlainText();
-  if (!text || isPlaceholder(text)) return;
+  if(!text || isPlaceholder(text)) return;
 
   const correctedText = applyMedicalCorrections(text);
-  if (correctedText !== text) {
+  if(correctedText !== text) {
     finalText = correctedText;
     document.getElementById('transcriptionBox').innerHTML = esc(correctedText);
   }
 
-  document.getElementById('routingInfo').textContent = '';
+  const model = document.getElementById('modelSelect').value;
+  // Routage : on n'envoie que les exemples du/des type(s) d'examen détecté(s)
+  const sysPrompt = buildSystemPrompt(correctedText);
+  document.getElementById('routingInfo').textContent = '⊟ Routage : ' + lastRouting.label + ' · ' + lastRouting.count + ' exemple(s) envoyé(s)';
   setError('');
-  document.getElementById('spinner').style.display = 'block';
-  document.getElementById('spinnerIcon').className = 'spinner';
-  const engineNames = { gemini: 'Gemini', claude: 'Claude', openai: 'GPT' };
-  document.getElementById('spinnerText').textContent =
-    (thinkingEnabled ? (engineNames[currentAI] || 'IA') + ' réfléchit puis rédige…'
-                     : (engineNames[currentAI] || 'IA') + ' rédige le compte rendu…');
-  document.getElementById('reformBtn').disabled = true;
-  document.getElementById('resultCard').style.display = 'none';
-  document.getElementById('resultEmpty').style.display = 'none';
-  document.getElementById('nextPatientBtn').style.display = 'none';
-  document.getElementById('autoCopiedBadge').style.display = 'none';
+  document.getElementById('spinner').style.display='block';
+  document.getElementById('spinnerIcon').className='spinner';
+  document.getElementById('spinnerText').textContent='L\'IA rédige le compte rendu…';
+  document.getElementById('reformBtn').disabled=true;
+  document.getElementById('resultCard').style.display='none';
+  document.getElementById('nextPatientBtn').style.display='none';
+  document.getElementById('autoCopiedBadge').style.display='none';
 
   let fullText = '';
-  try {
-    const res = await fetch('/api/proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        engine: currentAI,
-        effort: thinkingEnabled ? 'medium' : 'low',
-        dictation: correctedText
-      })
-    });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || 'Erreur serveur (' + res.status + ')');
+  try {
+    if(currentAI === 'claude') {
+      // ── CLAUDE API ──────────────────────
+      const claudeModel = document.getElementById('claudeModelSelect').value;
+      document.getElementById('spinnerText').textContent = thinkingEnabled ? 'Claude réfléchit puis rédige…' : 'Claude rédige le compte rendu…';
+      const claudeBody = {
+        model: claudeModel,
+        max_tokens: 8192,
+        system: sysPrompt,
+        messages: [{role:'user', content: correctedText}]
+      };
+      if(thinkingEnabled) {
+        if(claudeModel.includes('haiku')) {
+          // Haiku 4.5 : ancien mode (adaptive/effort non supportés) — budget < max_tokens
+          claudeBody.thinking = { type:'enabled', budget_tokens:4000 };
+        } else {
+          // Opus 4.6+/Sonnet 4.6+ (dont Opus 4.8 et 4.7) : thinking adaptatif + effort
+          claudeBody.thinking = { type:'adaptive' };
+          claudeBody.output_config = { effort:'medium' };
+          claudeBody.max_tokens = 16000; // marge pour le raisonnement + le compte rendu
+        }
+      }
+      claudeBody.stream = true;
+      const res = await fetch('/api/relay/claude', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(claudeBody)
+      });
+      if(!res.ok){
+        const err = await res.json().catch(()=>({}));
+        throw new Error(err.error?.message || 'Erreur API Claude ('+res.status+')');
+      }
+      let shown=false;
+      await pumpSSE(res,
+        j => (j.type==='content_block_delta' && j.delta?.type==='text_delta') ? j.delta.text : '',
+        t => { if(!shown){ beginStream(); shown=true; } fullText+=t; renderResult(fullText); });
+      if(!fullText) throw new Error('Réponse vide de Claude.');
+
+    } else if(currentAI === 'openai') {
+      // ── OPENAI API (Chat Completions) avec fallback auto ────
+      const oaModel = document.getElementById('openaiModelSelect').value;
+      // Modèle choisi d'abord, puis dégradation vers des modèles capables.
+      const OA_FALLBACK = [oaModel, 'gpt-5.5', 'gpt-5.4', 'gpt-5.4-mini']
+        .filter((v,i,a)=>a.indexOf(v)===i);
+      let lastMsg = '';
+      for (const tryModel of OA_FALLBACK) {
+        document.getElementById('spinnerText').textContent =
+          tryModel===oaModel ? (thinkingEnabled ? 'GPT réfléchit puis rédige…' : 'GPT rédige le compte rendu…') : `Basculement sur ${tryModel}…`;
+        try {
+          // GPT-5.x = modèles de raisonnement : max_completion_tokens (et non max_tokens),
+          // pas de temperature, reasoning_effort piloté par le toggle thinking.
+          const oaBody = {
+            model: tryModel,
+            max_completion_tokens: 16000,
+            reasoning_effort: thinkingEnabled ? 'medium' : 'low',
+            verbosity: 'medium',
+            stream: true,
+            messages: [
+              { role:'system', content: sysPrompt },
+              { role:'user', content: correctedText }
+            ]
+          };
+          const res = await fetch('/api/relay/openai', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(oaBody)});
+          if(!res.ok){
+            const err = await res.json().catch(()=>({}));
+            const msg = err.error?.message || '';
+            lastMsg = msg || lastMsg;
+            // Transitoire / modèle indisponible → on tente le suivant
+            if(res.status===429||res.status===503||res.status===500||res.status===404||
+               /rate limit|overloaded|unavailable|not found|does not exist/i.test(msg)){ continue; }
+            throw new Error(msg || 'Erreur OpenAI ('+res.status+')');
+          }
+          fullText = '';
+          let shownOA=false;
+          await pumpSSE(res,
+            j => j.choices?.[0]?.delta?.content || '',
+            t => { if(!shownOA){ beginStream(); shownOA=true; } fullText+=t; renderResult(fullText); });
+          if(!fullText){ continue; }
+          if(tryModel!==oaModel){
+            const b=document.getElementById('errorBox');
+            b.style.cssText='display:block;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);color:#7dd3fc;border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:14px;font-family:monospace;';
+            b.textContent=`ℹ Basculement automatique sur ${tryModel} (${oaModel} indisponible)`;
+            setTimeout(()=>{b.style.display='none';b.style.cssText='';},5000);
+          }
+          break;
+        } catch(innerErr){
+          if(OA_FALLBACK.indexOf(tryModel)<OA_FALLBACK.length-1) continue;
+          throw innerErr;
+        }
+      }
+      if(!fullText) throw new Error(lastMsg ? ('OpenAI : '+lastMsg) : 'OpenAI indisponible. Réessayez ou basculez sur un autre moteur.');
+
+    } else {
+      // ── GEMINI API avec fallback auto ────
+      const MODEL_FALLBACK = [
+        model,
+        model.includes('pro') ? 'gemini-2.5-pro' : 'gemini-2.5-flash',
+        'gemini-3-flash-preview',
+        'gemini-2.5-flash',
+        'gemini-3.1-flash-lite'
+      ].filter((v,i,a)=>a.indexOf(v)===i);
+
+      for (const tryModel of MODEL_FALLBACK) {
+        document.getElementById('spinnerText').textContent =
+          tryModel===model ? (thinkingEnabled ? 'Gemini réfléchit puis rédige…' : 'Gemini rédige le compte rendu…') : `Basculement sur ${tryModel}…`;
+        try {
+          const genConfig = { maxOutputTokens:8192 };
+          // Gemini 3.x : garder la température par défaut (1.0). Forcer une température
+          // basse dégrade ces modèles de raisonnement (sorties incohérentes / en boucle).
+          // La fidélité (ne rien inventer) est assurée par les règles strictes du prompt.
+          genConfig.temperature = tryModel.startsWith('gemini-3') ? 1.0 : 0.2;
+          const tcfg = geminiThinkingConfig(tryModel, thinkingEnabled);
+          if(tcfg) genConfig.thinkingConfig = tcfg;
+          const res=await fetch("/api/relay/gemini?model="+encodeURIComponent(tryModel),{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              system_instruction:{parts:[{text:sysPrompt}]},
+              contents:[{role:'user',parts:[{text:correctedText}]}],
+              generationConfig:genConfig
+            })
+          });
+          if(!res.ok){
+            const err=await res.json().catch(()=>({}));const msg=err.error?.message||'';
+            if(res.status===429||res.status===503||res.status===404||
+               msg.includes('high demand')||msg.includes('not found')||msg.includes('unavailable')){continue;}
+            throw new Error(msg||'Erreur Gemini ('+res.status+')');
+          }
+          fullText='';
+          let shownG=false;
+          await pumpSSE(res,
+            j => j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'',
+            t => { if(!shownG){ beginStream(); shownG=true; } fullText+=t; renderResult(fullText); });
+          if(!fullText){continue;}
+          if(tryModel!==model){
+            const b=document.getElementById('errorBox');
+            b.style.cssText='display:block;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);color:#7dd3fc;border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:14px;font-family:monospace;';
+            b.textContent=`ℹ Basculement automatique sur ${tryModel} (${model} surchargé)`;
+            setTimeout(()=>{b.style.display='none';b.style.cssText='';},5000);
+          }
+          break;
+        } catch(innerErr){
+          if(MODEL_FALLBACK.indexOf(tryModel)<MODEL_FALLBACK.length-1) continue;
+          throw innerErr;
+        }
+      }
+      if(!fullText) throw new Error('Gemini surchargé. Réessayez dans 30s ou basculez sur ✦ Claude.');
     }
 
-    let shown = false;
-    await readPlainStream(res, chunk => {
-      fullText += chunk;
-      if (!shown) { beginStream(); shown = true; }
-      renderResult(fullText);
-    });
-
-    if (!fullText) throw new Error('Réponse vide. Réessayez ou changez de moteur IA.');
-
     renderResult(fullText);
-    showResult();
+    document.getElementById('resultCard').style.display='block';
+    // Copie automatique vers le presse-papier (peut être bloquée par Chrome
+    // après un appel asynchrone long → le bouton ⎘ Copier reste le recours fiable)
     autoCopyResult();
-    if (!continuousMode) document.getElementById('nextPatientBtn').style.display = 'inline-block';
-    esSaveReport(correctedText, fullText, currentAI);
-
+    // Bouton "Patient suivant" en mode manuel (en mode continu, le compte à rebours enchaîne)
+    if(!continuousMode){
+      document.getElementById('nextPatientBtn').style.display='inline-block';
+    }
+    document.getElementById('resultCard').scrollIntoView({behavior:'smooth',block:'start'});
+    // Enregistrement local du CR finalisé (texte seul) + nettoyage du brouillon
+    const usedModel = currentAI==='gemini'
+      ? document.getElementById('modelSelect').value
+      : currentAI==='claude'
+        ? document.getElementById('claudeModelSelect').value
+        : document.getElementById('openaiModelSelect').value;
+    esSaveReport(correctedText, fullText, usedModel);
   } catch(e) {
     setError(e.message);
   } finally {
-    document.getElementById('spinner').style.display = 'none';
-    document.getElementById('reformBtn').disabled = false;
-    keywordTriggered = false; updateReformBtn();
-    if (continuousMode) startCountdown(3, () => { clearDictation(); finalText=''; startListening(); });
+    document.getElementById('spinner').style.display='none';
+    document.getElementById('reformBtn').disabled=false;
+    keywordTriggered=false; updateReformBtn();
+    if(continuousMode) {
+      startCountdown(3, ()=>{clearDictation();finalText='';startListening();});
+    }
   }
 }
 
-// ══════════════════════════════════════════════════════
-// RENDER RESULT
-// ══════════════════════════════════════════════════════
 function renderResult(text) {
-  const body = document.getElementById('resultBody');
-  const lines = text.split('\n'); let html = ''; let first = true;
-  lines.forEach(line => {
-    const trimmed = line.trim(); if (!trimmed) return;
+  const body=document.getElementById('resultBody');
+  const lines=text.split('\n'); let html=''; let first=true;
+  lines.forEach(line=>{
+    const trimmed=line.trim(); if(!trimmed) return;
+
+    // Detect ## SECTION ## markers (our format)
     const sectionMatch = trimmed.match(/^##\s*([A-ZÀÉÈÊ][A-ZÀÉÈÊ\s]+?)\s*##?\s*:?\s*$/);
-    const clean = trimmed.replace(/\*\*/g,'').replace(/^#+\s*/,'').replace(/##/g,'').trim();
-    const isSection = sectionMatch || SECTIONS.some(s => clean.toUpperCase().startsWith(s));
-    if (isSection) {
+    // Also detect plain uppercase section titles
+    const clean=trimmed.replace(/\*\*/g,'').replace(/^#+\s*/,'').replace(/##/g,'').trim();
+    const isSection = sectionMatch || SECTIONS.some(s=>clean.toUpperCase().startsWith(s));
+
+    if(isSection){
       const title = sectionMatch ? sectionMatch[1].trim() : clean.replace(/:$/,'').trim();
       const cls = first ? 'section-title first' : 'section-title';
-      html += `<p class="${cls}"><strong><u>${esc(title)} :</u></strong></p>`;
-      first = false;
+      html+=`<p class="${cls}"><strong><u>${esc(title)} :</u></strong></p>`;
+      first=false;
     } else {
+      // Bold organ names (**Foie :** etc.)
       const rendered = trimmed.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-      html += `<p>${rendered}</p>`;
+      html+=`<p>${rendered}</p>`;
     }
   });
-  body.innerHTML = html;
+  body.innerHTML=html;
 }
 
-// ══════════════════════════════════════════════════════
-// COPY
-// ══════════════════════════════════════════════════════
+function copyResult() {
+  const body = document.getElementById('resultBody');
+  // Build clean HTML for rich paste (Doctolib compatible)
+  const richHtml = buildRichHTML(body);
+  const plainText = body.innerText;
+  try {
+    const htmlBlob = new Blob([richHtml], {type: 'text/html'});
+    const textBlob = new Blob([plainText], {type: 'text/plain'});
+    const item = new ClipboardItem({'text/html': htmlBlob, 'text/plain': textBlob});
+    navigator.clipboard.write([item]).then(()=>{
+      const btn=document.getElementById('copyBtn');
+      btn.textContent='✓ Copié (formaté) !';
+      setTimeout(()=>btn.textContent='⎘ Copier',2500);
+    }).catch(()=>{
+      navigator.clipboard.writeText(plainText);
+      const btn=document.getElementById('copyBtn');
+      btn.textContent='✓ Copié !';
+      setTimeout(()=>btn.textContent='⎘ Copier',2000);
+    });
+  } catch(e) {
+    // Fallback: plain text
+    navigator.clipboard.writeText(plainText).then(()=>{
+      const btn=document.getElementById('copyBtn');
+      btn.textContent='✓ Copié !';
+      setTimeout(()=>btn.textContent='⎘ Copier',2000);
+    });
+  }
+}
+
 function buildRichHTML(body) {
+  // Convert the rendered result to clean HTML for paste
   let html = '<div style="font-family:Arial,sans-serif;font-size:11pt;">';
   body.querySelectorAll('p').forEach(p => {
-    if (p.classList.contains('section-title')) {
+    const isSection = p.classList.contains('section-title');
+    if(isSection) {
+      // Section: bold + underline
       const txt = p.querySelector('u') ? p.querySelector('u').textContent : p.innerText;
       html += `<p><strong><u>${txt}</u></strong></p>`;
     } else {
+      // Keep inner HTML (bold organ names)
       html += `<p>${p.innerHTML}</p>`;
     }
   });
   html += '</div>';
   return html;
 }
-function downloadPDF() {
-  const body = document.getElementById('resultBody');
-  if (!body || !body.innerHTML.trim()) return;
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
-  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
-
-  const marginL = 20, marginR = 20, pageW = 210;
-  const contentW = pageW - marginL - marginR;
-  let y = 0;
-
-  // ── En-tête bleu ──
-  doc.setFillColor(10, 74, 138);
-  doc.rect(0, 0, pageW, 28, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(18);
-  doc.setTextColor(255, 255, 255);
-  doc.text('EchoScribe', marginL, 12);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(180, 210, 240);
-  doc.text('Outil d\'aide à la rédaction médicale', marginL, 18);
-  doc.setFontSize(8);
-  doc.setTextColor(200, 225, 245);
-  doc.text('Généré le ' + dateStr + ' à ' + timeStr, pageW - marginR, 12, { align: 'right' });
-  doc.text('À valider et signer par le médecin responsable', pageW - marginR, 18, { align: 'right' });
-
-  y = 36;
-
-  // ── Contenu ──
-  const paragraphs = body.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    const isSection = p.classList.contains('section-title');
-    const text = p.innerText.replace(/\s+/g, ' ').trim();
-    if (!text) return;
-
-    if (isSection) {
-      // Ligne bleue avant chaque section
-      if (y > 36) { y += 3; doc.setDrawColor(10, 95, 168); doc.setLineWidth(0.3); doc.line(marginL, y, pageW - marginR, y); y += 5; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(10, 74, 138);
-      const lines = doc.splitTextToSize(text, contentW);
-      if (y + lines.length * 5 > 270) { doc.addPage(); y = 20; }
-      doc.text(lines, marginL, y);
-      y += lines.length * 5 + 2;
-    } else if (text.startsWith('•')) {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.setTextColor(40, 40, 40);
-      const lines = doc.splitTextToSize('  ' + text, contentW - 4);
-      if (y + lines.length * 5 > 270) { doc.addPage(); y = 20; }
-      doc.text(lines, marginL + 2, y);
-      y += lines.length * 5 + 1;
-    } else {
-      // Gras inline : **texte**
-      doc.setFontSize(10);
-      doc.setTextColor(40, 40, 40);
-      const parts = text.split(/(\*\*[^*]+\*\*)/g);
-      // Rendu simplifié : on affiche le texte nettoyé
-      const clean = text.replace(/\*\*/g, '');
-      const lines = doc.splitTextToSize(clean, contentW);
-      if (y + lines.length * 5 > 270) { doc.addPage(); y = 20; }
-      doc.setFont('helvetica', 'normal');
-      doc.text(lines, marginL, y);
-      y += lines.length * 5 + 1;
-    }
-  });
-
-  // ── Pied de page ──
-  const totalPages = doc.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFillColor(240, 247, 255);
-    doc.rect(0, 285, pageW, 12, 'F');
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7);
-    doc.setTextColor(100, 130, 160);
-    doc.text('EchoScribe · echoscribe.fr · Proposition à valider et signer par le médecin responsable', marginL, 291);
-    doc.text('Page ' + i + '/' + totalPages, pageW - marginR, 291, { align: 'right' });
-  }
-
-  const filename = 'CR_EchoScribe_' + now.toISOString().slice(0,10) + '.pdf';
-  doc.save(filename);
-}
-
-function downloadWord() {
-  const body = document.getElementById('resultBody');
-  if (!body || !body.innerHTML.trim()) return;
-
-  const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, Header, Footer, PageNumber } = docx;
-
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
-  const timeStr = now.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
-
-  const children = [];
-
-  // En-tête du document
-  children.push(new Paragraph({
-    children: [
-      new TextRun({ text: 'EchoScribe', bold: true, size: 36, color: '0a4a8a', font: 'Calibri' }),
-      new TextRun({ text: '  —  Compte rendu d\'échographie', size: 24, color: '2a5070', font: 'Calibri' }),
-    ],
-    spacing: { after: 100 },
-  }));
-  children.push(new Paragraph({
-    children: [
-      new TextRun({ text: 'Généré le ' + dateStr + ' à ' + timeStr + '  ·  À valider et signer par le médecin responsable', size: 16, color: '6a90b0', italics: true, font: 'Calibri' }),
-    ],
-    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '0a4a8a' } },
-    spacing: { after: 280 },
-  }));
-
-  // Contenu paragraphe par paragraphe
-  const paragraphs = body.querySelectorAll('p');
-  paragraphs.forEach(p => {
-    const isSection = p.classList.contains('section-title');
-    const raw = p.innerText.replace(/\s+/g, ' ').trim();
-    if (!raw) return;
-
-    if (isSection) {
-      children.push(new Paragraph({
-        children: [new TextRun({ text: raw.replace(/ :$/, ''), bold: true, size: 24, color: '0a4a8a', font: 'Calibri' })],
-        border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: 'bfdbfe' } },
-        spacing: { before: 240, after: 100 },
-      }));
-    } else if (raw.startsWith('•')) {
-      children.push(new Paragraph({
-        children: [new TextRun({ text: raw, size: 20, font: 'Calibri', color: '1a2e40' })],
-        spacing: { after: 60 },
-        indent: { left: 360 },
-      }));
-    } else {
-      // Gestion du gras inline **texte**
-      const parts = raw.split(/(\*\*[^*]+\*\*)/g);
-      const runs = parts.map(part => {
-        if (part.startsWith('**') && part.endsWith('**')) {
-          return new TextRun({ text: part.slice(2, -2), bold: true, size: 20, font: 'Calibri', color: '0d2540' });
-        }
-        return new TextRun({ text: part, size: 20, font: 'Calibri', color: '1a2e40' });
-      });
-      children.push(new Paragraph({ children: runs, spacing: { after: 80 } }));
-    }
-  });
-
-  // Pied de page
-  children.push(new Paragraph({
-    children: [new TextRun({ text: 'EchoScribe · echoscribe.fr · Proposition à valider et signer par le médecin responsable', size: 14, color: '8aaccb', italics: true, font: 'Calibri' })],
-    border: { top: { style: BorderStyle.SINGLE, size: 4, color: 'bfdbfe' } },
-    spacing: { before: 400 },
-    alignment: AlignmentType.CENTER,
-  }));
-
-  const doc = new Document({
-    sections: [{ properties: {}, children }],
-  });
-
-  Packer.toBlob(doc).then(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'CR_EchoScribe_' + now.toISOString().slice(0,10) + '.docx';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-}
-
-function copyResult() {
-  const body = document.getElementById('resultBody');
-  const richHtml = buildRichHTML(body);
-  const plainText = body.innerText;
-  try {
-    const item = new ClipboardItem({ 'text/html': new Blob([richHtml],{type:'text/html'}), 'text/plain': new Blob([plainText],{type:'text/plain'}) });
-    navigator.clipboard.write([item]).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = '✓ Copié !';
-      setTimeout(() => btn.textContent='⎘ Copier', 2500);
-    }).catch(() => {
-      navigator.clipboard.writeText(plainText);
-      document.getElementById('copyBtn').textContent = '✓ Copié !';
-      setTimeout(() => document.getElementById('copyBtn').textContent='⎘ Copier', 2000);
-    });
-  } catch(e) {
-    navigator.clipboard.writeText(plainText).then(() => {
-      document.getElementById('copyBtn').textContent = '✓ Copié !';
-      setTimeout(() => document.getElementById('copyBtn').textContent='⎘ Copier', 2000);
-    });
-  }
-}
 function autoCopyResult() {
   const body = document.getElementById('resultBody');
   const richHtml = buildRichHTML(body);
   const plainText = body.innerText;
   try {
-    const item = new ClipboardItem({ 'text/html': new Blob([richHtml],{type:'text/html'}), 'text/plain': new Blob([plainText],{type:'text/plain'}) });
-    navigator.clipboard.write([item]).then(() => {
-      document.getElementById('autoCopiedBadge').style.display = 'inline';
-    }).catch(() => {});
+    const htmlBlob = new Blob([richHtml], {type: 'text/html'});
+    const textBlob = new Blob([plainText], {type: 'text/plain'});
+    const item = new ClipboardItem({'text/html': htmlBlob, 'text/plain': textBlob});
+    navigator.clipboard.write([item]).then(()=>{
+      const badge=document.getElementById('autoCopiedBadge');
+      if(badge) badge.style.display='inline';
+    }).catch(()=>{ /* gesture perdu : l'utilisateur cliquera sur ⎘ Copier */ });
   } catch(e) {
-    navigator.clipboard.writeText(plainText).then(() => {
-      document.getElementById('autoCopiedBadge').style.display = 'inline';
-    }).catch(() => {});
+    navigator.clipboard.writeText(plainText).then(()=>{
+      const badge=document.getElementById('autoCopiedBadge');
+      if(badge) badge.style.display='inline';
+    }).catch(()=>{});
   }
 }
 
-// ══════════════════════════════════════════════════════
-// NAVIGATION ACTIONS
-// ══════════════════════════════════════════════════════
 function nextPatient() {
-  document.getElementById('nextPatientBtn').style.display = 'none';
-  document.getElementById('autoCopiedBadge').style.display = 'none';
-  clearDictation(true);
-  finalText = '';
-}
-function reset() {
-  if (countdownTimer) { clearInterval(countdownTimer); document.getElementById('continuousCountdown').style.display='none'; }
-  document.getElementById('nextPatientBtn').style.display = 'none';
-  document.getElementById('autoCopiedBadge').style.display = 'none';
-  clearDictation(true);
+  const npBtn=document.getElementById('nextPatientBtn');
+  const badge=document.getElementById('autoCopiedBadge');
+  if(npBtn) npBtn.style.display='none';
+  if(badge) badge.style.display='none';
+  clearDictation(true); // auto-start mic
+  finalText='';
 }
 
-// ══════════════════════════════════════════════════════
-// EVENT LISTENERS
-// ══════════════════════════════════════════════════════
+function reset() {
+  if(countdownTimer){clearInterval(countdownTimer);document.getElementById('continuousCountdown').style.display='none';}
+  const npBtn=document.getElementById('nextPatientBtn');
+  const badge=document.getElementById('autoCopiedBadge');
+  if(npBtn) npBtn.style.display='none';
+  if(badge) badge.style.display='none';
+  clearDictation(true); // auto-start mic
+  document.getElementById('resultCard').style.display='none';
+}
+
 document.getElementById('transcriptionBox').addEventListener('input', updateReformBtn);
 document.getElementById('transcriptionBox').addEventListener('input', esDraftOnInput);
-// Les model selects ne pilotent plus l'API (choix géré côté serveur)
+document.getElementById('modelSelect').addEventListener('change', updateAiLabel);
+document.getElementById('claudeModelSelect').addEventListener('change', updateAiLabel);
+document.getElementById('openaiModelSelect').addEventListener('change', updateAiLabel);
 
-// ══════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════
+// ── Initialisation persistance au chargement ──
 (async function() {
   await esReady();
-  await esPurge();
-  await esRenderHistory();
-  await esCheckDraft();
-  setInterval(() => { esPurge().then(esRenderHistory); }, 5 * 60 * 1000);
+  await esPurge();            // supprime tout ce qui dépasse 12h
+  await esRenderHistory();    // affiche l'historique restant
+  await esCheckDraft();       // propose la reprise d'un brouillon récent
+  setInterval(() => { esPurge().then(esRenderHistory); }, 5*60*1000); // purge périodique
 })();
 </script>
 </body>

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import DemoAnimation from "./components/DemoAnimation";
 
 export default function LandingPage() {
   return (
@@ -211,9 +210,21 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* RIGHT — démo animée */}
+          {/* RIGHT — démo vidéo */}
           <div className="hero-mockup2">
-            <DemoAnimation />
+            <video
+              src="/echoscribe-demo.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{
+                width: "100%",
+                borderRadius: 18,
+                boxShadow: "0 8px 40px rgba(10,20,48,0.14)",
+                display: "block",
+              }}
+            />
           </div>
         </div>
       </section>
