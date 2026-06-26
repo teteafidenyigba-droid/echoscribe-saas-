@@ -318,6 +318,14 @@
 
   /* Spinner in left column */
   .spinner-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow-sm); }
+
+  /* ── Mic click fix ── */
+  .card:has(.mic-zone) { overflow: visible; }
+  .mic-btn { z-index: 300 !important; position: relative !important; pointer-events: all !important; }
+  .mic-wrapper { z-index: 300; position: relative; }
+  .pulse-ring { pointer-events: none !important; }
+  /* Ensure nothing overlays the top bar */
+  .container::after { pointer-events: none; }
   /* Hide radio inputs */
   #tab-dictee, #tab-history, #tab-params { display: none; }
   .es-export-btn { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; font-weight: 600; }
