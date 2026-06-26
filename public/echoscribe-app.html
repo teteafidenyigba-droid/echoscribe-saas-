@@ -1433,8 +1433,7 @@ async function startRecording() {
 }
 
 async function stopRecordingAndTranscribe() {
-  const openaiKey = document.getElementById('openaiKey').value.trim();
-  if(!openaiKey || !mediaRecorder || mediaRecorder.state==='inactive') return null;
+  if(!mediaRecorder || mediaRecorder.state==='inactive') return null;
 
   return new Promise((resolve) => {
     mediaRecorder.onstop = async () => {
@@ -1453,9 +1452,8 @@ async function stopRecordingAndTranscribe() {
         formData.append('language', 'fr');
         formData.append('prompt', 'Compte rendu d\'échographie médicale. Termes: foie, vésicule biliaire, cholédoque, tronc porte, pancréas, rate, reins, cortex, pyélocalicielle, parenchyme, hyperéchogène, anéchogène, Doppler, prostate, utérus, endomètre, ovaires, aorte, épanchement, lithiase, contours réguliers.');
 
-        const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+        const res = await fetch('/api/relay/whisper', {
           method:'POST',
-          headers:{Authorization:`Bearer ${openaiKey}`},
           body:formData
         });
         document.getElementById('spinner').style.display='none';
@@ -1534,8 +1532,7 @@ async function stopListening() {
   esStopAutosave();
 
   // Tenter transcription Whisper
-  const openaiKey = document.getElementById('openaiKey').value.trim();
-  if(openaiKey && mediaRecorder) {
+  if(mediaRecorder) {
     const whisperText = await stopRecordingAndTranscribe();
     if(whisperText) {
       const corrected = applyMedicalCorrections(whisperText);
@@ -1605,15 +1602,12 @@ async function reformulate() {
   let key = '';
   if(currentAI === 'gemini') {
     key = document.getElementById('geminiKey').value.trim();
-    if(!key){setError("Entrez votre clé API Google AI Studio (AIzaSy…)");return;}
     localStorage.setItem('es_gemini_key', key);
   } else if(currentAI === 'claude') {
     key = document.getElementById('claudeKey').value.trim();
-    if(!key){setError("Entrez votre clé API Anthropic (sk-ant-…)");return;}
     localStorage.setItem('es_claude_key', key);
   } else {
     key = document.getElementById('openaiKey').value.trim();
-    if(!key){setError("Entrez votre clé API OpenAI (sk-…) dans le champ ci-dessus");return;}
     localStorage.setItem('es_openai_key', key);
   }
   localStorage.setItem('es_last_ai', currentAI);
@@ -1674,13 +1668,11 @@ async function reformulate() {
         }
       }
       claudeBody.stream = true;
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/relay/claude', {
         method:'POST',
         headers:{
           'Content-Type':'application/json',
-          'x-api-key': key,
           'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
         },
         body: JSON.stringify(claudeBody)
       });
@@ -1718,9 +1710,9 @@ async function reformulate() {
               { role:'user', content: correctedText }
             ]
           };
-          const res = await fetch('https://api.openai.com/v1/chat/completions', {
+          const res = await fetch('/api/relay/openai', {
             method:'POST',
-            headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
+            headers:{ 'Content-Type':'application/json' },
             body: JSON.stringify(oaBody)
           });
           if(!res.ok){
@@ -1773,8 +1765,8 @@ async function reformulate() {
           genConfig.temperature = tryModel.startsWith('gemini-3') ? 1.0 : 0.2;
           const tcfg = geminiThinkingConfig(tryModel, thinkingEnabled);
           if(tcfg) genConfig.thinkingConfig = tcfg;
-          const url=`https://generativelanguage.googleapis.com/v1beta/models/${tryModel}:streamGenerateContent?alt=sse`;
-          const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},
+          const url=`/api/relay/gemini?model=${encodeURIComponent(tryModel)}`;
+          const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
             body:JSON.stringify({
               system_instruction:{parts:[{text:sysPrompt}]},
               contents:[{role:'user',parts:[{text:correctedText}]}],
