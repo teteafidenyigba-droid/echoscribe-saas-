@@ -116,7 +116,439 @@
   /* ── Footer ── */
   .footer { text-align: center; font-size: 11px; color: var(--text-dim); margin-top: 40px; font-family: 'JetBrains Mono', monospace; line-height: 1.9; opacity: 0.7; }
 
+
+  /* ════════════════════════════════════════════
+     REDESIGN VISUEL — CSS uniquement
+     Zéro modification code V5
+  ════════════════════════════════════════════ */
+
+  /* ── Fond animé ── */
+  body {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99,155,220,.35) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 90%, rgba(56,112,190,.28) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 80% at 50% 50%, #b8d0e8 0%, #a4c0de 100%);
+    background-attachment: fixed;
+  }
+
+  /* ── Cartes glassmorphism ── */
+  .card {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 20px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 4px 24px rgba(10,40,80,.08),
+      0 16px 48px rgba(10,40,80,.06);
+    padding: 24px 26px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .card:hover {
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 6px 28px rgba(10,40,80,.11),
+      0 20px 56px rgba(10,40,80,.08);
+  }
+
+  /* ── Bouton micro redesign ── */
+  .mic-btn {
+    width: 96px;
+    height: 96px;
+    font-size: 34px;
+    background: linear-gradient(145deg, #ffffff 0%, #e8f2fb 100%);
+    border: 2px solid rgba(26,79,160,.18);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,1) inset,
+      0 6px 20px rgba(10,40,80,.14),
+      0 2px 6px rgba(10,40,80,.08);
+    transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .mic-btn:hover {
+    transform: scale(1.07);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,1) inset,
+      0 10px 30px rgba(26,79,160,.22),
+      0 4px 10px rgba(10,40,80,.1);
+    border-color: rgba(26,79,160,.4);
+  }
+  .mic-btn.listening {
+    background: linear-gradient(145deg, #1a4fa0 0%, #2563a8 100%);
+    border-color: rgba(26,79,160,.6);
+    color: white !important;
+    box-shadow:
+      0 0 0 8px rgba(26,79,160,.12),
+      0 0 0 16px rgba(26,79,160,.06),
+      0 8px 28px rgba(26,79,160,.35);
+  }
+
+  /* ── Zone micro ── */
+  .mic-zone { padding: 32px 0 24px; gap: 20px; }
+  .mic-status {
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    padding: 8px 20px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.8);
+    backdrop-filter: blur(8px);
+  }
+  .mic-status.active {
+    background: rgba(26,79,160,.08);
+    border-color: rgba(26,79,160,.2);
+  }
+
+  /* ── Bouton Générer ── */
+  .primary-btn {
+    background: linear-gradient(135deg, #1a4fa0 0%, #2563a8 50%, #1e5bb8 100%);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.2) inset,
+      0 4px 18px rgba(26,79,160,.35),
+      0 8px 32px rgba(26,79,160,.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .primary-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .primary-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.2) inset,
+      0 6px 24px rgba(26,79,160,.45),
+      0 12px 40px rgba(26,79,160,.25);
+  }
+  .primary-btn:disabled { background: linear-gradient(135deg, #8aabcf 0%, #9ab8d8 100%); }
+
+  /* ── Boutons icon ── */
+  .icon-btn {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid rgba(194,217,238,.8);
+    border-radius: 12px;
+    font-weight: 500;
+    backdrop-filter: blur(8px);
+    transition: all 0.18s;
+    box-shadow: 0 1px 4px rgba(10,40,80,.06);
+  }
+  .icon-btn:hover {
+    background: #fff;
+    border-color: var(--accent2);
+    color: var(--accent);
+    box-shadow: 0 2px 10px rgba(26,79,160,.12);
+    transform: translateY(-1px);
+  }
+
+  /* ── AI Switcher ── */
+  #aiSwitcher {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 2px 12px rgba(10,40,80,.08), 0 1px 0 rgba(255,255,255,.9) inset;
+  }
+  #btnGemini {
+    background: linear-gradient(135deg, rgba(22,163,74,.15) 0%, rgba(22,163,74,.08) 100%) !important;
+    color: #15803d !important;
+    font-weight: 600 !important;
+  }
+
+  /* ── Result card ── */
+  .result-card {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-left: 4px solid var(--accent2);
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.9) inset,
+      0 6px 28px rgba(26,79,160,.1),
+      0 20px 56px rgba(10,40,80,.07);
+  }
+
+  /* ── Transcription box ── */
+  .transcription-box {
+    background: rgba(232,242,251,0.6);
+    border: 1px solid rgba(194,217,238,.6);
+    border-radius: 14px;
+    backdrop-filter: blur(4px);
+    min-height: 160px;
+    font-size: 13.5px;
+    line-height: 1.8;
+  }
+  .transcription-box:focus {
+    background: rgba(232,242,251,0.9);
+    border-color: rgba(37,99,168,.4);
+    box-shadow: 0 0 0 4px rgba(37,99,168,.08);
+  }
+
+  /* ── Badge ── */
+  .badge {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.85);
+    box-shadow: 0 1px 8px rgba(10,40,80,.06);
+  }
+
+  /* ── Header logo ── */
+  h1 { font-size: 42px; }
+
+  /* ── History card ── */
+  #historyCard {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 20px;
+  }
+
+  /* ── Draft banner ── */
+  #draftBanner {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(10,40,80,.06);
+  }
+
+  /* ── Sélects ── */
+  select {
+    background: rgba(232,242,251,0.7);
+    border: 1px solid rgba(194,217,238,.7);
+    backdrop-filter: blur(4px);
+  }
+
+  /* ── Pulse ring intensifiée ── */
+  .pulse-ring { inset: -20px; border: 2px solid rgba(26,79,160,.4); }
+  @keyframes pulse-ring { 0%{transform:scale(1);opacity:0.7;} 100%{transform:scale(1.8);opacity:0;} }
+
+  /* ── Footer ── */
+  .footer { opacity: 0.6; }
   ::-webkit-scrollbar { width: 4px; }
+
+  /* ════════════════════════════════════════════
+     REDESIGN VISUEL — CSS uniquement
+     Zéro modification code V5
+  ════════════════════════════════════════════ */
+
+  /* ── Fond animé ── */
+  body {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99,155,220,.35) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 90%, rgba(56,112,190,.28) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 80% at 50% 50%, #b8d0e8 0%, #a4c0de 100%);
+    background-attachment: fixed;
+  }
+
+  /* ── Cartes glassmorphism ── */
+  .card {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 20px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 4px 24px rgba(10,40,80,.08),
+      0 16px 48px rgba(10,40,80,.06);
+    padding: 24px 26px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .card:hover {
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 6px 28px rgba(10,40,80,.11),
+      0 20px 56px rgba(10,40,80,.08);
+  }
+
+  /* ── Bouton micro redesign ── */
+  .mic-btn {
+    width: 96px;
+    height: 96px;
+    font-size: 34px;
+    background: linear-gradient(145deg, #ffffff 0%, #e8f2fb 100%);
+    border: 2px solid rgba(26,79,160,.18);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,1) inset,
+      0 6px 20px rgba(10,40,80,.14),
+      0 2px 6px rgba(10,40,80,.08);
+    transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .mic-btn:hover {
+    transform: scale(1.07);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,1) inset,
+      0 10px 30px rgba(26,79,160,.22),
+      0 4px 10px rgba(10,40,80,.1);
+    border-color: rgba(26,79,160,.4);
+  }
+  .mic-btn.listening {
+    background: linear-gradient(145deg, #1a4fa0 0%, #2563a8 100%);
+    border-color: rgba(26,79,160,.6);
+    color: white !important;
+    box-shadow:
+      0 0 0 8px rgba(26,79,160,.12),
+      0 0 0 16px rgba(26,79,160,.06),
+      0 8px 28px rgba(26,79,160,.35);
+  }
+
+  /* ── Zone micro ── */
+  .mic-zone { padding: 32px 0 24px; gap: 20px; }
+  .mic-status {
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    padding: 8px 20px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.8);
+    backdrop-filter: blur(8px);
+  }
+  .mic-status.active {
+    background: rgba(26,79,160,.08);
+    border-color: rgba(26,79,160,.2);
+  }
+
+  /* ── Bouton Générer ── */
+  .primary-btn {
+    background: linear-gradient(135deg, #1a4fa0 0%, #2563a8 50%, #1e5bb8 100%);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.2) inset,
+      0 4px 18px rgba(26,79,160,.35),
+      0 8px 32px rgba(26,79,160,.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .primary-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .primary-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.2) inset,
+      0 6px 24px rgba(26,79,160,.45),
+      0 12px 40px rgba(26,79,160,.25);
+  }
+  .primary-btn:disabled { background: linear-gradient(135deg, #8aabcf 0%, #9ab8d8 100%); }
+
+  /* ── Boutons icon ── */
+  .icon-btn {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid rgba(194,217,238,.8);
+    border-radius: 12px;
+    font-weight: 500;
+    backdrop-filter: blur(8px);
+    transition: all 0.18s;
+    box-shadow: 0 1px 4px rgba(10,40,80,.06);
+  }
+  .icon-btn:hover {
+    background: #fff;
+    border-color: var(--accent2);
+    color: var(--accent);
+    box-shadow: 0 2px 10px rgba(26,79,160,.12);
+    transform: translateY(-1px);
+  }
+
+  /* ── AI Switcher ── */
+  #aiSwitcher {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 2px 12px rgba(10,40,80,.08), 0 1px 0 rgba(255,255,255,.9) inset;
+  }
+  #btnGemini {
+    background: linear-gradient(135deg, rgba(22,163,74,.15) 0%, rgba(22,163,74,.08) 100%) !important;
+    color: #15803d !important;
+    font-weight: 600 !important;
+  }
+
+  /* ── Result card ── */
+  .result-card {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-left: 4px solid var(--accent2);
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.9) inset,
+      0 6px 28px rgba(26,79,160,.1),
+      0 20px 56px rgba(10,40,80,.07);
+  }
+
+  /* ── Transcription box ── */
+  .transcription-box {
+    background: rgba(232,242,251,0.6);
+    border: 1px solid rgba(194,217,238,.6);
+    border-radius: 14px;
+    backdrop-filter: blur(4px);
+    min-height: 160px;
+    font-size: 13.5px;
+    line-height: 1.8;
+  }
+  .transcription-box:focus {
+    background: rgba(232,242,251,0.9);
+    border-color: rgba(37,99,168,.4);
+    box-shadow: 0 0 0 4px rgba(37,99,168,.08);
+  }
+
+  /* ── Badge ── */
+  .badge {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.85);
+    box-shadow: 0 1px 8px rgba(10,40,80,.06);
+  }
+
+  /* ── Header logo ── */
+  h1 { font-size: 42px; }
+
+  /* ── History card ── */
+  #historyCard {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 20px;
+  }
+
+  /* ── Draft banner ── */
+  #draftBanner {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(10,40,80,.06);
+  }
+
+  /* ── Sélects ── */
+  select {
+    background: rgba(232,242,251,0.7);
+    border: 1px solid rgba(194,217,238,.7);
+    backdrop-filter: blur(4px);
+  }
+
+  /* ── Pulse ring intensifiée ── */
+  .pulse-ring { inset: -20px; border: 2px solid rgba(26,79,160,.4); }
+  @keyframes pulse-ring { 0%{transform:scale(1);opacity:0.7;} 100%{transform:scale(1.8);opacity:0;} }
+
+  /* ── Footer ── */
+  .footer { opacity: 0.6; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 </style>
 </head>
