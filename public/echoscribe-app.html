@@ -8,7 +8,7 @@
   @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0A66C2; --surface: rgba(255,255,255,0.03);
+    --bg: #07101e; --surface: rgba(255,255,255,0.03);
     --border: rgba(56,189,248,0.15); --accent: #38bdf8;
     --accent2: #4ade80; --text: #c8d8ea;
     --text-dim: #4a7a96; --text-mid: #7bacc2;
@@ -78,7 +78,7 @@
 
   /* Fond dégradé */
   :root {
-    --bg: #0A66C2;
+    --bg: #b8d0e8;
     --surface: #ffffff;
     --border: #c2d9ee;
     --accent: #1a4fa0;
@@ -95,9 +95,9 @@
 
   body {
     background:
-      radial-gradient(ellipse 80% 60% at 15% 10%, rgba(255,255,255,.12) 0%, transparent 55%),
-      radial-gradient(ellipse 55% 50% at 85% 85%, rgba(0,40,100,.25) 0%, transparent 50%),
-      #0A66C2;
+      radial-gradient(ellipse 80% 60% at 15% 10%, rgba(99,155,220,.4) 0%, transparent 55%),
+      radial-gradient(ellipse 55% 50% at 85% 85%, rgba(56,112,190,.3) 0%, transparent 50%),
+      #b8d0e8;
     background-attachment: fixed;
     font-family: 'Inter Tight', system-ui, sans-serif;
     color: var(--text);
@@ -391,145 +391,98 @@
     display: none !important;
   }
 
-  /* ── FIXES ── */
-  body {
-    background: #0A66C2 !important;
-    background-image:
-      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255,255,255,.14) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(0,30,80,.3) 0%, transparent 50%) !important;
-  }
-  /* Cacher carte modèle (distincte de la carte clés) */
-  .card:has(#geminiModelSection) { display: none !important; }
-  /* Cacher carte clés */
-  .card:has(#geminiKey) { display: none !important; }
+  /* ══ PATCH VISUEL v9 — fond LinkedIn, lisibilité, sections ══ */
 
-  /* ── Bouton Générer : contraste sur fond bleu LinkedIn ── */
-  button.primary-btn {
-    background: #ffffff !important;
-    color: #0A66C2 !important;
-    border: 2px solid rgba(255,255,255,.4) !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.6) inset !important;
-    letter-spacing: 0.03em;
-  }
-  button.primary-btn:hover:not(:disabled) {
-    background: #f0f7ff !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(0,0,0,.25) !important;
-  }
-  button.primary-btn:disabled {
-    background: rgba(255,255,255,.35) !important;
-    color: rgba(255,255,255,.7) !important;
-    box-shadow: none !important;
-  }
+  /* Fond LinkedIn blue */
+  body { background: #0A66C2 !important; }
 
-  /* ══ RESET LISIBILITÉ ══ */
-
-  /* Body : fond LinkedIn, scroll autorisé */
-  body {
-    background: #0A66C2 !important;
-    height: auto !important;
-    overflow: auto !important;
-    padding: 0 !important;
-  }
-
-  /* Container : grille + scroll vertical */
-  .container {
-    height: auto !important;
-    overflow: visible !important;
-    padding: 10px !important;
-    gap: 10px !important;
-  }
-
-  /* Cartes : blanc opaque, texte sombre */
-  .card {
+  /* Cartes blanches opaques — lisibilité garantie */
+  .card,
+  div:has(> .transcription-box),
+  .result-card,
+  .spinner-wrap,
+  #historyCard {
     background: #ffffff !important;
     backdrop-filter: none !important;
-    border: 1px solid #dbe8f4 !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,.12) !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #dce8f5 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.13) !important;
     color: #0d1f35 !important;
   }
   .card * { color: #0d1f35 !important; }
   .label  { color: #5a7a9a !important; }
+  .hint   { color: #5a7a9a !important; }
+  .transcription-box { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+
+  /* Header blanc opaque */
+  .header {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #dce8f5 !important;
+  }
+  .header * { color: #0d1f35 !important; }
+  h1 .echo { color: #0d1f35 !important; }
+  h1 span  { color: #0A66C2 !important; }
+  .badge   { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+
+  /* AI Switcher */
+  #aiSwitcher { background: #f0f6fc !important; border-color: #dce8f5 !important; backdrop-filter: none !important; }
+  #aiSwitcher button { color: #5a7a9a !important; background: transparent !important; }
+  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+
+  /* Micro */
+  .mic-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #0d1f35 !important; }
+  .mic-btn.listening { background: linear-gradient(145deg,#1a4fa0,#2563a8) !important; color: #fff !important; }
+  .mic-status { color: #5a7a9a !important; }
+
+  /* Bouton Générer — contraste fort */
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.25) !important;
+    font-weight: 700 !important;
+  }
+  button.primary-btn:hover:not(:disabled) { background: #003166 !important; transform: translateY(-1px) !important; }
+  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(255,255,255,.6) !important; }
+  button.primary-btn::after { display: none !important; }
+
+  /* Boutons icônes */
+  .icon-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #1a4fa0 !important; }
+  .icon-btn:hover { background: #e0edf8 !important; color: #0A66C2 !important; }
+
+  /* Toggles */
+  .toggle-btn    { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.35) !important; color: #15803d !important; }
+
+  /* Select */
+  select { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+
+  /* Résultat */
+  .result-card { border-left: 4px solid #0A66C2 !important; }
+  .result-body { color: #0d1f35 !important; }
+  .result-body strong { color: #14532d !important; }
+  .section-title { color: #0d1f35 !important; border-top-color: #dce8f5 !important; }
+
+  /* Placeholder colonne droite */
+  .container::after {
+    background: rgba(255,255,255,.18) !important;
+    border: 1px solid rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.65) !important;
+    backdrop-filter: none !important;
+    pointer-events: none !important;
+  }
 
   /* Remettre paramètres et historique visibles */
   .card:has(.toggle-btn) { display: block !important; }
   #historyCard           { display: block !important; }
 
-  /* Cacher uniquement les champs clés API */
-  .card:has(#geminiKey)          { display: none !important; }
-  .card:has(#geminiModelSection) { display: none !important; }
+  /* Erreur */
+  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
 
-  /* Bouton Générer : bleu foncé, texte blanc */
-  button.primary-btn {
-    background: #004182 !important;
-    color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
-    font-weight: 700 !important;
-  }
-  button.primary-btn:hover:not(:disabled) {
-    background: #003366 !important;
-    transform: translateY(-1px) !important;
-  }
-  button.primary-btn:disabled {
-    background: rgba(255,255,255,.3) !important;
-    color: rgba(255,255,255,.6) !important;
-  }
-
-  /* Header : blanc opaque */
-  .header {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    backdrop-filter: none !important;
-  }
-  .header * { color: #0d1f35 !important; }
-  h1 span   { color: #0A66C2 !important; }
-
-  /* Placeholder colonne droite */
-  .container::after {
-    background: rgba(255,255,255,.15) !important;
-    color: rgba(255,255,255,.6) !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    backdrop-filter: none !important;
-  }
-
-  /* Result card */
-  .result-card {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    border-left: 4px solid #0A66C2 !important;
-  }
-  .result-body { color: #0d1f35 !important; }
-
-  /* Transcription wrapper */
-  div:has(> .transcription-box) {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    backdrop-filter: none !important;
-  }
-  .transcription-box {
-    background: #f0f6fc !important;
-    color: #0d1f35 !important;
-    border-color: #dbe8f4 !important;
-  }
-
-  /* AI Switcher */
-  #aiSwitcher { background: #f0f6fc !important; border-color: #dbe8f4 !important; }
-  #aiSwitcher button { color: #5a7a9a !important; }
-  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
-
-  /* Mic */
-  .mic-btn { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #0d1f35 !important; box-shadow: 0 3px 10px rgba(0,0,0,.1) !important; }
-  .mic-status { color: #5a7a9a !important; }
-
-  /* Toggles */
-  .toggle-btn     { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #5a7a9a !important; }
-  .toggle-btn.on  { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
-
-  /* Spinner + erreur */
-  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; }
-  .error-box    { background: #fff5f5 !important; color: #b91c1c !important; }
+  /* Spinner */
+  .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
+  .spinner-wrap { color: #5a7a9a !important; }
 </style>
 </head>
 <body>
@@ -2419,145 +2372,98 @@ function exportPDF() {
   const body = document.getElementById('resultBody');
   const w = window.open('', '_blank');
   w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}
-  /* ── FIXES ── */
-  body {
-    background: #0A66C2 !important;
-    background-image:
-      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255,255,255,.14) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(0,30,80,.3) 0%, transparent 50%) !important;
-  }
-  /* Cacher carte modèle (distincte de la carte clés) */
-  .card:has(#geminiModelSection) { display: none !important; }
-  /* Cacher carte clés */
-  .card:has(#geminiKey) { display: none !important; }
+  /* ══ PATCH VISUEL v9 — fond LinkedIn, lisibilité, sections ══ */
 
-  /* ── Bouton Générer : contraste sur fond bleu LinkedIn ── */
-  button.primary-btn {
-    background: #ffffff !important;
-    color: #0A66C2 !important;
-    border: 2px solid rgba(255,255,255,.4) !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.6) inset !important;
-    letter-spacing: 0.03em;
-  }
-  button.primary-btn:hover:not(:disabled) {
-    background: #f0f7ff !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(0,0,0,.25) !important;
-  }
-  button.primary-btn:disabled {
-    background: rgba(255,255,255,.35) !important;
-    color: rgba(255,255,255,.7) !important;
-    box-shadow: none !important;
-  }
+  /* Fond LinkedIn blue */
+  body { background: #0A66C2 !important; }
 
-  /* ══ RESET LISIBILITÉ ══ */
-
-  /* Body : fond LinkedIn, scroll autorisé */
-  body {
-    background: #0A66C2 !important;
-    height: auto !important;
-    overflow: auto !important;
-    padding: 0 !important;
-  }
-
-  /* Container : grille + scroll vertical */
-  .container {
-    height: auto !important;
-    overflow: visible !important;
-    padding: 10px !important;
-    gap: 10px !important;
-  }
-
-  /* Cartes : blanc opaque, texte sombre */
-  .card {
+  /* Cartes blanches opaques — lisibilité garantie */
+  .card,
+  div:has(> .transcription-box),
+  .result-card,
+  .spinner-wrap,
+  #historyCard {
     background: #ffffff !important;
     backdrop-filter: none !important;
-    border: 1px solid #dbe8f4 !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,.12) !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #dce8f5 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.13) !important;
     color: #0d1f35 !important;
   }
   .card * { color: #0d1f35 !important; }
   .label  { color: #5a7a9a !important; }
+  .hint   { color: #5a7a9a !important; }
+  .transcription-box { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+
+  /* Header blanc opaque */
+  .header {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #dce8f5 !important;
+  }
+  .header * { color: #0d1f35 !important; }
+  h1 .echo { color: #0d1f35 !important; }
+  h1 span  { color: #0A66C2 !important; }
+  .badge   { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+
+  /* AI Switcher */
+  #aiSwitcher { background: #f0f6fc !important; border-color: #dce8f5 !important; backdrop-filter: none !important; }
+  #aiSwitcher button { color: #5a7a9a !important; background: transparent !important; }
+  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+
+  /* Micro */
+  .mic-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #0d1f35 !important; }
+  .mic-btn.listening { background: linear-gradient(145deg,#1a4fa0,#2563a8) !important; color: #fff !important; }
+  .mic-status { color: #5a7a9a !important; }
+
+  /* Bouton Générer — contraste fort */
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.25) !important;
+    font-weight: 700 !important;
+  }
+  button.primary-btn:hover:not(:disabled) { background: #003166 !important; transform: translateY(-1px) !important; }
+  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(255,255,255,.6) !important; }
+  button.primary-btn::after { display: none !important; }
+
+  /* Boutons icônes */
+  .icon-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #1a4fa0 !important; }
+  .icon-btn:hover { background: #e0edf8 !important; color: #0A66C2 !important; }
+
+  /* Toggles */
+  .toggle-btn    { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.35) !important; color: #15803d !important; }
+
+  /* Select */
+  select { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+
+  /* Résultat */
+  .result-card { border-left: 4px solid #0A66C2 !important; }
+  .result-body { color: #0d1f35 !important; }
+  .result-body strong { color: #14532d !important; }
+  .section-title { color: #0d1f35 !important; border-top-color: #dce8f5 !important; }
+
+  /* Placeholder colonne droite */
+  .container::after {
+    background: rgba(255,255,255,.18) !important;
+    border: 1px solid rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.65) !important;
+    backdrop-filter: none !important;
+    pointer-events: none !important;
+  }
 
   /* Remettre paramètres et historique visibles */
   .card:has(.toggle-btn) { display: block !important; }
   #historyCard           { display: block !important; }
 
-  /* Cacher uniquement les champs clés API */
-  .card:has(#geminiKey)          { display: none !important; }
-  .card:has(#geminiModelSection) { display: none !important; }
+  /* Erreur */
+  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
 
-  /* Bouton Générer : bleu foncé, texte blanc */
-  button.primary-btn {
-    background: #004182 !important;
-    color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
-    font-weight: 700 !important;
-  }
-  button.primary-btn:hover:not(:disabled) {
-    background: #003366 !important;
-    transform: translateY(-1px) !important;
-  }
-  button.primary-btn:disabled {
-    background: rgba(255,255,255,.3) !important;
-    color: rgba(255,255,255,.6) !important;
-  }
-
-  /* Header : blanc opaque */
-  .header {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    backdrop-filter: none !important;
-  }
-  .header * { color: #0d1f35 !important; }
-  h1 span   { color: #0A66C2 !important; }
-
-  /* Placeholder colonne droite */
-  .container::after {
-    background: rgba(255,255,255,.15) !important;
-    color: rgba(255,255,255,.6) !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    backdrop-filter: none !important;
-  }
-
-  /* Result card */
-  .result-card {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    border-left: 4px solid #0A66C2 !important;
-  }
-  .result-body { color: #0d1f35 !important; }
-
-  /* Transcription wrapper */
-  div:has(> .transcription-box) {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    backdrop-filter: none !important;
-  }
-  .transcription-box {
-    background: #f0f6fc !important;
-    color: #0d1f35 !important;
-    border-color: #dbe8f4 !important;
-  }
-
-  /* AI Switcher */
-  #aiSwitcher { background: #f0f6fc !important; border-color: #dbe8f4 !important; }
-  #aiSwitcher button { color: #5a7a9a !important; }
-  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
-
-  /* Mic */
-  .mic-btn { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #0d1f35 !important; box-shadow: 0 3px 10px rgba(0,0,0,.1) !important; }
-  .mic-status { color: #5a7a9a !important; }
-
-  /* Toggles */
-  .toggle-btn     { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #5a7a9a !important; }
-  .toggle-btn.on  { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
-
-  /* Spinner + erreur */
-  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; }
-  .error-box    { background: #fff5f5 !important; color: #b91c1c !important; }
+  /* Spinner */
+  .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
+  .spinner-wrap { color: #5a7a9a !important; }
 </style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
@@ -2565,145 +2471,98 @@ function exportPDF() {
 function exportWord() {
   const body = document.getElementById('resultBody');
   const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}
-  /* ── FIXES ── */
-  body {
-    background: #0A66C2 !important;
-    background-image:
-      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255,255,255,.14) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 80% 90%, rgba(0,30,80,.3) 0%, transparent 50%) !important;
-  }
-  /* Cacher carte modèle (distincte de la carte clés) */
-  .card:has(#geminiModelSection) { display: none !important; }
-  /* Cacher carte clés */
-  .card:has(#geminiKey) { display: none !important; }
+  /* ══ PATCH VISUEL v9 — fond LinkedIn, lisibilité, sections ══ */
 
-  /* ── Bouton Générer : contraste sur fond bleu LinkedIn ── */
-  button.primary-btn {
-    background: #ffffff !important;
-    color: #0A66C2 !important;
-    border: 2px solid rgba(255,255,255,.4) !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.6) inset !important;
-    letter-spacing: 0.03em;
-  }
-  button.primary-btn:hover:not(:disabled) {
-    background: #f0f7ff !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(0,0,0,.25) !important;
-  }
-  button.primary-btn:disabled {
-    background: rgba(255,255,255,.35) !important;
-    color: rgba(255,255,255,.7) !important;
-    box-shadow: none !important;
-  }
+  /* Fond LinkedIn blue */
+  body { background: #0A66C2 !important; }
 
-  /* ══ RESET LISIBILITÉ ══ */
-
-  /* Body : fond LinkedIn, scroll autorisé */
-  body {
-    background: #0A66C2 !important;
-    height: auto !important;
-    overflow: auto !important;
-    padding: 0 !important;
-  }
-
-  /* Container : grille + scroll vertical */
-  .container {
-    height: auto !important;
-    overflow: visible !important;
-    padding: 10px !important;
-    gap: 10px !important;
-  }
-
-  /* Cartes : blanc opaque, texte sombre */
-  .card {
+  /* Cartes blanches opaques — lisibilité garantie */
+  .card,
+  div:has(> .transcription-box),
+  .result-card,
+  .spinner-wrap,
+  #historyCard {
     background: #ffffff !important;
     backdrop-filter: none !important;
-    border: 1px solid #dbe8f4 !important;
-    box-shadow: 0 2px 16px rgba(0,0,0,.12) !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #dce8f5 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.13) !important;
     color: #0d1f35 !important;
   }
   .card * { color: #0d1f35 !important; }
   .label  { color: #5a7a9a !important; }
+  .hint   { color: #5a7a9a !important; }
+  .transcription-box { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+
+  /* Header blanc opaque */
+  .header {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #dce8f5 !important;
+  }
+  .header * { color: #0d1f35 !important; }
+  h1 .echo { color: #0d1f35 !important; }
+  h1 span  { color: #0A66C2 !important; }
+  .badge   { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+
+  /* AI Switcher */
+  #aiSwitcher { background: #f0f6fc !important; border-color: #dce8f5 !important; backdrop-filter: none !important; }
+  #aiSwitcher button { color: #5a7a9a !important; background: transparent !important; }
+  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+
+  /* Micro */
+  .mic-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #0d1f35 !important; }
+  .mic-btn.listening { background: linear-gradient(145deg,#1a4fa0,#2563a8) !important; color: #fff !important; }
+  .mic-status { color: #5a7a9a !important; }
+
+  /* Bouton Générer — contraste fort */
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.25) !important;
+    font-weight: 700 !important;
+  }
+  button.primary-btn:hover:not(:disabled) { background: #003166 !important; transform: translateY(-1px) !important; }
+  button.primary-btn:disabled { background: rgba(255,255,255,.3) !important; color: rgba(255,255,255,.6) !important; }
+  button.primary-btn::after { display: none !important; }
+
+  /* Boutons icônes */
+  .icon-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #1a4fa0 !important; }
+  .icon-btn:hover { background: #e0edf8 !important; color: #0A66C2 !important; }
+
+  /* Toggles */
+  .toggle-btn    { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.35) !important; color: #15803d !important; }
+
+  /* Select */
+  select { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
+
+  /* Résultat */
+  .result-card { border-left: 4px solid #0A66C2 !important; }
+  .result-body { color: #0d1f35 !important; }
+  .result-body strong { color: #14532d !important; }
+  .section-title { color: #0d1f35 !important; border-top-color: #dce8f5 !important; }
+
+  /* Placeholder colonne droite */
+  .container::after {
+    background: rgba(255,255,255,.18) !important;
+    border: 1px solid rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.65) !important;
+    backdrop-filter: none !important;
+    pointer-events: none !important;
+  }
 
   /* Remettre paramètres et historique visibles */
   .card:has(.toggle-btn) { display: block !important; }
   #historyCard           { display: block !important; }
 
-  /* Cacher uniquement les champs clés API */
-  .card:has(#geminiKey)          { display: none !important; }
-  .card:has(#geminiModelSection) { display: none !important; }
+  /* Erreur */
+  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
 
-  /* Bouton Générer : bleu foncé, texte blanc */
-  button.primary-btn {
-    background: #004182 !important;
-    color: #ffffff !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
-    font-weight: 700 !important;
-  }
-  button.primary-btn:hover:not(:disabled) {
-    background: #003366 !important;
-    transform: translateY(-1px) !important;
-  }
-  button.primary-btn:disabled {
-    background: rgba(255,255,255,.3) !important;
-    color: rgba(255,255,255,.6) !important;
-  }
-
-  /* Header : blanc opaque */
-  .header {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    backdrop-filter: none !important;
-  }
-  .header * { color: #0d1f35 !important; }
-  h1 span   { color: #0A66C2 !important; }
-
-  /* Placeholder colonne droite */
-  .container::after {
-    background: rgba(255,255,255,.15) !important;
-    color: rgba(255,255,255,.6) !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    backdrop-filter: none !important;
-  }
-
-  /* Result card */
-  .result-card {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    border-left: 4px solid #0A66C2 !important;
-  }
-  .result-body { color: #0d1f35 !important; }
-
-  /* Transcription wrapper */
-  div:has(> .transcription-box) {
-    background: #ffffff !important;
-    border: 1px solid #dbe8f4 !important;
-    backdrop-filter: none !important;
-  }
-  .transcription-box {
-    background: #f0f6fc !important;
-    color: #0d1f35 !important;
-    border-color: #dbe8f4 !important;
-  }
-
-  /* AI Switcher */
-  #aiSwitcher { background: #f0f6fc !important; border-color: #dbe8f4 !important; }
-  #aiSwitcher button { color: #5a7a9a !important; }
-  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
-
-  /* Mic */
-  .mic-btn { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #0d1f35 !important; box-shadow: 0 3px 10px rgba(0,0,0,.1) !important; }
-  .mic-status { color: #5a7a9a !important; }
-
-  /* Toggles */
-  .toggle-btn     { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #5a7a9a !important; }
-  .toggle-btn.on  { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
-
-  /* Spinner + erreur */
-  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; }
-  .error-box    { background: #fff5f5 !important; color: #b91c1c !important; }
+  /* Spinner */
+  .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
+  .spinner-wrap { color: #5a7a9a !important; }
 </style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
