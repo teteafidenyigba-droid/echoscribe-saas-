@@ -390,59 +390,6 @@
   #draftBanner {
     display: none !important;
   }
-
-  /* ══ v11 : COULEURS SEULEMENT — structure intacte ══ */
-  body { background: #0A66C2 !important; }
-
-  .card {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-    box-shadow: 0 2px 14px rgba(0,0,0,.12) !important;
-    color: #0d1f35 !important;
-  }
-  .card .label        { color: #5a7a9a !important; }
-  .card .hint         { color: #8aabcf !important; }
-  .card h2, .card h3  { color: #0d1f35 !important; }
-
-  .header {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-  }
-  .header .badge      { background: #f0f6fc !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
-
-  div:has(> .transcription-box) {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-  }
-  .transcription-box  { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
-
-  button.primary-btn  {
-    background: #004182 !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
-  }
-  button.primary-btn:disabled { background: rgba(0,65,130,.35) !important; }
-
-  .result-card {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-    border-left: 4px solid #0A66C2 !important;
-  }
-  .result-body, .section-title { color: #0d1f35 !important; }
-
-  .container::after {
-    background: rgba(255,255,255,.18) !important;
-    border: 1px solid rgba(255,255,255,.28) !important;
-    color: rgba(255,255,255,.6) !important;
-    backdrop-filter: none !important;
-  }
 </style>
 </head>
 <body>
@@ -2331,119 +2278,13 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 function exportPDF() {
   const body = document.getElementById('resultBody');
   const w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}
-  /* ══ v11 : COULEURS SEULEMENT — structure intacte ══ */
-  body { background: #0A66C2 !important; }
-
-  .card {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-    box-shadow: 0 2px 14px rgba(0,0,0,.12) !important;
-    color: #0d1f35 !important;
-  }
-  .card .label        { color: #5a7a9a !important; }
-  .card .hint         { color: #8aabcf !important; }
-  .card h2, .card h3  { color: #0d1f35 !important; }
-
-  .header {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-  }
-  .header .badge      { background: #f0f6fc !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
-
-  div:has(> .transcription-box) {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-  }
-  .transcription-box  { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
-
-  button.primary-btn  {
-    background: #004182 !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
-  }
-  button.primary-btn:disabled { background: rgba(0,65,130,.35) !important; }
-
-  .result-card {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-    border-left: 4px solid #0A66C2 !important;
-  }
-  .result-body, .section-title { color: #0d1f35 !important; }
-
-  .container::after {
-    background: rgba(255,255,255,.18) !important;
-    border: 1px solid rgba(255,255,255,.28) !important;
-    color: rgba(255,255,255,.6) !important;
-    backdrop-filter: none !important;
-  }
-</style></head><body>' + body.innerHTML + '</body></html>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compte rendu EchoScribe</title><style>body{font-family:Georgia,serif;font-size:13pt;line-height:1.8;margin:40px;color:#111}strong{font-weight:700}p{margin-bottom:8px}@media print{@page{margin:2cm}}</style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
 }
 function exportWord() {
   const body = document.getElementById('resultBody');
-  const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}
-  /* ══ v11 : COULEURS SEULEMENT — structure intacte ══ */
-  body { background: #0A66C2 !important; }
-
-  .card {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-    box-shadow: 0 2px 14px rgba(0,0,0,.12) !important;
-    color: #0d1f35 !important;
-  }
-  .card .label        { color: #5a7a9a !important; }
-  .card .hint         { color: #8aabcf !important; }
-  .card h2, .card h3  { color: #0d1f35 !important; }
-
-  .header {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-  }
-  .header .badge      { background: #f0f6fc !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
-
-  div:has(> .transcription-box) {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-  }
-  .transcription-box  { background: #f0f6fc !important; color: #0d1f35 !important; border-color: #dce8f5 !important; }
-
-  button.primary-btn  {
-    background: #004182 !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.28) !important;
-  }
-  button.primary-btn:disabled { background: rgba(0,65,130,.35) !important; }
-
-  .result-card {
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    border-color: #dce8f5 !important;
-    border-left: 4px solid #0A66C2 !important;
-  }
-  .result-body, .section-title { color: #0d1f35 !important; }
-
-  .container::after {
-    background: rgba(255,255,255,.18) !important;
-    border: 1px solid rgba(255,255,255,.28) !important;
-    color: rgba(255,255,255,.6) !important;
-    backdrop-filter: none !important;
-  }
-</style></head><body>' + body.innerHTML + '</body></html>';
+  const content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,sans-serif;font-size:11pt;line-height:1.6}</style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
