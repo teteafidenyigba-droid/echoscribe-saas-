@@ -140,14 +140,14 @@
 
   /* ── TOP BAR: mic card becomes fixed header ── */
   .card:has(.mic-zone) {
-    position: fixed;
-    top: 8px; left: 8px; right: 8px;
+    position: sticky;
+    top: 8px;
     z-index: 200;
     margin: 0;
     padding: 10px 20px 10px 16px;
     border-radius: 16px;
     box-shadow: var(--shadow);
-    grid-column: unset;
+    grid-column: 1 / -1;
   }
   .mic-zone {
     flex-direction: row !important;
@@ -223,7 +223,16 @@
   .footer { display: none; }
 
   /* ── TAB: HISTORIQUE ── */
-  #tab-history:checked ~ .container .card:has(.mic-zone) { display: none; position: static; }
+  #tab-history:checked ~ .container .card:has(.mic-zone) {
+    position: sticky;
+    top: 8px;
+    z-index: 200;
+    margin: 0;
+    padding: 10px 20px 10px 16px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    grid-column: 1 / -1;
+  }
   #tab-history:checked ~ .container div:has(> .transcription-box) { display: none; }
   #tab-history:checked ~ .container button.primary-btn { display: none !important; position: static !important; }
   #tab-history:checked ~ .container #resultCard { display: none !important; }
@@ -233,7 +242,16 @@
   #tab-history:checked ~ .container #historyCard { display: block; grid-column: 1 / -1; }
 
   /* ── TAB: PARAMÈTRES ── */
-  #tab-params:checked ~ .container .card:has(.mic-zone) { display: none; position: static; }
+  #tab-params:checked ~ .container .card:has(.mic-zone) {
+    position: sticky;
+    top: 8px;
+    z-index: 200;
+    margin: 0;
+    padding: 10px 20px 10px 16px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    grid-column: 1 / -1;
+  }
   #tab-params:checked ~ .container div:has(> .transcription-box) { display: none; }
   #tab-params:checked ~ .container button.primary-btn { display: none !important; position: static !important; }
   #tab-params:checked ~ .container #resultCard { display: none !important; }
@@ -320,7 +338,16 @@
   .spinner-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; box-shadow: var(--shadow-sm); }
 
   /* ── Mic click fix ── */
-  .card:has(.mic-zone) { overflow: visible; }
+  .card:has(.mic-zone) {
+    position: sticky;
+    top: 8px;
+    z-index: 200;
+    margin: 0;
+    padding: 10px 20px 10px 16px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    grid-column: 1 / -1;
+  }
   .mic-btn { z-index: 300 !important; position: relative !important; pointer-events: all !important; }
   .mic-wrapper { z-index: 300; position: relative; }
   .pulse-ring { pointer-events: none !important; }
@@ -333,9 +360,9 @@
 </style>
 </head>
 <body>
-<input type="radio" name="es-tab" id="tab-dictee" checked>
-<input type="radio" name="es-tab" id="tab-history">
-<input type="radio" name="es-tab" id="tab-params">
+<input type="radio" name="es-tab" id="tab-dictee" checked hidden style="display:none;position:absolute;pointer-events:none">
+<input type="radio" name="es-tab" id="tab-history" hidden style="display:none;position:absolute;pointer-events:none">
+<input type="radio" name="es-tab" id="tab-params" hidden style="display:none;position:absolute;pointer-events:none">
 <div class="container">
 
   <div class="header">
