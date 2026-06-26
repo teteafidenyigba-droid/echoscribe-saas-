@@ -73,6 +73,77 @@
   .footer { text-align:center; font-size:11px; color:#1e3448; margin-top:40px; font-family:'JetBrains Mono',monospace; line-height:1.8; }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-thumb { background:rgba(56,189,248,0.2); border-radius:4px; }
+
+  /* ══ THÈME LINKEDIN BLUE — couleurs seulement, structure V5 intacte ══ */
+  :root {
+    --bg: #0A66C2;
+    --surface: #ffffff;
+    --border: #dce8f5;
+    --accent: #0A66C2;
+    --accent2: #16a34a;
+    --text: #0d1f35;
+    --text-dim: #5a7a9a;
+    --text-mid: #3a6a8a;
+  }
+  body {
+    background: #0A66C2 !important;
+    background-image: none !important;
+  }
+  .card {
+    background: #ffffff !important;
+    border-color: #dce8f5 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.10) !important;
+  }
+  .header { background: transparent !important; }
+  h1 { color: #ffffff !important; }
+  h1 span { color: #e0edff !important; }
+  .subtitle { color: rgba(255,255,255,.75) !important; }
+  .badge {
+    background: rgba(255,255,255,.15) !important;
+    border-color: rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.9) !important;
+  }
+  .badge-dot { background: #4ade80 !important; }
+  .tag-gemini { background: rgba(74,222,128,.15) !important; border-color: rgba(74,222,128,.4) !important; }
+  .tag-whisper { background: rgba(192,132,252,.15) !important; border-color: rgba(192,132,252,.4) !important; }
+  .transcription-box {
+    background: #f0f6fc !important;
+    border-color: #dce8f5 !important;
+    color: #0d1f35 !important;
+  }
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.28) !important;
+  }
+  button.primary-btn:hover:not(:disabled) { background: #003166 !important; }
+  button.primary-btn:disabled { opacity: .5 !important; }
+  .result-card {
+    background: #ffffff !important;
+    border-left: 4px solid #0A66C2 !important;
+    border-color: #dce8f5 !important;
+  }
+  .footer { color: rgba(255,255,255,.5) !important; }
+  select, input[type="password"], input[type="text"] {
+    background: #f0f6fc !important;
+    border-color: #dce8f5 !important;
+    color: #0d1f35 !important;
+  }
+  .icon-btn {
+    background: #f0f6fc !important;
+    border-color: #dce8f5 !important;
+    color: #1a4fa0 !important;
+  }
+  .toggle-btn { background: #f0f6fc !important; border-color: #dce8f5 !important; color: #5a7a9a !important; }
+  .toggle-btn.on { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
+  #aiSwitcher { background: rgba(255,255,255,.15) !important; border-color: rgba(255,255,255,.3) !important; }
+  #aiSwitcher button { color: rgba(255,255,255,.8) !important; }
+  #aiSwitcher button.active { background: #ffffff !important; color: #0A66C2 !important; }
+  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; border-color: #dce8f5 !important; }
+  .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
+  .mic-btn { border-color: rgba(56,189,248,.3) !important; }
+  .whisper-badge { background: rgba(168,85,247,.15) !important; border-color: rgba(168,85,247,.4) !important; color: #c084fc !important; }
+  #routingInfo { color: rgba(255,255,255,.6) !important; }
 </style>
 </head>
 <body>
