@@ -473,9 +473,10 @@
     pointer-events: none !important;
   }
 
-  /* Remettre paramètres et historique visibles */
-  .card:has(.toggle-btn) { display: block !important; }
-  #historyCard           { display: block !important; }
+  /* Paramètres + Historique : lignes 5-6, sous la zone principale */
+  .card:has(.toggle-btn) { display: block !important; grid-column: 1 / -1 !important; grid-row: 5 !important; }
+  #historyCard           { display: block !important; grid-column: 1 / -1 !important; grid-row: 6 !important; }
+  /* Permettre le scroll pour accéder aux sections en bas */
 
   /* Erreur */
   .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
@@ -483,6 +484,8 @@
   /* Spinner */
   .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
   .spinner-wrap { color: #5a7a9a !important; }
+  body      { overflow-y: auto !important; height: auto !important; }
+  .container { overflow-y: visible !important; height: auto !important; min-height: 100vh; }
 </style>
 </head>
 <body>
@@ -2454,9 +2457,10 @@ function exportPDF() {
     pointer-events: none !important;
   }
 
-  /* Remettre paramètres et historique visibles */
-  .card:has(.toggle-btn) { display: block !important; }
-  #historyCard           { display: block !important; }
+  /* Paramètres + Historique : lignes 5-6, sous la zone principale */
+  .card:has(.toggle-btn) { display: block !important; grid-column: 1 / -1 !important; grid-row: 5 !important; }
+  #historyCard           { display: block !important; grid-column: 1 / -1 !important; grid-row: 6 !important; }
+  /* Permettre le scroll pour accéder aux sections en bas */
 
   /* Erreur */
   .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
@@ -2464,6 +2468,8 @@ function exportPDF() {
   /* Spinner */
   .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
   .spinner-wrap { color: #5a7a9a !important; }
+  body      { overflow-y: auto !important; height: auto !important; }
+  .container { overflow-y: visible !important; height: auto !important; min-height: 100vh; }
 </style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
@@ -2553,9 +2559,10 @@ function exportWord() {
     pointer-events: none !important;
   }
 
-  /* Remettre paramètres et historique visibles */
-  .card:has(.toggle-btn) { display: block !important; }
-  #historyCard           { display: block !important; }
+  /* Paramètres + Historique : lignes 5-6, sous la zone principale */
+  .card:has(.toggle-btn) { display: block !important; grid-column: 1 / -1 !important; grid-row: 5 !important; }
+  #historyCard           { display: block !important; grid-column: 1 / -1 !important; grid-row: 6 !important; }
+  /* Permettre le scroll pour accéder aux sections en bas */
 
   /* Erreur */
   .error-box { background: #fff5f5 !important; border-color: #fca5a5 !important; color: #b91c1c !important; }
@@ -2563,6 +2570,8 @@ function exportWord() {
   /* Spinner */
   .spinner { border-color: #dce8f5 !important; border-top-color: #0A66C2 !important; }
   .spinner-wrap { color: #5a7a9a !important; }
+  body      { overflow-y: auto !important; height: auto !important; }
+  .container { overflow-y: visible !important; height: auto !important; min-height: 100vh; }
 </style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
