@@ -1774,7 +1774,10 @@ async function stopRecordingAndTranscribe() {
           body:formData
         });
         document.getElementById('spinner').style.display='none';
-        if(!res.ok) { resolve(null); return; }
+        if(!res.ok) {
+          if(res.status===429) setError('⚠ Whisper : limite OpenAI atteinte (429). Patientez 30s puis réessayez, ou vérifiez vos crédits sur platform.openai.com');
+          resolve(null); return;
+        }
         const data = await res.json();
         resolve(data.text || null);
       } catch(e) {
