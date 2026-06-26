@@ -422,6 +422,114 @@
     color: rgba(255,255,255,.7) !important;
     box-shadow: none !important;
   }
+
+  /* ══ RESET LISIBILITÉ ══ */
+
+  /* Body : fond LinkedIn, scroll autorisé */
+  body {
+    background: #0A66C2 !important;
+    height: auto !important;
+    overflow: auto !important;
+    padding: 0 !important;
+  }
+
+  /* Container : grille + scroll vertical */
+  .container {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+
+  /* Cartes : blanc opaque, texte sombre */
+  .card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #dbe8f4 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.12) !important;
+    color: #0d1f35 !important;
+  }
+  .card * { color: #0d1f35 !important; }
+  .label  { color: #5a7a9a !important; }
+
+  /* Remettre paramètres et historique visibles */
+  .card:has(.toggle-btn) { display: block !important; }
+  #historyCard           { display: block !important; }
+
+  /* Cacher uniquement les champs clés API */
+  .card:has(#geminiKey)          { display: none !important; }
+  .card:has(#geminiModelSection) { display: none !important; }
+
+  /* Bouton Générer : bleu foncé, texte blanc */
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
+    font-weight: 700 !important;
+  }
+  button.primary-btn:hover:not(:disabled) {
+    background: #003366 !important;
+    transform: translateY(-1px) !important;
+  }
+  button.primary-btn:disabled {
+    background: rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.6) !important;
+  }
+
+  /* Header : blanc opaque */
+  .header {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    backdrop-filter: none !important;
+  }
+  .header * { color: #0d1f35 !important; }
+  h1 span   { color: #0A66C2 !important; }
+
+  /* Placeholder colonne droite */
+  .container::after {
+    background: rgba(255,255,255,.15) !important;
+    color: rgba(255,255,255,.6) !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Result card */
+  .result-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    border-left: 4px solid #0A66C2 !important;
+  }
+  .result-body { color: #0d1f35 !important; }
+
+  /* Transcription wrapper */
+  div:has(> .transcription-box) {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    backdrop-filter: none !important;
+  }
+  .transcription-box {
+    background: #f0f6fc !important;
+    color: #0d1f35 !important;
+    border-color: #dbe8f4 !important;
+  }
+
+  /* AI Switcher */
+  #aiSwitcher { background: #f0f6fc !important; border-color: #dbe8f4 !important; }
+  #aiSwitcher button { color: #5a7a9a !important; }
+  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+
+  /* Mic */
+  .mic-btn { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #0d1f35 !important; box-shadow: 0 3px 10px rgba(0,0,0,.1) !important; }
+  .mic-status { color: #5a7a9a !important; }
+
+  /* Toggles */
+  .toggle-btn     { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #5a7a9a !important; }
+  .toggle-btn.on  { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
+
+  /* Spinner + erreur */
+  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; }
+  .error-box    { background: #fff5f5 !important; color: #b91c1c !important; }
 </style>
 </head>
 <body>
@@ -2342,6 +2450,114 @@ function exportPDF() {
     color: rgba(255,255,255,.7) !important;
     box-shadow: none !important;
   }
+
+  /* ══ RESET LISIBILITÉ ══ */
+
+  /* Body : fond LinkedIn, scroll autorisé */
+  body {
+    background: #0A66C2 !important;
+    height: auto !important;
+    overflow: auto !important;
+    padding: 0 !important;
+  }
+
+  /* Container : grille + scroll vertical */
+  .container {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+
+  /* Cartes : blanc opaque, texte sombre */
+  .card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #dbe8f4 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.12) !important;
+    color: #0d1f35 !important;
+  }
+  .card * { color: #0d1f35 !important; }
+  .label  { color: #5a7a9a !important; }
+
+  /* Remettre paramètres et historique visibles */
+  .card:has(.toggle-btn) { display: block !important; }
+  #historyCard           { display: block !important; }
+
+  /* Cacher uniquement les champs clés API */
+  .card:has(#geminiKey)          { display: none !important; }
+  .card:has(#geminiModelSection) { display: none !important; }
+
+  /* Bouton Générer : bleu foncé, texte blanc */
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
+    font-weight: 700 !important;
+  }
+  button.primary-btn:hover:not(:disabled) {
+    background: #003366 !important;
+    transform: translateY(-1px) !important;
+  }
+  button.primary-btn:disabled {
+    background: rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.6) !important;
+  }
+
+  /* Header : blanc opaque */
+  .header {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    backdrop-filter: none !important;
+  }
+  .header * { color: #0d1f35 !important; }
+  h1 span   { color: #0A66C2 !important; }
+
+  /* Placeholder colonne droite */
+  .container::after {
+    background: rgba(255,255,255,.15) !important;
+    color: rgba(255,255,255,.6) !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Result card */
+  .result-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    border-left: 4px solid #0A66C2 !important;
+  }
+  .result-body { color: #0d1f35 !important; }
+
+  /* Transcription wrapper */
+  div:has(> .transcription-box) {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    backdrop-filter: none !important;
+  }
+  .transcription-box {
+    background: #f0f6fc !important;
+    color: #0d1f35 !important;
+    border-color: #dbe8f4 !important;
+  }
+
+  /* AI Switcher */
+  #aiSwitcher { background: #f0f6fc !important; border-color: #dbe8f4 !important; }
+  #aiSwitcher button { color: #5a7a9a !important; }
+  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+
+  /* Mic */
+  .mic-btn { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #0d1f35 !important; box-shadow: 0 3px 10px rgba(0,0,0,.1) !important; }
+  .mic-status { color: #5a7a9a !important; }
+
+  /* Toggles */
+  .toggle-btn     { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #5a7a9a !important; }
+  .toggle-btn.on  { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
+
+  /* Spinner + erreur */
+  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; }
+  .error-box    { background: #fff5f5 !important; color: #b91c1c !important; }
 </style></head><body>' + body.innerHTML + '</body></html>');
   w.document.close(); w.focus();
   setTimeout(() => { w.print(); w.close(); }, 350);
@@ -2380,6 +2596,114 @@ function exportWord() {
     color: rgba(255,255,255,.7) !important;
     box-shadow: none !important;
   }
+
+  /* ══ RESET LISIBILITÉ ══ */
+
+  /* Body : fond LinkedIn, scroll autorisé */
+  body {
+    background: #0A66C2 !important;
+    height: auto !important;
+    overflow: auto !important;
+    padding: 0 !important;
+  }
+
+  /* Container : grille + scroll vertical */
+  .container {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+
+  /* Cartes : blanc opaque, texte sombre */
+  .card {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #dbe8f4 !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,.12) !important;
+    color: #0d1f35 !important;
+  }
+  .card * { color: #0d1f35 !important; }
+  .label  { color: #5a7a9a !important; }
+
+  /* Remettre paramètres et historique visibles */
+  .card:has(.toggle-btn) { display: block !important; }
+  #historyCard           { display: block !important; }
+
+  /* Cacher uniquement les champs clés API */
+  .card:has(#geminiKey)          { display: none !important; }
+  .card:has(#geminiModelSection) { display: none !important; }
+
+  /* Bouton Générer : bleu foncé, texte blanc */
+  button.primary-btn {
+    background: #004182 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25) !important;
+    font-weight: 700 !important;
+  }
+  button.primary-btn:hover:not(:disabled) {
+    background: #003366 !important;
+    transform: translateY(-1px) !important;
+  }
+  button.primary-btn:disabled {
+    background: rgba(255,255,255,.3) !important;
+    color: rgba(255,255,255,.6) !important;
+  }
+
+  /* Header : blanc opaque */
+  .header {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    backdrop-filter: none !important;
+  }
+  .header * { color: #0d1f35 !important; }
+  h1 span   { color: #0A66C2 !important; }
+
+  /* Placeholder colonne droite */
+  .container::after {
+    background: rgba(255,255,255,.15) !important;
+    color: rgba(255,255,255,.6) !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Result card */
+  .result-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    border-left: 4px solid #0A66C2 !important;
+  }
+  .result-body { color: #0d1f35 !important; }
+
+  /* Transcription wrapper */
+  div:has(> .transcription-box) {
+    background: #ffffff !important;
+    border: 1px solid #dbe8f4 !important;
+    backdrop-filter: none !important;
+  }
+  .transcription-box {
+    background: #f0f6fc !important;
+    color: #0d1f35 !important;
+    border-color: #dbe8f4 !important;
+  }
+
+  /* AI Switcher */
+  #aiSwitcher { background: #f0f6fc !important; border-color: #dbe8f4 !important; }
+  #aiSwitcher button { color: #5a7a9a !important; }
+  #btnGemini { background: rgba(22,163,74,.12) !important; color: #15803d !important; }
+
+  /* Mic */
+  .mic-btn { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #0d1f35 !important; box-shadow: 0 3px 10px rgba(0,0,0,.1) !important; }
+  .mic-status { color: #5a7a9a !important; }
+
+  /* Toggles */
+  .toggle-btn     { background: #f0f6fc !important; border-color: #dbe8f4 !important; color: #5a7a9a !important; }
+  .toggle-btn.on  { background: rgba(22,163,74,.12) !important; border-color: rgba(22,163,74,.4) !important; color: #15803d !important; }
+
+  /* Spinner + erreur */
+  .spinner-wrap { background: #ffffff !important; color: #5a7a9a !important; }
+  .error-box    { background: #fff5f5 !important; color: #b91c1c !important; }
 </style></head><body>' + body.innerHTML + '</body></html>';
   const blob = new Blob(['﻿' + content], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
