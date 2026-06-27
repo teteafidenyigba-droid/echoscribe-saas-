@@ -106,13 +106,30 @@
     font-family: 'Inter', sans-serif !important;
   }
   .container {
-    display: flex !important;
-    flex-direction: column !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
     gap: 16px !important;
-    max-width: 780px !important;
+    max-width: 1100px !important;
     margin: 0 auto !important;
     padding: 28px 20px 40px !important;
+    align-items: start !important;
   }
+  /* Pleine largeur */
+  .container > .header,
+  .container > .card:has(.mic-btn),
+  .container > #draftBanner,
+  .container > #reformBtn,
+  .container > #routingInfo,
+  .container > .spinner-wrap,
+  .container > .error-box,
+  .container > #historyCard,
+  .container > .card:has(.toggle-btn),
+  .container > .footer { grid-column: 1 / -1 !important; }
+  /* Colonne gauche : transcription */
+  .container > div:has(> .transcription-box) { grid-column: 1 !important; grid-row: 3 !important; }
+  /* Colonne droite : compte rendu */
+  .container > #resultCard { grid-column: 2 !important; grid-row: 3 !important; display: block !important; min-height: 200px !important; }
 
   /* ── Header ── */
   .header {
