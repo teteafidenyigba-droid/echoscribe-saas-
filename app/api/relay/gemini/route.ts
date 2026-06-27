@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const GROQ_MODELS = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_TIMEOUT_MS = 3000;
 
 function openaiChunkToGeminiSSE(text: string): string {
   return `data: ${JSON.stringify({
@@ -12,9 +13,10 @@ function openaiChunkToGeminiSSE(text: string): string {
 }
 
 async function tryGroq(systemText: string, userText: string): Promise<NextResponse | null> {
-  for (const model of GROQ_MODELS) {
+  {
+    const model = GROQ_MODEL;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
+    const timeout = setTimeout(() => controller.abort(), GROQ_TIMEOUT_MS);
     try {
       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
@@ -23,7 +25,7 @@ async function tryGroq(systemText: string, userText: string): Promise<NextRespon
           "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model,
+          model: GROQ_MODEL,
           stream: true,
           max_tokens: 4096,
           temperature: 0.2,
@@ -36,7 +38,7 @@ async function tryGroq(systemText: string, userText: string): Promise<NextRespon
       });
 
       clearTimeout(timeout);
-      if (!res.ok) continue;
+      if (!res.ok) return null;
 
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
@@ -75,10 +77,9 @@ async function tryGroq(systemText: string, userText: string): Promise<NextRespon
       });
     } catch {
       clearTimeout(timeout);
-      continue;
+      return null;
     }
   }
-  return null;
 }
 
 export async function POST(request: NextRequest) {
