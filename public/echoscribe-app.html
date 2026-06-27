@@ -2247,5 +2247,104 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
   setInterval(() => { esPurge().then(esRenderHistory); }, 5*60*1000); // purge périodique
 })();
 </script>
+
+<!-- ══ EXPORT PDF & WORD (ajout EchoScribe SaaS — ne touche pas au code V5) ══ -->
+<style>
+  .export-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 14px; border-radius: 8px; font-size: 12px;
+    font-weight: 600; cursor: pointer; border: 1.5px solid;
+    font-family: 'JetBrains Mono', monospace; transition: all .15s;
+  }
+  .export-btn-pdf { background: #fff0f0; border-color: #f87171; color: #b91c1c; }
+  .export-btn-pdf:hover { background: #fee2e2; }
+  .export-btn-word { background: #eff6ff; border-color: #60a5fa; color: #1d4ed8; }
+  .export-btn-word:hover { background: #dbeafe; }
+  @media print {
+    body > *:not(#echoscribe-print-target) { display: none !important; }
+    #echoscribe-print-target {
+      display: block !important; position: fixed; inset: 0;
+      background: white; padding: 40px; font-family: Arial, sans-serif;
+      font-size: 14px; color: #111; z-index: 99999;
+    }
+  }
+</style>
+<div id="echoscribe-print-target" style="display:none;"></div>
+<script>
+(function() {
+  function waitFor(id, cb) {
+    const el = document.getElementById(id);
+    if (el) { cb(el); return; }
+    setTimeout(() => waitFor(id, cb), 300);
+  }
+
+  /* Injection des boutons dans la barre du resultCard */
+  waitFor('copyBtn', function(copyBtn) {
+    const bar = copyBtn.parentElement;
+
+    const btnPdf = document.createElement('button');
+    btnPdf.className = 'export-btn export-btn-pdf';
+    btnPdf.innerHTML = '⬇ PDF';
+    btnPdf.title = 'Exporter en PDF';
+    btnPdf.onclick = exportPDF;
+
+    const btnWord = document.createElement('button');
+    btnWord.className = 'export-btn export-btn-word';
+    btnWord.innerHTML = '⬇ Word';
+    btnWord.title = 'Exporter en Word (.doc)';
+    btnWord.onclick = exportWord;
+
+    bar.appendChild(btnPdf);
+    bar.appendChild(btnWord);
+  });
+
+  function getContent() {
+    const body = document.getElementById('resultBody');
+    return body ? body.innerHTML.trim() : '';
+  }
+
+  function getTextContent() {
+    const body = document.getElementById('resultBody');
+    return body ? body.innerText.trim() : '';
+  }
+
+  function exportPDF() {
+    const html = getContent();
+    if (!html) { alert('Aucun compte rendu à exporter.'); return; }
+    const target = document.getElementById('echoscribe-print-target');
+    target.innerHTML = '<h2 style="margin-bottom:20px;font-size:18px;color:#0A66C2;">Compte Rendu Échographique</h2>' + html +
+      '<p style="margin-top:30px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">Proposition à valider et signer par le médecin responsable — EchoScribe</p>';
+    target.style.display = 'block';
+    window.print();
+    target.style.display = 'none';
+  }
+
+  function exportWord() {
+    const html = getContent();
+    if (!html) { alert('Aucun compte rendu à exporter.'); return; }
+    const docHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+      <head><meta charset="utf-8">
+        <style>body{font-family:Arial,sans-serif;font-size:12pt;color:#111;margin:2cm;}
+          h1{color:#0A66C2;} strong{font-weight:bold;} p{margin-bottom:8pt;}</style>
+      </head>
+      <body>
+        <h1>Compte Rendu Échographique</h1>
+        ${html}
+        <p style="margin-top:30pt;font-size:9pt;color:#888;border-top:1pt solid #eee;padding-top:6pt;">
+          Proposition à valider et signer par le médecin responsable — EchoScribe
+        </p>
+      </body></html>`;
+    const blob = new Blob(['﻿' + docHtml], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'compte-rendu-echographie.doc';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+})();
+</script>
 </body>
 </html>
