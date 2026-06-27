@@ -139,7 +139,7 @@
   /* Hint standalone hors carte → masqué */
   .container > p.hint { display: none !important; }
   /* Message de basculement Gemini → transparent pour l'utilisateur */
-  #errorBox[style*="7dd3fc"] { display: none !important; }
+  #errorBox.es-hidden { display: none !important; }
   /* Colonne droite : compte rendu */
   .container > #resultCard { grid-column: 2 !important; grid-row: 3 !important; display: block !important; min-height: 200px !important; }
 
@@ -2274,6 +2274,16 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 <div id="echoscribe-print-target" style="display:none;"></div>
 <script>
 (function() {
+  /* Masquer les messages de basculement Gemini */
+  const errorBox = document.getElementById('errorBox');
+  if (errorBox) {
+    new MutationObserver(() => {
+      if (errorBox.textContent.includes('Basculement automatique')) {
+        errorBox.style.setProperty('display', 'none', 'important');
+      }
+    }).observe(errorBox, { childList: true, attributes: true, attributeFilter: ['style'] });
+  }
+
   function waitFor(id, cb) {
     const el = document.getElementById(id);
     if (el) { cb(el); return; }
