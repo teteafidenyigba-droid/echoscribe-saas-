@@ -20,7 +20,7 @@ export default function AppClient({ user }: Props) {
   const displayName = user.name !== user.email ? user.name : user.email;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", backgroundColor: "#043a82", backgroundImage: "linear-gradient(170deg, rgba(5,82,163,0.85) 0%, rgba(3,48,110,0.92) 100%), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MDAgNDgwIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIG9wYWNpdHk9IjAuNSI+PHBhdGggZD0iTTI1MCwxNSBMMjUwLDkwIiBzdHJva2Utd2lkdGg9IjEwIi8+PHBhdGggZD0iTTI1MCw5MCBRMjEwLDEwNSAxODUsMTMwIiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMjUwLDkwIFEyOTAsMTA1IDMxNSwxMzAiIHN0cm9rZS13aWR0aD0iNyIvPjxwYXRoIGQ9Ik0xODUsMTMwIFExNDAsMTQ4IDExMiwxODAgUTc1LDIyMCA2OCwyNzAgUTYyLDMyNSA4OCwzNjggUTExMiw0MDggMTUwLDQyMiBRMTg1LDQzMiAyMDUsNDE1IFEyMjIsMzk4IDIyMCwzNjggUTIxNywzMzIgMTk4LDMwOCBRMTgwLDI4NSAxODMsMjQ4IFExODYsMjEwIDE4NSwxMzBaIiBzdHJva2Utd2lkdGg9IjQiLz48cGF0aCBkPSJNMzE1LDEzMCBRMzYwLDE0OCAzODgsMTgwIFE0MjUsMjIwIDQzMiwyNzAgUTQzOCwzMjUgNDEyLDM2OCBRMzg4LDQwOCAzNTAsNDIyIFEzMTUsNDMyIDI5NSw0MTUgUTI3OCwzOTggMjgwLDM2OCBRMjgzLDMzMiAzMDIsMzA4IFEzMjAsMjg1IDMxNywyNDggUTMxNCwyMTAgMzE1LDEzMFoiIHN0cm9rZS13aWR0aD0iNCIvPjwvZz48L3N2Zz4=')", backgroundSize: "cover, 60% auto", backgroundPosition: "center, center", backgroundRepeat: "no-repeat, no-repeat" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#0A66C2" }}>
       {/* Top bar */}
       <div style={{
         background: "rgba(234,244,251,0.97)",
@@ -97,7 +97,7 @@ export default function AppClient({ user }: Props) {
 
       {/* App iframe */}
       <iframe
-        src="/echoscribe-app.html?v=v5pro17"
+        src="/echoscribe-app.html?v=v5pro18"
         style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
         title="EchoScribe Application"
         allow="microphone"
