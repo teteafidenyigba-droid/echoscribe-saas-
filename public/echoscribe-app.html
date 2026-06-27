@@ -106,38 +106,13 @@
     font-family: 'Inter', sans-serif !important;
   }
   .container {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-areas:
-      "header  header"
-      "mic     mic"
-      "draft   draft"
-      "trans   result"
-      "btn     btn"
-      "routing routing"
-      "spinner spinner"
-      "error   error"
-      "history history"
-      "options options"
-      "footer  footer" !important;
+    display: flex !important;
+    flex-direction: column !important;
     gap: 16px !important;
-    max-width: 1100px !important;
+    max-width: 780px !important;
     margin: 0 auto !important;
     padding: 28px 20px 40px !important;
-    align-items: start !important;
   }
-  .header                    { grid-area: header  !important; }
-  .card:has(.mic-btn)        { grid-area: mic     !important; }
-  #draftBanner               { grid-area: draft   !important; }
-  div:has(> .transcription-box) { grid-area: trans !important; }
-  #resultCard                { grid-area: result  !important; }
-  #reformBtn                 { grid-area: btn     !important; }
-  #routingInfo               { grid-area: routing !important; }
-  .spinner-wrap              { grid-area: spinner !important; }
-  .error-box                 { grid-area: error   !important; }
-  #historyCard               { grid-area: history !important; }
-  .card:has(.toggle-btn)     { grid-area: options !important; }
-  .footer                    { grid-area: footer  !important; }
 
   /* ── Header ── */
   .header {
