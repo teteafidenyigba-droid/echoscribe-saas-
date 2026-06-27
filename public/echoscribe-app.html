@@ -2317,6 +2317,19 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 <div id="echoscribe-print-target" style="display:none;"></div>
 <script>
 (function() {
+  /* Remplacer "Gemini" par "IA" dans le spinner */
+  const spinnerText = document.getElementById('spinnerText');
+  if (spinnerText) {
+    const _spinDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+    Object.defineProperty(spinnerText, 'textContent', {
+      set(value) {
+        _spinDesc.set.call(this, typeof value === 'string' ? value.replace(/Gemini/g, 'IA') : value);
+      },
+      get() { return _spinDesc.get.call(this); },
+      configurable: true,
+    });
+  }
+
   /* Intercepter le textContent de errorBox pour masquer les messages de basculement Gemini */
   const errorBox = document.getElementById('errorBox');
   if (errorBox) {
