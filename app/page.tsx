@@ -1,4 +1,5 @@
 import Link from "next/link";
+import FaqSection from "./components/FaqSection";
 
 export default function LandingPage() {
   return (
@@ -379,28 +380,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="section-pad" style={{ background: "#eaf4fb", padding: "64px 24px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ marginBottom: 40 }}>
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#0a5fa8", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 12 }}>LES VRAIES QUESTIONS</p>
-            <h2 style={{ fontSize: 32, fontWeight: 800, color: "#0f2440" }}>Ce que vous vous demandez sûrement</h2>
-          </div>
-          <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-            {[
-              { q: "Est-ce que mes données restent chez moi ?", a: "Oui, totalement. L'audio est traité dans votre navigateur et n'est jamais transmis. Effacement automatique après 12h. Secret médical garanti." },
-              { q: "Est-ce que ça marche avec mon logiciel métier ?", a: "Oui. Doctolib, HelloDoc, WEDA, Medistory, Axisante, Word… il suffit de copier-coller. La mise en page est conservée." },
-              { q: "C'est certifié dispositif médical ?", a: "C'est un outil d'aide à la rédaction. Le compte rendu doit être relu et signé par le médecin. EchoScribe assiste — il ne remplace pas votre jugement clinique." },
-              { q: "Je peux arrêter quand je veux ?", a: "Oui, sans engagement ni pénalité. Un clic dans votre espace facturation. Vous gardez l'accès jusqu'à la fin de la période payée." },
-              { q: "L'essai gratuit, c'est vraiment gratuit ?", a: "7 jours offerts, sans engagement. Aucun prélèvement automatique. À la fin, vous choisissez ou vous partez — sans friction." },
-            ].map((item, i) => (
-              <div key={i} className="faq-item faq-card" style={{ background: "#ffffff", border: "1px solid #c8ddef", borderRadius: 14, padding: "22px 26px", boxShadow: "0 2px 10px rgba(10,95,168,0.07)" }}>
-                <div className="faq-q" style={{ fontSize: 16, color: "#0d2540", fontWeight: 700, marginBottom: 8 }}>{item.q}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.75, color: "#2a5070" }}>{item.a}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FaqSection />
 
       {/* CTA FINAL */}
       <section className="cta-section" style={{ background: "linear-gradient(140deg, #0f2440 0%, #1e3a5f 50%, #1e7fc5 100%)", textAlign: "center", padding: "88px 24px", position: "relative", overflow: "hidden" }}>
