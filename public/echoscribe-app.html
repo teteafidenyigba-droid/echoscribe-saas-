@@ -336,6 +336,49 @@
     color: var(--red) !important;
   }
 
+  /* ══ RESPONSIVE MOBILE ══ */
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: 1fr !important;
+      padding: 14px 12px 28px !important;
+      gap: 12px !important;
+    }
+    /* Tout en colonne unique, ordre auto */
+    .container > .header,
+    .container > .card:has(.mic-btn),
+    .container > #draftBanner,
+    .container > #reformBtn,
+    .container > #routingInfo,
+    .container > .spinner-wrap,
+    .container > .error-box,
+    .container > #historyCard,
+    .container > .card:has(.toggle-btn),
+    .container > .footer { grid-column: 1 !important; }
+    .container > div:has(> .transcription-box) {
+      grid-column: 1 !important; grid-row: auto !important;
+    }
+    .container > #resultCard {
+      grid-column: 1 !important; grid-row: auto !important;
+      min-height: 160px !important;
+    }
+    /* Mic */
+    .mic-btn { width: 68px !important; height: 68px !important; font-size: 26px !important; }
+    .mic-status { font-size: 13px !important; }
+    /* Boutons d'export */
+    .export-btn { font-size: 11px !important; padding: 5px 10px !important; }
+    /* Cards padding */
+    .card { padding: 16px 14px !important; }
+    .container > div:has(> .transcription-box) { padding: 14px 14px !important; }
+    /* Transcription box */
+    .transcription-box { min-height: 90px !important; font-size: 13px !important; }
+    /* Result body */
+    .result-body { font-size: 13px !important; }
+    /* Badge */
+    .badge { font-size: 13px !important; padding: 9px 18px !important; }
+    /* Historique */
+    #historyCard { display: none !important; }
+  }
+
   /* ── Footer ── */
   .footer {
     color: rgba(255,255,255,.5) !important;

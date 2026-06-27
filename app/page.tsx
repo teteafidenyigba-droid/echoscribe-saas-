@@ -8,6 +8,11 @@ export default function LandingPage() {
         @media (max-width: 768px) {
           body, html { overflow-x: hidden; }
 
+          /* Sections avec padding fixe */
+          section[style*="48px"] { padding-left: 16px !important; padding-right: 16px !important; }
+          section[style*="72px 48px"] { padding: 48px 16px !important; }
+          section[style*="80px 24px"] { padding: 48px 16px !important; }
+
           /* Nav */
           .nav-wrap { padding: 0 16px !important; height: 60px !important; }
           .nav-cta-text { display: none !important; }
