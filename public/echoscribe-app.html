@@ -138,6 +138,8 @@
   .container > div:has(> .transcription-box) p.hint { color: var(--text-md) !important; }
   /* Hint standalone hors carte → masqué */
   .container > p.hint { display: none !important; }
+  /* Message de basculement Gemini → transparent pour l'utilisateur */
+  #errorBox[style*="7dd3fc"] { display: none !important; }
   /* Colonne droite : compte rendu */
   .container > #resultCard { grid-column: 2 !important; grid-row: 3 !important; display: block !important; min-height: 200px !important; }
 
