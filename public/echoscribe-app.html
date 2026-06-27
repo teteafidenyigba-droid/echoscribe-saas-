@@ -2215,7 +2215,11 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 </script>
 </body>
 <style>
-  html { background: url('medical-bg.png') center/cover no-repeat fixed #043a82 !important; }
-  body { background: linear-gradient(170deg, rgba(5,82,163,0.70) 0%, rgba(3,48,110,0.78) 100%) center/cover no-repeat fixed !important; }
+  html, body { min-height: 100vh; }
+  body {
+    background:
+      linear-gradient(170deg, rgba(10,102,194,0.55) 0%, rgba(3,48,110,0.65) 100%),
+      url('/medical-bg.png') center/cover no-repeat !important;
+  }
 </style>
 </html>
