@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
     clearTimeout(timeout);
     const isTimeout = err instanceof Error && err.name === "AbortError";
     return NextResponse.json(
-      { error: isTimeout ? "Gemini timeout" : "Gemini error" },
-      { status: 504 }
+      { error: { message: isTimeout ? "Gemini unavailable (timeout)" : "Gemini unavailable" } },
+      { status: 503 }
     );
   }
 }
