@@ -3,11 +3,41 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+async function tryGroq(body: string): Promise<NextResponse | null> {
+  try {
+    const url = new URL("/api/relay/groq", "http://localhost");
+    const res = await fetch(
+      `${process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"}/api/relay/groq`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        signal: AbortSignal.timeout(4000),
+      }
+    );
+    if (!res.ok) return null;
+    return new NextResponse(res.body, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   const model = request.nextUrl.searchParams.get("model") || "gemini-2.5-flash";
   const body = await request.text();
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
 
+  // 1. Essayer Groq d'abord (rapide)
+  const groqResponse = await tryGroq(body);
+  if (groqResponse) return groqResponse;
+
+  // 2. Fallback Gemini
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 5000);
 
