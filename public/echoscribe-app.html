@@ -2274,14 +2274,22 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 <div id="echoscribe-print-target" style="display:none;"></div>
 <script>
 (function() {
-  /* Masquer les messages de basculement Gemini */
+  /* Intercepter le textContent de errorBox pour masquer les messages de basculement Gemini */
   const errorBox = document.getElementById('errorBox');
   if (errorBox) {
-    new MutationObserver(() => {
-      if (errorBox.textContent.includes('Basculement automatique')) {
-        errorBox.style.setProperty('display', 'none', 'important');
-      }
-    }).observe(errorBox, { childList: true, attributes: true, attributeFilter: ['style'] });
+    const _desc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+    Object.defineProperty(errorBox, 'textContent', {
+      set(value) {
+        if (typeof value === 'string' && value.includes('Basculement')) {
+          _desc.set.call(this, '');
+          this.style.setProperty('display', 'none', 'important');
+        } else {
+          _desc.set.call(this, value);
+        }
+      },
+      get() { return _desc.get.call(this); },
+      configurable: true,
+    });
   }
 
   function waitFor(id, cb) {
