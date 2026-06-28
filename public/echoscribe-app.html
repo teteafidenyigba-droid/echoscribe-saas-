@@ -2317,17 +2317,25 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 <div id="echoscribe-print-target" style="display:none;"></div>
 <script>
 (function() {
-  /* Remplacer "Gemini" par "IA" dans le spinner */
+  /* Remplacer "Gemini" par "IA" dans le spinner — double interception */
   const spinnerText = document.getElementById('spinnerText');
   if (spinnerText) {
+    // 1. Object.defineProperty — intercepte les assignments directs
     const _spinDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
     Object.defineProperty(spinnerText, 'textContent', {
       set(value) {
-        _spinDesc.set.call(this, typeof value === 'string' ? value.replace(/Gemini/g, 'IA') : value);
+        _spinDesc.set.call(this, typeof value === 'string' ? value.replace(/Gemini/gi, 'IA') : value);
       },
       get() { return _spinDesc.get.call(this); },
       configurable: true,
     });
+    // 2. MutationObserver — rattrape tout ce qui échappe au setter
+    new MutationObserver(function() {
+      if (spinnerText.textContent && /Gemini/i.test(spinnerText.textContent)) {
+        const _spinDesc2 = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+        _spinDesc2.set.call(spinnerText, spinnerText.textContent.replace(/Gemini/gi, 'IA'));
+      }
+    }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
   }
 
   /* Intercepter le textContent de errorBox pour masquer les messages de basculement Gemini */
