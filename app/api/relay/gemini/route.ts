@@ -12,7 +12,7 @@ function openaiChunkToGeminiSSE(text: string): string {
   })}\n\n`;
 }
 
-async function tryGroq(systemText: string, userText: string): Promise<NextResponse | null> {
+async function tryGroq(systemText: string, userText: string, temperature = 0.2, maxTokens = 8192): Promise<NextResponse | null> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), GROQ_TIMEOUT_MS);
   try {
@@ -25,8 +25,8 @@ async function tryGroq(systemText: string, userText: string): Promise<NextRespon
       body: JSON.stringify({
         model: GROQ_MODEL,
         stream: true,
-        max_tokens: 4096,
-        temperature: 0.2,
+        max_tokens: maxTokens,
+        temperature,
         messages: [
           { role: "system", content: systemText },
           { role: "user", content: userText },
@@ -88,7 +88,9 @@ export async function POST(request: NextRequest) {
     const parsed = JSON.parse(body);
     const systemText = parsed.system_instruction?.parts?.[0]?.text ?? "";
     const userText = parsed.contents?.[0]?.parts?.[0]?.text ?? "";
-    const groqRes = await tryGroq(systemText, userText);
+    const temperature = parsed.generationConfig?.temperature ?? 0.2;
+    const maxTokens = parsed.generationConfig?.maxOutputTokens ?? 8192;
+    const groqRes = await tryGroq(systemText, userText, temperature, maxTokens);
     if (groqRes) return groqRes;
   } catch { /* body non parseable → fallback Gemini */ }
 
