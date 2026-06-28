@@ -136,6 +136,8 @@
     border-radius: var(--radius) !important;
     box-shadow: var(--shadow) !important;
     padding: 20px 22px !important;
+    max-height: 60vh !important;
+    overflow-y: auto !important;
   }
   .container > div:has(> .transcription-box) p.hint { color: var(--text-md) !important; }
   /* Hint standalone hors carte → masqué */
@@ -143,7 +145,7 @@
   /* Message de basculement Gemini → transparent pour l'utilisateur */
   #errorBox.es-hidden { display: none !important; }
   /* Colonne droite : compte rendu */
-  .container > #resultCard { grid-column: 2 !important; grid-row: 3 !important; display: block !important; min-height: 200px !important; }
+  .container > #resultCard { grid-column: 2 !important; grid-row: 3 !important; display: block !important; min-height: 200px !important; max-height: 60vh !important; overflow-y: auto !important; }
 
   /* ── Header ── */
   .header {
