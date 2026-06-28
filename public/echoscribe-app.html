@@ -2356,7 +2356,8 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       set(value) {
         if (!value || _IA_ERR.test(value)) {
           _ebDesc.set.call(this, '');
-          this.style.setProperty('display', 'none', 'important');
+          this.style.cssText = '';          // efface display:block + styles inline
+          this.style.display = 'none';
         } else {
           _ebDesc.set.call(this, value);
         }
