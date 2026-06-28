@@ -2316,6 +2316,23 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 <div id="echoscribe-print-target" style="display:none;"></div>
 <script>
 (function() {
+  /* Remplacer "Gemini" par "IA" dans le bouton générer */
+  const generateBtnLabel = document.getElementById('generateBtnLabel');
+  if (generateBtnLabel) {
+    const _btnDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+    Object.defineProperty(generateBtnLabel, 'textContent', {
+      set(value) {
+        _btnDesc.set.call(this, typeof value === 'string' ? value.replace(/Gemini/gi, 'IA') : value);
+      },
+      get() { return _btnDesc.get.call(this); },
+      configurable: true,
+    });
+    // Corriger la valeur initiale si déjà définie
+    if (/Gemini/i.test(generateBtnLabel.textContent)) {
+      generateBtnLabel.textContent = generateBtnLabel.textContent.replace(/Gemini/gi, 'IA');
+    }
+  }
+
   /* Remplacer "Gemini" par "IA" dans le spinner — double interception */
   const spinnerText = document.getElementById('spinnerText');
   if (spinnerText) {
