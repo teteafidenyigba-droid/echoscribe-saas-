@@ -2338,13 +2338,15 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
   }
 
   /* Masquer TOUTES les erreurs IA — double verrou : setError + textContent direct */
-  /* Vider le compte rendu au passage au patient suivant */
-  const _origReset = window.reset;
-  window.reset = function() {
+  /* Vider le compte rendu à chaque reset/nouveau/patient suivant */
+  function _clearResult() {
     const rb = document.getElementById('resultBody');
     if (rb) rb.innerHTML = '';
-    if (_origReset) _origReset();
-  };
+  }
+  const _origReset = window.reset;
+  window.reset = function() { _clearResult(); if (_origReset) _origReset(); };
+  const _origClearDictation = window.clearDictation;
+  window.clearDictation = function(autoMic) { _clearResult(); if (_origClearDictation) _origClearDictation(autoMic); };
 
   const _IA_ERR = /basculement|gemini|openai|groq|llama|gpt|unavailable|timeout|503|indisponible|temporairement|surcharg/i;
 
