@@ -2322,7 +2322,7 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     const _btnDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
     Object.defineProperty(generateBtnLabel, 'textContent', {
       set(value) {
-        _btnDesc.set.call(this, typeof value === 'string' ? value.replace(/Gemini/gi, 'IA') : value);
+        _btnDesc.set.call(this, typeof value === 'string' ? value.replace(/\s*avec\s+Gemini/gi, '') : value);
       },
       get() { return _btnDesc.get.call(this); },
       configurable: true,
