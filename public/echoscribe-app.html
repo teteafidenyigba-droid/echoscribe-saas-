@@ -2356,8 +2356,7 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       set(value) {
         if (!value || _IA_ERR.test(value)) {
           _ebDesc.set.call(this, '');
-          this.style.cssText = '';          // efface display:block + styles inline
-          this.style.display = 'none';
+          this.style.cssText = 'display:none'; // écrase TOUT le style inline par display:none
         } else {
           _ebDesc.set.call(this, value);
         }
