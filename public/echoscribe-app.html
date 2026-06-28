@@ -2338,23 +2338,13 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
   }
 
-  /* Intercepter le textContent de errorBox pour masquer les messages de basculement Gemini */
-  const errorBox = document.getElementById('errorBox');
-  if (errorBox) {
-    const _desc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-    Object.defineProperty(errorBox, 'textContent', {
-      set(value) {
-        if (typeof value === 'string' && value.includes('Basculement')) {
-          _desc.set.call(this, '');
-          this.style.setProperty('display', 'none', 'important');
-        } else {
-          _desc.set.call(this, value);
-        }
-      },
-      get() { return _desc.get.call(this); },
-      configurable: true,
-    });
-  }
+  /* Surcharger setError pour masquer les erreurs liées à l'IA (transparence totale pour le user) */
+  const _IA_ERR = /basculement|gemini|openai|groq|llama|gpt|unavailable|timeout|503|indisponible|temporairement/i;
+  const _origSetError = window.setError;
+  window.setError = function(msg) {
+    if (!msg || _IA_ERR.test(msg)) return; // silencieux pour les erreurs IA
+    if (_origSetError) _origSetError(msg);  // on laisse passer les vraies erreurs (micro, navigateur…)
+  };
 
   function waitFor(id, cb) {
     const el = document.getElementById(id);
