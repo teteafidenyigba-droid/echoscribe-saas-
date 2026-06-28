@@ -58,7 +58,7 @@ export default function AppClient({ user }: Props) {
 
       {/* App iframe */}
       <iframe
-        src="/echoscribe-app.html?v=v5pro52"
+        src="/echoscribe-app.html?v=v5pro53"
         style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
         title="EchoScribe Application"
         allow="microphone"
