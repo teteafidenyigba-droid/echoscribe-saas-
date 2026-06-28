@@ -2338,6 +2338,14 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
   }
 
   /* Masquer TOUTES les erreurs IA — double verrou : setError + textContent direct */
+  /* Vider le compte rendu au passage au patient suivant */
+  const _origReset = window.reset;
+  window.reset = function() {
+    const rb = document.getElementById('resultBody');
+    if (rb) rb.innerHTML = '';
+    if (_origReset) _origReset();
+  };
+
   const _IA_ERR = /basculement|gemini|openai|groq|llama|gpt|unavailable|timeout|503|indisponible|temporairement|surcharg/i;
 
   // Verrou 1 : override setError (erreurs passant par la fonction)
