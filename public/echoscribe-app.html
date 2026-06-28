@@ -2338,13 +2338,33 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
   }
 
-  /* Surcharger setError pour masquer les erreurs liées à l'IA (transparence totale pour le user) */
-  const _IA_ERR = /basculement|gemini|openai|groq|llama|gpt|unavailable|timeout|503|indisponible|temporairement/i;
+  /* Masquer TOUTES les erreurs IA — double verrou : setError + textContent direct */
+  const _IA_ERR = /basculement|gemini|openai|groq|llama|gpt|unavailable|timeout|503|indisponible|temporairement|surcharg/i;
+
+  // Verrou 1 : override setError (erreurs passant par la fonction)
   const _origSetError = window.setError;
   window.setError = function(msg) {
-    if (!msg || _IA_ERR.test(msg)) return; // silencieux pour les erreurs IA
-    if (_origSetError) _origSetError(msg);  // on laisse passer les vraies erreurs (micro, navigateur…)
+    if (!msg || _IA_ERR.test(msg)) return;
+    if (_origSetError) _origSetError(msg);
   };
+
+  // Verrou 2 : Object.defineProperty sur errorBox (écriture directe b.textContent = ...)
+  const _eb = document.getElementById('errorBox');
+  if (_eb) {
+    const _ebDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+    Object.defineProperty(_eb, 'textContent', {
+      set(value) {
+        if (!value || _IA_ERR.test(value)) {
+          _ebDesc.set.call(this, '');
+          this.style.setProperty('display', 'none', 'important');
+        } else {
+          _ebDesc.set.call(this, value);
+        }
+      },
+      get() { return _ebDesc.get.call(this); },
+      configurable: true,
+    });
+  }
 
   function waitFor(id, cb) {
     const el = document.getElementById(id);
