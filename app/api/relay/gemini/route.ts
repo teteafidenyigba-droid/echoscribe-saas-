@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-export const runtime = "edge"; // Edge runtime : cold start ~0ms au lieu de 200-500ms
+export const runtime = "nodejs";
 
 const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_TIMEOUT_MS = 8000;
 
 function openaiChunkToGeminiSSE(text: string): string {
   return `data: ${JSON.stringify({
@@ -11,17 +12,11 @@ function openaiChunkToGeminiSSE(text: string): string {
   })}\n\n`;
 }
 
-export async function POST(request: NextRequest) {
-  const model = request.nextUrl.searchParams.get("model") || "gemini-2.5-flash";
-  const body = await request.text();
-
-  // 1. Groq direct — priorité absolue
+async function tryGroq(systemText: string, userText: string): Promise<NextResponse | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), GROQ_TIMEOUT_MS);
   try {
-    const parsed = JSON.parse(body);
-    const systemText = parsed.system_instruction?.parts?.[0]?.text ?? "";
-    const userText = parsed.contents?.[0]?.parts?.[0]?.text ?? "";
-
-    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,47 +32,67 @@ export async function POST(request: NextRequest) {
           { role: "user", content: userText },
         ],
       }),
+      signal: controller.signal,
     });
 
-    if (groqRes.ok) {
-      const encoder = new TextEncoder();
-      const stream = new ReadableStream({
-        async start(ctrl) {
-          const reader = groqRes.body!.getReader();
-          const decoder = new TextDecoder();
-          let buffer = "";
-          try {
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              buffer += decoder.decode(value, { stream: true });
-              const lines = buffer.split("\n");
-              buffer = lines.pop() ?? "";
-              for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed.startsWith("data:")) continue;
-                const data = trimmed.slice(5).trim();
-                if (data === "[DONE]") continue;
-                try {
-                  const chunk = JSON.parse(data);
-                  const text = chunk.choices?.[0]?.delta?.content ?? "";
-                  if (text) ctrl.enqueue(encoder.encode(openaiChunkToGeminiSSE(text)));
-                } catch { /* ignore parse errors */ }
-              }
-            }
-          } finally {
-            ctrl.close();
-          }
-        },
-      });
-      return new NextResponse(stream, {
-        status: 200,
-        headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache" },
-      });
-    }
-  } catch { /* Groq indisponible → fallback Gemini */ }
+    clearTimeout(timeout);
+    if (!res.ok) return null;
 
-  // 2. Fallback Gemini (si Groq indisponible)
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(ctrl) {
+        const reader = res.body!.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
+              const data = trimmed.slice(5).trim();
+              if (data === "[DONE]") continue;
+              try {
+                const chunk = JSON.parse(data);
+                const text = chunk.choices?.[0]?.delta?.content ?? "";
+                if (text) ctrl.enqueue(encoder.encode(openaiChunkToGeminiSSE(text)));
+              } catch { /* ignore */ }
+            }
+          }
+        } finally {
+          ctrl.close();
+        }
+      },
+    });
+
+    return new NextResponse(stream, {
+      status: 200,
+      headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache" },
+    });
+  } catch {
+    clearTimeout(timeout);
+    return null;
+  }
+}
+
+export async function POST(request: NextRequest) {
+  const model = request.nextUrl.searchParams.get("model") || "gemini-2.5-flash";
+  const body = await request.text();
+
+  // 1. Groq en premier
+  try {
+    const parsed = JSON.parse(body);
+    const systemText = parsed.system_instruction?.parts?.[0]?.text ?? "";
+    const userText = parsed.contents?.[0]?.parts?.[0]?.text ?? "";
+    const groqRes = await tryGroq(systemText, userText);
+    if (groqRes) return groqRes;
+  } catch { /* body non parseable → fallback Gemini */ }
+
+  // 2. Fallback Gemini
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
   try {
     const res = await fetch(url, {
