@@ -1,19 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-async function isAdmin(email: string): Promise<boolean> {
-  try {
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const res = await fetch(
-      `${supabaseUrl}/rest/v1/admins?email=eq.${encodeURIComponent(email)}&select=id&limit=1`,
-      { headers: { "apikey": serviceKey, "Authorization": `Bearer ${serviceKey}` } }
-    );
-    const data = await res.json();
-    return Array.isArray(data) && data.length > 0;
-  } catch {
-    return false;
-  }
+function isAdmin(email: string): boolean {
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "").split(",").map(e => e.trim().toLowerCase());
+  return adminEmails.includes(email.toLowerCase());
 }
 
 export async function middleware(request: NextRequest) {
@@ -40,8 +30,7 @@ export async function middleware(request: NextRequest) {
   // ── Routes ADMIN — complètement séparées, jamais de vérif abonnement ──
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     if (!user) return NextResponse.redirect(new URL("/login", request.url));
-    const admin = await isAdmin(user.email!);
-    if (!admin) return NextResponse.redirect(new URL("/app", request.url));
+    if (!isAdmin(user.email!)) return NextResponse.redirect(new URL("/app", request.url));
     return supabaseResponse;
   }
 
@@ -50,8 +39,7 @@ export async function middleware(request: NextRequest) {
     if (!user) return NextResponse.redirect(new URL("/login", request.url));
 
     // Admins : accès libre à /app sans abonnement
-    const admin = await isAdmin(user.email!);
-    if (admin) return supabaseResponse;
+    if (isAdmin(user.email!)) return supabaseResponse;
 
     // Charge le profil (session + stripe)
     const { data: profile } = await supabase
