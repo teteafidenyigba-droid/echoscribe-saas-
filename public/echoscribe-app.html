@@ -402,14 +402,12 @@
   .subtitle, .tag, #aiLabel { display: none !important; }
 
   /* ── Page Paramètres (Historique + Options de dictée) ── */
-  body.es-page-main #historyCard,
   body.es-page-main .card:has(#thinkingToggle) { display: none !important; }
 
-  body.es-page-settings .container > *:not(.header):not(#historyCard):not(.card:has(#thinkingToggle)):not(.footer) {
+  body.es-page-settings .container > *:not(.header):not(.card:has(#thinkingToggle)):not(.footer) {
     display: none !important;
   }
   body.es-page-settings .container { grid-template-columns: 1fr !important; max-width: 700px !important; }
-  body.es-page-settings #historyCard,
   body.es-page-settings .card:has(#thinkingToggle) { grid-column: 1 !important; display: block !important; }
 </style>
 </head>
