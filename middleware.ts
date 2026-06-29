@@ -37,6 +37,19 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
+    // Les admins ont accès sans vérification d'abonnement
+    try {
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/admins?email=eq.${encodeURIComponent(user.email!)}&select=id&limit=1`,
+        { headers: { "apikey": serviceKey, "Authorization": `Bearer ${serviceKey}` } }
+      );
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) return supabaseResponse;
+    } catch {}
+
+
     // Charge le profil une seule fois (session + stripe)
     const { data: profile } = await supabase
       .from("profiles")
