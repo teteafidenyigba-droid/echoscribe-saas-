@@ -6,9 +6,10 @@ import Link from "next/link";
 
 interface Props {
   user: { email: string; name: string };
+  panel?: "main" | "settings";
 }
 
-export default function AppClient({ user }: Props) {
+export default function AppClient({ user, panel = "main" }: Props) {
   const router = useRouter();
   const supabase = createClient();
 
@@ -26,6 +27,8 @@ export default function AppClient({ user }: Props) {
         .es-logo-text { font-family: 'EB Garamond', serif; font-size: 28px; font-style: italic; color: #0d2540; letter-spacing: -0.01em; }
         .es-email { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #2a5070; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
         .es-btn-abo { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #ffffff; text-decoration: none; padding: 7px 16px; background: linear-gradient(135deg,#1e3a5f,#1e5a8a); border: none; border-radius: 8px; white-space: nowrap; box-shadow: 0 2px 8px rgba(30,58,95,0.3); }
+        .es-btn-settings { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: 2px solid #c8ddef; border-radius: 8px; padding: 5px 14px; cursor: pointer; white-space: nowrap; text-decoration: none; }
+        .es-btn-settings.active { background: #e8f1fb; border-color: #0a5fa8; }
         .es-btn-logout { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: 2px solid #0a5fa8; border-radius: 8px; padding: 5px 14px; cursor: pointer; white-space: nowrap; font-weight: 700; }
         @media (max-width: 600px) {
           .es-topbar { padding: 0 12px; height: 52px; }
@@ -51,6 +54,9 @@ export default function AppClient({ user }: Props) {
         {/* Right side */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span className="es-email">{displayName}</span>
+          <Link href={panel === "settings" ? "/app" : "/app/parametres"} className={`es-btn-settings${panel === "settings" ? " active" : ""}`}>
+            {panel === "settings" ? "← Retour" : "Paramètres"}
+          </Link>
           <Link href="/billing" className="es-btn-abo">Mon abonnement</Link>
           <button onClick={handleLogout} className="es-btn-logout">Déconnexion</button>
         </div>
@@ -58,7 +64,7 @@ export default function AppClient({ user }: Props) {
 
       {/* App iframe */}
       <iframe
-        src="/echoscribe-app.html?v=v5pro54"
+        src={`/echoscribe-app.html?v=v5pro54${panel === "settings" ? "&panel=settings" : ""}`}
         style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
         title="EchoScribe Application"
         allow="microphone"
