@@ -119,6 +119,25 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Admin routes — vérifie la table admins via service role
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    if (!user) return NextResponse.redirect(new URL("/login", request.url));
+    try {
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/admins?email=eq.${encodeURIComponent(user.email!)}&select=id&limit=1`,
+        { headers: { "apikey": serviceKey, "Authorization": `Bearer ${serviceKey}` } }
+      );
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        return NextResponse.redirect(new URL("/app", request.url));
+      }
+    } catch {
+      return NextResponse.redirect(new URL("/app", request.url));
+    }
+  }
+
   // Redirect authenticated users away from auth pages
   if ((pathname === "/login" || pathname === "/register") && user) {
     return NextResponse.redirect(new URL("/app", request.url));
