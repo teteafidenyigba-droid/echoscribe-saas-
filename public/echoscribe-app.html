@@ -2377,7 +2377,11 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
   // Verrou 1 : override setError (erreurs passant par la fonction)
   const _origSetError = window.setError;
   window.setError = function(msg) {
-    if (!msg || _IA_ERR.test(msg)) return;
+    if (_IA_ERR.test(msg || '')) {
+      const b = document.getElementById('errorBox');
+      if (b) b.style.cssText = 'display:none';
+      return;
+    }
     if (_origSetError) _origSetError(msg);
   };
 
