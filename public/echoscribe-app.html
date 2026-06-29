@@ -402,13 +402,20 @@
   .subtitle, .tag, #aiLabel { display: none !important; }
 
   /* ── Page Paramètres (Historique + Options de dictée) ── */
-  body.es-page-main .card:has(#thinkingToggle) { display: none !important; }
+  body.es-page-main .card:has(#thinkingToggle),
+  body.es-page-main #historyCard { display: none !important; }
 
   body.es-page-settings .container > *:not(.header):not(.card:has(#thinkingToggle)):not(.footer) {
     display: none !important;
   }
   body.es-page-settings .container { grid-template-columns: 1fr !important; max-width: 700px !important; }
   body.es-page-settings .card:has(#thinkingToggle) { grid-column: 1 !important; display: block !important; }
+
+  body.es-page-history .container > *:not(.header):not(#historyCard):not(.footer) {
+    display: none !important;
+  }
+  body.es-page-history .container { grid-template-columns: 1fr !important; max-width: 900px !important; }
+  body.es-page-history #historyCard { grid-column: 1 !important; display: block !important; }
 </style>
 </head>
 <body>
@@ -2372,7 +2379,11 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 
   /* Bascule Historique + Options de dictée sur une page séparée via ?panel=settings */
   const _panel = new URLSearchParams(window.location.search).get('panel');
-  document.body.classList.add(_panel === 'settings' ? 'es-page-settings' : 'es-page-main');
+  document.body.classList.add(
+    _panel === 'settings' ? 'es-page-settings' :
+    _panel === 'history' ? 'es-page-history' :
+    'es-page-main'
+  );
 
   /* Masquer TOUTES les erreurs IA — double verrou : setError + textContent direct */
   /* Vider le compte rendu à chaque reset/nouveau/patient suivant */

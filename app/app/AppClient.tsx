@@ -6,10 +6,11 @@ import Link from "next/link";
 
 interface Props {
   user: { email: string; name: string };
-  panel?: "main" | "settings";
+  panel?: "main" | "settings" | "history";
 }
 
 export default function AppClient({ user, panel = "main" }: Props) {
+  const backHref = panel !== "main" ? "/app" : null;
   const router = useRouter();
   const supabase = createClient();
 
@@ -54,9 +55,13 @@ export default function AppClient({ user, panel = "main" }: Props) {
         {/* Right side */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span className="es-email">{displayName}</span>
-          <Link href={panel === "settings" ? "/app" : "/app/parametres"} className={`es-btn-settings${panel === "settings" ? " active" : ""}`}>
-            {panel === "settings" ? "← Retour" : "Paramètres"}
-          </Link>
+          {backHref
+            ? <Link href={backHref} className="es-btn-settings">← Retour</Link>
+            : <>
+                <Link href="/app/historique" className="es-btn-settings">Historique</Link>
+                <Link href="/app/parametres" className="es-btn-settings">Paramètres</Link>
+              </>
+          }
           <Link href="/billing" className="es-btn-abo">Mon abonnement</Link>
           <button onClick={handleLogout} className="es-btn-logout">Déconnexion</button>
         </div>
@@ -64,7 +69,7 @@ export default function AppClient({ user, panel = "main" }: Props) {
 
       {/* App iframe */}
       <iframe
-        src={`/echoscribe-app.html?v=v5pro56${panel === "settings" ? "&panel=settings" : ""}`}
+        src={`/echoscribe-app.html?v=v5pro57${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
         style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
         title="EchoScribe Application"
         allow="microphone"
