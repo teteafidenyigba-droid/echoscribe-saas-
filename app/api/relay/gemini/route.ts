@@ -83,14 +83,28 @@ async function fetchGroq(systemText: string, userText: string, temperature: numb
 }
 
 async function fetchGemini(body: string, model: string, signal: AbortSignal): Promise<Response> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`;
+  // Forcer gemini-2.0-flash comme fallback rapide (2-3× plus rapide que 2.5-flash)
+  const fastModel = model.includes("pro") ? model : "gemini-2.0-flash";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(fastModel)}:streamGenerateContent?alt=sse`;
+
+  // Désactiver le thinking Gemini côté relay pour éliminer la latence de raisonnement
+  let fastBody = body;
+  try {
+    const parsed = JSON.parse(body);
+    if (parsed.generationConfig) {
+      delete parsed.generationConfig.thinkingBudget;
+      delete parsed.generationConfig.thinkingLevel;
+    }
+    fastBody = JSON.stringify(parsed);
+  } catch { /* garder body original */ }
+
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-goog-api-key": process.env.GOOGLE_AI_API_KEY!,
     },
-    body,
+    body: fastBody,
     signal,
   });
   if (!res.ok) throw new Error(`Gemini ${res.status}`);
