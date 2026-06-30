@@ -83,8 +83,7 @@ async function fetchGroq(systemText: string, userText: string, temperature: numb
 }
 
 async function fetchGemini(body: string, model: string, signal: AbortSignal): Promise<Response> {
-  // Forcer gemini-2.0-flash comme fallback rapide (2-3× plus rapide que 2.5-flash)
-  const fastModel = model.includes("pro") ? model : "gemini-2.0-flash";
+  const fastModel = model;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(fastModel)}:streamGenerateContent?alt=sse`;
 
   // Désactiver le thinking Gemini côté relay pour éliminer la latence de raisonnement
