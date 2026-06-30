@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const GROQ_MODEL = "llama-3.3-70b-versatile";
-const GROQ_TIMEOUT_MS = 8000;
+const GROQ_TIMEOUT_MS = 15000;
 
 function openaiChunkToGeminiSSE(text: string): string {
   return `data: ${JSON.stringify({
