@@ -397,7 +397,7 @@
   /* ── Masqués ── */
   .card:has(#geminiKey), .card:has(#openaiKey), .card:has(#claudeKey),
   #claudeKeySection, #openaiKeySection, #geminiKeySection { display: none !important; }
-  #aiSwitcher { display: none !important; }
+  /* #aiSwitcher visible — géré par script injecté */
   #geminiModelSection, #claudeModelSection, #openaiModelSection { display: none !important; }
   .subtitle, .tag, #aiLabel { display: none !important; }
 
@@ -2376,6 +2376,56 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       }
     }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
   }
+
+  /* ── Switcher IA dissocié : Groq | Gemini | Claude | OpenAI sans basculement automatique ── */
+  (function() {
+    // Ajouter bouton Groq dans le switcher V5
+    const switcher = document.getElementById('aiSwitcher');
+    if (switcher) {
+      const btnGroq = document.createElement('button');
+      btnGroq.id = 'btnGroq';
+      btnGroq.textContent = '⚡ Groq';
+      btnGroq.style.cssText = 'padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:\'JetBrains Mono\',monospace;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#4a7a96;transition:all 0.2s;';
+      btnGroq.onclick = function() { window.switchAI('groq'); };
+      switcher.insertBefore(btnGroq, switcher.firstChild);
+    }
+
+    // Override switchAI pour gérer 'groq'
+    const _origSwitchAI = window.switchAI;
+    window.switchAI = function(ai) {
+      // Mettre à jour le style du bouton Groq
+      const btnGroq = document.getElementById('btnGroq');
+      if (btnGroq) {
+        btnGroq.style.background = ai === 'groq' ? 'rgba(251,191,36,0.18)' : 'transparent';
+        btnGroq.style.color = ai === 'groq' ? '#fbbf24' : '#4a7a96';
+      }
+      if (ai === 'groq') {
+        // Mettre à jour currentAI manuellement (V5 ne connaît pas 'groq')
+        window.currentAI = 'groq';
+        // Désactiver les autres boutons
+        ['btnGemini','btnClaude','btnOpenai'].forEach(function(id) {
+          const b = document.getElementById(id);
+          if (b) { b.style.background = 'transparent'; b.style.color = '#4a7a96'; }
+        });
+        localStorage.setItem('es_last_ai', 'groq');
+        return;
+      }
+      _origSwitchAI(ai);
+    };
+
+    // Override window.fetch : redirige /api/relay/gemini → /api/relay/groq quand currentAI==='groq'
+    const _origFetch = window.fetch;
+    window.fetch = function(input, init) {
+      if (typeof input === 'string' && input.startsWith('/api/relay/gemini') && window.currentAI === 'groq') {
+        input = input.replace('/api/relay/gemini', '/api/relay/groq');
+      }
+      return _origFetch.call(this, input, init);
+    };
+
+    // Restaurer le dernier moteur utilisé
+    const lastAI = localStorage.getItem('es_last_ai');
+    if (lastAI) setTimeout(function() { window.switchAI(lastAI); }, 100);
+  })();
 
   /* Bascule Historique + Options de dictée sur une page séparée via ?panel=settings */
   const _panel = new URLSearchParams(window.location.search).get('panel');
