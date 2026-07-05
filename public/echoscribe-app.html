@@ -2417,7 +2417,7 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       set(value) {
         if (!value || _IA_ERR.test(value)) {
           _ebDesc.set.call(this, '');
-          this.style.cssText = 'display:none'; // écrase TOUT le style inline par display:none
+          this.style.cssText = 'display:none';
         } else {
           _ebDesc.set.call(this, value);
         }
@@ -2425,6 +2425,13 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       get() { return _ebDesc.get.call(this); },
       configurable: true,
     });
+
+    // Verrou 3 : MutationObserver sur style — empêche le setTimeout V5 de re-afficher la case vide
+    new MutationObserver(function() {
+      if (!_eb.textContent || _IA_ERR.test(_eb.textContent)) {
+        if (_eb.style.display !== 'none') _eb.style.cssText = 'display:none';
+      }
+    }).observe(_eb, { attributes: true, attributeFilter: ['style'] });
   }
 
   function waitFor(id, cb) {
