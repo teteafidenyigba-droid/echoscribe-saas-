@@ -2444,8 +2444,8 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       return _origFetch.call(this, input, init);
     };
 
-    // Restaurer le dernier moteur (défaut : Groq)
-    const lastAI = localStorage.getItem('es_last_ai') || 'groq';
+    // Restaurer le dernier moteur (défaut : GPT)
+    const lastAI = localStorage.getItem('es_last_ai') || 'openai';
     setTimeout(function() { window.switchAI(lastAI); }, 150);
   })();
 
