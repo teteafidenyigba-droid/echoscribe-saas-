@@ -2377,7 +2377,7 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
   }
 
-  /* ── Switcher IA : GPT | Groq | Gemini — sans basculement automatique ── */
+  /* ── Switcher IA : GPT | Groq | Mistral | Gemini — sans basculement automatique ── */
   (function() {
     const switcher = document.getElementById('aiSwitcher');
     if (!switcher) return;
@@ -2392,27 +2392,38 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     const btnOpenai = document.getElementById('btnOpenai');
     if (btnOpenai) btnOpenai.textContent = '◍ GPT';
 
-    // Ajouter bouton Groq entre GPT et Gemini
+    // Référence btnGemini
+    const btnGemini = document.getElementById('btnGemini');
+
+    // Ajouter bouton Groq avant Gemini
     const btnGroq = document.createElement('button');
     btnGroq.id = 'btnGroq';
     btnGroq.textContent = '⚡ Groq';
     btnGroq.style.cssText = BTN_STYLE + 'background:transparent;color:#4a7a96;';
     btnGroq.onclick = function() { window.switchAI('groq'); };
-    // Insérer avant btnGemini
-    const btnGemini = document.getElementById('btnGemini');
     if (btnGemini) switcher.insertBefore(btnGroq, btnGemini);
     else switcher.appendChild(btnGroq);
 
-    // Ordre visuel : GPT | Groq | Gemini
+    // Ajouter bouton Mistral entre Groq et Gemini
+    const btnMistral = document.createElement('button');
+    btnMistral.id = 'btnMistral';
+    btnMistral.textContent = '◆ Mistral';
+    btnMistral.style.cssText = BTN_STYLE + 'background:transparent;color:#4a7a96;';
+    btnMistral.onclick = function() { window.switchAI('mistral'); };
+    if (btnGemini) switcher.insertBefore(btnMistral, btnGemini);
+    else switcher.appendChild(btnMistral);
+
+    // Ordre visuel : GPT | Groq | Mistral | Gemini
     if (btnOpenai) switcher.insertBefore(btnOpenai, switcher.firstChild);
 
     function _setActive(ai) {
       const map = {
-        groq:   { id: 'btnGroq',   bg: 'rgba(251,191,36,0.18)',  color: '#fbbf24' },
-        gemini: { id: 'btnGemini', bg: 'rgba(74,222,128,0.18)',  color: '#4ade80' },
-        openai: { id: 'btnOpenai', bg: 'rgba(129,140,248,0.18)', color: '#818cf8' },
+        groq:    { id: 'btnGroq',    bg: 'rgba(251,191,36,0.18)',  color: '#fbbf24' },
+        mistral: { id: 'btnMistral', bg: 'rgba(255,120,60,0.18)',  color: '#ff783c' },
+        gemini:  { id: 'btnGemini',  bg: 'rgba(74,222,128,0.18)',  color: '#4ade80' },
+        openai:  { id: 'btnOpenai',  bg: 'rgba(129,140,248,0.18)', color: '#818cf8' },
       };
-      ['btnGroq','btnGemini','btnOpenai'].forEach(function(id) {
+      ['btnGroq','btnMistral','btnGemini','btnOpenai'].forEach(function(id) {
         const b = document.getElementById(id);
         if (b) { b.style.background = 'transparent'; b.style.color = '#4a7a96'; }
       });
@@ -2423,25 +2434,26 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       }
     }
 
-    // Override switchAI pour gérer 'groq'
+    // Override switchAI pour gérer 'groq' et 'mistral'
     const _origSwitchAI = window.switchAI;
     window.switchAI = function(ai) {
       _setActive(ai);
-      if (ai === 'groq') {
-        window.currentAI = 'groq';
-        localStorage.setItem('es_last_ai', 'groq');
+      if (ai === 'groq' || ai === 'mistral') {
+        window.currentAI = ai;
+        localStorage.setItem('es_last_ai', ai);
         return;
       }
       _origSwitchAI(ai);
     };
 
-    // Override fetch : redirige gemini relay → groq relay quand currentAI==='groq'
+    // Override fetch : redirige gemini relay → relay dédié selon currentAI
     const _origFetch = window.fetch;
     window.fetch = function(input, init) {
-      if (typeof input === 'string' && input.startsWith('/api/relay/gemini') && window.currentAI === 'groq') {
-        input = input.replace('/api/relay/gemini', '/api/relay/groq');
+      if (typeof input === 'string' && input.startsWith('/api/relay/gemini')) {
+        if (window.currentAI === 'groq')    input = input.replace('/api/relay/gemini', '/api/relay/groq');
+        if (window.currentAI === 'mistral') input = input.replace('/api/relay/gemini', '/api/relay/mistral');
       }
-      return _origFetch.call(this, input, init);
+      return _origFetch.call(window, input, init);
     };
 
     // Restaurer le dernier moteur (défaut : GPT)
