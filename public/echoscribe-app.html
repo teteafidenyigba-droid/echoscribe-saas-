@@ -2356,23 +2356,30 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     }
   }
 
-  /* Remplacer "Gemini" par "IA" dans le spinner — double interception */
+  /* Masquer tous les noms de modèle dans le spinner — double interception */
   const spinnerText = document.getElementById('spinnerText');
   if (spinnerText) {
+    function _maskSpinner(v) {
+      if (typeof v !== 'string') return v;
+      // Remplacer "Basculement sur X…" → générique
+      v = v.replace(/Basculement\s+sur\s+[^\s…]+[….]*/gi, 'Optimisation en cours…');
+      // Remplacer noms de modèles par "IA"
+      v = v.replace(/\b(Gemini|GPT|Claude|Mistral|Groq|Llama)\b/gi, 'IA');
+      return v;
+    }
     // 1. Object.defineProperty — intercepte les assignments directs
     const _spinDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
     Object.defineProperty(spinnerText, 'textContent', {
-      set(value) {
-        _spinDesc.set.call(this, typeof value === 'string' ? value.replace(/Gemini/gi, 'IA') : value);
-      },
+      set(value) { _spinDesc.set.call(this, _maskSpinner(value)); },
       get() { return _spinDesc.get.call(this); },
       configurable: true,
     });
     // 2. MutationObserver — rattrape tout ce qui échappe au setter
     new MutationObserver(function() {
-      if (spinnerText.textContent && /Gemini/i.test(spinnerText.textContent)) {
-        const _spinDesc2 = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-        _spinDesc2.set.call(spinnerText, spinnerText.textContent.replace(/Gemini/gi, 'IA'));
+      var t = spinnerText.textContent;
+      if (t && /Gemini|GPT|Claude|Mistral|Groq|Basculement/i.test(t)) {
+        const _sd2 = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+        _sd2.set.call(spinnerText, _maskSpinner(t));
       }
     }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
   }
@@ -2456,53 +2463,54 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       return _origFetch.call(window, input, init);
     };
 
-    // Restaurer le dernier moteur (défaut : High Premium / GPT)
-    const lastAI = localStorage.getItem('es_last_ai') || 'openai';
+    // Restaurer le dernier moteur (défaut : Premium / Gemini — rapide et natif V5)
+    const lastAI = localStorage.getItem('es_last_ai') || 'gemini';
     setTimeout(function() { window.switchAI(lastAI); }, 150);
   })();
 
-  /* ── Cascade KO : GPT (15s) → Mistral → Gemini (mode auto uniquement) ── */
-  /* En mode manuel (_esManualAI défini) : moteur exact, pas de fallback        */
+  /* ── Cascade KO : Gemini → Mistral (mode auto) | moteur exact (mode manuel) ── */
   (function() {
-    window._esManualAI = null; // null = auto cascade, 'openai'|'mistral'|'gemini' = manuel
+    window._esManualAI = null; // null = auto, 'openai'|'mistral'|'gemini' = manuel exact
     var _baseFetch = window.fetch;
 
     window.fetch = async function(input, init) {
       if (typeof input !== 'string') return _baseFetch.apply(window, arguments);
 
-      // ── Mode MANUEL : moteur exact, pas de cascade ──
+      var isRelay = input.startsWith('/api/relay/gemini') ||
+                    input.startsWith('/api/relay/mistral') ||
+                    input.startsWith('/api/relay/openai');
+      if (!isRelay) return _baseFetch.call(window, input, init);
+
+      // ── Mode MANUEL : moteur exact choisi, pas de cascade ──
       if (window._esManualAI) {
-        var manualTarget = window._esManualAI === 'mistral' ? '/api/relay/mistral'
-                         : window._esManualAI === 'gemini'  ? '/api/relay/gemini'
-                         : '/api/relay/openai';
-        if (input.startsWith('/api/relay/openai') || input.startsWith('/api/relay/mistral') || input.startsWith('/api/relay/gemini')) {
-          return _baseFetch.call(window, manualTarget, init);
-        }
+        var target = window._esManualAI === 'mistral' ? '/api/relay/mistral'
+                   : window._esManualAI === 'openai'  ? '/api/relay/openai'
+                   : '/api/relay/gemini';
+        return _baseFetch.call(window, target, init);
       }
 
-      // ── Mode AUTO : cascade GPT (15s) → Mistral → Gemini ──
+      // ── Mode AUTO : Gemini en premier (natif V5, rapide) → KO → Mistral ──
+      // Laisser passer les appels openai directs sans cascade (moteur non-défaut)
       if (input.startsWith('/api/relay/openai')) {
-        var ctrl = new AbortController();
-        var timer = setTimeout(function() { ctrl.abort(); }, 15000);
-        try {
-          var r1 = await _baseFetch.call(window, input, Object.assign({}, init, { signal: ctrl.signal }));
-          clearTimeout(timer);
-          if (r1.ok) return r1;
-        } catch(e) { clearTimeout(timer); }
-
-        // KO GPT → Mistral
-        if (window._esHighlightAI) window._esHighlightAI('mistral');
-        try {
-          var r2 = await _baseFetch.call(window, '/api/relay/mistral', init);
-          if (r2.ok) return r2;
-        } catch(e) {}
-
-        // KO Mistral → Gemini
-        if (window._esHighlightAI) window._esHighlightAI('gemini');
-        return _baseFetch.call(window, '/api/relay/gemini', init);
+        return _baseFetch.call(window, input, init);
       }
 
-      return _baseFetch.call(window, input, init);
+      // Gemini → KO → Mistral
+      try {
+        var r1 = await _baseFetch.call(window, '/api/relay/gemini', init);
+        if (r1.ok) return r1;
+      } catch(e) {}
+
+      // KO Gemini → Mistral
+      if (window._esHighlightAI) window._esHighlightAI('mistral');
+      try {
+        var r2 = await _baseFetch.call(window, '/api/relay/mistral', init);
+        if (r2.ok) return r2;
+      } catch(e) {}
+
+      // KO Mistral → retour Gemini (ultime filet)
+      if (window._esHighlightAI) window._esHighlightAI('gemini');
+      return _baseFetch.call(window, '/api/relay/gemini', init);
     };
   })();
 
