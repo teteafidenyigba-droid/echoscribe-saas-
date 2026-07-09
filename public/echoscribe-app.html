@@ -2339,24 +2339,34 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 <div id="echoscribe-print-target" style="display:none;"></div>
 <script>
 (function() {
-  /* Masquer le nom du moteur dans le bouton générer */
+  /* Masquer le nom du moteur dans le bouton générer — triple verrou */
   const generateBtnLabel = document.getElementById('generateBtnLabel');
   if (generateBtnLabel) {
+    const _MASK_BTN = /\s*avec\s+(Gemini|OpenAI|Claude|Mistral|Groq|GPT)[^\s→]*/gi;
+    function _fixBtnLabel() {
+      var t = generateBtnLabel.textContent || '';
+      if (_MASK_BTN.test(t)) {
+        _MASK_BTN.lastIndex = 0;
+        var d = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
+        d.set.call(generateBtnLabel, t.replace(_MASK_BTN, ''));
+      }
+    }
+    // Verrou 1 : defineProperty
     const _btnDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
     Object.defineProperty(generateBtnLabel, 'textContent', {
       set(value) {
-        _btnDesc.set.call(this, typeof value === 'string'
-          ? value.replace(/\s*avec\s+(Gemini|OpenAI|Claude|Mistral|Groq|GPT)[^\s→]*/gi, '')
-          : value);
+        _btnDesc.set.call(this, typeof value === 'string' ? value.replace(_MASK_BTN, '') : value);
       },
       get() { return _btnDesc.get.call(this); },
       configurable: true,
     });
-    // Corriger la valeur initiale si déjà définie
-    if (/avec\s+(Gemini|OpenAI|Claude|Mistral|Groq|GPT)/i.test(generateBtnLabel.textContent)) {
-      generateBtnLabel.textContent = generateBtnLabel.textContent
-        .replace(/\s*avec\s+(Gemini|OpenAI|Claude|Mistral|Groq|GPT)[^\s→]*/gi, '');
-    }
+    // Verrou 2 : MutationObserver
+    new MutationObserver(_fixBtnLabel)
+      .observe(generateBtnLabel, { childList: true, characterData: true, subtree: true });
+    // Verrou 3 : correction immédiate + après switchAI
+    _fixBtnLabel();
+    setTimeout(_fixBtnLabel, 200);
+    setTimeout(_fixBtnLabel, 600);
   }
 
   /* Masquer tous les noms de modèle dans le spinner — double interception */
