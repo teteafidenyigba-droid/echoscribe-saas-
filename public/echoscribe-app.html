@@ -2457,45 +2457,47 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     setTimeout(function() { window.switchAI(lastAI); }, 150);
   })();
 
-  /* ── Règle Terminé : GPT 15s → Mistral en fallback automatique ── */
+  /* ── Cascade KO : GPT (15s) → Mistral → Gemini — uniquement au niveau fetch ── */
   (function() {
-    var _fbPending = false;
-
-    // Wrap fetch : si fallback actif et appel openai → timeout 15s, sinon Mistral
     var _baseFetch = window.fetch;
+
     window.fetch = async function(input, init) {
-      if (_fbPending && typeof input === 'string' && input.startsWith('/api/relay/openai')) {
-        _fbPending = false;
+      if (typeof input !== 'string') return _baseFetch.apply(window, arguments);
+
+      // Appel OpenAI (GPT) : timeout 15s, KO → Mistral → Gemini
+      if (input.startsWith('/api/relay/openai')) {
         var ctrl = new AbortController();
         var timer = setTimeout(function() { ctrl.abort(); }, 15000);
         try {
-          var res = await _baseFetch.call(window, input, Object.assign({}, init, { signal: ctrl.signal }));
+          var r1 = await _baseFetch.call(window, input, Object.assign({}, init, { signal: ctrl.signal }));
           clearTimeout(timer);
-          if (res.ok) return res;
+          if (r1.ok) return r1;
         } catch(e) { clearTimeout(timer); }
-        // KO GPT → bascule Mistral
+
+        // KO GPT → Mistral
         if (window._esHighlightAI) window._esHighlightAI('mistral');
-        window.currentAI = 'mistral';
-        return _baseFetch.call(window, '/api/relay/mistral', init);
+        try {
+          var r2 = await _baseFetch.call(window, '/api/relay/mistral', init);
+          if (r2.ok) return r2;
+        } catch(e) {}
+
+        // KO Mistral → Gemini
+        if (window._esHighlightAI) window._esHighlightAI('gemini');
+        return _baseFetch.call(window, '/api/relay/gemini', init);
       }
+
+      // Appel Mistral direct (sélection manuelle) : KO → Gemini
+      if (input.startsWith('/api/relay/mistral')) {
+        try {
+          var r3 = await _baseFetch.call(window, input, init);
+          if (r3.ok) return r3;
+        } catch(e) {}
+        if (window._esHighlightAI) window._esHighlightAI('gemini');
+        return _baseFetch.call(window, '/api/relay/gemini', init);
+      }
+
       return _baseFetch.call(window, input, init);
     };
-
-    // Intercepter le bouton Terminé : forcer GPT puis activer fallback
-    function _hookTermine() {
-      document.querySelectorAll('button').forEach(function(btn) {
-        if (/termin/i.test(btn.textContent) && !btn._echoPatch) {
-          btn._echoPatch = true;
-          btn.addEventListener('click', function() {
-            if (window._esActivateGPT) window._esActivateGPT();
-            _fbPending = true;
-          }, true); // capture phase — avant le handler V5
-        }
-      });
-    }
-
-    setTimeout(_hookTermine, 800);
-    setTimeout(_hookTermine, 2500);
   })();
 
   /* Bascule Historique + Options de dictée sur une page séparée via ?panel=settings */
