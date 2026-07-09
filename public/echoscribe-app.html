@@ -2403,9 +2403,13 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     btnMistral.id = 'btnMistral';
     btnMistral.textContent = '◆ Premium Lite';
     btnMistral.style.cssText = BTN_STYLE + 'background:transparent;color:#4a7a96;';
-    btnMistral.onclick = function() { window.switchAI('mistral'); };
+    btnMistral.onclick = function() { window._esManualAI = 'mistral'; window.switchAI('mistral'); };
     if (btnGemini) switcher.insertBefore(btnMistral, btnGemini);
     else switcher.appendChild(btnMistral);
+
+    // Sélection manuelle sur les boutons V5 existants
+    if (btnOpenai) btnOpenai.addEventListener('click', function() { window._esManualAI = 'openai'; });
+    if (btnGemini) btnGemini.addEventListener('click', function() { window._esManualAI = 'gemini'; });
 
     // Ordre visuel : High Premium | Premium Lite | Premium
     if (btnOpenai) switcher.insertBefore(btnOpenai, switcher.firstChild);
@@ -2457,14 +2461,26 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     setTimeout(function() { window.switchAI(lastAI); }, 150);
   })();
 
-  /* ── Cascade KO : GPT (15s) → Mistral → Gemini — uniquement au niveau fetch ── */
+  /* ── Cascade KO : GPT (15s) → Mistral → Gemini (mode auto uniquement) ── */
+  /* En mode manuel (_esManualAI défini) : moteur exact, pas de fallback        */
   (function() {
+    window._esManualAI = null; // null = auto cascade, 'openai'|'mistral'|'gemini' = manuel
     var _baseFetch = window.fetch;
 
     window.fetch = async function(input, init) {
       if (typeof input !== 'string') return _baseFetch.apply(window, arguments);
 
-      // Appel OpenAI (GPT) : timeout 15s, KO → Mistral → Gemini
+      // ── Mode MANUEL : moteur exact, pas de cascade ──
+      if (window._esManualAI) {
+        var manualTarget = window._esManualAI === 'mistral' ? '/api/relay/mistral'
+                         : window._esManualAI === 'gemini'  ? '/api/relay/gemini'
+                         : '/api/relay/openai';
+        if (input.startsWith('/api/relay/openai') || input.startsWith('/api/relay/mistral') || input.startsWith('/api/relay/gemini')) {
+          return _baseFetch.call(window, manualTarget, init);
+        }
+      }
+
+      // ── Mode AUTO : cascade GPT (15s) → Mistral → Gemini ──
       if (input.startsWith('/api/relay/openai')) {
         var ctrl = new AbortController();
         var timer = setTimeout(function() { ctrl.abort(); }, 15000);
@@ -2482,16 +2498,6 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
         } catch(e) {}
 
         // KO Mistral → Gemini
-        if (window._esHighlightAI) window._esHighlightAI('gemini');
-        return _baseFetch.call(window, '/api/relay/gemini', init);
-      }
-
-      // Appel Mistral direct (sélection manuelle) : KO → Gemini
-      if (input.startsWith('/api/relay/mistral')) {
-        try {
-          var r3 = await _baseFetch.call(window, input, init);
-          if (r3.ok) return r3;
-        } catch(e) {}
         if (window._esHighlightAI) window._esHighlightAI('gemini');
         return _baseFetch.call(window, '/api/relay/gemini', init);
       }
