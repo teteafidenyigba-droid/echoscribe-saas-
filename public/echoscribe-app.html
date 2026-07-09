@@ -2463,8 +2463,8 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       return _origFetch.call(window, input, init);
     };
 
-    // Restaurer le dernier moteur (défaut : Premium / Gemini — rapide et natif V5)
-    const lastAI = localStorage.getItem('es_last_ai') || 'gemini';
+    // Restaurer le dernier moteur (défaut : High Premium / OpenAI)
+    const lastAI = localStorage.getItem('es_last_ai') || 'openai';
     setTimeout(function() { window.switchAI(lastAI); }, 150);
   })();
 
@@ -2489,26 +2489,25 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
         return _baseFetch.call(window, target, init);
       }
 
-      // ── Mode AUTO : Gemini en premier (natif V5, rapide) → KO → Mistral ──
-      // Laisser passer les appels openai directs sans cascade (moteur non-défaut)
-      if (input.startsWith('/api/relay/openai')) {
-        return _baseFetch.call(window, input, init);
-      }
+      // ── Mode AUTO : OpenAI (15s) → KO → Mistral → KO → Gemini ──
 
-      // Gemini → KO → Mistral
+      // OpenAI avec timeout 15s
+      var ctrl = new AbortController();
+      var timer = setTimeout(function() { ctrl.abort(); }, 15000);
       try {
-        var r1 = await _baseFetch.call(window, '/api/relay/gemini', init);
+        var r1 = await _baseFetch.call(window, '/api/relay/openai', Object.assign({}, init, { signal: ctrl.signal }));
+        clearTimeout(timer);
         if (r1.ok) return r1;
-      } catch(e) {}
+      } catch(e) { clearTimeout(timer); }
 
-      // KO Gemini → Mistral
+      // KO OpenAI → Mistral
       if (window._esHighlightAI) window._esHighlightAI('mistral');
       try {
         var r2 = await _baseFetch.call(window, '/api/relay/mistral', init);
         if (r2.ok) return r2;
       } catch(e) {}
 
-      // KO Mistral → retour Gemini (ultime filet)
+      // KO Mistral → Gemini (ultime filet)
       if (window._esHighlightAI) window._esHighlightAI('gemini');
       return _baseFetch.call(window, '/api/relay/gemini', init);
     };
