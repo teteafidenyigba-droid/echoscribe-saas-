@@ -2439,6 +2439,10 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
       _origSwitchAI(ai);
     };
 
+    // Exposer pour la règle Terminé (utilisé par l'IIFE suivante)
+    window._esActivateGPT  = function() { _origSwitchAI('openai'); };
+    window._esHighlightAI  = _setActive;
+
     // Override fetch : redirige gemini relay → relay mistral si actif
     const _origFetch = window.fetch;
     window.fetch = function(input, init) {
@@ -2451,6 +2455,47 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
     // Restaurer le dernier moteur (défaut : High Premium / GPT)
     const lastAI = localStorage.getItem('es_last_ai') || 'openai';
     setTimeout(function() { window.switchAI(lastAI); }, 150);
+  })();
+
+  /* ── Règle Terminé : GPT 15s → Mistral en fallback automatique ── */
+  (function() {
+    var _fbPending = false;
+
+    // Wrap fetch : si fallback actif et appel openai → timeout 15s, sinon Mistral
+    var _baseFetch = window.fetch;
+    window.fetch = async function(input, init) {
+      if (_fbPending && typeof input === 'string' && input.startsWith('/api/relay/openai')) {
+        _fbPending = false;
+        var ctrl = new AbortController();
+        var timer = setTimeout(function() { ctrl.abort(); }, 15000);
+        try {
+          var res = await _baseFetch.call(window, input, Object.assign({}, init, { signal: ctrl.signal }));
+          clearTimeout(timer);
+          if (res.ok) return res;
+        } catch(e) { clearTimeout(timer); }
+        // KO GPT → bascule Mistral
+        if (window._esHighlightAI) window._esHighlightAI('mistral');
+        window.currentAI = 'mistral';
+        return _baseFetch.call(window, '/api/relay/mistral', init);
+      }
+      return _baseFetch.call(window, input, init);
+    };
+
+    // Intercepter le bouton Terminé : forcer GPT puis activer fallback
+    function _hookTermine() {
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (/termin/i.test(btn.textContent) && !btn._echoPatch) {
+          btn._echoPatch = true;
+          btn.addEventListener('click', function() {
+            if (window._esActivateGPT) window._esActivateGPT();
+            _fbPending = true;
+          }, true); // capture phase — avant le handler V5
+        }
+      });
+    }
+
+    setTimeout(_hookTermine, 800);
+    setTimeout(_hookTermine, 2500);
   })();
 
   /* Bascule Historique + Options de dictée sur une page séparée via ?panel=settings */
