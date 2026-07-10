@@ -2539,8 +2539,8 @@ document.getElementById('mistralModelSelect').addEventListener('change', updateA
   if(btnG) btnG.textContent='◉ Premium';
 
   function _setActive(ai) {
-    var map={ openai:{id:'btnOpenai',bg:'rgba(129,140,248,0.18)',color:'#818cf8'}, mistral:{id:'btnMistral',bg:'rgba(255,120,60,0.18)',color:'#ff783c'}, gemini:{id:'btnGemini',bg:'rgba(74,222,128,0.18)',color:'#4ade80'} };
-    ['btnOpenai','btnMistral','btnGemini'].forEach(function(id){ var b=document.getElementById(id); if(b){b.style.background='transparent';b.style.color='#4a7a96';} });
+    var map={ openai:{id:'btnOpenai',bg:'rgba(255,255,255,0.18)',color:'#ffffff'}, mistral:{id:'btnMistral',bg:'rgba(255,255,255,0.18)',color:'#ffffff'}, gemini:{id:'btnGemini',bg:'rgba(255,255,255,0.18)',color:'#ffffff'} };
+    ['btnOpenai','btnMistral','btnGemini'].forEach(function(id){ var b=document.getElementById(id); if(b){b.style.background='transparent';b.style.color='rgba(255,255,255,0.45)';} });
     var a=map[ai]; if(a){ var b=document.getElementById(a.id); if(b){b.style.background=a.bg;b.style.color=a.color;} }
   }
   window._esHighlightAI = _setActive;
