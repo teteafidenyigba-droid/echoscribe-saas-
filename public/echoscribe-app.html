@@ -71,351 +71,84 @@
   @keyframes spin { to{transform:rotate(360deg);} }
   .error-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.35); border-radius:10px; padding:14px 18px; color:#fca5a5; font-size:13px; font-family:'JetBrains Mono',monospace; margin-bottom:14px; line-height:1.6; }
   .footer { text-align:center; font-size:11px; color:#1e3448; margin-top:40px; font-family:'JetBrains Mono',monospace; line-height:1.8; }
-  ::-webkit-scrollbar { width:16px; }
-  ::-webkit-scrollbar-track { background: #e8e8e8; border-left: 1px solid #c0c0c0; }
-  ::-webkit-scrollbar-thumb { background: #a0a0a0; border: 1px solid #808080; border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: #888888; }
-  ::-webkit-scrollbar-button { background: #d4d4d4; border: 1px solid #a0a0a0; display: block; height: 16px; }
-  ::-webkit-scrollbar-button:vertical:decrement { background: #d4d4d4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='8,4 13,11 3,11' fill='%23444'/%3E%3C/svg%3E") center no-repeat; }
-  ::-webkit-scrollbar-button:vertical:increment { background: #d4d4d4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpolygon points='8,12 13,5 3,5' fill='%23444'/%3E%3C/svg%3E") center no-repeat; }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-thumb { background:rgba(56,189,248,0.2); border-radius:4px; }
 
   /* ══ THÈME PRO ECHOSCRIBE — CSS uniquement, code V5 intact ══ */
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-  :root {
-    --blue:    #0A66C2;
-    --blue-dk: #004a9e;
-    --blue-lt: #e8f2fc;
-    --white:   #ffffff;
-    --card-bg: #ffffff;
-    --border:  #d6e8f8;
-    --text-dk: #0d1f35;
-    --text-md: #3a5a7a;
-    --text-lt: rgba(255,255,255,.85);
-    --green:   #16a34a;
-    --red:     #dc2626;
-    --radius:  14px;
-    --shadow:  0 4px 24px rgba(10,102,194,.13);
+  :root { --blue:#0A66C2; --blue-dk:#004a9e; --blue-lt:#e8f2fc; --white:#ffffff; --card-bg:#ffffff; --border:#d6e8f8; --text-dk:#0d1f35; --text-md:#3a5a7a; --text-lt:rgba(255,255,255,.85); --green:#16a34a; --red:#dc2626; --radius:14px; --shadow:0 4px 24px rgba(10,102,194,.13); }
+  body { background-color:#043a82!important; background-image:linear-gradient(170deg,rgba(5,82,163,0.78) 0%,rgba(3,48,110,0.85) 100%),url('/medical-bg.png')!important; background-size:cover,cover!important; background-position:center center,center center!important; background-repeat:no-repeat,no-repeat!important; min-height:100vh; font-family:'Inter',sans-serif!important; }
+  .container { display:grid!important; grid-template-columns:1fr 1fr!important; grid-template-rows:auto!important; gap:16px!important; max-width:1100px!important; margin:0 auto!important; padding:28px 20px 40px!important; align-items:stretch!important; }
+  .container>.header,.container>.card:has(.mic-btn),.container>#draftBanner,.container>#reformBtn,.container>#routingInfo,.container>.spinner-wrap,.container>.error-box,.container>#historyCard,.container>.card:has(.toggle-btn),.container>.footer{grid-column:1/-1!important;}
+  .container>div:has(>.transcription-box){grid-column:1!important;grid-row:3!important;background:#ffffff!important;border:1px solid var(--border)!important;border-radius:var(--radius)!important;box-shadow:var(--shadow)!important;padding:20px 22px!important;max-height:60vh!important;overflow-y:auto!important;}
+  .container>div:has(>.transcription-box) p.hint{color:var(--text-md)!important;}
+  .container>p.hint{display:none!important;}
+  #errorBox.es-hidden{display:none!important;}
+  .container>#resultCard{grid-column:2!important;grid-row:3!important;display:block!important;min-height:200px!important;max-height:60vh!important;overflow-y:auto!important;}
+  .header{background:transparent!important;text-align:center!important;padding:0 0 8px!important;}
+  h1{display:none!important;}
+  .badge{display:inline-flex!important;align-items:center!important;gap:8px!important;background:rgba(255,255,255,.15)!important;border:1px solid rgba(255,255,255,.25)!important;color:#ffffff!important;font-size:16px!important;font-weight:700!important;letter-spacing:.12em!important;padding:12px 28px!important;border-radius:999px!important;backdrop-filter:blur(6px)!important;}
+  .badge-dot{width:7px!important;height:7px!important;background:#4ade80!important;border-radius:50%!important;box-shadow:0 0 6px #4ade80!important;}
+  .card{background:#ffffff!important;border:1px solid var(--border)!important;border-radius:var(--radius)!important;box-shadow:var(--shadow)!important;padding:20px 22px!important;}
+  .card:has(.toggle-btn){order:100!important;}
+  span.label{color:#ffffff!important;font-family:'Inter',sans-serif!important;font-size:11px!important;font-weight:600!important;letter-spacing:.1em!important;}
+  p.hint{color:rgba(255,255,255,.7)!important;font-size:12px!important;}
+  .card .label{color:var(--text-md)!important;font-size:11px!important;font-weight:600!important;letter-spacing:.08em!important;}
+  #routingInfo{color:rgba(255,255,255,.65)!important;font-size:11px!important;}
+  .mic-btn{width:80px!important;height:80px!important;font-size:32px!important;border:2px solid rgba(10,102,194,.25)!important;box-shadow:0 4px 20px rgba(10,102,194,.2)!important;background:linear-gradient(135deg,#0A66C2,#0552a3)!important;color:#ffffff!important;transition:transform .15s,box-shadow .15s!important;}
+  .mic-btn:hover{transform:scale(1.07)!important;box-shadow:0 6px 28px rgba(10,102,194,.35)!important;}
+  .mic-btn.listening{background:linear-gradient(135deg,#dc2626,#b91c1c)!important;border-color:rgba(220,38,38,.4)!important;box-shadow:0 4px 24px rgba(220,38,38,.35)!important;}
+  .mic-status{color:#0d1f35!important;font-weight:600!important;font-size:15px!important;}
+  .transcription-box{background:var(--blue-lt)!important;border:1px solid var(--border)!important;border-radius:10px!important;color:var(--text-dk)!important;font-size:14px!important;line-height:1.75!important;min-height:120px!important;}
+  .transcription-box .interim{color:#6b7280!important;}
+  .whisper-badge{background:rgba(139,92,246,.1)!important;border-color:rgba(139,92,246,.35)!important;color:#7c3aed!important;font-weight:600!important;}
+  #reformBtn{width:100%!important;padding:16px 24px!important;background:linear-gradient(135deg,#0A66C2,#0552a3)!important;color:#ffffff!important;border:none!important;border-radius:12px!important;font-family:'Inter',sans-serif!important;font-size:16px!important;font-weight:700!important;letter-spacing:.01em!important;box-shadow:0 4px 20px rgba(10,102,194,.35)!important;opacity:1!important;transition:transform .15s,box-shadow .15s!important;cursor:pointer!important;}
+  #reformBtn span{color:#ffffff!important;font-size:16px!important;font-weight:700!important;}
+  #reformBtn:hover:not(:disabled){transform:translateY(-2px)!important;box-shadow:0 8px 28px rgba(10,102,194,.45)!important;}
+  #reformBtn:disabled{background:rgba(255,255,255,.2)!important;color:rgba(255,255,255,.5)!important;box-shadow:none!important;opacity:1!important;cursor:not-allowed!important;}
+  #reformBtn:disabled span{color:rgba(255,255,255,.5)!important;}
+  .result-card{background:#ffffff!important;border:1px solid var(--border)!important;border-left:4px solid var(--blue)!important;border-radius:var(--radius)!important;box-shadow:var(--shadow)!important;}
+  .result-body{color:var(--text-dk)!important;font-size:15px!important;line-height:1.8!important;}
+  .result-body strong{color:var(--blue-dk)!important;}
+  #resultCard p[style*="JetBrains"]{color:#6b7280!important;}
+  .section-title{color:var(--text-md)!important;}
+  .card:has(.toggle-btn) .label{color:var(--text-md)!important;}
+  .card:has(.toggle-btn)>span.label{color:var(--text-dk)!important;font-size:13px!important;font-weight:700!important;letter-spacing:0!important;text-transform:none!important;}
+  .toggle-btn{background:var(--blue-lt)!important;border:1px solid var(--border)!important;color:var(--text-md)!important;border-radius:8px!important;font-weight:600!important;font-size:12px!important;padding:6px 14px!important;}
+  .toggle-btn.on{background:rgba(22,163,74,.1)!important;border-color:rgba(22,163,74,.4)!important;color:#15803d!important;}
+  select,input[type="text"],input[type="password"]{background:var(--blue-lt)!important;border:1px solid var(--border)!important;border-radius:8px!important;color:var(--text-dk)!important;font-size:13px!important;padding:8px 12px!important;}
+  .spinner-wrap{background:#ffffff!important;border-radius:var(--radius)!important;box-shadow:var(--shadow)!important;padding:32px!important;color:var(--text-md)!important;}
+  .spinner{border-color:rgba(10,102,194,.15)!important;border-top-color:var(--blue)!important;}
+  #draftBanner{background:rgba(255,255,255,.15)!important;border-color:rgba(255,255,255,.4)!important;color:#ffffff!important;font-weight:600!important;}
+  #draftBanner button{background:rgba(255,255,255,.2)!important;border-color:rgba(255,255,255,.4)!important;color:#ffffff!important;}
+  .error-box{background:#fff5f5!important;border-color:#fca5a5!important;border-radius:10px!important;color:var(--red)!important;}
+  @media (max-width:768px){
+    .container{grid-template-columns:1fr!important;padding:14px 12px 28px!important;gap:12px!important;}
+    .container>.header,.container>.card:has(.mic-btn),.container>#draftBanner,.container>#reformBtn,.container>#routingInfo,.container>.spinner-wrap,.container>.error-box,.container>#historyCard,.container>.card:has(.toggle-btn),.container>.footer{grid-column:1!important;}
+    .container>div:has(>.transcription-box){grid-column:1!important;grid-row:auto!important;}
+    .container>#resultCard{grid-column:1!important;grid-row:auto!important;min-height:160px!important;}
+    .mic-btn{width:68px!important;height:68px!important;font-size:26px!important;}
+    .mic-status{font-size:13px!important;}
+    .export-btn{font-size:11px!important;padding:5px 10px!important;}
+    .card{padding:16px 14px!important;}
+    .container>div:has(>.transcription-box){padding:14px 14px!important;}
+    .transcription-box{min-height:90px!important;font-size:13px!important;}
+    .result-body{font-size:13px!important;}
+    .badge{font-size:13px!important;padding:9px 18px!important;}
+    #historyCard{display:none!important;}
   }
-
-  /* ── Base ── */
-  body {
-    background-color: #043a82 !important;
-    background-image:
-      linear-gradient(170deg, rgba(5,82,163,0.78) 0%, rgba(3,48,110,0.85) 100%),
-      url('/medical-bg.png') !important;
-    background-size: cover, cover !important;
-    background-position: center center, center center !important;
-    background-repeat: no-repeat, no-repeat !important;
-    min-height: 100vh;
-    font-family: 'Inter', sans-serif !important;
-  }
-  .container {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: auto !important;
-    gap: 16px !important;
-    max-width: 1100px !important;
-    margin: 0 auto !important;
-    padding: 28px 20px 40px !important;
-    align-items: stretch !important;
-  }
-  /* Pleine largeur */
-  .container > .header,
-  .container > .card:has(.mic-btn),
-  .container > #draftBanner,
-  .container > #reformBtn,
-  .container > #routingInfo,
-  .container > .spinner-wrap,
-  .container > .error-box,
-  .container > #historyCard,
-  .container > .card:has(.toggle-btn),
-  .container > .footer { grid-column: 1 / -1 !important; }
-  /* Colonne gauche : transcription */
-  .container > div:has(> .transcription-box) {
-    grid-column: 1 !important; grid-row: 3 !important;
-    background: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius) !important;
-    box-shadow: var(--shadow) !important;
-    padding: 20px 22px !important;
-    max-height: 60vh !important;
-    overflow-y: auto !important;
-  }
-  .container > div:has(> .transcription-box) p.hint { color: var(--text-md) !important; }
-  /* Hint standalone hors carte → masqué */
-  .container > p.hint { display: none !important; }
-  /* Message de basculement Gemini → transparent pour l'utilisateur */
-  #errorBox.es-hidden { display: none !important; }
-  /* Colonne droite : compte rendu */
-  .container > #resultCard { grid-column: 2 !important; grid-row: 3 !important; display: block !important; min-height: 200px !important; max-height: 60vh !important; overflow-y: auto !important; }
-
-  /* ── Header ── */
-  .header {
-    background: transparent !important;
-    text-align: center !important;
-    padding: 0 0 8px !important;
-  }
-  h1 { display: none !important; }
-  h1 {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 32px !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.5px !important;
-    color: #ffffff !important;
-    margin-bottom: 10px !important;
-  }
-  h1 span { color: rgba(255,255,255,.7) !important; }
-  .badge {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    background: rgba(255,255,255,.15) !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    color: #ffffff !important;
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    letter-spacing: .12em !important;
-    padding: 12px 28px !important;
-    border-radius: 999px !important;
-    backdrop-filter: blur(6px) !important;
-  }
-  .badge-dot {
-    width: 7px !important; height: 7px !important;
-    background: #4ade80 !important;
-    border-radius: 50% !important;
-    box-shadow: 0 0 6px #4ade80 !important;
-  }
-
-  /* ── Cards ── */
-  .card {
-    background: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius) !important;
-    box-shadow: var(--shadow) !important;
-    padding: 20px 22px !important;
-  }
-  .card:has(.toggle-btn) { order: 100 !important; }
-
-  /* ── Labels & hints ── */
-  span.label {
-    color: #ffffff !important;
-    font-family: 'Inter', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    letter-spacing: .1em !important;
-  }
-  p.hint { color: rgba(255,255,255,.7) !important; font-size: 12px !important; }
-  .card .label {
-    color: var(--text-md) !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    letter-spacing: .08em !important;
-  }
-  #routingInfo { color: rgba(255,255,255,.65) !important; font-size: 11px !important; }
-
-  /* ── Mic zone ── */
-  .mic-btn {
-    width: 80px !important; height: 80px !important;
-    font-size: 32px !important;
-    border: 2px solid rgba(10,102,194,.25) !important;
-    box-shadow: 0 4px 20px rgba(10,102,194,.2) !important;
-    background: linear-gradient(135deg, #0A66C2, #0552a3) !important;
-    color: #ffffff !important;
-    transition: transform .15s, box-shadow .15s !important;
-  }
-  .mic-btn:hover { transform: scale(1.07) !important; box-shadow: 0 6px 28px rgba(10,102,194,.35) !important; }
-  .mic-btn.recording {
-    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
-    border-color: rgba(220,38,38,.4) !important;
-    box-shadow: 0 4px 24px rgba(220,38,38,.35) !important;
-  }
-  .mic-status { color: #0d1f35 !important; font-weight: 600 !important; font-size: 15px !important; }
-
-  /* ── Transcription ── */
-  .transcription-box {
-    background: var(--blue-lt) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 10px !important;
-    color: var(--text-dk) !important;
-    font-size: 14px !important;
-    line-height: 1.75 !important;
-    min-height: 120px !important;
-  }
-  .transcription-box .interim { color: #6b7280 !important; }
-  .whisper-badge {
-    background: rgba(139,92,246,.1) !important;
-    border-color: rgba(139,92,246,.35) !important;
-    color: #7c3aed !important;
-    font-weight: 600 !important;
-  }
-
-  /* ── Generate button ── */
-  #reformBtn {
-    width: 100% !important;
-    padding: 16px 24px !important;
-    background: linear-gradient(135deg, #0A66C2, #0552a3) !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 12px !important;
-    font-family: 'Inter', sans-serif !important;
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    letter-spacing: .01em !important;
-    box-shadow: 0 4px 20px rgba(10,102,194,.35) !important;
-    opacity: 1 !important;
-    transition: transform .15s, box-shadow .15s !important;
-    cursor: pointer !important;
-  }
-  #reformBtn span { color: #ffffff !important; font-size: 16px !important; font-weight: 700 !important; }
-  #reformBtn:hover:not(:disabled) {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(10,102,194,.45) !important;
-  }
-  #reformBtn:disabled {
-    background: rgba(255,255,255,.2) !important;
-    color: rgba(255,255,255,.5) !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
-    cursor: not-allowed !important;
-  }
-  #reformBtn:disabled span { color: rgba(255,255,255,.5) !important; }
-
-  /* ── Result card ── */
-  .result-card {
-    background: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-left: 4px solid var(--blue) !important;
-    border-radius: var(--radius) !important;
-    box-shadow: var(--shadow) !important;
-  }
-  .result-body { color: var(--text-dk) !important; font-size: 15px !important; line-height: 1.8 !important; }
-  .result-body strong { color: var(--blue-dk) !important; }
-  #resultCard p[style*="JetBrains"] { color: #6b7280 !important; }
-  .section-title { color: var(--text-md) !important; }
-
-  /* ── Options card (bas) ── */
-  .card:has(.toggle-btn) .label { color: var(--text-md) !important; }
-  .card:has(.toggle-btn) > span.label { color: var(--text-dk) !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: 0 !important; text-transform: none !important; }
-  .toggle-btn {
-    background: var(--blue-lt) !important;
-    border: 1px solid var(--border) !important;
-    color: var(--text-md) !important;
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
-    padding: 6px 14px !important;
-  }
-  .toggle-btn.on {
-    background: rgba(22,163,74,.1) !important;
-    border-color: rgba(22,163,74,.4) !important;
-    color: #15803d !important;
-  }
-  select, input[type="text"], input[type="password"] {
-    background: var(--blue-lt) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    color: var(--text-dk) !important;
-    font-size: 13px !important;
-    padding: 8px 12px !important;
-  }
-
-  /* ── Spinner ── */
-  .spinner-wrap {
-    background: #ffffff !important;
-    border-radius: var(--radius) !important;
-    box-shadow: var(--shadow) !important;
-    padding: 32px !important;
-    color: var(--text-md) !important;
-  }
-  .spinner { border-color: rgba(10,102,194,.15) !important; border-top-color: var(--blue) !important; }
-
-  /* ── Draft banner ── */
-  #draftBanner { background: rgba(255,255,255,.15) !important; border-color: rgba(255,255,255,.4) !important; color: #ffffff !important; font-weight: 600 !important; }
-  #draftBanner button { background: rgba(255,255,255,.2) !important; border-color: rgba(255,255,255,.4) !important; color: #ffffff !important; }
-
-  /* ── Error ── */
-  .error-box {
-    background: #fff5f5 !important;
-    border-color: #fca5a5 !important;
-    border-radius: 10px !important;
-    color: var(--red) !important;
-  }
-
-  /* ══ RESPONSIVE MOBILE ══ */
-  @media (max-width: 768px) {
-    .container {
-      grid-template-columns: 1fr !important;
-      padding: 14px 12px 28px !important;
-      gap: 12px !important;
-    }
-    /* Tout en colonne unique, ordre auto */
-    .container > .header,
-    .container > .card:has(.mic-btn),
-    .container > #draftBanner,
-    .container > #reformBtn,
-    .container > #routingInfo,
-    .container > .spinner-wrap,
-    .container > .error-box,
-    .container > #historyCard,
-    .container > .card:has(.toggle-btn),
-    .container > .footer { grid-column: 1 !important; }
-    .container > div:has(> .transcription-box) {
-      grid-column: 1 !important; grid-row: auto !important;
-    }
-    .container > #resultCard {
-      grid-column: 1 !important; grid-row: auto !important;
-      min-height: 160px !important;
-    }
-    /* Mic */
-    .mic-btn { width: 68px !important; height: 68px !important; font-size: 26px !important; }
-    .mic-status { font-size: 13px !important; }
-    /* Boutons d'export */
-    .export-btn { font-size: 11px !important; padding: 5px 10px !important; }
-    /* Cards padding */
-    .card { padding: 16px 14px !important; }
-    .container > div:has(> .transcription-box) { padding: 14px 14px !important; }
-    /* Transcription box */
-    .transcription-box { min-height: 90px !important; font-size: 13px !important; }
-    /* Result body */
-    .result-body { font-size: 13px !important; }
-    /* Badge */
-    .badge { font-size: 13px !important; padding: 9px 18px !important; }
-    /* Historique */
-    #historyCard { display: none !important; }
-  }
-
-  /* ── Footer ── */
-  .footer {
-    color: rgba(255,255,255,.5) !important;
-    font-size: 11px !important;
-    text-align: center !important;
-    order: 999 !important;
-    margin-top: auto !important;
-  }
-
-  /* ── Masqués ── */
-  .card:has(#geminiKey), .card:has(#openaiKey), .card:has(#claudeKey),
-  #claudeKeySection, #openaiKeySection, #geminiKeySection { display: none !important; }
-  /* #aiSwitcher visible — géré par script injecté */
-  #geminiModelSection, #claudeModelSection, #openaiModelSection { display: none !important; }
-  .subtitle, .tag, #aiLabel { display: none !important; }
-
-  /* ── Page Paramètres (Historique + Options de dictée) ── */
-  body.es-page-main .card:has(#thinkingToggle),
-  body.es-page-main #historyCard { display: none !important; }
-
-  body.es-page-settings .container > *:not(.header):not(.card:has(#thinkingToggle)):not(.footer) {
-    display: none !important;
-  }
-  body.es-page-settings .container { grid-template-columns: 1fr !important; max-width: 700px !important; }
-  body.es-page-settings .card:has(#thinkingToggle) { grid-column: 1 !important; display: block !important; }
-
-  body.es-page-history .container > *:not(.header):not(#historyCard):not(.footer) {
-    display: none !important;
-  }
-  body.es-page-history .container { grid-template-columns: 1fr !important; max-width: 900px !important; }
-  body.es-page-history #historyCard { grid-column: 1 !important; display: block !important; }
+  .footer{color:rgba(255,255,255,.5)!important;font-size:11px!important;text-align:center!important;order:999!important;margin-top:auto!important;}
+  .card:has(#geminiKey),.card:has(#openaiKey),.card:has(#claudeKey),.card:has(#grokKey),.card:has(#mistralKey),
+  #claudeKeySection,#openaiKeySection,#geminiKeySection,#grokKeySection,#mistralKeySection{display:none!important;}
+  #geminiModelSection,#claudeModelSection,#openaiModelSection,#grokModelSection,#mistralModelSection{display:none!important;}
+  .subtitle,.tag,#aiLabel{display:none!important;}
+  body.es-page-main .card:has(#thinkingToggle),body.es-page-main #historyCard{display:none!important;}
+  body.es-page-settings .container>*:not(.header):not(.card:has(#thinkingToggle)):not(.footer){display:none!important;}
+  body.es-page-settings .container{grid-template-columns:1fr!important;max-width:700px!important;}
+  body.es-page-settings .card:has(#thinkingToggle){grid-column:1!important;display:block!important;}
+  body.es-page-history .container>*:not(.header):not(#historyCard):not(.footer){display:none!important;}
+  body.es-page-history .container{grid-template-columns:1fr!important;max-width:900px!important;}
+  body.es-page-history #historyCard{grid-column:1!important;display:block!important;}
 </style>
 </head>
 <body>
@@ -439,12 +172,20 @@
         style="padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#4a7a96;transition:all 0.2s;">
         ◍ OpenAI
       </button>
+      <button id="btnGrok" onclick="switchAI('grok')"
+        style="padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#4a7a96;transition:all 0.2s;">
+        ✕ Grok
+      </button>
+      <button id="btnMistral" onclick="switchAI('mistral')"
+        style="padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:'JetBrains Mono',monospace;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:#4a7a96;transition:all 0.2s;">
+        ◆ Mistral
+      </button>
     </div>
     <p id="aiLabel" style="font-size:11px;color:#4a7a96;font-family:'JetBrains Mono',monospace;margin-top:6px;">Gemini actif</p>
   </div>
 
   <!-- Clés API -->
-  <div class="card" id="apiKeysCard" style="display:none!important">
+  <div class="card">
 
     <!-- Gemini key -->
     <div id="geminiKeySection">
@@ -466,6 +207,26 @@
       <p class="hint"><a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:#38bdf8;text-decoration:none;">console.anthropic.com</a></p>
     </div>
 
+    <!-- Grok key -->
+    <div id="grokKeySection" style="display:none;margin-top:14px;">
+      <span class="label">✕ Clé API xAI (Grok)</span>
+      <div class="row" style="margin-bottom:8px;">
+        <input type="password" id="grokKey" placeholder="xai-…" autocomplete="off" />
+        <button class="icon-btn" onclick="toggleKey('grokKey',this)">Afficher</button>
+      </div>
+      <p class="hint"><a href="https://console.x.ai" target="_blank" style="color:#38bdf8;text-decoration:none;">console.x.ai</a></p>
+    </div>
+
+    <!-- Mistral key -->
+    <div id="mistralKeySection" style="display:none;margin-top:14px;">
+      <span class="label">◆ Clé API Mistral (La Plateforme — UE)</span>
+      <div class="row" style="margin-bottom:8px;">
+        <input type="password" id="mistralKey" placeholder="clé Mistral…" autocomplete="off" />
+        <button class="icon-btn" onclick="toggleKey('mistralKey',this)">Afficher</button>
+      </div>
+      <p class="hint"><a href="https://console.mistral.ai" target="_blank" style="color:#38bdf8;text-decoration:none;">console.mistral.ai</a> · hébergement UE (RGPD/HDS)</p>
+    </div>
+
     <div style="border-top:1px solid rgba(56,189,248,0.1);margin:14px 0 10px;"></div>
 
     <!-- Whisper / GPT key -->
@@ -483,7 +244,7 @@
   </div>
 
   <!-- Modèle -->
-  <div class="card" style="display:none!important">
+  <div class="card">
     <div id="geminiModelSection">
       <span class="label">Modèle Gemini</span>
       <select id="modelSelect">
@@ -513,6 +274,24 @@
       </select>
       <p class="hint" style="margin-top:8px;">Utilise la clé OpenAI ci-dessus (même clé que Whisper).</p>
     </div>
+    <div id="grokModelSection" style="display:none;">
+      <span class="label">Modèle Grok (xAI)</span>
+      <select id="grokModelSelect">
+        <option value="grok-4.3" selected>grok-4.3 🆕 (phare, raisonnement)</option>
+        <option value="grok-4.1-fast">grok-4.1-fast (rapide &amp; économique)</option>
+      </select>
+      <p class="hint" style="margin-top:8px;">API compatible OpenAI. Nécessite une clé xAI (champ ci-dessus).</p>
+    </div>
+    <div id="mistralModelSection" style="display:none;">
+      <span class="label">Modèle Mistral</span>
+      <select id="mistralModelSelect">
+        <option value="magistral-medium-latest" selected>magistral-medium-latest 🧠 (raisonnement, finesse max)</option>
+        <option value="mistral-large-latest">mistral-large-latest (phare, rapide)</option>
+        <option value="mistral-medium-latest">mistral-medium-latest (intermédiaire)</option>
+        <option value="mistral-small-latest">mistral-small-latest (rapide &amp; économique)</option>
+      </select>
+      <p class="hint" style="margin-top:8px;">Hébergement UE (RGPD/HDS). Magistral « réfléchit » avant de rédiger (plus fin, plus lent). Nécessite une clé Mistral.</p>
+    </div>
   </div>
 
   <!-- Options -->
@@ -522,9 +301,9 @@
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
           <div style="font-size:13px;color:#c8d8ea;margin-bottom:3px;">Raisonnement approfondi (thinking)</div>
-          <div style="font-size:11px;color:#3d5a70;font-family:'JetBrains Mono',monospace;">Le modèle réfléchit avant de rédiger — CONCLUSION/CAT plus fines, un peu plus lent</div>
+          <div style="font-size:11px;color:#3d5a70;font-family:'JetBrains Mono',monospace;">Le modèle réfléchit avant de rédiger — CONCLUSION/CAT plus fines, mais plus lent. Désactivé par défaut pour la rapidité.</div>
         </div>
-        <button class="toggle-btn on" id="thinkingToggle" onclick="toggleThinking()">ON</button>
+        <button class="toggle-btn" id="thinkingToggle" onclick="toggleThinking()">OFF</button>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
@@ -587,7 +366,7 @@
   </div>
 
   <button class="primary-btn" id="reformBtn" onclick="reformulate()" disabled>
-    <span id="generateBtnLabel">Générer le compte rendu →</span>
+    <span id="generateBtnLabel">Générer le compte rendu avec Gemini →</span>
   </button>
   <p id="routingInfo" class="hint" style="text-align:center;margin:-6px 0 10px;color:#3d5a70;"></p>
 
@@ -609,7 +388,7 @@
       </div>
     </div>
     <div class="result-body" id="resultBody"></div>
-    <p style="margin-top:18px;font-size:11px;color:#6b7280;font-family:'JetBrains Mono',monospace;">Proposition à valider et signer par le médecin responsable</p>
+    <p style="margin-top:18px;font-size:11px;color:rgba(74,222,128,0.25);font-family:'JetBrains Mono',monospace;">Proposition à valider et signer par le médecin responsable</p>
   </div>
 
   <div class="error-box" id="errorBox" style="display:none;"></div>
@@ -623,7 +402,8 @@
     <div id="historyList"></div>
   </div>
 
-  <p class="footer" style="order:999;margin-top:auto;">
+  <p class="footer">
+    Whisper (OpenAI) · Web Speech API · Gemini (Google) · Claude (Anthropic)<br>
     Audio non conservé · Texte conservé localement et supprimé après 12 h · Usage médical local uniquement
   </p>
 </div>
@@ -911,11 +691,28 @@ STRUCTURE DU COMPTE RENDU — pour chaque examen, respecte systématiquement :
 
 NE JAMAIS inclure de section TECHNIQUE — aller directement de INDICATION à RÉSULTATS.
 
-RÈGLE ABSOLUE SUR LES CHIFFRES (priorité maximale) :
-- Les comptes rendus de référence ci-dessous ont été VOLONTAIREMENT écrits SANS aucune valeur chiffrée. Ils illustrent uniquement la STRUCTURE, le STYLE et le RAISONNEMENT clinique attendus.
-- Tu ne dois JAMAIS reprendre, deviner, estimer ou inventer un chiffre à partir de ces exemples.
-- N'écris une valeur chiffrée (mm, cm, cc, mm³, %, MHz, vitesse, date, score numérique, grade chiffré) QUE si elle a été EXPLICITEMENT dictée dans la transcription du jour.
-- En l'absence de chiffre dicté, décris TOUJOURS en termes qualitatifs (taille normale, augmentée, calibre habituel, volume dans les limites normales, paroi épaissie, etc.) sans aucun nombre.
+RÈGLE ABSOLUE SUR LES CHIFFRES (priorité maximale) — DEUX VOLETS COMPLÉMENTAIRES ET D'ÉGALE IMPORTANCE :
+
+VOLET 1 — CONSERVER INTÉGRALEMENT LES MESURES DICTÉES (impératif absolu) :
+- TOUTE valeur chiffrée EXPLICITEMENT DICTÉE dans la transcription du jour (taille d'un organe, dimension d'une lésion, épaisseur, vitesse Doppler, IR/IP, %, score, calibre…) DOIT être reprise FIDÈLEMENT, à l'identique, et placée à sa juste position anatomique dans le compte rendu.
+- Ne JAMAIS supprimer, omettre, arrondir ni « qualitativiser » une mesure qui a été dictée. Exemple : si le foie est dicté « flèche hépatique 16 cm », le compte rendu DOIT écrire « 16 cm » — surtout pas « de taille augmentée » à la place du chiffre.
+- Reprends AUSSI l'unité dictée (mm, cm, cc, m/s, %…) telle quelle.
+
+VOLET 2 — NE JAMAIS INVENTER DE CHIFFRE :
+- Les comptes rendus de référence ci-dessous ont été VOLONTAIREMENT écrits SANS aucune valeur chiffrée : ils illustrent la STRUCTURE, le STYLE et le RAISONNEMENT, jamais des chiffres à recopier.
+- N'écris JAMAIS une valeur chiffrée qui n'a PAS été dictée. Ne devine, n'estime, ne reprends aucun chiffre depuis les exemples.
+- En l'absence de mesure dictée pour un organe, décris-le qualitativement (taille normale, augmentée, calibre habituel, volume dans les limites normales, paroi épaissie…) sans aucun nombre.
+
+EN RÉSUMÉ : les chiffres du compte rendu proviennent EXCLUSIVEMENT de la dictée — tous ceux qui y sont dictés (aucun ne doit manquer), et aucun de plus.
+
+INTERPRÉTATION QUALITATIVE DES MESURES (dans la CONCLUSION surtout, et si pertinent dans les RÉSULTATS) :
+- Tu DOIS interpréter les mesures DICTÉES en les comparant aux valeurs de référence usuelles de l'adulte (SFR/HAS) : qualifie la structure de « normal(e) », « augmenté(e)/hypertrophié(e) », « diminué(e)/atrophique », « dilaté(e) », « épaissi(e) », et emploie le terme diagnostique consacré quand il s'applique (hépatomégalie, splénomégalie, anévrisme/ectasie, dilatation des voies biliaires, dilatation du tronc porte…).
+- Cette interprétation NE contredit PAS la règle sur les chiffres : le chiffre dicté reste écrit tel quel dans les RÉSULTATS ; la CONCLUSION en donne la lecture qualitative. Tu n'inventes toujours AUCUN chiffre (n'écris pas le seuil de référence dans le CR, sers-t'en seulement pour qualifier).
+- PRUDENCE (impératif médico-légal) : n'affirme un caractère pathologique que si la mesure dictée dépasse CLAIREMENT le seuil usuel. Pour une valeur proche du seuil, reste nuancé (« à la limite supérieure de la normale », « discrètement augmenté »). Si le seuil dépend d'un contexte non dicté (âge, sexe, morphologie, statut ménopausique, cholécystectomie…), reste factuel et prudent, sans trancher abusivement.
+
+VALEURS DE RÉFÉRENCE INDICATIVES (adulte — repères pour qualifier, à valider par le médecin ; NE PAS les recopier dans le CR) :
+{{REFERENCE_VALUES}}
+- Doppler artériel/veineux et classifications (TI-RADS, O-RADS, BI-RADS, Bosniak) : appliquer les seuils et critères consacrés avec prudence, sans simplification abusive.
 
 COMPLÉTUDE DES ORGANES (règle importante, à appliquer à chaque compte rendu) :
 - Décris SYSTÉMATIQUEMENT TOUS les organes et structures du champ d'exploration correspondant (voir GESTION DES SPÉCIALITÉS ci-dessous), même ceux qui n'ont PAS été mentionnés dans la dictée.
@@ -947,6 +744,11 @@ AUTRES RÈGLES DE RÉDACTION :
   * NE JAMAIS inclure de section TECHNIQUE. Aller directement de INDICATION à RÉSULTATS.
   * Ne jamais utiliser de tirets ou bullets dans RÉSULTATS — uniquement des paragraphes par organe.
   * Respecter strictement cette mise en forme à chaque compte rendu.
+
+CONDITIONS D'EXAMEN — MENTION OBLIGATOIRE (voie d'abord + consentement) :
+- Échographie PELVIENNE chez la femme : commencer SYSTÉMATIQUEMENT la section RÉSULTATS par une première ligne « **Conditions d'examen :** Échographie réalisée par voie transcutanée et endovaginale après information et accord de la patiente. » Cette mention doit toujours figurer, sauf si la dictée précise explicitement une autre voie (ex. voie transcutanée seule, endovaginale non réalisée ou refusée) — dans ce cas, adapter la mention en conséquence.
+- Échographie PROSTATIQUE : inclure de même une première ligne « **Conditions d'examen :** Échographie réalisée par voie endorectale après information et accord du patient. » lorsque la voie endorectale est utilisée ou dictée. Conserver cette mention telle quelle.
+- Ne JAMAIS omettre, raccourcir ni paraphraser cette mention de voie d'abord et de consentement quand elle s'applique : elle a une valeur médico-légale.
 
 GESTION DES SPÉCIALITÉS :
 - Abdominal : Foie, Vésicule, Voies biliaires, Pancréas, Rate, Reins, Aorte, Vessie.
@@ -1249,7 +1051,7 @@ INDICATION : Bilan d'une masse latéro-utérine droite sur douleurs pelviennes. 
 
 RÉSULTATS :
 
-Conditions d'examen : Échographie réalisée par voie sus-pubienne et endovaginale après information et accord de la patiente.
+Conditions d'examen : Échographie réalisée par voie transcutanée et endovaginale après information et accord de la patiente.
 
 Utérus : Antéversé, contours réguliers, myomètre homogène.
 
@@ -1422,13 +1224,46 @@ function detectExamType(t){
 
 let lastRouting = { label:'tous types', count:0 };
 
-// Assemble le system prompt : base + uniquement les exemples du/des type(s) détecté(s).
+/* ══════════════════════════════════════════════════════════════════════
+   VALEURS DE RÉFÉRENCE ÉDITABLES (repères adulte pour l'interprétation qualitative
+   dans la CONCLUSION). MODIFIE LIBREMENT CE TABLEAU pour l'adapter à TES normes :
+   ajoute/retire une ligne, change un seuil, etc. — sans toucher au reste du code.
+   • zone         : organe / structure concerné
+   • repere       : valeur(s) usuelle(s) chez l'adulte
+   • anomalie     : interprétation qualitative au-delà du seuil (laisser '' si aucune)
+   Ces repères servent UNIQUEMENT à qualifier une mesure DICTÉE (augmenté, dilaté…) ;
+   ils ne sont jamais recopiés tels quels dans le compte rendu.
+   ══════════════════════════════════════════════════════════════════════ */
+const REFERENCE_VALUES = [
+  { zone:'Foie', repere:'flèche hépatique médio-claviculaire usuelle ≤ ~15-16 cm', anomalie:'au-delà → hépatomégalie' },
+  { zone:'Rate', repere:'grand axe usuel ≤ ~11-12 cm', anomalie:'au-delà → splénomégalie' },
+  { zone:'Reins', repere:'grand axe usuel ~9-12 cm', anomalie:'en dehors → augmenté / atrophique' },
+  { zone:'Aorte abdominale', repere:'calibre usuel < 3 cm', anomalie:'≥ 3 cm → anévrisme ; ~2,5-3 cm → ectasie' },
+  { zone:'Voie biliaire principale (cholédoque)', repere:'≤ ~6-7 mm (tolérance majorée si sujet âgé ou cholécystectomisé)', anomalie:'au-delà → dilatation' },
+  { zone:'Tronc porte', repere:'≤ ~13 mm', anomalie:'au-delà → dilatation (évoquer une HTP selon le contexte)' },
+  { zone:'Paroi vésiculaire', repere:'≤ ~3-4 mm', anomalie:'au-delà → épaississement' },
+  { zone:'Canal de Wirsung', repere:'≤ ~3 mm', anomalie:'au-delà → dilatation' },
+  { zone:'Endomètre (post-ménopause sans traitement)', repere:'≤ ~4-5 mm', anomalie:'au-delà → épaississement à explorer' },
+  { zone:'Varicocèle', repere:'veines du plexus pampiniforme > ~3 mm avec reflux au Valsalva', anomalie:'' },
+];
+
+// Rend le tableau de référence en lignes de texte pour le prompt.
+function renderReferenceValues(){
+  return REFERENCE_VALUES.map(v => {
+    let line = '- ' + v.zone + ' : ' + v.repere;
+    if(v.anomalie) line += ' ; ' + v.anomalie;
+    return line + '.';
+  }).join('\n');
+}
+
+// Assemble le system prompt : base (+ valeurs de référence injectées) + exemples du/des type(s) détecté(s).
 function buildSystemPrompt(dictation){
   const types = detectExamType(dictation);
   let chosen = types.length ? FEWSHOT_EXAMPLES.filter(e => types.includes(e.type)) : [];
   if(!chosen.length) chosen = FEWSHOT_EXAMPLES; // aucun type reconnu -> tous (sécurité qualité)
   lastRouting = { label: types.length ? types.join(' + ') : 'tous types', count: chosen.length };
-  return SYSTEM_PROMPT_BASE + chosen.map(e => e.text).join('\n\n---\n\n');
+  const base = SYSTEM_PROMPT_BASE.replace('{{REFERENCE_VALUES}}', renderReferenceValues());
+  return base + chosen.map(e => e.text).join('\n\n---\n\n');
 }
 
 
@@ -1445,19 +1280,29 @@ function switchAI(ai) {
   const btnG = document.getElementById('btnGemini');
   const btnC = document.getElementById('btnClaude');
   const btnO = document.getElementById('btnOpenai');
+  const btnX = document.getElementById('btnGrok');
+  const btnM = document.getElementById('btnMistral');
   btnG.style.background = ai==='gemini' ? 'rgba(74,222,128,0.18)' : 'transparent';
   btnG.style.color = ai==='gemini' ? '#4ade80' : '#4a7a96';
   btnC.style.background = ai==='claude' ? 'rgba(56,189,248,0.18)' : 'transparent';
   btnC.style.color = ai==='claude' ? '#38bdf8' : '#4a7a96';
   btnO.style.background = ai==='openai' ? 'rgba(255,255,255,0.14)' : 'transparent';
   btnO.style.color = ai==='openai' ? '#e2eaf5' : '#4a7a96';
+  btnX.style.background = ai==='grok' ? 'rgba(167,139,250,0.20)' : 'transparent';
+  btnX.style.color = ai==='grok' ? '#c4b5fd' : '#4a7a96';
+  btnM.style.background = ai==='mistral' ? 'rgba(251,146,60,0.20)' : 'transparent';
+  btnM.style.color = ai==='mistral' ? '#fb923c' : '#4a7a96';
   // Show/hide key sections (OpenAI réutilise la clé Whisper, toujours visible)
   document.getElementById('geminiKeySection').style.display = ai==='gemini' ? 'block' : 'none';
   document.getElementById('claudeKeySection').style.display = ai==='claude' ? 'block' : 'none';
+  document.getElementById('grokKeySection').style.display = ai==='grok' ? 'block' : 'none';
+  document.getElementById('mistralKeySection').style.display = ai==='mistral' ? 'block' : 'none';
   // Show/hide model sections
   document.getElementById('geminiModelSection').style.display = ai==='gemini' ? 'block' : 'none';
   document.getElementById('claudeModelSection').style.display = ai==='claude' ? 'block' : 'none';
   document.getElementById('openaiModelSection').style.display = ai==='openai' ? 'block' : 'none';
+  document.getElementById('grokModelSection').style.display = ai==='grok' ? 'block' : 'none';
+  document.getElementById('mistralModelSection').style.display = ai==='mistral' ? 'block' : 'none';
   updateAiLabel();
 }
 
@@ -1473,10 +1318,18 @@ function updateAiLabel() {
     label.textContent = document.getElementById('claudeModelSelect').value + ' actif';
     label.style.color = '#38bdf8';
     if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec Claude →';
-  } else {
+  } else if(currentAI==='openai') {
     label.textContent = document.getElementById('openaiModelSelect').value + ' actif';
     label.style.color = '#e2eaf5';
     if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec OpenAI →';
+  } else if(currentAI==='grok') {
+    label.textContent = document.getElementById('grokModelSelect').value + ' actif';
+    label.style.color = '#c4b5fd';
+    if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec Grok →';
+  } else {
+    label.textContent = document.getElementById('mistralModelSelect').value + ' actif';
+    label.style.color = '#fb923c';
+    if(btnLabel) btnLabel.textContent = 'Générer le compte rendu avec Mistral →';
   }
 }
 
@@ -1640,11 +1493,15 @@ async function esClearAll() {
   const gk = localStorage.getItem('es_gemini_key');
   const ck = localStorage.getItem('es_claude_key');
   const ok = localStorage.getItem('es_openai_key');
+  const xk = localStorage.getItem('es_grok_key');
+  const mk = localStorage.getItem('es_mistral_key');
   const lastAI = localStorage.getItem('es_last_ai') || 'gemini';
   if(gk) document.getElementById('geminiKey').value = gk;
   if(ck) document.getElementById('claudeKey').value = ck;
   if(ok) document.getElementById('openaiKey').value = ok;
-  if(gk || ck) document.getElementById('savedBadge').style.display = 'inline';
+  if(xk) document.getElementById('grokKey').value = xk;
+  if(mk) document.getElementById('mistralKey').value = mk;
+  if(gk || ck || xk || mk) document.getElementById('savedBadge').style.display = 'inline';
   // Restore last used AI
   setTimeout(() => switchAI(lastAI), 50);
 })();
@@ -1658,10 +1515,14 @@ function clearSavedKeys() {
   localStorage.removeItem('es_gemini_key');
   localStorage.removeItem('es_claude_key');
   localStorage.removeItem('es_openai_key');
+  localStorage.removeItem('es_grok_key');
+  localStorage.removeItem('es_mistral_key');
   localStorage.removeItem('es_last_ai');
   document.getElementById('geminiKey').value = '';
   document.getElementById('claudeKey').value = '';
   document.getElementById('openaiKey').value = '';
+  document.getElementById('grokKey').value = '';
+  document.getElementById('mistralKey').value = '';
   document.getElementById('savedBadge').style.display = 'none';
   setError('');
   alert('Clés effacées de cet appareil.');
@@ -1675,7 +1536,7 @@ function toggleContinuous() {
 }
 
 // Raisonnement approfondi (thinking) — activé par défaut
-let thinkingEnabled = true;
+let thinkingEnabled = false;
 function toggleThinking() {
   thinkingEnabled = !thinkingEnabled;
   const btn = document.getElementById('thinkingToggle');
@@ -1775,7 +1636,8 @@ async function startRecording() {
 }
 
 async function stopRecordingAndTranscribe() {
-  if(!mediaRecorder || mediaRecorder.state==='inactive') return null;
+  const openaiKey = document.getElementById('openaiKey').value.trim();
+  if(!openaiKey || !mediaRecorder || mediaRecorder.state==='inactive') return null;
 
   return new Promise((resolve) => {
     mediaRecorder.onstop = async () => {
@@ -1794,14 +1656,15 @@ async function stopRecordingAndTranscribe() {
         formData.append('language', 'fr');
         formData.append('prompt', 'Compte rendu d\'échographie médicale. Termes: foie, vésicule biliaire, cholédoque, tronc porte, pancréas, rate, reins, cortex, pyélocalicielle, parenchyme, hyperéchogène, anéchogène, Doppler, prostate, utérus, endomètre, ovaires, aorte, épanchement, lithiase, contours réguliers.');
 
-        const res = await fetch('/api/relay/whisper', {
+        const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
           method:'POST',
+          headers:{Authorization:`Bearer ${openaiKey}`},
           body:formData
         });
         document.getElementById('spinner').style.display='none';
         if(!res.ok) { resolve(null); return; }
         const data = await res.json();
-        resolve(data.text || null);
+        resolve(cleanWhisperHallucinations(data.text) || null);
       } catch(e) {
         document.getElementById('spinner').style.display='none';
         resolve(null);
@@ -1810,6 +1673,61 @@ async function stopRecordingAndTranscribe() {
     if(recordingStream) recordingStream.getTracks().forEach(t=>t.stop());
     mediaRecorder.stop();
   });
+}
+
+// Retire les hallucinations connues de Whisper sur les silences (génériques de
+// sous-titres : Amara.org, Radio-Canada, « merci d'avoir regardé », musique…).
+// Ne touche PAS aux consignes patient réelles (filtrées plus tard par le prompt).
+function cleanWhisperHallucinations(text){
+  if(!text) return text;
+  let t = text;
+  const patterns = [
+    /sous-?titr(?:es|age)[^.!?\n]*?communaut[ée][^.!?\n]*?amara\.?org/gi,
+    /la vid[ée]o a [ée]t[ée] r[ée]alis[ée]e en partenariat[^.!?\n]*?amara\.?org/gi,
+    /sous-?titrage[^.!?\n]*?(?:soci[ée]t[ée] )?radio-?canada/gi,
+    /merci d['’]avoir regard[ée](?: cette vid[ée]o)?/gi,
+    /merci à tous(?: et à (?:la prochaine|bient[ôo]t|tr[èe]s vite))?/gi,
+    /merci à mes tipeurs(?:\s+et\s+souscripteurs)?/gi,
+    /\btipeurs?\b/gi,
+    /\bsouscripteurs?\b/gi,
+    /avec le soutien de[^.!?\n]*/gi,
+    /\bairsoft\b/gi,
+    /r[ée]alis[ée]e?\s+par\s+\S*\d\S*/gi,
+    /n['’]?h[ée]sitez pas à (?:vous abonner|liker|commenter)[^.!?\n]*/gi,
+    /abonnez-?vous[^.!?\n]*/gi,
+    /thank(?:s| you)(?: for watching)?/gi,
+    /[\[(]\s*(?:musique|music|applaudissements|applause)\s*[\])]/gi,
+    /\bsous-?titres?\b/gi,
+    /\bamara\.?org\b/gi,
+    /[♪♫🎵🎶]+/g
+  ];
+  for(const p of patterns) t = t.replace(p, ' ');
+  // Nettoyage : espaces multiples, ponctuation orpheline, fragments résiduels en tête
+  t = t.replace(/\s{2,}/g, ' ').replace(/\s+([.,;:!?])/g, '$1')
+       .replace(/^[\s.,;:!?'’-]*\borg\b/i, '')
+       .replace(/^[\s.,;:!?·•]+/, '').trim();
+  return t;
+}
+
+// Détecte une BOUCLE de répétition (raté typique de Whisper) : un même bloc de
+// mots répété au moins 3 fois consécutivement. Ne se déclenche pas sur les
+// répétitions normales d'un CR (les phrases y sont entrecoupées de contenu différent,
+// ex. noms de veines en Doppler) car ici on exige une répétition CONSÉCUTIVE à l'identique.
+function hasRepetitionLoop(t){
+  if(!t) return false;
+  const w = t.toLowerCase().replace(/[.,;:!?·•]/g,' ').split(/\s+/).filter(Boolean);
+  const n = w.length;
+  if(n < 6) return false;
+  for(let L=1; L<=14; L++){
+    for(let i=0; i+3*L<=n; i++){
+      let ok=true;
+      for(let r=1; r<3 && ok; r++)
+        for(let k=0; k<L; k++)
+          if(w[i+k]!==w[i+r*L+k]){ ok=false; break; }
+      if(ok) return true; // bloc de L mots répété 3 fois de suite
+    }
+  }
+  return false;
 }
 
 // ── Speech Recognition ──────────────────────────
@@ -1873,14 +1791,29 @@ async function stopListening() {
   setMicUI(false);
   esStopAutosave();
 
+  // Filet de sécurité : on mémorise la dictée captée en live (Web Speech) AVANT toute substitution
+  const liveText = (finalText && !isPlaceholder(finalText)) ? finalText.trim() : '';
+
   // Tenter transcription Whisper
-  if(mediaRecorder) {
-    const whisperText = await stopRecordingAndTranscribe();
-    if(whisperText) {
-      const corrected = applyMedicalCorrections(whisperText);
-      finalText = corrected;
-      document.getElementById('transcriptionBox').innerHTML = esc(corrected);
-      document.getElementById('whisperBadge').style.display='inline-block';
+  const openaiKey = document.getElementById('openaiKey').value.trim();
+  if(openaiKey && mediaRecorder) {
+    const whisperRaw = await stopRecordingAndTranscribe();
+    if(whisperRaw) {
+      const whisperClean = cleanWhisperHallucinations(whisperRaw) || '';
+      // Whisper part parfois en BOUCLE, ou se vide après nettoyage : dans ces cas on NE
+      // remplace PAS la dictée live (sinon la boucle écrase la vraie dictée — bug constaté).
+      const looped = hasRepetitionLoop(whisperRaw);
+      const tooShort = liveText && whisperClean.length < liveText.length * 0.5;
+      if(whisperClean && !looped && !tooShort) {
+        // Whisper sain → plus fiable sur les termes médicaux, on l'utilise
+        finalText = applyMedicalCorrections(whisperClean);
+        document.getElementById('whisperBadge').style.display='inline-block';
+      } else {
+        // Whisper instable/en boucle → on conserve la transcription live
+        finalText = liveText ? applyMedicalCorrections(liveText) : (whisperClean || finalText);
+        document.getElementById('whisperBadge').style.display='none';
+      }
+      document.getElementById('transcriptionBox').innerHTML = esc(finalText);
       updateReformBtn();
     }
   }
@@ -1938,18 +1871,41 @@ function beginStream() {
   document.getElementById('resultCard').style.display = 'block';
 }
 
+// Retire le raisonnement <think>…</think> des modèles de raisonnement (Magistral) :
+// pendant le stream, si un <think> est ouvert mais pas encore fermé, on n'affiche
+// rien après lui (réflexion en cours) ; le CR visible = tout ce qui suit </think>.
+function stripThink(s) {
+  if(!s) return s;
+  let out = s.replace(/<think>[\s\S]*?<\/think>/gi, '');
+  const open = out.search(/<think>/i);
+  if(open !== -1) out = out.slice(0, open); // bloc de réflexion non encore fermé
+  return out.replace(/^\s+/, '');
+}
+
+
 // ── Génération du compte rendu ───────────────────
 async function reformulate() {
-  // Key handling (3 moteurs)
+  // Key handling (5 moteurs)
   let key = '';
   if(currentAI === 'gemini') {
     key = document.getElementById('geminiKey').value.trim();
+    if(!key){setError("Entrez votre clé API Google AI Studio (AIzaSy…)");return;}
     localStorage.setItem('es_gemini_key', key);
   } else if(currentAI === 'claude') {
     key = document.getElementById('claudeKey').value.trim();
+    if(!key){setError("Entrez votre clé API Anthropic (sk-ant-…)");return;}
     localStorage.setItem('es_claude_key', key);
+  } else if(currentAI === 'grok') {
+    key = document.getElementById('grokKey').value.trim();
+    if(!key){setError("Entrez votre clé API xAI (xai-…) dans le champ ci-dessus");return;}
+    localStorage.setItem('es_grok_key', key);
+  } else if(currentAI === 'mistral') {
+    key = document.getElementById('mistralKey').value.trim();
+    if(!key){setError("Entrez votre clé API Mistral dans le champ ci-dessus");return;}
+    localStorage.setItem('es_mistral_key', key);
   } else {
     key = document.getElementById('openaiKey').value.trim();
+    if(!key){setError("Entrez votre clé API OpenAI (sk-…) dans le champ ci-dessus");return;}
     localStorage.setItem('es_openai_key', key);
   }
   localStorage.setItem('es_last_ai', currentAI);
@@ -1987,6 +1943,12 @@ async function reformulate() {
 
   let fullText = '';
 
+  // Délai d'expiration : on coupe si la génération dépasse 120 s (évite le spinner infini)
+  const GEN_TIMEOUT_MS = 120000;
+  const genAbort = new AbortController();
+  let timedOut = false;
+  const genTimer = setTimeout(() => { timedOut = true; genAbort.abort(); }, GEN_TIMEOUT_MS);
+
   try {
     if(currentAI === 'claude') {
       // ── CLAUDE API ──────────────────────
@@ -2010,13 +1972,16 @@ async function reformulate() {
         }
       }
       claudeBody.stream = true;
-      const res = await fetch('/api/relay/claude', {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method:'POST',
         headers:{
           'Content-Type':'application/json',
+          'x-api-key': key,
           'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
         },
-        body: JSON.stringify(claudeBody)
+        body: JSON.stringify(claudeBody),
+        signal: genAbort.signal
       });
       if(!res.ok){
         const err = await res.json().catch(()=>({}));
@@ -2052,10 +2017,11 @@ async function reformulate() {
               { role:'user', content: correctedText }
             ]
           };
-          const res = await fetch('/api/relay/openai', {
+          const res = await fetch('https://api.openai.com/v1/chat/completions', {
             method:'POST',
-            headers:{ 'Content-Type':'application/json' },
-            body: JSON.stringify(oaBody)
+            headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
+            body: JSON.stringify(oaBody),
+            signal: genAbort.signal
           });
           if(!res.ok){
             const err = await res.json().catch(()=>({}));
@@ -2086,6 +2052,144 @@ async function reformulate() {
       }
       if(!fullText) throw new Error(lastMsg ? ('OpenAI : '+lastMsg) : 'OpenAI indisponible. Réessayez ou basculez sur un autre moteur.');
 
+    } else if(currentAI === 'grok') {
+      // ── xAI GROK API (compatible OpenAI : /v1/chat/completions) avec fallback auto ────
+      const xModel = document.getElementById('grokModelSelect').value;
+      const X_FALLBACK = [xModel, 'grok-4.3', 'grok-4.1-fast'].filter((v,i,a)=>a.indexOf(v)===i);
+      let lastMsgX = '';
+      for (const tryModel of X_FALLBACK) {
+        document.getElementById('spinnerText').textContent =
+          tryModel===xModel ? (thinkingEnabled ? 'Grok réfléchit puis rédige…' : 'Grok rédige le compte rendu…') : `Basculement sur ${tryModel}…`;
+        try {
+          // API compatible OpenAI : max_tokens (standard), reasoning_effort piloté par le toggle.
+          const xBody = {
+            model: tryModel,
+            max_tokens: 16000,
+            reasoning_effort: thinkingEnabled ? 'high' : 'low',
+            stream: true,
+            messages: [
+              { role:'system', content: sysPrompt },
+              { role:'user', content: correctedText }
+            ]
+          };
+          const res = await fetch('https://api.x.ai/v1/chat/completions', {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
+            body: JSON.stringify(xBody),
+            signal: genAbort.signal
+          });
+          if(!res.ok){
+            const err = await res.json().catch(()=>({}));
+            const msg = err.error?.message || (typeof err.error==='string'?err.error:'');
+            lastMsgX = msg || lastMsgX;
+            if(res.status===429||res.status===503||res.status===500||res.status===404||
+               /rate limit|overloaded|unavailable|not found|does not exist/i.test(msg)){ continue; }
+            throw new Error(msg || 'Erreur Grok ('+res.status+')');
+          }
+          fullText = '';
+          let shownX=false;
+          await pumpSSE(res,
+            j => j.choices?.[0]?.delta?.content || '',
+            t => { if(!shownX){ beginStream(); shownX=true; } fullText+=t; renderResult(fullText); });
+          if(!fullText){ continue; }
+          if(tryModel!==xModel){
+            const b=document.getElementById('errorBox');
+            b.style.cssText='display:block;background:rgba(167,139,250,0.10);border:1px solid rgba(167,139,250,0.3);color:#c4b5fd;border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:14px;font-family:monospace;';
+            b.textContent=`ℹ Basculement automatique sur ${tryModel} (${xModel} indisponible)`;
+            setTimeout(()=>{b.style.display='none';b.style.cssText='';},5000);
+          }
+          break;
+        } catch(innerErr){
+          if(X_FALLBACK.indexOf(tryModel)<X_FALLBACK.length-1) continue;
+          throw innerErr;
+        }
+      }
+      if(!fullText) throw new Error(lastMsgX ? ('Grok : '+lastMsgX) : 'Grok indisponible. Réessayez ou basculez sur un autre moteur.');
+
+    } else if(currentAI === 'mistral') {
+      // ── MISTRAL API (La Plateforme UE, compatible OpenAI : /v1/chat/completions) avec fallback auto ────
+      // Deux familles : modèles standards (mistral-*) et modèles de RAISONNEMENT (magistral-*),
+      // qui « pensent » avant de rédiger (meilleure finesse/pertinence) via reasoning_effort et
+      // renvoient leur raisonnement dans <think>…</think> (retiré du CR).
+      const mModel = document.getElementById('mistralModelSelect').value;
+      const M_FALLBACK = [mModel, 'magistral-medium-latest', 'mistral-large-latest', 'mistral-medium-latest', 'mistral-small-latest'].filter((v,i,a)=>a.indexOf(v)===i);
+      let lastMsgM = '';
+      // Renforcement Mistral : priorités qualité + checklist des mesures dictées (recency).
+      const mMeas = [...new Set((correctedText.match(/\d+(?:[.,]\d+)?\s?(?:mm|cm|cc|ml|cm3|cm\u00b3|mm3|mm\u00b3|m\/s|cm\/s|%|mhz)/gi) || []).map(x => x.trim()))];
+      const mistralSys = sysPrompt
+        + '\n\n\u2550\u2550\u2550 PRIORITÉS DE QUALITÉ (à respecter impérativement) \u2550\u2550\u2550\n'
+        + '- Reproduis fidèlement le STYLE, la STRUCTURE et le niveau de finesse des comptes rendus de référence.\n'
+        + '- Décris TOUS les organes du champ d\'examen (complétude), avec un détail modulé : concis sur le normal, développé sur les anomalies.\n'
+        + '- CONCLUSION pertinente : emploie le terme diagnostique consacré (SFR/HAS) et interprète les mesures dictées par rapport aux valeurs de référence (augmenté, dilaté, hépatomégalie, anévrisme…), avec prudence sur les valeurs limites.\n'
+        + (mMeas.length
+            ? '- MESURES : reporte CHAQUE mesure dictée à sa place anatomique, sans en omettre aucune ni en modifier la valeur : ' + mMeas.join(' \u00b7 ') + '.\n'
+            : '')
+        + 'Avant de finaliser, relis la dictée et vérifie complétude, pertinence de la conclusion et présence de toutes les mesures.';
+      for (const tryModel of M_FALLBACK) {
+        const isReasoning = /magistral/i.test(tryModel);
+        document.getElementById('spinnerText').textContent =
+          tryModel===mModel
+            ? (isReasoning ? 'Magistral réfléchit puis rédige…' : 'Mistral rédige le compte rendu…')
+            : `Basculement sur ${tryModel}…`;
+        try {
+          const mBody = {
+            model: tryModel,
+            max_tokens: 16000,
+            stream: true,
+            messages: [
+              { role:'system', content: mistralSys },
+              { role:'user', content: correctedText }
+            ]
+          };
+          // Magistral = raisonnement (reasoning_effort) ; standards = température basse pour la fidélité.
+          if(isReasoning) mBody.reasoning_effort = thinkingEnabled ? 'high' : 'medium';
+          else mBody.temperature = 0.2;
+
+          const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json', 'Accept':'application/json', 'Authorization':`Bearer ${key}` },
+            body: JSON.stringify(mBody),
+            signal: genAbort.signal
+          });
+          if(!res.ok){
+            const err = await res.json().catch(()=>({}));
+            const msg = err.error?.message || err.message || (typeof err.error==='string'?err.error:'');
+            lastMsgM = msg || lastMsgM;
+            if(res.status===429||res.status===503||res.status===500||res.status===404||res.status===502||
+               /rate limit|capacity|overloaded|unavailable|not found|does not exist|no model/i.test(msg)){ continue; }
+            throw new Error(msg || 'Erreur Mistral ('+res.status+')');
+          }
+          let rawBuf = '';
+          let shownM = false;
+          await pumpSSE(res,
+            j => j.choices?.[0]?.delta?.content || '',
+            t => {
+              rawBuf += t;
+              const visible = isReasoning ? stripThink(rawBuf) : rawBuf;
+              if(visible) {
+                if(!shownM){ beginStream(); shownM = true; }
+                fullText = visible;
+                renderResult(visible);
+              } else if(isReasoning) {
+                document.getElementById('spinnerText').textContent = 'Magistral réfléchit…';
+              }
+            });
+          fullText = isReasoning ? stripThink(rawBuf) : rawBuf;
+          if(!fullText){ continue; }
+          if(tryModel!==mModel){
+            const b=document.getElementById('errorBox');
+            b.style.cssText='display:block;background:rgba(251,146,60,0.10);border:1px solid rgba(251,146,60,0.3);color:#fdba74;border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:14px;font-family:monospace;';
+            b.textContent=`ℹ Basculement automatique sur ${tryModel} (${mModel} indisponible)`;
+            setTimeout(()=>{b.style.display='none';b.style.cssText='';},5000);
+          }
+          break;
+        } catch(innerErr){
+          if(M_FALLBACK.indexOf(tryModel)<M_FALLBACK.length-1) continue;
+          throw innerErr;
+        }
+      }
+      if(!fullText) throw new Error(lastMsgM ? ('Mistral : '+lastMsgM) : 'Mistral indisponible. Réessayez ou basculez sur un autre moteur.');
+
     } else {
       // ── GEMINI API avec fallback auto ────
       const MODEL_FALLBACK = [
@@ -2107,13 +2211,14 @@ async function reformulate() {
           genConfig.temperature = tryModel.startsWith('gemini-3') ? 1.0 : 0.2;
           const tcfg = geminiThinkingConfig(tryModel, thinkingEnabled);
           if(tcfg) genConfig.thinkingConfig = tcfg;
-          const url=`/api/relay/gemini?model=${encodeURIComponent(tryModel)}`;
-          const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(30000),
+          const url=`https://generativelanguage.googleapis.com/v1beta/models/${tryModel}:streamGenerateContent?alt=sse`;
+          const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},
             body:JSON.stringify({
               system_instruction:{parts:[{text:sysPrompt}]},
               contents:[{role:'user',parts:[{text:correctedText}]}],
               generationConfig:genConfig
-            })
+            }),
+            signal: genAbort.signal
           });
           if(!res.ok){
             const err=await res.json().catch(()=>({}));const msg=err.error?.message||'';
@@ -2139,23 +2244,7 @@ async function reformulate() {
           throw innerErr;
         }
       }
-      if(!fullText) {
-        // Basculement silencieux vers OpenAI après échec/timeout Gemini
-        document.getElementById('spinnerText').textContent = 'Génération en cours…';
-        const fbRes = await fetch('/api/relay/openai', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            model:'gpt-4o-mini', stream:true, max_completion_tokens:4096,
-            messages:[{role:'system',content:sysPrompt},{role:'user',content:correctedText}]
-          })
-        });
-        if(fbRes.ok) {
-          await pumpSSE(fbRes,
-            j=>j.choices?.[0]?.delta?.content||'',
-            t=>{ if(!fullText){beginStream();} fullText+=t; renderResult(fullText); });
-        }
-        if(!fullText) throw new Error('Service temporairement indisponible. Réessayez dans quelques instants.');
-      }
+      if(!fullText) throw new Error('Gemini surchargé. Réessayez dans 30s ou basculez sur ✦ Claude.');
     }
 
     renderResult(fullText);
@@ -2173,11 +2262,20 @@ async function reformulate() {
       ? document.getElementById('modelSelect').value
       : currentAI==='claude'
         ? document.getElementById('claudeModelSelect').value
-        : document.getElementById('openaiModelSelect').value;
+        : currentAI==='grok'
+          ? document.getElementById('grokModelSelect').value
+          : currentAI==='mistral'
+            ? document.getElementById('mistralModelSelect').value
+            : document.getElementById('openaiModelSelect').value;
     esSaveReport(correctedText, fullText, usedModel);
   } catch(e) {
-    setError(e.message);
+    if(timedOut || e.name === 'AbortError') {
+      setError("Délai dépassé : le moteur est trop lent ou ne répond pas. Réessayez, désactivez « Raisonnement approfondi », ou changez de moteur (OpenAI est souvent le plus rapide).");
+    } else {
+      setError(e.message);
+    }
   } finally {
+    clearTimeout(genTimer);
     document.getElementById('spinner').style.display='none';
     document.getElementById('reformBtn').disabled=false;
     keywordTriggered=false; updateReformBtn();
@@ -2304,6 +2402,8 @@ document.getElementById('transcriptionBox').addEventListener('input', esDraftOnI
 document.getElementById('modelSelect').addEventListener('change', updateAiLabel);
 document.getElementById('claudeModelSelect').addEventListener('change', updateAiLabel);
 document.getElementById('openaiModelSelect').addEventListener('change', updateAiLabel);
+document.getElementById('grokModelSelect').addEventListener('change', updateAiLabel);
+document.getElementById('mistralModelSelect').addEventListener('change', updateAiLabel);
 
 // ── Initialisation persistance au chargement ──
 (async function() {
@@ -2315,346 +2415,215 @@ document.getElementById('openaiModelSelect').addEventListener('change', updateAi
 })();
 </script>
 
-<!-- ══ EXPORT PDF & WORD (ajout EchoScribe SaaS — ne touche pas au code V5) ══ -->
+<!-- ══ EXPORT PDF & WORD — EchoScribe SaaS ══ -->
 <style>
-  .export-btn {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 6px 14px; border-radius: 8px; font-size: 12px;
-    font-weight: 600; cursor: pointer; border: 1.5px solid;
-    font-family: 'JetBrains Mono', monospace; transition: all .15s;
-  }
-  .export-btn-pdf { background: #fff0f0; border-color: #f87171; color: #b91c1c; }
-  .export-btn-pdf:hover { background: #fee2e2; }
-  .export-btn-word { background: #eff6ff; border-color: #60a5fa; color: #1d4ed8; }
-  .export-btn-word:hover { background: #dbeafe; }
-  @media print {
-    body > *:not(#echoscribe-print-target) { display: none !important; }
-    #echoscribe-print-target {
-      display: block !important; position: fixed; inset: 0;
-      background: white; padding: 40px; font-family: Arial, sans-serif;
-      font-size: 14px; color: #111; z-index: 99999;
-    }
-  }
+  .export-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid;font-family:'JetBrains Mono',monospace;transition:all .15s;}
+  .export-btn-pdf{background:#fff0f0;border-color:#f87171;color:#b91c1c;}
+  .export-btn-pdf:hover{background:#fee2e2;}
+  .export-btn-word{background:#eff6ff;border-color:#60a5fa;color:#1d4ed8;}
+  .export-btn-word:hover{background:#dbeafe;}
+  @media print{body>*:not(#echoscribe-print-target){display:none!important;}#echoscribe-print-target{display:block!important;position:fixed;inset:0;background:white;padding:40px;font-family:Arial,sans-serif;font-size:14px;color:#111;z-index:99999;}}
 </style>
 <div id="echoscribe-print-target" style="display:none;"></div>
+
+<!-- ══ SCRIPT SaaS — injecté APRES le </script> V5, ne modifie RIEN du code V5 ══ -->
 <script>
 (function() {
-  /* Masquer le nom du moteur dans le bouton générer — triple verrou */
-  const generateBtnLabel = document.getElementById('generateBtnLabel');
-  if (generateBtnLabel) {
-    const _MASK_BTN = /\s*avec\s+(Gemini|OpenAI|Claude|Mistral|Groq|GPT)[^\s→]*/gi;
-    function _fixBtnLabel() {
-      var t = generateBtnLabel.textContent || '';
-      if (_MASK_BTN.test(t)) {
-        _MASK_BTN.lastIndex = 0;
-        var d = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-        d.set.call(generateBtnLabel, t.replace(_MASK_BTN, ''));
+'use strict';
+
+/* 0. Pre-fill key inputs to bypass V5 key validation (our relay uses server-side keys) */
+['geminiKey','openaiKey','mistralKey','grokKey','claudeKey'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el && !el.value) el.value = 'es-relay';
+});
+
+/* 1. Fetch interceptor: redirect all external API calls to our server-side relays */
+(function() {
+  var _baseFetch = window.fetch;
+
+  function _wrapGeminiAsOpenAI(body) {
+    var reader = body.getReader(), dec = new TextDecoder(), enc = new TextEncoder(), buf = '';
+    return new ReadableStream({ pull: async function(ctrl) {
+      while (true) {
+        var res = await reader.read();
+        if (res.done) { ctrl.close(); return; }
+        buf += dec.decode(res.value, { stream: true });
+        var lines = buf.split('\n'); buf = lines.pop() || '';
+        for (var i = 0; i < lines.length; i++) {
+          var t = lines[i].trim();
+          if (!t.startsWith('data:')) continue;
+          var d = t.slice(5).trim();
+          if (d === '[DONE]') continue;
+          try {
+            var chunk = JSON.parse(d);
+            var text = (chunk.candidates && chunk.candidates[0] && chunk.candidates[0].content &&
+              chunk.candidates[0].content.parts && chunk.candidates[0].content.parts[0] &&
+              chunk.candidates[0].content.parts[0].text) || '';
+            if (text) ctrl.enqueue(enc.encode('data: ' + JSON.stringify({ choices:[{ delta:{ content:text } }] }) + '\n\n'));
+          } catch(e) {}
+        }
       }
-    }
-    // Verrou 1 : defineProperty
-    const _btnDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-    Object.defineProperty(generateBtnLabel, 'textContent', {
-      set(value) {
-        _btnDesc.set.call(this, typeof value === 'string' ? value.replace(_MASK_BTN, '') : value);
-      },
-      get() { return _btnDesc.get.call(this); },
-      configurable: true,
-    });
-    // Verrou 2 : MutationObserver
-    new MutationObserver(_fixBtnLabel)
-      .observe(generateBtnLabel, { childList: true, characterData: true, subtree: true });
-    // Verrou 3 : correction immédiate + après switchAI
-    _fixBtnLabel();
-    setTimeout(_fixBtnLabel, 200);
-    setTimeout(_fixBtnLabel, 600);
+    }});
   }
 
-  /* Masquer tous les noms de modèle dans le spinner — double interception */
-  const spinnerText = document.getElementById('spinnerText');
-  if (spinnerText) {
-    function _maskSpinner(v) {
-      if (typeof v !== 'string') return v;
-      // Remplacer "Basculement sur X…" → générique
-      v = v.replace(/Basculement\s+sur\s+[^\s…]+[….]*/gi, 'Optimisation en cours…');
-      // Remplacer noms de modèles par "IA"
-      v = v.replace(/\b(Gemini|GPT|Claude|Mistral|Groq|Llama)\b/gi, 'IA');
-      return v;
-    }
-    // 1. Object.defineProperty — intercepte les assignments directs
-    const _spinDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-    Object.defineProperty(spinnerText, 'textContent', {
-      set(value) { _spinDesc.set.call(this, _maskSpinner(value)); },
-      get() { return _spinDesc.get.call(this); },
-      configurable: true,
-    });
-    // 2. MutationObserver — rattrape tout ce qui échappe au setter
-    new MutationObserver(function() {
-      var t = spinnerText.textContent;
-      if (t && /Gemini|GPT|Claude|Mistral|Groq|Basculement/i.test(t)) {
-        const _sd2 = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-        _sd2.set.call(spinnerText, _maskSpinner(t));
-      }
-    }).observe(spinnerText, { childList: true, characterData: true, subtree: true });
-  }
+  window.fetch = async function(input, init) {
+    if (typeof input !== 'string') return _baseFetch.apply(window, arguments);
 
-  /* ── Switcher IA : High Premium | Premium Lite | Premium — sans basculement automatique ── */
-  (function() {
-    const switcher = document.getElementById('aiSwitcher');
-    if (!switcher) return;
+    if (input.startsWith('https://api.openai.com/v1/audio/transcriptions'))
+      return _baseFetch.call(window, '/api/relay/whisper', init);
 
-    const BTN_STYLE = 'padding:6px 18px;font-size:11px;letter-spacing:0.1em;font-family:\'JetBrains Mono\',monospace;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.2s;';
-
-    // Masquer Claude et Groq (non proposés)
-    ['btnClaude','btnGroq'].forEach(function(id) {
-      const b = document.getElementById(id);
-      if (b) b.style.display = 'none';
-    });
-
-    // Renommer OpenAI → High Premium
-    const btnOpenai = document.getElementById('btnOpenai');
-    if (btnOpenai) btnOpenai.textContent = '◍ High Premium';
-
-    // Renommer Gemini → Premium
-    const btnGemini = document.getElementById('btnGemini');
-    if (btnGemini) btnGemini.textContent = '◉ Premium';
-
-    // Ajouter bouton Mistral = Premium Lite (entre GPT et Gemini)
-    const btnMistral = document.createElement('button');
-    btnMistral.id = 'btnMistral';
-    btnMistral.textContent = '◆ Premium Lite';
-    btnMistral.style.cssText = BTN_STYLE + 'background:transparent;color:#4a7a96;';
-    btnMistral.onclick = function() { window._esManualAI = 'mistral'; window.switchAI('mistral'); };
-    if (btnGemini) switcher.insertBefore(btnMistral, btnGemini);
-    else switcher.appendChild(btnMistral);
-
-    // Sélection manuelle sur les boutons V5 existants
-    if (btnOpenai) btnOpenai.addEventListener('click', function() { window._esManualAI = 'openai'; });
-    if (btnGemini) btnGemini.addEventListener('click', function() { window._esManualAI = 'gemini'; });
-
-    // Ordre visuel : High Premium | Premium Lite | Premium
-    if (btnOpenai) switcher.insertBefore(btnOpenai, switcher.firstChild);
-
-    function _setActive(ai) {
-      const map = {
-        mistral: { id: 'btnMistral', bg: 'rgba(255,120,60,0.18)',  color: '#ff783c' },
-        gemini:  { id: 'btnGemini',  bg: 'rgba(74,222,128,0.18)',  color: '#4ade80' },
-        openai:  { id: 'btnOpenai',  bg: 'rgba(129,140,248,0.18)', color: '#818cf8' },
-      };
-      ['btnMistral','btnGemini','btnOpenai'].forEach(function(id) {
-        const b = document.getElementById(id);
-        if (b) { b.style.background = 'transparent'; b.style.color = '#4a7a96'; }
-      });
-      const active = map[ai];
-      if (active) {
-        const b = document.getElementById(active.id);
-        if (b) { b.style.background = active.bg; b.style.color = active.color; }
-      }
+    if (input.startsWith('https://generativelanguage.googleapis.com/')) {
+      var mM = input.match(/models\/([^:]+):/);
+      var gMod = mM ? mM[1] : 'gemini-2.5-flash';
+      return _baseFetch.call(window, '/api/relay/gemini?model=' + encodeURIComponent(gMod),
+        Object.assign({}, init, { headers: { 'Content-Type': 'application/json' } }));
     }
 
-    // Override switchAI pour gérer 'mistral'
-    const _origSwitchAI = window.switchAI;
-    window.switchAI = function(ai) {
-      _setActive(ai);
-      if (ai === 'mistral') {
-        window.currentAI = 'mistral';
-        localStorage.setItem('es_last_ai', 'mistral');
-        return;
-      }
-      _origSwitchAI(ai);
-    };
+    if (input.startsWith('https://api.mistral.ai/'))
+      return _baseFetch.call(window, '/api/relay/mistral',
+        Object.assign({}, init, { headers: { 'Content-Type': 'application/json' } }));
 
-    // Exposer pour la règle Terminé (utilisé par l'IIFE suivante)
-    window._esActivateGPT  = function() { _origSwitchAI('openai'); };
-    window._esHighlightAI  = _setActive;
+    if (input.startsWith('https://api.anthropic.com/') || input.startsWith('https://api.x.ai/'))
+      return Promise.resolve(new Response(JSON.stringify({ error: { message: 'Not available' } }), { status: 503 }));
 
-    // Override fetch : redirige gemini relay → relay mistral si actif
-    const _origFetch = window.fetch;
-    window.fetch = function(input, init) {
-      if (typeof input === 'string' && input.startsWith('/api/relay/gemini')) {
-        if (window.currentAI === 'mistral') input = input.replace('/api/relay/gemini', '/api/relay/mistral');
-      }
-      return _origFetch.call(window, input, init);
-    };
+    if (input.startsWith('https://api.openai.com/v1/chat/completions')) {
+      if (window._esManualAI === 'openai')
+        return _baseFetch.call(window, '/api/relay/openai', init);
 
-    // Restaurer le dernier moteur (défaut : High Premium / OpenAI)
-    const lastAI = localStorage.getItem('es_last_ai') || 'openai';
-    setTimeout(function() { window.switchAI(lastAI); }, 150);
-  })();
-
-  /* ── Cascade KO : Gemini → Mistral (mode auto) | moteur exact (mode manuel) ── */
-  (function() {
-    window._esManualAI = null; // null = auto, 'openai'|'mistral'|'gemini' = manuel exact
-    var _baseFetch = window.fetch;
-
-    window.fetch = async function(input, init) {
-      if (typeof input !== 'string') return _baseFetch.apply(window, arguments);
-
-      var isRelay = input.startsWith('/api/relay/gemini') ||
-                    input.startsWith('/api/relay/mistral') ||
-                    input.startsWith('/api/relay/openai');
-      if (!isRelay) return _baseFetch.call(window, input, init);
-
-      // ── Mode MANUEL : moteur exact choisi, pas de cascade ──
-      if (window._esManualAI) {
-        var target = window._esManualAI === 'mistral' ? '/api/relay/mistral'
-                   : window._esManualAI === 'openai'  ? '/api/relay/openai'
-                   : '/api/relay/gemini';
-        return _baseFetch.call(window, target, init);
-      }
-
-      // ── Mode AUTO : OpenAI (15s) → KO → Mistral → KO → Gemini ──
-
-      // OpenAI avec timeout 15s
+      /* Auto cascade: OpenAI (15s) -> Mistral -> Gemini */
       var ctrl = new AbortController();
       var timer = setTimeout(function() { ctrl.abort(); }, 15000);
       try {
-        var r1 = await _baseFetch.call(window, '/api/relay/openai', Object.assign({}, init, { signal: ctrl.signal }));
+        var r1 = await _baseFetch.call(window, '/api/relay/openai',
+          Object.assign({}, init, { signal: ctrl.signal }));
         clearTimeout(timer);
-        if (r1.ok) return r1;
+        if (r1 && r1.ok) return r1;
       } catch(e) { clearTimeout(timer); }
 
-      // KO OpenAI → Mistral
       if (window._esHighlightAI) window._esHighlightAI('mistral');
       try {
-        var r2 = await _baseFetch.call(window, '/api/relay/mistral', init);
-        if (r2.ok) return r2;
+        var p1 = JSON.parse((init && typeof init.body === 'string' && init.body) || '{}');
+        var mBody = JSON.stringify({ model:'mistral-large-latest', max_tokens:16000, stream:true, messages: p1.messages || [] });
+        var r2 = await _baseFetch.call(window, '/api/relay/mistral',
+          Object.assign({}, init, { body: mBody, headers: { 'Content-Type':'application/json' }, signal: undefined }));
+        if (r2 && r2.ok) return r2;
       } catch(e) {}
 
-      // KO Mistral → Gemini (ultime filet)
       if (window._esHighlightAI) window._esHighlightAI('gemini');
-      return _baseFetch.call(window, '/api/relay/gemini', init);
-    };
-  })();
-
-  /* Bascule Historique + Options de dictée sur une page séparée via ?panel=settings */
-  const _panel = new URLSearchParams(window.location.search).get('panel');
-  document.body.classList.add(
-    _panel === 'settings' ? 'es-page-settings' :
-    _panel === 'history' ? 'es-page-history' :
-    'es-page-main'
-  );
-
-  /* Masquer TOUTES les erreurs IA — double verrou : setError + textContent direct */
-  /* Vider le compte rendu à chaque reset/nouveau/patient suivant */
-  function _clearResult() {
-    const rb = document.getElementById('resultBody');
-    if (rb) rb.innerHTML = '';
-  }
-  const _origReset = window.reset;
-  window.reset = function() { _clearResult(); if (_origReset) _origReset(); };
-  const _origClearDictation = window.clearDictation;
-  window.clearDictation = function(autoMic) { _clearResult(); if (_origClearDictation) _origClearDictation(autoMic); };
-
-  const _IA_ERR = /basculement|gemini|openai|groq|llama|gpt|unavailable|timeout|503|indisponible|temporairement|surcharg/i;
-
-  // Verrou 1 : override setError (erreurs passant par la fonction)
-  const _origSetError = window.setError;
-  window.setError = function(msg) {
-    if (_IA_ERR.test(msg || '')) {
-      const b = document.getElementById('errorBox');
-      if (b) b.style.cssText = 'display:none';
-      return;
-    }
-    if (_origSetError) _origSetError(msg);
-  };
-
-  // Verrou 2 : Object.defineProperty sur errorBox (écriture directe b.textContent = ...)
-  const _eb = document.getElementById('errorBox');
-  if (_eb) {
-    const _ebDesc = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-    Object.defineProperty(_eb, 'textContent', {
-      set(value) {
-        if (!value || _IA_ERR.test(value)) {
-          _ebDesc.set.call(this, '');
-          this.style.cssText = 'display:none';
-        } else {
-          _ebDesc.set.call(this, value);
+      try {
+        var p2 = JSON.parse((init && typeof init.body === 'string' && init.body) || '{}');
+        var msgs = p2.messages || [], sysMsg = '', userMsg = '';
+        for (var j = 0; j < msgs.length; j++) {
+          if (msgs[j].role === 'system') sysMsg = msgs[j].content || '';
+          else if (msgs[j].role === 'user') userMsg = msgs[j].content || '';
         }
-      },
-      get() { return _ebDesc.get.call(this); },
-      configurable: true,
-    });
-
-    // Verrou 3 : MutationObserver sur style — empêche le setTimeout V5 de re-afficher la case vide
-    new MutationObserver(function() {
-      if (!_eb.textContent || _IA_ERR.test(_eb.textContent)) {
-        if (_eb.style.display !== 'none') _eb.style.cssText = 'display:none';
+        var gBody = JSON.stringify({
+          system_instruction: { parts: [{ text: sysMsg }] },
+          contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+          generationConfig: { maxOutputTokens: 8192, temperature: 0.2 }
+        });
+        var r3 = await _baseFetch.call(window, '/api/relay/gemini',
+          Object.assign({}, init, { body: gBody, headers: { 'Content-Type':'application/json' }, signal: undefined }));
+        if (r3 && r3.ok) return new Response(_wrapGeminiAsOpenAI(r3.body), { status:200, headers:{ 'Content-Type':'text/event-stream','Cache-Control':'no-cache' } });
+        return r3;
+      } catch(e) {
+        return new Response(JSON.stringify({ error: { message: 'Tous les moteurs IA sont indisponibles.' } }), { status: 503 });
       }
-    }).observe(_eb, { attributes: true, attributeFilter: ['style'] });
+    }
+
+    return _baseFetch.apply(window, arguments);
+  };
+})();
+
+/* 2. Switcher: renommer boutons, cacher Claude+Grok, gérer _esManualAI */
+(function() {
+  window._esManualAI = null;
+  ['btnClaude','btnGrok'].forEach(function(id) { var b=document.getElementById(id); if(b) b.style.display='none'; });
+  var btnO=document.getElementById('btnOpenai'), btnM=document.getElementById('btnMistral'), btnG=document.getElementById('btnGemini');
+  if(btnO) btnO.textContent='◍ High Premium';
+  if(btnM) btnM.textContent='◆ Premium Lite';
+  if(btnG) btnG.textContent='◉ Premium';
+
+  function _setActive(ai) {
+    var map={ openai:{id:'btnOpenai',bg:'rgba(129,140,248,0.18)',color:'#818cf8'}, mistral:{id:'btnMistral',bg:'rgba(255,120,60,0.18)',color:'#ff783c'}, gemini:{id:'btnGemini',bg:'rgba(74,222,128,0.18)',color:'#4ade80'} };
+    ['btnOpenai','btnMistral','btnGemini'].forEach(function(id){ var b=document.getElementById(id); if(b){b.style.background='transparent';b.style.color='#4a7a96';} });
+    var a=map[ai]; if(a){ var b=document.getElementById(a.id); if(b){b.style.background=a.bg;b.style.color=a.color;} }
   }
+  window._esHighlightAI = _setActive;
 
-  function waitFor(id, cb) {
-    const el = document.getElementById(id);
-    if (el) { cb(el); return; }
-    setTimeout(() => waitFor(id, cb), 300);
-  }
-
-  /* Injection des boutons dans la barre du resultCard */
-  waitFor('copyBtn', function(copyBtn) {
-    const bar = copyBtn.parentElement;
-
-    const btnPdf = document.createElement('button');
-    btnPdf.className = 'export-btn export-btn-pdf';
-    btnPdf.innerHTML = '⬇ PDF';
-    btnPdf.title = 'Exporter en PDF';
-    btnPdf.onclick = exportPDF;
-
-    const btnWord = document.createElement('button');
-    btnWord.className = 'export-btn export-btn-word';
-    btnWord.innerHTML = '⬇ Word';
-    btnWord.title = 'Exporter en Word (.doc)';
-    btnWord.onclick = exportWord;
-
-    bar.appendChild(btnPdf);
-    bar.appendChild(btnWord);
+  [['btnOpenai','openai'],['btnMistral','mistral'],['btnGemini','gemini']].forEach(function(pair) {
+    var b=document.getElementById(pair[0]);
+    if(b) b.addEventListener('click', function(){ window._esManualAI=pair[1]; localStorage.setItem('es_last_ai',pair[1]); });
   });
 
-  function getContent() {
-    const body = document.getElementById('resultBody');
-    return body ? body.innerHTML.trim() : '';
-  }
+  var _origSwitchAI = window.switchAI;
+  window.switchAI = function(ai) {
+    if(typeof _origSwitchAI==='function') _origSwitchAI.call(this,ai);
+    _setActive(ai);
+    ['grokKeySection','mistralKeySection','grokModelSection','mistralModelSection'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+  };
 
-  function getTextContent() {
-    const body = document.getElementById('resultBody');
-    return body ? body.innerText.trim() : '';
-  }
+  var initAI = localStorage.getItem('es_last_ai') || 'openai';
+  setTimeout(function(){ window.switchAI(initAI); }, 100);
+})();
 
-  function exportPDF() {
-    const html = getContent();
-    if (!html) { alert('Aucun compte rendu à exporter.'); return; }
-    const target = document.getElementById('echoscribe-print-target');
-    target.innerHTML = '<h2 style="margin-bottom:20px;font-size:18px;color:#0A66C2;">Compte Rendu Échographique</h2>' + html +
-      '<p style="margin-top:30px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">Proposition à valider et signer par le médecin responsable — EchoScribe</p>';
-    target.style.display = 'block';
-    window.print();
-    target.style.display = 'none';
-  }
+/* 3. Triple verrou generateBtnLabel */
+var generateBtnLabel = document.getElementById('generateBtnLabel');
+if (generateBtnLabel) {
+  var _MASK_BTN = /\s*avec\s+(Gemini|OpenAI|Claude|Mistral|Groq|GPT|Grok)[^\s→]*/gi;
+  function _fixBtnLabel() { var t=generateBtnLabel.textContent||''; if(_MASK_BTN.test(t)){_MASK_BTN.lastIndex=0;var _d=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');_d.set.call(generateBtnLabel,t.replace(_MASK_BTN,''));} }
+  var _btnDesc=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+  Object.defineProperty(generateBtnLabel,'textContent',{ set:function(v){_btnDesc.set.call(this,typeof v==='string'?v.replace(_MASK_BTN,''):v);}, get:function(){return _btnDesc.get.call(this);}, configurable:true });
+  new MutationObserver(_fixBtnLabel).observe(generateBtnLabel,{childList:true,characterData:true,subtree:true});
+  _fixBtnLabel(); setTimeout(_fixBtnLabel,200); setTimeout(_fixBtnLabel,600);
+}
 
-  function exportWord() {
-    const html = getContent();
-    if (!html) { alert('Aucun compte rendu à exporter.'); return; }
-    const docHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:w="urn:schemas-microsoft-com:office:word"
-      xmlns="http://www.w3.org/TR/REC-html40">
-      <head><meta charset="utf-8">
-        <style>body{font-family:Arial,sans-serif;font-size:12pt;color:#111;margin:2cm;}
-          h1{color:#0A66C2;} strong{font-weight:bold;} p{margin-bottom:8pt;}</style>
-      </head>
-      <body>
-        <h1>Compte Rendu Échographique</h1>
-        ${html}
-        <p style="margin-top:30pt;font-size:9pt;color:#888;border-top:1pt solid #eee;padding-top:6pt;">
-          Proposition à valider et signer par le médecin responsable — EchoScribe
-        </p>
-      </body></html>`;
-    const blob = new Blob(['﻿' + docHtml], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'compte-rendu-echographie.doc';
-    a.click();
-    URL.revokeObjectURL(url);
+/* 4. Spinner masking */
+var spinnerText = document.getElementById('spinnerText');
+if (spinnerText) {
+  function _maskSpinner(v) {
+    if(typeof v!=='string') return v;
+    v=v.replace(/Basculement\s+sur\s+[^\s…]+[….]*/gi,'Optimisation en cours…');
+    v=v.replace(/Magistral\s+réfléchit/gi,'IA réfléchit');
+    v=v.replace(/\b(Gemini|GPT|Claude|Mistral|Groq|Grok|Llama)\b/gi,'IA');
+    return v;
   }
+  var _spinDesc=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+  Object.defineProperty(spinnerText,'textContent',{ set:function(v){_spinDesc.set.call(this,_maskSpinner(v));}, get:function(){return _spinDesc.get.call(this);}, configurable:true });
+  new MutationObserver(function(){ var t=spinnerText.textContent; if(t&&/Gemini|GPT|Claude|Mistral|Groq|Grok|Basculement|Magistral/i.test(t)){var _sd2=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');_sd2.set.call(spinnerText,_maskSpinner(t));} }).observe(spinnerText,{childList:true,characterData:true,subtree:true});
+}
+
+/* 5. Panel routing */
+var _panel=new URLSearchParams(window.location.search).get('panel');
+document.body.classList.add(_panel==='settings'?'es-page-settings':_panel==='history'?'es-page-history':'es-page-main');
+
+/* 6. Clear result on reset */
+function _clearResult(){ var rb=document.getElementById('resultBody'); if(rb) rb.innerHTML=''; }
+var _origReset=window.reset; window.reset=function(){_clearResult();if(typeof _origReset==='function')_origReset();};
+var _origClearDictation=window.clearDictation; window.clearDictation=function(autoMic){_clearResult();if(typeof _origClearDictation==='function')_origClearDictation(autoMic);};
+
+/* 7. Masquer erreurs IA */
+var _IA_ERR=/basculement|gemini|openai|groq|llama|gpt|grok|unavailable|timeout|503|indisponible|temporairement|surcharg|entrez votre cl|api key/i;
+var _origSetError=window.setError;
+window.setError=function(msg){ if(_IA_ERR.test(msg||'')){var b=document.getElementById('errorBox');if(b)b.style.cssText='display:none';return;} if(typeof _origSetError==='function')_origSetError(msg); };
+var _eb=document.getElementById('errorBox');
+if(_eb){
+  var _ebDesc=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+  Object.defineProperty(_eb,'textContent',{ set:function(v){if(!v||_IA_ERR.test(v)){_ebDesc.set.call(this,'');this.style.cssText='display:none';}else{_ebDesc.set.call(this,v);}}, get:function(){return _ebDesc.get.call(this);}, configurable:true });
+  new MutationObserver(function(){if(!_eb.textContent||_IA_ERR.test(_eb.textContent)){if(_eb.style.display!=='none')_eb.style.cssText='display:none';}}).observe(_eb,{attributes:true,attributeFilter:['style']});
+}
+
+/* 8. Export PDF + Word */
+function waitFor(id,cb){var el=document.getElementById(id);if(el){cb(el);return;}setTimeout(function(){waitFor(id,cb);},300);}
+waitFor('copyBtn',function(copyBtn){
+  var bar=copyBtn.parentElement;
+  var btnPdf=document.createElement('button');btnPdf.className='export-btn export-btn-pdf';btnPdf.innerHTML='&#8595; PDF';btnPdf.title='Exporter en PDF';btnPdf.onclick=exportPDF;bar.appendChild(btnPdf);
+  var btnWord=document.createElement('button');btnWord.className='export-btn export-btn-word';btnWord.innerHTML='&#8595; Word';btnWord.title='Exporter en Word (.doc)';btnWord.onclick=exportWord;bar.appendChild(btnWord);
+});
+function getContent(){var body=document.getElementById('resultBody');return body?body.innerHTML.trim():'';}
+function exportPDF(){var html=getContent();if(!html){alert('Aucun compte rendu à exporter.');return;}var target=document.getElementById('echoscribe-print-target');target.innerHTML='<h2 style="margin-bottom:20px;font-size:18px;color:#0A66C2;">Compte Rendu Échographique</h2>'+html+'<p style="margin-top:30px;font-size:10px;color:#888;border-top:1px solid #eee;padding-top:10px;">Proposition à valider et signer par le médecin responsable — EchoScribe</p>';target.style.display='block';window.print();target.style.display='none';}
+function exportWord(){var html=getContent();if(!html){alert('Aucun compte rendu à exporter.');return;}var docHtml='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;font-size:12pt;color:#111;margin:2cm;} h1{color:#0A66C2;} strong{font-weight:bold;} p{margin-bottom:8pt;}</style></head><body><h1>Compte Rendu Échographique</h1>'+html+'<p style="margin-top:30pt;font-size:9pt;color:#888;border-top:1pt solid #eee;padding-top:6pt;">Proposition à valider et signer par le médecin responsable — EchoScribe</p></body></html>';var blob=new Blob(['﻿'+docHtml],{type:'application/msword'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='compte-rendu-echographie.doc';a.click();URL.revokeObjectURL(url);}
+
 })();
 </script>
 </body>
