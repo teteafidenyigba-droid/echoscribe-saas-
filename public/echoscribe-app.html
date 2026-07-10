@@ -138,19 +138,11 @@
     #historyCard{display:none!important;}
   }
   .footer{color:rgba(255,255,255,.5)!important;font-size:11px!important;text-align:center!important;order:999!important;margin-top:auto!important;}
-  .card:has(#geminiKey),.card:has(#openaiKey),.card:has(#claudeKey),.card:has(#grokKey),.card:has(#mistralKey),
-  #claudeKeySection,#openaiKeySection,#geminiKeySection,#grokKeySection,#mistralKeySection{display:none!important;}
-  .card:has(#geminiModelSection),.card:has(#openaiModelSection),.card:has(#claudeModelSection),
-  .card:has(#grokModelSection),.card:has(#mistralModelSection),
-  #geminiModelSection,#claudeModelSection,#openaiModelSection,#grokModelSection,#mistralModelSection{display:none!important;}
+  /* Éléments masqués par ID — pas de :has() pour éviter les fragilités de structure */
+  #claudeKeySection,#openaiKeySection,#geminiKeySection,#grokKeySection,#mistralKeySection,
+  #geminiModelSection,#claudeModelSection,#openaiModelSection,#grokModelSection,#mistralModelSection,
   .subtitle,.tag,#aiLabel{display:none!important;}
-  body.es-page-main .card:has(#thinkingToggle),body.es-page-main #historyCard{display:none!important;}
-  body.es-page-settings .container>*:not(.header):not(.card:has(#thinkingToggle)):not(.footer){display:none!important;}
-  body.es-page-settings .container{grid-template-columns:1fr!important;max-width:700px!important;}
-  body.es-page-settings .card:has(#thinkingToggle){grid-column:1!important;display:block!important;}
-  body.es-page-history .container>*:not(.header):not(#historyCard):not(.footer){display:none!important;}
-  body.es-page-history .container{grid-template-columns:1fr!important;max-width:900px!important;}
-  body.es-page-history #historyCard{grid-column:1!important;display:block!important;}
+  /* Les cartes parent (clés + modèles) sont masquées via JS dans le script injecté */
 </style>
 </head>
 <body>
@@ -2595,9 +2587,54 @@ if (spinnerText) {
   new MutationObserver(function(){ var t=spinnerText.textContent; if(t&&/Gemini|GPT|Claude|Mistral|Groq|Grok|Basculement|Magistral/i.test(t)){var _sd2=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');_sd2.set.call(spinnerText,_maskSpinner(t));} }).observe(spinnerText,{childList:true,characterData:true,subtree:true});
 }
 
-/* 5. Panel routing */
-var _panel=new URLSearchParams(window.location.search).get('panel');
-document.body.classList.add(_panel==='settings'?'es-page-settings':_panel==='history'?'es-page-history':'es-page-main');
+/* 5. Panel routing + masquage des cartes via DOM traversal (robuste, sans :has()) */
+(function(){
+  var _panel=new URLSearchParams(window.location.search).get('panel');
+  document.body.classList.add(_panel==='settings'?'es-page-settings':_panel==='history'?'es-page-history':'es-page-main');
+
+  /* --- Localiser les cartes structurelles --- */
+  var _keysCard=(document.getElementById('geminiKeySection')||{closest:null}).closest&&document.getElementById('geminiKeySection').closest('.card');
+  var _modelCard=(document.getElementById('geminiModelSection')||{closest:null}).closest&&document.getElementById('geminiModelSection').closest('.card');
+  var _ttEl=document.getElementById('thinkingToggle');
+  var _optCard=_ttEl&&_ttEl.closest?_ttEl.closest('.card'):null;
+  var _histCard=document.getElementById('historyCard');
+
+  /* --- Toujours masquer la carte clés et la carte modèles --- */
+  if(_keysCard)_keysCard.style.setProperty('display','none','important');
+  if(_modelCard)_modelCard.style.setProperty('display','none','important');
+
+  if(!_panel||_panel==='main'){
+    /* Page principale : masquer options et historique */
+    if(_optCard)_optCard.style.setProperty('display','none','important');
+    if(_histCard)_histCard.style.setProperty('display','none','important');
+
+  }else if(_panel==='settings'){
+    /* Page paramètres : afficher uniquement header + carte options + footer */
+    var _cont=document.querySelector('.container');
+    if(_cont){
+      Array.prototype.forEach.call(_cont.children,function(ch){
+        var keep=ch.classList.contains('header')||ch===_optCard||ch.classList.contains('footer');
+        if(!keep)ch.style.setProperty('display','none','important');
+      });
+      _cont.style.gridTemplateColumns='1fr';
+      _cont.style.maxWidth='700px';
+    }
+    if(_optCard){_optCard.style.removeProperty('display');_optCard.style.gridColumn='1';}
+
+  }else if(_panel==='history'){
+    /* Page historique : afficher uniquement header + historyCard + footer */
+    var _cont2=document.querySelector('.container');
+    if(_cont2){
+      Array.prototype.forEach.call(_cont2.children,function(ch){
+        var keep=ch.classList.contains('header')||ch===_histCard||ch.id==='historyCard'||ch.classList.contains('footer');
+        if(!keep)ch.style.setProperty('display','none','important');
+      });
+      _cont2.style.gridTemplateColumns='1fr';
+      _cont2.style.maxWidth='900px';
+    }
+    if(_histCard){_histCard.style.removeProperty('display');_histCard.style.gridColumn='1';}
+  }
+})();
 
 /* 6. Clear result on reset */
 function _clearResult(){ var rb=document.getElementById('resultBody'); if(rb) rb.innerHTML=''; }
