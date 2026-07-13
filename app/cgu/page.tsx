@@ -61,7 +61,7 @@ const cguContent = `
 <p>L'audio dicté est traité localement ou transmis directement à l'API choisie et n'est jamais conservé sur les serveurs d'EchoScribe.</p>
 
 <h2>6. Abonnement et facturation</h2>
-<p>L'accès au Service est soumis à un abonnement mensuel (59€ HT/mois) ou annuel (699€ HT/an), après une période d'essai gratuit de 7 jours.</p>
+<p>L'accès au Service est soumis à un abonnement mensuel (69€ HT/mois) ou annuel (799€ HT/an), après une période d'essai gratuit de 7 jours.</p>
 <p>Le paiement est géré par Stripe. L'abonnement se renouvelle automatiquement sauf résiliation. La résiliation prend effet à la fin de la période en cours.</p>
 <p>Conformément à l'article L. 221-28 du Code de la consommation, le droit de rétractation de 14 jours s'applique. Toutefois, si l'accès au Service est demandé avant l'expiration de ce délai, l'Utilisateur reconnaît expressément renoncer à ce droit.</p>
 
