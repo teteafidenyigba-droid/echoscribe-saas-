@@ -140,7 +140,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 </span>
               )}
             </div>
-            {hasStripeCustomer && (
+            {hasStripeCustomer && isActive && (
               <button
                 onClick={handlePortal}
                 disabled={loading === "portal"}
