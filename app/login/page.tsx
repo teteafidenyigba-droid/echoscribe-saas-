@@ -88,17 +88,6 @@ function LoginForm() {
         <div className="es-right" style={s.right}>
           <div style={s.formWrap}>
 
-            {/* Logo — toujours visible */}
-            <Link href="/" style={{ ...s.logoLink, marginBottom: 44 }}>
-              <svg width="38" height="25" viewBox="0 0 38 26" fill="none">
-                <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                  stroke="#c45d4a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
-              <span style={{ ...s.logoText, color: "#0d2540" }}>
-                <em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a6abf" }}>Scribe</strong>
-              </span>
-            </Link>
-
             {/* En-tête formulaire */}
             <div style={s.formHeader}>
               <h2 style={s.formTitle}>Connexion</h2>
