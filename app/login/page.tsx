@@ -106,7 +106,10 @@ function LoginForm() {
                   style={s.input} />
               </div>
               <div style={s.field}>
-                <label style={s.label}>Mot de passe</label>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                  <label style={s.label}>Mot de passe</label>
+                  <Link href="/forgot-password" style={s.forgotLink}>Mot de passe oublié ?</Link>
+                </div>
                 <input className="es-input" type="password" required value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -376,6 +379,12 @@ const s: Record<string, React.CSSProperties> = {
     color: "#0a66c2",
     textDecoration: "none",
     fontWeight: 600,
+  },
+  forgotLink: {
+    fontSize: 12,
+    color: "#8a9ab0",
+    textDecoration: "none",
+    fontWeight: 400,
   },
   legalRight: {
     textAlign: "center",
