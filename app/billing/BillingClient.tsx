@@ -168,7 +168,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                   disabled={!!loading}
                   style={s.primaryBtn}
                 >
-                  {loading === "monthly" ? "Redirection…" : "Commencer l'essai →"}
+                  {loading === "monthly" ? "Redirection…" : "S'abonner →"}
                 </button>
               </div>
 
@@ -183,7 +183,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                   disabled={!!loading}
                   style={{ ...s.primaryBtn, background: "#0552a3" }}
                 >
-                  {loading === "yearly" ? "Redirection…" : "Commencer l'essai →"}
+                  {loading === "yearly" ? "Redirection…" : "S'abonner →"}
                 </button>
               </div>
             </div>
