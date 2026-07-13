@@ -66,8 +66,14 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
     <div style={s.page}>
       {/* NAV */}
       <nav style={s.nav}>
-        <Link href="/" style={s.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+        <Link href="/" style={s.logoLink}>
+          <svg width="28" height="18" viewBox="0 0 38 26" fill="none">
+            <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+              stroke="#c45d4a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          </svg>
+          <span style={s.logoText}>
+            <em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a6abf" }}>Scribe</strong>
+          </span>
         </Link>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span style={s.userEmail}>{user.email}</span>
@@ -175,7 +181,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}
-                  style={{ ...s.primaryBtn, background: "#38bdf8", color: "#07101e", border: "none" }}
+                  style={{ ...s.primaryBtn, background: "#0552a3" }}
                 >
                   {loading === "yearly" ? "Redirection…" : "Commencer l'essai →"}
                 </button>
@@ -232,12 +238,17 @@ const s: Record<string, React.CSSProperties> = {
     justifyContent: "space-between",
     height: 64,
   },
-  logo: {
-    fontFamily: "'EB Garamond', serif",
-    fontSize: 22,
-    fontStyle: "italic",
-    color: "#e2eaf5",
+  logoLink: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
     textDecoration: "none",
+  },
+  logoText: {
+    fontFamily: "'EB Garamond', serif",
+    fontSize: 24,
+    color: "#e8f4fd",
+    letterSpacing: "-0.01em",
   },
   userEmail: {
     fontFamily: "'JetBrains Mono', monospace",
@@ -365,13 +376,15 @@ const s: Record<string, React.CSSProperties> = {
   primaryBtn: {
     width: "100%",
     padding: "13px",
-    background: "linear-gradient(90deg,#0c2840,#0e3352)",
-    border: "1px solid rgba(56,189,248,0.45)",
+    background: "#0a66c2",
+    border: "none",
     borderRadius: 10,
-    color: "#7dd3fc",
-    fontSize: 16,
-    fontFamily: "'EB Garamond', serif",
+    color: "#ffffff",
+    fontSize: 15,
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 600,
     cursor: "pointer",
+    boxShadow: "0 4px 16px rgba(10,102,194,0.35)",
   },
   secondaryBtn: {
     padding: "10px 20px",
