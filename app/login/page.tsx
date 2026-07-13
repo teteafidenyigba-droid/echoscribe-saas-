@@ -53,23 +53,21 @@ function LoginForm() {
         <div className="es-left" style={s.left}>
           {/* Grande onde ECG décorative */}
           <svg
-            viewBox="0 0 800 200"
+            viewBox="0 0 900 160"
             style={s.ecgBig}
             preserveAspectRatio="xMidYMid meet"
           >
             <polyline
-              points="0,100 120,100 160,20 210,180 255,60 295,130 330,100 800,100"
-              stroke="rgba(0,180,216,0.18)"
-              strokeWidth="2"
+              points="0,80 150,80 190,80 220,15 260,145 295,45 330,110 360,80 900,80"
+              stroke="rgba(255,255,255,0.04)"
+              strokeWidth="1.5"
               fill="none"
             />
             <polyline
-              points="0,100 120,100 160,20 210,180 255,60 295,130 330,100 800,100"
-              stroke="rgba(0,180,216,0.7)"
-              strokeWidth="1.5"
+              points="0,80 150,80 190,80 220,15 260,145 295,45 330,110 360,80 900,80"
+              stroke="rgba(255,255,255,0.12)"
+              strokeWidth="1"
               fill="none"
-              strokeDasharray="800"
-              strokeDashoffset="0"
             />
           </svg>
 
@@ -91,7 +89,7 @@ function LoginForm() {
             <div style={s.leftBody}>
               <h1 style={s.headline}>
                 La dictée médicale<br />
-                <em style={{ color: "#00b4d8" }}>réinventée.</em>
+                <em style={{ color: "rgba(255,255,255,0.55)", fontStyle: "italic" }}>réinventée.</em>
               </h1>
               <p style={s.desc}>
                 Comptes rendus d&apos;échographie générés en quelques secondes.
@@ -198,7 +196,7 @@ const s: Record<string, React.CSSProperties> = {
   left: {
     position: "relative",
     width: "55%",
-    background: "linear-gradient(145deg, #050f1e 0%, #0a1f3d 60%, #0d2952 100%)",
+    background: "#07111f",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
@@ -206,10 +204,11 @@ const s: Record<string, React.CSSProperties> = {
 
   ecgBig: {
     position: "absolute",
-    bottom: "38%",
+    top: "50%",
     left: 0,
     right: 0,
     width: "100%",
+    transform: "translateY(-50%)",
     opacity: 1,
   },
 
@@ -219,7 +218,7 @@ const s: Record<string, React.CSSProperties> = {
     display: "flex",
     flexDirection: "column",
     height: "100%",
-    padding: "44px 52px",
+    padding: "44px 56px",
   },
 
   logoLinkLeft: {
@@ -230,53 +229,55 @@ const s: Record<string, React.CSSProperties> = {
   },
   logoTextLeft: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 24,
-    color: "#e8f4fd",
+    fontSize: 22,
+    color: "rgba(255,255,255,0.9)",
     letterSpacing: "-0.01em",
   },
 
   leftBody: {
     marginTop: "auto",
     marginBottom: "auto",
-    paddingTop: 40,
   },
 
   headline: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 52,
+    fontSize: 58,
     fontWeight: 400,
-    color: "#e8f4fd",
-    lineHeight: 1.15,
-    letterSpacing: "-0.02em",
-    marginBottom: 20,
+    color: "#ffffff",
+    lineHeight: 1.1,
+    letterSpacing: "-0.025em",
+    marginBottom: 24,
   },
 
   desc: {
-    fontSize: 16,
-    color: "rgba(232,244,253,0.6)",
-    lineHeight: 1.65,
-    maxWidth: 380,
-    marginBottom: 32,
+    fontSize: 15,
+    color: "rgba(255,255,255,0.45)",
+    lineHeight: 1.7,
+    maxWidth: 360,
+    marginBottom: 40,
     fontWeight: 400,
   },
 
   badges: {
     display: "flex",
     flexDirection: "column",
-    gap: 8,
+    gap: 10,
   },
   badge: {
-    fontSize: 13,
-    color: "rgba(0,180,216,0.85)",
+    fontSize: 12,
+    color: "rgba(255,255,255,0.35)",
     fontFamily: "'Inter', sans-serif",
-    fontWeight: 500,
+    fontWeight: 400,
     letterSpacing: "0.01em",
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
   },
 
   leftFooter: {
-    fontSize: 11,
-    color: "rgba(232,244,253,0.25)",
-    letterSpacing: "0.06em",
+    fontSize: 10,
+    color: "rgba(255,255,255,0.15)",
+    letterSpacing: "0.08em",
     textTransform: "uppercase",
     fontFamily: "'Inter', sans-serif",
   },
