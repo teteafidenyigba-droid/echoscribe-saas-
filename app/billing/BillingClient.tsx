@@ -181,7 +181,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}
-                  style={{ ...s.primaryBtn, background: "#0552a3" }}
+                  style={{ ...s.primaryBtn }}
                 >
                   {loading === "yearly" ? "Redirection…" : "S'abonner →"}
                 </button>
@@ -357,6 +357,8 @@ const s: Record<string, React.CSSProperties> = {
     borderRadius: 14,
     padding: "28px 24px",
     boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+    display: "flex",
+    flexDirection: "column",
   },
   planName: {
     fontFamily: "'JetBrains Mono', monospace",
@@ -377,6 +379,7 @@ const s: Record<string, React.CSSProperties> = {
     fontSize: 12,
     color: "#8a9ab0",
     marginBottom: 20,
+    flexGrow: 1,
   },
   primaryBtn: {
     width: "100%",
