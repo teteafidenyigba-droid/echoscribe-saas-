@@ -64,7 +64,7 @@ export default function AppClient({ user, panel = "main" }: Props) {
 
       {/* App iframe */}
       <iframe
-        src={`/echoscribe-app.html?v=v5pro79${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
+        src={`/echoscribe-app.html?v=v5pro80${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
         style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
         title="EchoScribe Application"
         allow="microphone"
