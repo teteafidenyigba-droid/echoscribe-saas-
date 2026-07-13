@@ -79,13 +79,6 @@ function LoginForm() {
                 Précis, conforme, prêt à signer.
               </p>
 
-              {/* Citation */}
-              <blockquote style={s.quote}>
-                <p style={s.quoteText}>
-                  &ldquo;EchoScribe m&apos;a fait gagner 45 minutes par jour sur mes comptes rendus d&apos;échographie.&rdquo;
-                </p>
-                <cite style={s.quoteCite}>Dr. M. Leblanc — Radiologue, CHU de Lyon</cite>
-              </blockquote>
             </div>
 
             <p style={s.leftFooter}>Hébergement France · RGPD · HDS</p>
