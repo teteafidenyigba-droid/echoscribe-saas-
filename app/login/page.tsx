@@ -99,12 +99,14 @@ function LoginForm() {
 
             <form onSubmit={handleLogin} style={s.form}>
               <div style={s.field}>
+                <label style={s.label}>Email</label>
                 <input className="es-input" type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="dr.dupont@clinique.fr"
                   style={s.input} />
               </div>
               <div style={s.field}>
+                <label style={s.label}>Mot de passe</label>
                 <input className="es-input" type="password" required value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
