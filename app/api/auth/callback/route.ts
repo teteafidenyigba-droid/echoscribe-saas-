@@ -52,20 +52,24 @@ async function upsertProfile(userId: string, email: string, name: string, plan: 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const next = searchParams.get("next");
   const plan = searchParams.get("plan") ?? "monthly";
 
   if (code) {
     const supabase = createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && data.user) {
+      // Recovery flow (reset password) — just redirect, no trial/welcome email
+      if (next) {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+
       const user = data.user;
       const name = user.user_metadata?.full_name ?? user.email ?? "";
 
-      // Use direct REST API calls with service role to bypass RLS and cookie issues
       await upsertProfile(user.id, user.email!, name, plan);
       await createTrialSubscription(user.id);
 
-      // Send welcome email
       if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_PLACEHOLDER')) {
         try {
           await sendWelcomeEmail(user.email!, name);

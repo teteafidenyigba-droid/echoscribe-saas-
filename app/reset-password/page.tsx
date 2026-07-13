@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-function ResetPasswordForm() {
+export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,19 +14,14 @@ function ResetPasswordForm() {
   const [ready, setReady] = useState(false);
   const supabase = createClient();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const code = searchParams.get("code");
-    if (!code) {
-      setError("Lien invalide. Demandez un nouveau lien de réinitialisation.");
-      return;
-    }
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) {
-        setError("Ce lien est invalide ou a expiré. Demandez un nouveau lien.");
-      } else {
+    // La session est déjà établie par /api/auth/callback
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
         setReady(true);
+      } else {
+        setError("Lien invalide ou expiré. Demandez un nouveau lien.");
       }
     });
   }, []);
@@ -91,7 +86,7 @@ function ResetPasswordForm() {
               </Link>
             </div>
           ) : !ready ? (
-            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification du lien…</p>
+            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification…</p>
           ) : (
             <>
               <p style={{ fontSize: 14, color: "#8a9ab0", marginBottom: 28, lineHeight: 1.6 }}>
@@ -100,39 +95,23 @@ function ResetPasswordForm() {
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080", letterSpacing: "0.01em" }}>Nouveau mot de passe</label>
-                  <input
-                    className="es-input"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="8 caractères minimum"
-                    style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }}
-                  />
+                  <input className="es-input" type="password" required value={password}
+                    onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum"
+                    style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080", letterSpacing: "0.01em" }}>Confirmer le mot de passe</label>
-                  <input
-                    className="es-input"
-                    type="password"
-                    required
-                    value={confirm}
-                    onChange={e => setConfirm(e.target.value)}
-                    placeholder="••••••••"
-                    style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }}
-                  />
+                  <input className="es-input" type="password" required value={confirm}
+                    onChange={e => setConfirm(e.target.value)} placeholder="••••••••"
+                    style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
                 </div>
                 {error && (
                   <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "11px 16px", color: "#b91c1c", fontSize: 13 }}>
                     {error}
                   </div>
                 )}
-                <button
-                  className="es-btn"
-                  type="submit"
-                  disabled={loading}
-                  style={{ width: "100%", padding: "14px", marginTop: 6, background: "#0a66c2", border: "none", borderRadius: 10, color: "#ffffff", fontSize: 15, fontWeight: 600, fontFamily: "'Inter', sans-serif", cursor: "pointer", boxShadow: "0 4px 16px rgba(10,102,194,0.28)" }}
-                >
+                <button className="es-btn" type="submit" disabled={loading}
+                  style={{ width: "100%", padding: "14px", marginTop: 6, background: "#0a66c2", border: "none", borderRadius: 10, color: "#ffffff", fontSize: 15, fontWeight: 600, fontFamily: "'Inter', sans-serif", cursor: "pointer", boxShadow: "0 4px 16px rgba(10,102,194,0.28)" }}>
                   {loading ? "Enregistrement…" : "Enregistrer le mot de passe →"}
                 </button>
               </form>
@@ -148,13 +127,5 @@ function ResetPasswordForm() {
         </div>
       </div>
     </>
-  );
-}
-
-export default function ResetPasswordPage() {
-  return (
-    <Suspense fallback={<div style={{ background: "#f5f7fa", minHeight: "100vh" }} />}>
-      <ResetPasswordForm />
-    </Suspense>
   );
 }
