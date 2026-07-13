@@ -63,9 +63,9 @@ function LoginForm() {
             <Link href="/" style={s.logoLink}>
               <svg width="26" height="17" viewBox="0 0 38 26" fill="none">
                 <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                  stroke="#00b4d8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                  stroke="#c45d4a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
-              <span style={s.logoText}><em>Echo</em><strong style={{ fontStyle:"normal", color:"#00b4d8" }}>Scribe</strong></span>
+              <span style={s.logoText}><em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a6abf" }}>Scribe</strong></span>
             </Link>
 
             {/* Corps */}
@@ -93,10 +93,10 @@ function LoginForm() {
               <Link href="/" style={s.logoLink}>
                 <svg width="26" height="17" viewBox="0 0 38 26" fill="none">
                   <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                    stroke="#0a66c2" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    stroke="#c45d4a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
                 </svg>
                 <span style={{ ...s.logoText, color: "#0d2540" }}>
-                  <em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a66c2" }}>Scribe</strong>
+                  <em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a6abf" }}>Scribe</strong>
                 </span>
               </Link>
             </div>
