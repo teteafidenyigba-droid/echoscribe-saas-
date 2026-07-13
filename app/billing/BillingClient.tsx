@@ -172,8 +172,8 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 </button>
               </div>
 
-              <div style={{ ...s.planCard, borderColor: "rgba(56,189,248,0.4)", background: "rgba(56,189,248,0.03)" }}>
-                <div style={{ ...s.planName, color: "#38bdf8" }}>Annuel · <span style={{ color: "#4ade80" }}>-25%</span></div>
+              <div style={{ ...s.planCard, borderColor: "#0a66c2", borderWidth: 2 }}>
+                <div style={{ ...s.planName }}>Annuel · <span style={{ color: "#0a66c2", fontWeight: 700 }}>-4%</span></div>
                 <div style={s.planPrice}>
                   799€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
                 </div>
@@ -201,12 +201,15 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
               style={{
                 display: "inline-block",
                 padding: "14px 32px",
-                background: "linear-gradient(90deg,#0c2840,#0e3352)",
-                border: "1px solid rgba(56,189,248,0.45)",
+                background: "#0a66c2",
+                border: "none",
                 borderRadius: 10,
-                color: "#7dd3fc",
+                color: "#ffffff",
                 textDecoration: "none",
-                fontSize: 18,
+                fontSize: 16,
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                boxShadow: "0 4px 16px rgba(10,102,194,0.28)",
               }}
             >
               Accéder à l'application →
@@ -220,18 +223,18 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
 
 const s: Record<string, React.CSSProperties> = {
   page: {
-    background: "#07101e",
+    background: "#f5f7fa",
     minHeight: "100vh",
     fontFamily: "'EB Garamond', Georgia, serif",
-    color: "#c8d8ea",
+    color: "#0d2540",
   },
   nav: {
     position: "sticky",
     top: 0,
     zIndex: 50,
-    background: "rgba(7,16,30,0.92)",
+    background: "rgba(255,255,255,0.95)",
     backdropFilter: "blur(20px)",
-    borderBottom: "1px solid rgba(56,189,248,0.15)",
+    borderBottom: "1px solid #dce6f0",
     padding: "0 24px",
     display: "flex",
     alignItems: "center",
@@ -253,13 +256,13 @@ const s: Record<string, React.CSSProperties> = {
   userEmail: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
-    color: "#4a7a96",
+    color: "#8a9ab0",
   },
   navBtn: {
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(56,189,248,0.2)",
+    background: "transparent",
+    border: "1.5px solid #dce6f0",
     borderRadius: 8,
-    color: "#7bacc2",
+    color: "#4a6080",
     textDecoration: "none",
     fontSize: 13,
     padding: "7px 14px",
@@ -273,13 +276,13 @@ const s: Record<string, React.CSSProperties> = {
   h1: {
     fontSize: 32,
     fontWeight: 600,
-    color: "#e2eaf5",
+    color: "#0d2540",
     marginBottom: 28,
   },
   h2: {
     fontSize: 22,
     fontWeight: 600,
-    color: "#e2eaf5",
+    color: "#0d2540",
     margin: "36px 0 20px",
   },
   errorBox: {
@@ -313,18 +316,19 @@ const s: Record<string, React.CSSProperties> = {
     marginBottom: 20,
   },
   card: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(56,189,248,0.15)",
+    background: "#ffffff",
+    border: "1px solid #dce6f0",
     borderRadius: 14,
     padding: "24px",
     marginBottom: 24,
+    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
   },
   cardTitle: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 10,
     letterSpacing: "0.14em",
     textTransform: "uppercase",
-    color: "#4a7a96",
+    color: "#8a9ab0",
     marginBottom: 14,
   },
   badge: {
@@ -348,15 +352,16 @@ const s: Record<string, React.CSSProperties> = {
     marginBottom: 16,
   },
   planCard: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(56,189,248,0.2)",
+    background: "#ffffff",
+    border: "1px solid #dce6f0",
     borderRadius: 14,
     padding: "28px 24px",
+    boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
   },
   planName: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 11,
-    color: "#7bacc2",
+    color: "#8a9ab0",
     letterSpacing: "0.1em",
     textTransform: "uppercase",
     marginBottom: 12,
@@ -364,13 +369,13 @@ const s: Record<string, React.CSSProperties> = {
   planPrice: {
     fontSize: 38,
     fontWeight: 600,
-    color: "#e2eaf5",
+    color: "#0d2540",
     marginBottom: 6,
   },
   planDesc: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
-    color: "#4a7a96",
+    color: "#8a9ab0",
     marginBottom: 20,
   },
   primaryBtn: {
@@ -388,10 +393,10 @@ const s: Record<string, React.CSSProperties> = {
   },
   secondaryBtn: {
     padding: "10px 20px",
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(56,189,248,0.25)",
+    background: "transparent",
+    border: "1.5px solid #dce6f0",
     borderRadius: 9,
-    color: "#7bacc2",
+    color: "#4a6080",
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 13,
     cursor: "pointer",
