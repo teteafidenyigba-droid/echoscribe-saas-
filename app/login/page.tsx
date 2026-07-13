@@ -36,7 +36,7 @@ function LoginForm() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; overflow: hidden; }
         .es-input { transition: border-color 0.2s, box-shadow 0.2s; }
@@ -209,9 +209,9 @@ const s: Record<string, React.CSSProperties> = {
     fontWeight: 500,
   },
   headline: {
-    fontFamily: "'Playfair Display', serif",
-    fontSize: 62,
-    fontWeight: 400,
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: 64,
+    fontWeight: 300,
     color: "#ffffff",
     lineHeight: 1.08,
     letterSpacing: "-0.025em",
