@@ -74,10 +74,6 @@ function LoginForm() {
               <h1 style={s.headline}>
                 Le compte rendu<br />en quelques<br /><em>secondes.</em>
               </h1>
-              <p style={s.leftDesc}>
-                Spécialisé pour les radiologues et échographistes.<br />
-                Précis, conforme, prêt à signer.
-              </p>
 
             </div>
 
