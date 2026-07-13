@@ -223,18 +223,18 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
 
 const s: Record<string, React.CSSProperties> = {
   page: {
-    background: "#111827",
+    background: "#07101e",
     minHeight: "100vh",
     fontFamily: "'EB Garamond', Georgia, serif",
-    color: "#0d2540",
+    color: "#c8d8ea",
   },
   nav: {
     position: "sticky",
     top: 0,
     zIndex: 50,
-    background: "rgba(255,255,255,0.95)",
+    background: "rgba(7,16,30,0.92)",
     backdropFilter: "blur(20px)",
-    borderBottom: "1px solid #dce6f0",
+    borderBottom: "1px solid rgba(56,189,248,0.15)",
     padding: "0 24px",
     display: "flex",
     alignItems: "center",
