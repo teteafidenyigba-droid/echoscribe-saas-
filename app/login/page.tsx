@@ -81,7 +81,6 @@ function LoginForm() {
 
             </div>
 
-            <p style={s.leftFooter}>Hébergement France · RGPD · HDS</p>
           </div>
         </div>
 
