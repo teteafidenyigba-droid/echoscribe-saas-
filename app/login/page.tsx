@@ -105,7 +105,9 @@ const styles: Record<string, React.CSSProperties> = {
   page: {
     background: "#07101e",
     backgroundImage:
-      "radial-gradient(ellipse at 50% 0%, rgba(14,50,82,0.55) 0%, transparent 55%)",
+      "linear-gradient(160deg,rgba(5,16,34,0.88) 0%,rgba(7,20,45,0.82) 100%), url('/medical-bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
     minHeight: "100vh",
     display: "flex",
     alignItems: "center",
