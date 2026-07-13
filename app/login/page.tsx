@@ -61,7 +61,7 @@ function LoginForm() {
           <div style={s.leftContent}>
             {/* Logo */}
             <Link href="/" style={s.logoLink}>
-              <svg width="26" height="17" viewBox="0 0 38 26" fill="none">
+              <svg width="38" height="25" viewBox="0 0 38 26" fill="none">
                 <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
                   stroke="#c45d4a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
@@ -208,7 +208,7 @@ const s: Record<string, React.CSSProperties> = {
   },
   logoText: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 22,
+    fontSize: 32,
     color: "#e8f4fd",
     letterSpacing: "-0.01em",
   },
