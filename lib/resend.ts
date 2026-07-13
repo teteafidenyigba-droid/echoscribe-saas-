@@ -1,6 +1,4 @@
 import { Resend } from "resend";
-import { readFileSync } from "fs";
-import { resolve } from "path";
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY ?? "re_placeholder");
@@ -8,79 +6,146 @@ function getResend() {
 const FROM = process.env.RESEND_FROM_EMAIL ?? "EchoScribe <noreply@echoscribe.fr>";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://echoscribe.fr";
 
-// Chargés une seule fois au démarrage — chemins statiques pour que Vercel les bundle
-const TEMPLATES = {
-  base:             readFileSync(resolve(process.cwd(), "emails/base.html"), "utf-8"),
-  bienvenue:        readFileSync(resolve(process.cwd(), "emails/bienvenue.html"), "utf-8"),
-  "essai-actif":    readFileSync(resolve(process.cwd(), "emails/essai-actif.html"), "utf-8"),
-  "rappel-j3":      readFileSync(resolve(process.cwd(), "emails/rappel-j3.html"), "utf-8"),
-  "essai-expire":   readFileSync(resolve(process.cwd(), "emails/essai-expire.html"), "utf-8"),
-  "abonnement-actif": readFileSync(resolve(process.cwd(), "emails/abonnement-actif.html"), "utf-8"),
-  annulation:       readFileSync(resolve(process.cwd(), "emails/annulation.html"), "utf-8"),
-};
+const LOGO = `
+<table cellpadding="0" cellspacing="0" style="margin:0 auto 12px;">
+  <tr>
+    <td valign="middle" style="padding-right:10px;">
+      <img src="https://echoscribe.fr/ecg.png" width="34" height="22" alt="" style="display:block;">
+    </td>
+    <td valign="middle">
+      <span style="font-size:34px;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:#ffffff;letter-spacing:-0.01em;">Echo<span style="font-style:normal;font-weight:700;color:#4a9fd4;">Scribe</span></span>
+    </td>
+  </tr>
+</table>
+<span style="display:inline-block;background:rgba(125,211,252,0.15);border:1px solid rgba(125,211,252,0.3);border-radius:999px;padding:4px 16px;font-size:11px;color:#7dd3fc;letter-spacing:0.1em;font-family:monospace;">Dictée Médicale</span>`;
 
-function render(templateKey: keyof typeof TEMPLATES, vars: Record<string, string>): string {
-  let content = TEMPLATES[templateKey];
-  for (const [key, val] of Object.entries({ ...vars, APP_URL })) {
-    content = content.replaceAll(`{{${key}}}`, val);
-  }
-  return TEMPLATES.base
-    .replace("{{APP_URL}}", APP_URL)
-    .replace("{{CONTENT}}", content);
+const FOOTER = `
+<div style="background:#0f2440;border-radius:0 0 20px 20px;padding:24px 40px;text-align:center;">
+  <p style="font-size:11px;color:#4a6a8a;margin:0;font-family:monospace;line-height:2;">
+    © 2026 EchoScribe · Outil d'aide à la rédaction médicale<br>
+    À valider par le médecin responsable<br>
+    Adresse non surveillée — merci de ne pas répondre à cet email<br>
+    <a href="${APP_URL}/confidentialite" style="color:#7dd3fc;text-decoration:none;">Confidentialité</a> ·
+    <a href="${APP_URL}/cgu" style="color:#7dd3fc;text-decoration:none;">CGU</a>
+  </p>
+</div>`;
+
+function base(content: string) {
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body style="margin:0;padding:0;background:#dce8f5;font-family:Georgia,serif;">
+  <div style="max-width:560px;margin:0 auto;padding:40px 20px;">
+    <div style="background:linear-gradient(135deg,#0f2440 0%,#1e3a5f 60%,#1a6aaa 100%);border-radius:20px 20px 0 0;padding:40px;text-align:center;">
+      ${LOGO}
+    </div>
+    <div style="background:#ffffff;padding:40px;border-left:1px solid #c8ddef;border-right:1px solid #c8ddef;">
+      ${content}
+    </div>
+    ${FOOTER}
+  </div>
+</body>
+</html>`;
+}
+
+function h1(text: string) {
+  return `<h1 style="font-size:24px;color:#1e3a5f;margin:0 0 16px;font-weight:700;">${text}</h1>`;
+}
+function p(text: string, small = false) {
+  return `<p style="font-size:${small ? "13px" : "16px"};line-height:1.75;color:${small ? "#8aaac8" : "#4a6a8a"};margin:0 0 ${small ? "0" : "16px"};">${text}</p>`;
+}
+function btn(label: string, url: string) {
+  return `<a href="${url}" style="display:block;text-align:center;background:linear-gradient(135deg,#1e3a5f,#1e5a8a);color:#ffffff;text-decoration:none;font-size:17px;font-weight:700;padding:18px 32px;border-radius:12px;margin:0 0 32px;">${label}</a>`;
 }
 
 export async function sendWelcomeEmail(to: string, name: string) {
   await getResend().emails.send({
-    from: FROM,
-    to,
+    from: FROM, to,
     subject: "Bienvenue sur EchoScribe — votre essai de 7 jours commence",
-    html: render("bienvenue", { NAME: name }),
+    html: base(`
+      ${h1("Bienvenue sur EchoScribe")}
+      ${p(`Bonjour ${name},`)}
+      ${p("Votre compte est créé. Vous bénéficiez d'un <strong style=\"color:#1e3a5f;\">essai gratuit de 7 jours</strong>, sans carte bancaire requise.")}
+      ${p("EchoScribe transforme votre dictée en compte rendu d'échographie structuré en moins de <strong style=\"color:#1e3a5f;\">30 secondes</strong>, conforme aux standards de la SFR.")}
+      ${btn("Accéder à l'application →", `${APP_URL}/app`)}
+      ${p("Si vous avez des questions, contactez-nous via echoscribe.fr", true)}
+    `),
   });
 }
 
 export async function sendTrialStartEmail(to: string, name: string, trialEnd: Date) {
   const dateStr = trialEnd.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   await getResend().emails.send({
-    from: FROM,
-    to,
+    from: FROM, to,
     subject: "Votre essai EchoScribe est actif",
-    html: render("essai-actif", { NAME: name, TRIAL_END_DATE: dateStr }),
+    html: base(`
+      ${h1("Votre essai gratuit est actif")}
+      ${p(`Bonjour ${name},`)}
+      ${p(`Votre essai EchoScribe est actif jusqu'au <strong style="color:#1e3a5f;">${dateStr}</strong>.`)}
+      ${p("Profitez de ces 7 jours pour générer vos comptes rendus d'échographie par dictée vocale.")}
+      ${btn("Ouvrir EchoScribe →", `${APP_URL}/app`)}
+    `),
   });
 }
 
 export async function sendTrialReminderEmail(to: string, name: string) {
   await getResend().emails.send({
-    from: FROM,
-    to,
+    from: FROM, to,
     subject: "⏰ Plus que 3 jours — votre essai EchoScribe se termine bientôt",
-    html: render("rappel-j3", { NAME: name }),
+    html: base(`
+      ${h1("Plus que 3 jours d'essai")}
+      ${p(`Bonjour ${name},`)}
+      ${p("Votre période d'essai gratuit se termine dans <strong style=\"color:#1e3a5f;\">3 jours</strong>. Pour continuer sans interruption, choisissez votre abonnement.")}
+      ${p("Vos comptes rendus et paramètres sont conservés.")}
+      ${btn("Choisir mon abonnement →", `${APP_URL}/billing`)}
+      ${p("Résiliable à tout moment depuis votre espace abonné.", true)}
+    `),
   });
 }
 
 export async function sendTrialExpiryEmail(to: string, name: string) {
   await getResend().emails.send({
-    from: FROM,
-    to,
+    from: FROM, to,
     subject: "Votre essai EchoScribe est terminé — continuez sans interruption",
-    html: render("essai-expire", { NAME: name }),
+    html: base(`
+      ${h1("Votre essai gratuit est terminé")}
+      ${p(`Bonjour ${name},`)}
+      ${p("Votre période d'essai de 7 jours a expiré. Pour retrouver un accès immédiat, choisissez votre abonnement.")}
+      ${p("Vos comptes rendus et paramètres sont conservés et accessibles dès la souscription.")}
+      ${btn("Choisir mon abonnement →", `${APP_URL}/billing`)}
+      ${p("Paiement sécurisé par Stripe · Résiliable à tout moment.", true)}
+    `),
   });
 }
 
 export async function sendSubscriptionActiveEmail(to: string, name: string, plan: string) {
   await getResend().emails.send({
-    from: FROM,
-    to,
+    from: FROM, to,
     subject: "✅ Votre abonnement EchoScribe est actif",
-    html: render("abonnement-actif", { NAME: name, PLAN: plan }),
+    html: base(`
+      ${h1("Abonnement activé")}
+      ${p(`Bonjour ${name},`)}
+      ${p(`Votre abonnement <strong style="color:#1e3a5f;">${plan}</strong> est désormais actif. Vous avez accès complet à EchoScribe.`)}
+      ${btn("Accéder à l'application →", `${APP_URL}/app`)}
+      ${p("Vous pouvez gérer votre abonnement à tout moment depuis votre espace.", true)}
+    `),
   });
 }
 
 export async function sendCancellationEmail(to: string, name: string, endDate: Date) {
   const dateStr = endDate.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   await getResend().emails.send({
-    from: FROM,
-    to,
+    from: FROM, to,
     subject: "Votre abonnement EchoScribe a été annulé",
-    html: render("annulation", { NAME: name, END_DATE: dateStr }),
+    html: base(`
+      ${h1("Annulation confirmée")}
+      ${p(`Bonjour ${name},`)}
+      ${p(`Votre abonnement a bien été annulé. Vous conservez l'accès jusqu'au <strong style="color:#1e3a5f;">${dateStr}</strong>.`)}
+      ${p("Vous pouvez vous réabonner à tout moment pour retrouver un accès immédiat.")}
+      ${btn("Se réabonner →", `${APP_URL}/billing`)}
+    `),
   });
 }
