@@ -177,7 +177,7 @@ const s: Record<string, React.CSSProperties> = {
   left: {
     position: "relative",
     width: "55%",
-    background: "#07111f",
+    background: "linear-gradient(145deg, #050f1e 0%, #0a1f3d 60%, #0d2952 100%)",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
