@@ -148,7 +148,6 @@ function LoginForm() {
               <Link href="/register" style={s.registerLink}>Commencer l&apos;essai gratuit</Link>
             </p>
 
-            <p style={s.legalRight}>Hébergement France · RGPD · HDS</p>
           </div>
         </div>
 
