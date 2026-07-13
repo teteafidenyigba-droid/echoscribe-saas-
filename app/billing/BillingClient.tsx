@@ -177,7 +177,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
                 <div style={s.planPrice}>
                   799€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
                 </div>
-                <p style={{ ...s.planDesc, color: "#38bdf8" }}>Soit 58€/mois · économisez 25%</p>
+                <p style={{ ...s.planDesc, color: "#7bacc2" }}>Soit 66,58€/mois · économisez 4%</p>
                 <button
                   onClick={() => handleCheckout("yearly")}
                   disabled={!!loading}
