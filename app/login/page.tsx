@@ -138,18 +138,23 @@ export default function LoginPage() {
 const s: Record<string, React.CSSProperties> = {
   root: {
     display: "flex",
-    minHeight: "100vh",
+    height: "100vh",
+    width: "100vw",
+    overflow: "hidden",
     fontFamily: "'EB Garamond', Georgia, serif",
   },
   /* ── LEFT ── */
   left: {
     position: "relative",
-    flex: "1 1 55%",
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
     backgroundImage: "url('/medical-bg.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     display: "flex",
     flexDirection: "column",
+    height: "100%",
   },
   leftOverlay: {
     position: "absolute",
@@ -232,12 +237,16 @@ const s: Record<string, React.CSSProperties> = {
   },
   /* ── RIGHT ── */
   right: {
-    flex: "0 0 420px",
+    flexGrow: 0,
+    flexShrink: 0,
+    flexBasis: 420,
     background: "#030d1a",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     padding: "48px 40px",
+    height: "100%",
+    overflowY: "auto",
     borderLeft: "1px solid rgba(56,189,248,0.1)",
   },
   formWrap: {
