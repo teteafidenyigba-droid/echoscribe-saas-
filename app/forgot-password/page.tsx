@@ -15,9 +15,8 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://echoscribe.fr";
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${appUrl}/api/auth/callback?next=/reset-password`,
+      redirectTo: "https://echoscribe.fr/reset-password",
     });
     if (error) {
       setError("Une erreur est survenue. Vérifiez votre adresse e-mail.");

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,14 +14,20 @@ export default function ResetPasswordPage() {
   const [ready, setReady] = useState(false);
   const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // La session est déjà établie par /api/auth/callback
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setReady(true);
+    const token_hash = searchParams.get("token_hash");
+    const type = searchParams.get("type");
+    if (!token_hash || type !== "recovery") {
+      setError("Lien invalide ou expiré.");
+      return;
+    }
+    supabase.auth.verifyOtp({ token_hash, type: "recovery" }).then(({ error }) => {
+      if (error) {
+        setError("Ce lien est invalide ou a expiré. Demandez-en un nouveau.");
       } else {
-        setError("Lien invalide ou expiré. Demandez un nouveau lien.");
+        setReady(true);
       }
     });
   }, []);
@@ -29,14 +35,8 @@ export default function ResetPasswordPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
-      return;
-    }
-    if (password !== confirm) {
-      setError("Les mots de passe ne correspondent pas.");
-      return;
-    }
+    if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return; }
+    if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
         .es-input { transition: border-color 0.2s, box-shadow 0.2s; }
         .es-input:focus { border-color: #0a66c2 !important; box-shadow: 0 0 0 3px rgba(10,102,194,0.1) !important; outline: none; }
         .es-btn { transition: background 0.15s, transform 0.1s, box-shadow 0.15s; }
-        .es-btn:hover:not(:disabled) { background: #084fa0 !important; box-shadow: 0 6px 24px rgba(10,102,194,0.4) !important; transform: translateY(-1px); }
+        .es-btn:hover:not(:disabled) { background: #084fa0 !important; transform: translateY(-1px); }
         .es-btn:disabled { opacity: 0.55; cursor: not-allowed; }
       `}</style>
 
@@ -73,7 +73,7 @@ export default function ResetPasswordPage() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>✅</div>
               <p style={{ fontSize: 16, color: "#0d2540", fontWeight: 600, marginBottom: 10 }}>Mot de passe modifié</p>
               <p style={{ fontSize: 14, color: "#8a9ab0", lineHeight: 1.7 }}>
-                Vous recevrez un e-mail de confirmation.<br />Redirection vers la connexion…
+                Vous recevrez un e-mail de confirmation.<br />Redirection en cours…
               </p>
             </div>
           ) : error && !ready ? (
@@ -86,36 +86,31 @@ export default function ResetPasswordPage() {
               </Link>
             </div>
           ) : !ready ? (
-            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification…</p>
+            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification du lien…</p>
           ) : (
-            <>
-              <p style={{ fontSize: 14, color: "#8a9ab0", marginBottom: 28, lineHeight: 1.6 }}>
-                Choisissez un nouveau mot de passe pour votre compte EchoScribe.
-              </p>
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080", letterSpacing: "0.01em" }}>Nouveau mot de passe</label>
-                  <input className="es-input" type="password" required value={password}
-                    onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum"
-                    style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080" }}>Nouveau mot de passe</label>
+                <input className="es-input" type="password" required value={password}
+                  onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum"
+                  style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+                <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080" }}>Confirmer le mot de passe</label>
+                <input className="es-input" type="password" required value={confirm}
+                  onChange={e => setConfirm(e.target.value)} placeholder="••••••••"
+                  style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
+              </div>
+              {error && (
+                <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "11px 16px", color: "#b91c1c", fontSize: 13 }}>
+                  {error}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                  <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080", letterSpacing: "0.01em" }}>Confirmer le mot de passe</label>
-                  <input className="es-input" type="password" required value={confirm}
-                    onChange={e => setConfirm(e.target.value)} placeholder="••••••••"
-                    style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
-                </div>
-                {error && (
-                  <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "11px 16px", color: "#b91c1c", fontSize: 13 }}>
-                    {error}
-                  </div>
-                )}
-                <button className="es-btn" type="submit" disabled={loading}
-                  style={{ width: "100%", padding: "14px", marginTop: 6, background: "#0a66c2", border: "none", borderRadius: 10, color: "#ffffff", fontSize: 15, fontWeight: 600, fontFamily: "'Inter', sans-serif", cursor: "pointer", boxShadow: "0 4px 16px rgba(10,102,194,0.28)" }}>
-                  {loading ? "Enregistrement…" : "Enregistrer le mot de passe →"}
-                </button>
-              </form>
-            </>
+              )}
+              <button className="es-btn" type="submit" disabled={loading}
+                style={{ width: "100%", padding: "14px", marginTop: 6, background: "#0a66c2", border: "none", borderRadius: 10, color: "#ffffff", fontSize: 15, fontWeight: 600, fontFamily: "'Inter', sans-serif", cursor: "pointer", boxShadow: "0 4px 16px rgba(10,102,194,0.28)" }}>
+                {loading ? "Enregistrement…" : "Enregistrer le mot de passe →"}
+              </button>
+            </form>
           )}
 
           {!done && (
@@ -123,9 +118,16 @@ export default function ResetPasswordPage() {
               <Link href="/login" style={{ color: "#8a9ab0", textDecoration: "none" }}>← Retour à la connexion</Link>
             </p>
           )}
-
         </div>
       </div>
     </>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div style={{ background: "#f5f7fa", minHeight: "100vh" }} />}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
