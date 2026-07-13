@@ -105,7 +105,7 @@ const styles: Record<string, React.CSSProperties> = {
   page: {
     background: "#07101e",
     backgroundImage:
-      "linear-gradient(160deg,rgba(5,16,34,0.65) 0%,rgba(7,20,45,0.60) 100%), url('/medical-bg.png')",
+      "linear-gradient(160deg,rgba(3,13,26,0.80) 0%,rgba(4,18,40,0.75) 100%), url('/medical-bg.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     minHeight: "100vh",
@@ -116,12 +116,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'EB Garamond', Georgia, serif",
   },
   card: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(56,189,248,0.2)",
+    background: "rgba(8,24,48,0.93)",
+    border: "1px solid rgba(56,189,248,0.35)",
     borderRadius: 16,
     padding: "40px 36px",
     width: "100%",
     maxWidth: 420,
+    backdropFilter: "blur(20px)",
+    boxShadow: "0 0 0 1px rgba(56,189,248,0.08), 0 8px 48px rgba(0,0,0,0.6), 0 0 60px rgba(56,189,248,0.06)",
   },
   logo: {
     display: "block",
@@ -157,11 +159,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
   input: {
     width: "100%",
-    background: "rgba(0,0,0,0.35)",
-    border: "1px solid rgba(56,189,248,0.18)",
+    background: "rgba(0,0,0,0.45)",
+    border: "1px solid rgba(56,189,248,0.25)",
     borderRadius: 9,
     padding: "11px 14px",
-    color: "#c8d8ea",
+    color: "#e8f4fd",
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 14,
     outline: "none",
