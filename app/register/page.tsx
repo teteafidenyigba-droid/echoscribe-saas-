@@ -5,87 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    background: "#07101e",
-    backgroundImage: "radial-gradient(ellipse at 50% 0%, rgba(14,50,82,0.55) 0%, transparent 55%)",
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    fontFamily: "'EB Garamond', Georgia, serif",
-  },
-  card: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(56,189,248,0.2)",
-    borderRadius: 16,
-    padding: "40px 36px",
-    width: "100%",
-    maxWidth: 440,
-  },
-  logo: {
-    display: "block",
-    fontFamily: "'EB Garamond', serif",
-    fontSize: 24,
-    fontStyle: "italic",
-    color: "#e2eaf5",
-    textDecoration: "none",
-    marginBottom: 28,
-    textAlign: "center" as const,
-  },
-  label: {
-    display: "block",
-    fontSize: 12,
-    color: "#c8d8ea",
-    fontFamily: "'JetBrains Mono', monospace",
-    marginBottom: 6,
-    letterSpacing: "0.06em",
-  },
-  input: {
-    width: "100%",
-    background: "rgba(0,0,0,0.35)",
-    border: "1px solid rgba(56,189,248,0.18)",
-    borderRadius: 9,
-    padding: "11px 14px",
-    color: "#c8d8ea",
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: 14,
-    outline: "none",
-  },
-  errorBox: {
-    background: "rgba(239,68,68,0.08)",
-    border: "1px solid rgba(239,68,68,0.35)",
-    borderRadius: 8,
-    padding: "10px 14px",
-    color: "#fca5a5",
-    fontSize: 13,
-    fontFamily: "'JetBrains Mono', monospace",
-  },
-  successBox: {
-    background: "rgba(74,222,128,0.07)",
-    border: "1px solid rgba(74,222,128,0.3)",
-    borderRadius: 8,
-    padding: "16px 14px",
-    color: "#86efac",
-    fontSize: 14,
-    fontFamily: "'JetBrains Mono', monospace",
-    lineHeight: 1.6,
-  },
-  btn: {
-    width: "100%",
-    padding: "14px",
-    background: "linear-gradient(90deg,#0c2840,#0e3352)",
-    border: "1px solid rgba(56,189,248,0.45)",
-    borderRadius: 10,
-    color: "#7dd3fc",
-    fontSize: 17,
-    fontFamily: "'EB Garamond', serif",
-    cursor: "pointer",
-    marginTop: 4,
-  },
-};
-
 function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -118,7 +37,6 @@ function RegisterForm() {
       setError(error.message || error.name || JSON.stringify(error));
       setLoading(false);
     } else if (data.user && data.user.identities?.length === 0) {
-      // Email déjà utilisé — Supabase ne retourne pas d'erreur mais identities est vide
       setError("Un compte existe déjà avec cette adresse email. Connectez-vous ou utilisez une autre adresse.");
       setLoading(false);
     } else {
@@ -126,98 +44,317 @@ function RegisterForm() {
     }
   }
 
-  if (success) {
-    return (
-      <div style={styles.card}>
-        <Link href="/" style={styles.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
-        </Link>
-        <div style={styles.successBox}>
-          <div style={{ fontSize: 18, marginBottom: 10 }}>✓ Vérifiez votre email</div>
-          <p>Un lien de confirmation vous a été envoyé à <strong>{email}</strong>.</p>
-          <p style={{ marginTop: 8 }}>Cliquez sur le lien pour activer votre compte et démarrer votre essai de 7 jours.</p>
-        </div>
-        <p style={{ textAlign: "center", fontSize: 13, color: "#4a7a96", marginTop: 20, fontFamily: "'JetBrains Mono', monospace" }}>
-          Déjà un compte ? <Link href="/login" style={{ color: "#38bdf8" }}>Se connecter</Link>
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div style={styles.card}>
-      <Link href="/" style={styles.logo}>
-        Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
-      </Link>
-      <h1 style={{ fontSize: 24, fontWeight: 600, color: "#e2eaf5", marginBottom: 4, textAlign: "center" }}>
-        Créer votre compte
-      </h1>
-      <p style={{ fontSize: 13, color: "#38bdf8", fontFamily: "'JetBrains Mono', monospace", marginBottom: 28, textAlign: "center" }}>
-        7 jours gratuits · aucune carte bancaire requise
-      </p>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow: hidden; }
+        .reg-input { transition: border-color 0.2s, box-shadow 0.2s; }
+        .reg-input:focus { border-color: #0a66c2 !important; box-shadow: 0 0 0 3px rgba(10,102,194,0.1) !important; outline: none; }
+        .reg-btn { transition: background 0.15s, transform 0.1s, box-shadow 0.15s; }
+        .reg-btn:hover:not(:disabled) { background: #084fa0 !important; box-shadow: 0 6px 24px rgba(10,102,194,0.4) !important; transform: translateY(-1px); }
+        .reg-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        @media (max-width: 900px) {
+          .reg-left { display: none !important; }
+          .reg-right { width: 100% !important; overflow-y: auto !important; }
+        }
+      `}</style>
 
-      <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <div>
-          <label style={styles.label}>Prénom et nom</label>
-          <input
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Dr. Marie Dupont"
-            style={styles.input}
-          />
-        </div>
-        <div>
-          <label style={styles.label}>Email professionnel</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="dr.dupont@clinique.fr"
-            style={styles.input}
-          />
-        </div>
-        <div>
-          <label style={styles.label}>Mot de passe (min. 8 caractères)</label>
-          <input
-            type="password"
-            required
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            style={styles.input}
-          />
+      <div style={s.root}>
+        {/* ── Panneau gauche ── */}
+        <div className="reg-left" style={s.left}>
+          <div style={s.leftBg} />
+          <div style={s.leftOverlay} />
+          <div style={s.leftContent}>
+            <Link href="/" style={s.logoLink}>
+              <svg width="38" height="25" viewBox="0 0 38 26" fill="none">
+                <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+                  stroke="#c45d4a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+              <span style={s.logoText}><em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a6abf" }}>Scribe</strong></span>
+            </Link>
+            <div style={s.leftBody}>
+              <h1 style={s.headline}>
+                Le compte rendu<br />en quelques<br /><em>secondes.</em>
+              </h1>
+            </div>
+          </div>
         </div>
 
-        {error && <div style={styles.errorBox}>{error}</div>}
+        {/* ── Panneau droit ── */}
+        <div className="reg-right" style={s.right}>
+          <div style={s.formWrap}>
 
-        <button type="submit" disabled={loading} style={styles.btn}>
-          {loading ? "Création du compte…" : "Démarrer l'essai gratuit →"}
-        </button>
-      </form>
+            {success ? (
+              <>
+                <div style={s.formHeader}>
+                  <h2 style={s.formTitle}>Vérifiez votre email</h2>
+                  <div style={s.titleAccent} />
+                </div>
+                <div style={s.successBox}>
+                  <p>Un lien de confirmation a été envoyé à <strong>{email}</strong>.</p>
+                  <p style={{ marginTop: 8 }}>Cliquez sur le lien pour activer votre compte et démarrer votre essai de 7 jours.</p>
+                </div>
+                <p style={s.loginLink}>
+                  Déjà un compte ? <Link href="/login" style={s.registerLink}>Se connecter</Link>
+                </p>
+              </>
+            ) : (
+              <>
+                <div style={s.formHeader}>
+                  <h2 style={s.formTitle}>Créer votre compte</h2>
+                  <div style={s.titleAccent} />
+                  <p style={s.formSub}>7 jours gratuits · aucune carte requise</p>
+                </div>
 
-      <p style={{ fontSize: 11, color: "#2d4a5e", fontFamily: "'JetBrains Mono', monospace", marginTop: 14, textAlign: "center", lineHeight: 1.6 }}>
-        En vous inscrivant, vous acceptez nos{" "}
-        <Link href="/cgu" style={{ color: "#4a7a96" }}>CGU</Link> et notre{" "}
-        <Link href="/confidentialite" style={{ color: "#4a7a96" }}>politique de confidentialité</Link>.
-      </p>
+                <form onSubmit={handleRegister} style={s.form}>
+                  <div style={s.field}>
+                    <label style={s.label}>Prénom et nom</label>
+                    <input className="reg-input" type="text" required value={name}
+                      onChange={e => setName(e.target.value)}
+                      placeholder="Dr. Marie Dupont"
+                      style={s.input} />
+                  </div>
+                  <div style={s.field}>
+                    <label style={s.label}>Email</label>
+                    <input className="reg-input" type="email" required value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder="dr.dupont@clinique.fr"
+                      style={s.input} />
+                  </div>
+                  <div style={s.field}>
+                    <label style={s.label}>Mot de passe</label>
+                    <input className="reg-input" type="password" required minLength={8} value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      placeholder="••••••••  (min. 8 caractères)"
+                      style={s.input} />
+                  </div>
 
-      <p style={{ textAlign: "center", fontSize: 14, color: "#4a7a96", marginTop: 16, fontFamily: "'JetBrains Mono', monospace" }}>
-        Déjà un compte ? <Link href="/login" style={{ color: "#38bdf8" }}>Se connecter</Link>
-      </p>
-    </div>
+                  {error && <div style={s.errorBox}>{error}</div>}
+
+                  <button className="reg-btn" type="submit" disabled={loading} style={s.btn}>
+                    {loading ? "Création du compte…" : "Démarrer l'essai gratuit →"}
+                  </button>
+                </form>
+
+                <p style={s.legal}>
+                  En vous inscrivant, vous acceptez nos{" "}
+                  <Link href="/cgu" style={{ color: "#8a9ab0" }}>CGU</Link> et notre{" "}
+                  <Link href="/confidentialite" style={{ color: "#8a9ab0" }}>politique de confidentialité</Link>.
+                </p>
+
+                <div style={s.dividerRow}>
+                  <span style={s.dividerLine} />
+                  <span style={s.dividerText}>ou</span>
+                  <span style={s.dividerLine} />
+                </div>
+
+                <p style={s.loginLink}>
+                  Déjà un compte ? <Link href="/login" style={s.registerLink}>Se connecter</Link>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <div style={styles.page}>
-      <Suspense fallback={<div style={{ color: "#7bacc2" }}>Chargement…</div>}>
-        <RegisterForm />
-      </Suspense>
-    </div>
+    <Suspense fallback={<div style={{ background: "#f5f7fa", minHeight: "100vh" }} />}>
+      <RegisterForm />
+    </Suspense>
   );
 }
+
+const s: Record<string, React.CSSProperties> = {
+  root: {
+    display: "flex",
+    height: "100vh",
+    width: "100vw",
+    overflow: "hidden",
+    fontFamily: "'Inter', sans-serif",
+  },
+  left: {
+    position: "relative",
+    width: "52%",
+    flexShrink: 0,
+    overflow: "hidden",
+  },
+  leftBg: {
+    position: "absolute",
+    inset: 0,
+    backgroundImage: "url('/medical-bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center 20%",
+  },
+  leftOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(160deg, rgba(5,15,35,0.90) 0%, rgba(8,28,65,0.85) 50%, rgba(10,35,80,0.80) 100%)",
+  },
+  leftContent: {
+    position: "relative",
+    zIndex: 1,
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    padding: "44px 56px",
+  },
+  logoLink: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    textDecoration: "none",
+  },
+  logoText: {
+    fontFamily: "'EB Garamond', serif",
+    fontSize: 32,
+    color: "rgba(255,255,255,0.9)",
+    letterSpacing: "-0.01em",
+  },
+  leftBody: {
+    marginTop: "auto",
+    marginBottom: "auto",
+  },
+  headline: {
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: 64,
+    fontWeight: 300,
+    color: "#ffffff",
+    lineHeight: 1.08,
+    letterSpacing: "-0.025em",
+  },
+  right: {
+    flex: 1,
+    background: "#f5f7fa",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px 32px",
+    overflowY: "auto",
+  },
+  formWrap: {
+    width: "100%",
+    maxWidth: 380,
+  },
+  formHeader: {
+    marginBottom: 32,
+  },
+  formTitle: {
+    fontFamily: "'EB Garamond', serif",
+    fontSize: 40,
+    fontWeight: 600,
+    color: "#0d2540",
+    letterSpacing: "-0.025em",
+    marginBottom: 10,
+    lineHeight: 1,
+  },
+  titleAccent: {
+    width: 36,
+    height: 3,
+    background: "#c45d4a",
+    borderRadius: 2,
+    marginBottom: 14,
+  },
+  formSub: {
+    fontSize: 14,
+    color: "#8a9ab0",
+    fontWeight: 400,
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  field: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 6,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: 500,
+    color: "#4a6080",
+    letterSpacing: "0.01em",
+  },
+  input: {
+    width: "100%",
+    border: "1.5px solid #dce6f0",
+    borderRadius: 10,
+    padding: "12px 14px",
+    fontSize: 14,
+    color: "#0d2540",
+    fontFamily: "'Inter', sans-serif",
+    background: "#ffffff",
+  },
+  errorBox: {
+    background: "#fef2f2",
+    border: "1px solid #fecaca",
+    borderRadius: 10,
+    padding: "11px 16px",
+    color: "#b91c1c",
+    fontSize: 13,
+  },
+  successBox: {
+    background: "#f0fdf4",
+    border: "1px solid #bbf7d0",
+    borderRadius: 10,
+    padding: "16px",
+    color: "#166534",
+    fontSize: 14,
+    lineHeight: 1.6,
+    marginBottom: 24,
+  },
+  btn: {
+    width: "100%",
+    padding: "14px",
+    marginTop: 4,
+    background: "#0a66c2",
+    border: "none",
+    borderRadius: 10,
+    color: "#ffffff",
+    fontSize: 15,
+    fontWeight: 600,
+    fontFamily: "'Inter', sans-serif",
+    cursor: "pointer",
+    letterSpacing: "0.01em",
+    boxShadow: "0 4px 16px rgba(10,102,194,0.28)",
+  },
+  legal: {
+    fontSize: 11,
+    color: "#aab8cc",
+    textAlign: "center",
+    marginTop: 16,
+    lineHeight: 1.6,
+  },
+  dividerRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    margin: "24px 0",
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    background: "#dce6f0",
+  },
+  dividerText: {
+    fontSize: 12,
+    color: "#aab8cc",
+    fontWeight: 500,
+  },
+  loginLink: {
+    textAlign: "center",
+    fontSize: 14,
+    color: "#8a9ab0",
+  },
+  registerLink: {
+    color: "#0a66c2",
+    textDecoration: "none",
+    fontWeight: 600,
+  },
+};
