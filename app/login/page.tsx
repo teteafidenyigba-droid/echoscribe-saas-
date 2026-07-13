@@ -14,7 +14,6 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
-
   const autreAppareil = searchParams.get("error") === "autre_appareil";
 
   async function handleLogin(e: React.FormEvent) {
@@ -36,74 +35,63 @@ function LoginForm() {
 
   return (
     <div style={s.root}>
-      {/* ── PANNEAU GAUCHE ── */}
-      <div style={s.left}>
-        <div style={s.leftOverlay} />
-        <div style={s.leftContent}>
+      {/* Fond : image filtrée en mode échographe */}
+      <div style={s.bgImage} />
+      <div style={s.bgOverlay} />
+
+      {/* Contenu centré */}
+      <div style={s.center}>
+        <div style={s.card}>
+
           {/* Logo */}
-          <Link href="/" style={s.logo}>
-            <svg width="38" height="26" viewBox="0 0 38 26" fill="none">
-              <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                stroke="#38bdf8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <Link href="/" style={s.logoLink}>
+            <svg width="34" height="22" viewBox="0 0 38 26" fill="none" style={{ flexShrink: 0 }}>
+              <polyline
+                points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+                stroke="#00b4d8" strokeWidth="2.4"
+                strokeLinecap="round" strokeLinejoin="round" fill="none"
+              />
             </svg>
             <span style={s.logoText}>
-              Echo<span style={{ fontStyle:"normal", fontWeight:700, color:"#38bdf8" }}>Scribe</span>
+              <em>Echo</em><strong style={{ fontStyle: "normal", color: "#00b4d8" }}>Scribe</strong>
             </span>
           </Link>
 
-          {/* Tagline */}
-          <div style={s.tagline}>
-            <h1 style={s.h1}>Dictée médicale<br/>augmentée par l'IA</h1>
-            <p style={s.desc}>De la voix au compte rendu signable<br/>en moins de 30 secondes.</p>
+          {/* Ligne de scan — signature */}
+          <div style={s.scanLine}>
+            <div style={s.scanGlow} />
           </div>
 
-          {/* Features */}
-          <ul style={s.features}>
-            {["Transcription Whisper temps réel","Rédaction IA — normes SFR/HAS","Historique 12h · Export PDF & Word","Données hébergées en Europe"].map(f => (
-              <li key={f} style={s.featureItem}>
-                <span style={s.check}>✦</span>{f}
-              </li>
-            ))}
-          </ul>
-
-          <p style={s.leftFooter}>Rejoignez 500+ médecins échographistes</p>
-        </div>
-      </div>
-
-      {/* ── PANNEAU DROIT ── */}
-      <div style={s.right}>
-        <div style={s.formWrap}>
-          {/* Logo mobile */}
-          <Link href="/" style={{ ...s.logo, display:"none", marginBottom:32, ...s.logoMobile }}>
-            <svg width="32" height="22" viewBox="0 0 38 26" fill="none">
-              <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                stroke="#38bdf8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            </svg>
-            <span style={s.logoText}>Echo<span style={{ fontStyle:"normal", fontWeight:700, color:"#38bdf8" }}>Scribe</span></span>
-          </Link>
-
-          <h2 style={s.formTitle}>Connexion</h2>
-          <p style={s.formSub}>Accédez à votre espace de dictée</p>
+          <h1 style={s.title}>Connexion</h1>
+          <p style={s.sub}>Accédez à votre espace de dictée</p>
 
           {autreAppareil && (
             <div style={s.warningBox}>
               <strong>⚠️ Autre appareil connecté</strong>
-              <p style={{ margin:"4px 0 0", fontSize:12 }}>Connectez-vous ici pour basculer la session — l&apos;autre sera déconnecté.</p>
+              <p style={{ margin: "4px 0 0", fontSize: 12 }}>
+                Connectez-vous ici pour basculer — l&apos;autre session sera déconnectée.
+              </p>
             </div>
           )}
 
-          <form onSubmit={handleLogin} style={{ display:"flex", flexDirection:"column", gap:16 }}>
+          <form onSubmit={handleLogin} style={s.form}>
             <div>
               <label style={s.label}>Email professionnel</label>
-              <input type="email" required value={email}
+              <input
+                type="email" required value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="dr.dupont@clinique.fr" style={s.input} />
+                placeholder="dr.dupont@clinique.fr"
+                style={s.input}
+              />
             </div>
             <div>
               <label style={s.label}>Mot de passe</label>
-              <input type="password" required value={password}
+              <input
+                type="password" required value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••" style={s.input} />
+                placeholder="••••••••"
+                style={s.input}
+              />
             </div>
 
             {error && <div style={s.errorBox}>{error}</div>}
@@ -113,14 +101,12 @@ function LoginForm() {
             </button>
           </form>
 
-          <p style={s.footerText}>
+          <p style={s.register}>
             Pas encore de compte ?{" "}
-            <Link href="/register" style={{ color:"#38bdf8", textDecoration:"none", fontWeight:600 }}>
-              Essai gratuit 7 jours
-            </Link>
+            <Link href="/register" style={s.registerLink}>Essai gratuit 7 jours</Link>
           </p>
 
-          <p style={s.legal}>Données médicales hébergées en Europe · RGPD</p>
+          <p style={s.legal}>Hébergement Europe · RGPD · HDS</p>
         </div>
       </div>
     </div>
@@ -129,7 +115,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div style={{ background:"#030d1a", minHeight:"100vh" }} />}>
+    <Suspense fallback={<div style={{ background: "#000d1a", minHeight: "100vh" }} />}>
       <LoginForm />
     </Suspense>
   );
@@ -137,151 +123,125 @@ export default function LoginPage() {
 
 const s: Record<string, React.CSSProperties> = {
   root: {
-    display: "flex",
-    height: "100vh",
-    width: "100vw",
-    overflow: "hidden",
-    fontFamily: "'EB Garamond', Georgia, serif",
-  },
-  /* ── LEFT ── */
-  left: {
     position: "relative",
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "24px 16px",
+    fontFamily: "'EB Garamond', Georgia, serif",
+    overflow: "hidden",
+  },
+
+  /* Fond image filtrée mode échographe */
+  bgImage: {
+    position: "absolute",
+    inset: 0,
     backgroundImage: "url('/medical-bg.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
+    filter: "grayscale(100%) brightness(0.55) sepia(0.6) hue-rotate(170deg) saturate(3)",
+    transform: "scale(1.04)",
   },
-  leftOverlay: {
+
+  /* Overlay sombre par-dessus */
+  bgOverlay: {
     position: "absolute",
     inset: 0,
-    background: "linear-gradient(135deg, rgba(3,13,26,0.82) 0%, rgba(4,22,55,0.72) 60%, rgba(6,30,70,0.65) 100%)",
+    background: "linear-gradient(160deg, rgba(0,8,24,0.72) 0%, rgba(0,14,38,0.68) 100%)",
   },
-  leftContent: {
+
+  /* Carte centrale */
+  center: {
     position: "relative",
     zIndex: 1,
+    width: "100%",
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
-    padding: "48px 52px",
+    justifyContent: "center",
   },
-  logo: {
+
+  card: {
+    width: "100%",
+    maxWidth: 400,
+    background: "rgba(0,10,28,0.88)",
+    border: "1px solid rgba(0,180,216,0.22)",
+    borderRadius: 18,
+    padding: "40px 36px 36px",
+    backdropFilter: "blur(24px)",
+    boxShadow: "0 0 0 1px rgba(0,180,216,0.06), 0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(0,180,216,0.12)",
+  },
+
+  logoLink: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     gap: 10,
     textDecoration: "none",
-    color: "#e2eaf5",
+    marginBottom: 28,
   },
   logoText: {
     fontFamily: "'EB Garamond', serif",
     fontSize: 26,
-    fontStyle: "italic",
-    color: "#e2eaf5",
+    color: "#e8f4fd",
     letterSpacing: "-0.01em",
   },
-  tagline: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingBottom: 24,
+
+  /* Ligne de scan — signature visuelle */
+  scanLine: {
+    position: "relative",
+    height: 1,
+    background: "linear-gradient(90deg, transparent 0%, rgba(0,180,216,0.15) 20%, rgba(0,180,216,0.5) 50%, rgba(0,180,216,0.15) 80%, transparent 100%)",
+    marginBottom: 28,
   },
-  h1: {
-    fontSize: 42,
-    fontWeight: 400,
-    fontStyle: "italic",
-    color: "#ffffff",
-    lineHeight: 1.18,
-    marginBottom: 16,
-    letterSpacing: "-0.02em",
+  scanGlow: {
+    position: "absolute",
+    top: -2,
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: 60,
+    height: 5,
+    background: "rgba(0,180,216,0.25)",
+    borderRadius: 4,
+    filter: "blur(4px)",
   },
-  desc: {
-    fontSize: 16,
-    color: "rgba(125,211,252,0.85)",
-    fontFamily: "'JetBrains Mono', monospace",
-    lineHeight: 1.65,
-    letterSpacing: "0.01em",
-  },
-  features: {
-    listStyle: "none",
-    padding: 0,
-    margin: "0 0 32px",
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-  },
-  featureItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    fontSize: 14,
-    color: "rgba(200,216,234,0.88)",
-    fontFamily: "'JetBrains Mono', monospace",
-  },
-  check: {
-    color: "#38bdf8",
-    fontSize: 11,
-    flexShrink: 0,
-  },
-  leftFooter: {
-    fontSize: 12,
-    color: "rgba(125,211,252,0.5)",
-    fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.06em",
-    textTransform: "uppercase",
-  },
-  /* ── RIGHT ── */
-  right: {
-    flexGrow: 0,
-    flexShrink: 0,
-    flexBasis: 420,
-    background: "#030d1a",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "48px 40px",
-    height: "100%",
-    overflowY: "auto",
-    borderLeft: "1px solid rgba(56,189,248,0.1)",
-  },
-  formWrap: {
-    width: "100%",
-    maxWidth: 340,
-  },
-  logoMobile: { display: "none" },
-  formTitle: {
-    fontSize: 28,
+
+  title: {
+    fontSize: 26,
     fontWeight: 600,
     color: "#e8f4fd",
-    marginBottom: 6,
+    marginBottom: 4,
+    textAlign: "center",
     letterSpacing: "-0.01em",
   },
-  formSub: {
+  sub: {
     fontSize: 13,
     color: "#4a7a96",
     fontFamily: "'JetBrains Mono', monospace",
-    marginBottom: 32,
+    marginBottom: 28,
+    textAlign: "center",
   },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+
   label: {
     display: "block",
-    fontSize: 11,
-    color: "#7bacc2",
+    fontSize: 10,
+    color: "#4a7a96",
     fontFamily: "'JetBrains Mono', monospace",
-    marginBottom: 6,
-    letterSpacing: "0.08em",
+    letterSpacing: "0.1em",
     textTransform: "uppercase",
+    marginBottom: 6,
   },
   input: {
     width: "100%",
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(56,189,248,0.2)",
+    background: "rgba(0,180,216,0.04)",
+    border: "1px solid rgba(0,180,216,0.18)",
     borderRadius: 8,
-    padding: "12px 14px",
+    padding: "11px 14px",
     color: "#e8f4fd",
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 14,
@@ -289,55 +249,63 @@ const s: Record<string, React.CSSProperties> = {
     boxSizing: "border-box",
     transition: "border-color 0.2s",
   },
-  btn: {
-    width: "100%",
-    padding: "14px",
-    marginTop: 4,
-    background: "linear-gradient(135deg, #0552a3 0%, #0A66C2 100%)",
-    border: "none",
-    borderRadius: 9,
-    color: "#ffffff",
-    fontSize: 16,
-    fontFamily: "'EB Garamond', serif",
-    fontWeight: 600,
-    letterSpacing: "0.02em",
-    cursor: "pointer",
-    boxShadow: "0 4px 24px rgba(10,102,194,0.4)",
-    transition: "opacity 0.15s",
-  },
+
   warningBox: {
-    background: "rgba(251,191,36,0.08)",
-    border: "1px solid rgba(251,191,36,0.3)",
+    background: "rgba(251,191,36,0.07)",
+    border: "1px solid rgba(251,191,36,0.25)",
     borderRadius: 8,
     padding: "12px 14px",
     color: "#fde68a",
     fontSize: 13,
     fontFamily: "'JetBrains Mono', monospace",
     lineHeight: 1.5,
-    marginBottom: 16,
   },
   errorBox: {
-    background: "rgba(239,68,68,0.08)",
-    border: "1px solid rgba(239,68,68,0.3)",
+    background: "rgba(239,68,68,0.07)",
+    border: "1px solid rgba(239,68,68,0.25)",
     borderRadius: 8,
     padding: "10px 14px",
     color: "#fca5a5",
     fontSize: 13,
     fontFamily: "'JetBrains Mono', monospace",
   },
-  footerText: {
+
+  btn: {
+    width: "100%",
+    padding: "13px",
+    marginTop: 4,
+    background: "linear-gradient(135deg, #0552a3 0%, #0a66c2 100%)",
+    border: "none",
+    borderRadius: 9,
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: "'EB Garamond', serif",
+    fontWeight: 600,
+    letterSpacing: "0.03em",
+    cursor: "pointer",
+    boxShadow: "0 4px 20px rgba(10,102,194,0.45)",
+    transition: "opacity 0.15s, transform 0.1s",
+  },
+
+  register: {
     textAlign: "center",
-    fontSize: 14,
-    color: "#4a7a96",
-    marginTop: 24,
+    fontSize: 13,
+    color: "#3d5a6e",
     fontFamily: "'JetBrains Mono', monospace",
+    marginTop: 24,
+  },
+  registerLink: {
+    color: "#00b4d8",
+    textDecoration: "none",
+    fontWeight: 600,
   },
   legal: {
     textAlign: "center",
-    fontSize: 11,
-    color: "rgba(74,122,150,0.5)",
-    marginTop: 32,
+    fontSize: 10,
+    color: "rgba(0,180,216,0.3)",
     fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.04em",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
+    marginTop: 20,
   },
 };
