@@ -36,116 +36,130 @@ function LoginForm() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { height: 100%; }
-        .es-input:focus { border-color: #0a66c2 !important; outline: none; }
-        .es-btn:hover:not(:disabled) { background: #0552a3 !important; }
-        .es-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        @media (max-width: 768px) {
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow: hidden; }
+        .es-input { transition: border-color 0.2s, box-shadow 0.2s; }
+        .es-input:focus { border-color: #0a66c2 !important; box-shadow: 0 0 0 3px rgba(10,102,194,0.1) !important; outline: none; }
+        .es-btn { transition: background 0.15s, transform 0.1s, box-shadow 0.15s; }
+        .es-btn:hover:not(:disabled) { background: #084fa0 !important; box-shadow: 0 6px 24px rgba(10,102,194,0.4) !important; transform: translateY(-1px); }
+        .es-btn:active:not(:disabled) { transform: translateY(0); }
+        .es-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        @media (max-width: 900px) {
           .es-left { display: none !important; }
           .es-right { width: 100% !important; }
         }
       `}</style>
 
       <div style={s.root}>
-        {/* Panneau gauche — graphique */}
+
+        {/* ── Panneau gauche ── */}
         <div className="es-left" style={s.left}>
-          {/* Grande onde ECG décorative */}
-          {/* Contenu */}
+          <div style={s.leftBg} />
+          <div style={s.leftOverlay} />
+
           <div style={s.leftContent}>
-            <Link href="/" style={s.logoLinkLeft}>
-              <svg width="28" height="18" viewBox="0 0 38 26" fill="none">
-                <polyline
-                  points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                  stroke="#00b4d8" strokeWidth="2.4"
-                  strokeLinecap="round" strokeLinejoin="round" fill="none"
-                />
+            {/* Logo */}
+            <Link href="/" style={s.logoLink}>
+              <svg width="26" height="17" viewBox="0 0 38 26" fill="none">
+                <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+                  stroke="#00b4d8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
               </svg>
-              <span style={s.logoTextLeft}>
-                <em>Echo</em><strong style={{ fontStyle: "normal", color: "#00b4d8" }}>Scribe</strong>
-              </span>
+              <span style={s.logoText}><em>Echo</em><strong style={{ fontStyle:"normal", color:"#00b4d8" }}>Scribe</strong></span>
             </Link>
 
+            {/* Corps */}
             <div style={s.leftBody}>
+              <p style={s.eyebrow}>Dictée médicale augmentée par l&apos;IA</p>
               <h1 style={s.headline}>
-                La dictée médicale<br />
-                <em style={{ color: "rgba(255,255,255,0.55)", fontStyle: "italic" }}>réinventée.</em>
+                Le compte rendu<br />en quelques<br /><em>secondes.</em>
               </h1>
-              <p style={s.desc}>
-                Comptes rendus d&apos;échographie générés en quelques secondes.
-                Précis, conformes, prêts à signer.
+              <p style={s.leftDesc}>
+                Spécialisé pour les radiologues et échographistes.<br />
+                Précis, conforme, prêt à signer.
               </p>
 
+              {/* Citation */}
+              <blockquote style={s.quote}>
+                <p style={s.quoteText}>
+                  &ldquo;EchoScribe m&apos;a fait gagner 45 minutes par jour sur mes comptes rendus d&apos;échographie.&rdquo;
+                </p>
+                <cite style={s.quoteCite}>Dr. M. Leblanc — Radiologue, CHU de Lyon</cite>
+              </blockquote>
             </div>
 
-            <p style={s.leftFooter}>
-              Fait pour les radiologues et échographistes
-            </p>
+            <p style={s.leftFooter}>Hébergement France · RGPD · HDS</p>
           </div>
         </div>
 
-        {/* Panneau droit — formulaire */}
+        {/* ── Panneau droit ── */}
         <div className="es-right" style={s.right}>
           <div style={s.formWrap}>
-            {/* Logo mobile uniquement */}
-            <Link href="/" style={{ ...s.logoLinkLeft, display: "none", marginBottom: 32 } as React.CSSProperties}>
-              <svg width="24" height="16" viewBox="0 0 38 26" fill="none">
-                <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                  stroke="#0a66c2" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
-              <span style={{ ...s.logoTextLeft, color: "#0d2540" }}>
-                <em>Echo</em><strong style={{ fontStyle: "normal", color: "#0a66c2" }}>Scribe</strong>
-              </span>
-            </Link>
 
-            <h2 style={s.formTitle}>Connexion</h2>
-            <p style={s.formSub}>Accédez à votre espace</p>
+            {/* Logo (visible si gauche masqué) */}
+            <div style={s.mobileLogoWrap}>
+              <Link href="/" style={s.logoLink}>
+                <svg width="26" height="17" viewBox="0 0 38 26" fill="none">
+                  <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+                    stroke="#0a66c2" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                </svg>
+                <span style={{ ...s.logoText, color: "#0d2540" }}>
+                  <em>Echo</em><strong style={{ fontStyle:"normal", color:"#0a66c2" }}>Scribe</strong>
+                </span>
+              </Link>
+            </div>
+
+            {/* En-tête formulaire */}
+            <div style={s.formHeader}>
+              <h2 style={s.formTitle}>Connexion</h2>
+              <p style={s.formSub}>Bon retour parmi nous</p>
+            </div>
 
             {autreAppareil && (
               <div style={s.warningBox}>
-                <strong>Autre appareil connecté</strong>
-                <p style={{ marginTop: 4, fontSize: 13 }}>
-                  Cette session sera déconnectée dès votre connexion ici.
-                </p>
+                <span style={{ fontWeight: 600 }}>Autre appareil connecté.</span>{" "}
+                Cette session sera déconnectée dès votre connexion ici.
               </div>
             )}
 
             <form onSubmit={handleLogin} style={s.form}>
               <div style={s.field}>
                 <label style={s.label}>Email professionnel</label>
-                <input
-                  className="es-input"
-                  type="email" required value={email}
+                <input className="es-input" type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="dr.dupont@clinique.fr"
-                  style={s.input}
-                />
+                  style={s.input} />
               </div>
               <div style={s.field}>
                 <label style={s.label}>Mot de passe</label>
-                <input
-                  className="es-input"
-                  type="password" required value={password}
+                <input className="es-input" type="password" required value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  style={s.input}
-                />
+                  style={s.input} />
               </div>
 
               {error && <div style={s.errorBox}>{error}</div>}
 
               <button className="es-btn" type="submit" disabled={loading} style={s.btn}>
-                {loading ? "Connexion…" : "Se connecter"}
+                {loading ? "Connexion…" : "Se connecter →"}
               </button>
             </form>
 
+            <div style={s.dividerRow}>
+              <span style={s.dividerLine} />
+              <span style={s.dividerText}>ou</span>
+              <span style={s.dividerLine} />
+            </div>
+
             <p style={s.register}>
               Pas encore de compte ?{" "}
-              <Link href="/register" style={s.registerLink}>Essai gratuit 7 jours</Link>
+              <Link href="/register" style={s.registerLink}>Commencer l&apos;essai gratuit</Link>
             </p>
+
+            <p style={s.legalRight}>Hébergement France · RGPD · HDS</p>
           </div>
         </div>
+
       </div>
     </>
   );
@@ -153,7 +167,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div style={{ background: "#f8fafc", minHeight: "100vh" }} />}>
+    <Suspense fallback={<div style={{ background: "#f5f7fa", minHeight: "100vh" }} />}>
       <LoginForm />
     </Suspense>
   );
@@ -168,198 +182,226 @@ const s: Record<string, React.CSSProperties> = {
     fontFamily: "'Inter', sans-serif",
   },
 
-  /* Panneau gauche */
+  /* ── Gauche ── */
   left: {
     position: "relative",
-    width: "55%",
-    background: "linear-gradient(145deg, #050f1e 0%, #0a1f3d 60%, #0d2952 100%)",
-    display: "flex",
-    flexDirection: "column",
+    width: "52%",
+    flexShrink: 0,
     overflow: "hidden",
   },
-
-  ecgBig: {
+  leftBg: {
     position: "absolute",
-    top: "50%",
-    left: 0,
-    right: 0,
-    width: "100%",
-    transform: "translateY(-50%)",
-    opacity: 1,
+    inset: 0,
+    backgroundImage: "url('/medical-bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center 20%",
   },
-
+  leftOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "linear-gradient(160deg, rgba(5,15,35,0.90) 0%, rgba(8,28,65,0.85) 50%, rgba(10,35,80,0.80) 100%)",
+  },
   leftContent: {
     position: "relative",
     zIndex: 1,
     display: "flex",
     flexDirection: "column",
     height: "100%",
-    padding: "44px 56px",
+    padding: "44px 52px",
   },
-
-  logoLinkLeft: {
+  logoLink: {
     display: "flex",
     alignItems: "center",
     gap: 10,
     textDecoration: "none",
   },
-  logoTextLeft: {
+  logoText: {
     fontFamily: "'EB Garamond', serif",
     fontSize: 22,
-    color: "rgba(255,255,255,0.9)",
+    color: "#e8f4fd",
     letterSpacing: "-0.01em",
   },
-
   leftBody: {
     marginTop: "auto",
     marginBottom: "auto",
   },
-
+  eyebrow: {
+    fontSize: 11,
+    color: "rgba(0,180,216,0.7)",
+    fontFamily: "'Inter', sans-serif",
+    letterSpacing: "0.12em",
+    textTransform: "uppercase" as const,
+    marginBottom: 20,
+    fontWeight: 500,
+  },
   headline: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 58,
+    fontSize: 62,
     fontWeight: 400,
     color: "#ffffff",
-    lineHeight: 1.1,
+    lineHeight: 1.08,
     letterSpacing: "-0.025em",
     marginBottom: 24,
   },
-
-  desc: {
+  leftDesc: {
     fontSize: 15,
-    color: "rgba(255,255,255,0.45)",
+    color: "rgba(255,255,255,0.5)",
     lineHeight: 1.7,
-    maxWidth: 360,
-    marginBottom: 40,
-    fontWeight: 400,
+    marginBottom: 44,
   },
-
-  badges: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
+  quote: {
+    borderLeft: "2px solid rgba(0,180,216,0.35)",
+    paddingLeft: 20,
   },
-  badge: {
-    fontSize: 12,
-    color: "rgba(255,255,255,0.35)",
+  quoteText: {
+    fontSize: 14,
+    color: "rgba(255,255,255,0.55)",
+    fontFamily: "'EB Garamond', serif",
+    fontStyle: "italic",
+    lineHeight: 1.6,
+    marginBottom: 8,
+  },
+  quoteCite: {
+    fontSize: 11,
+    color: "rgba(0,180,216,0.55)",
     fontFamily: "'Inter', sans-serif",
-    fontWeight: 400,
-    letterSpacing: "0.01em",
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
+    fontStyle: "normal",
+    letterSpacing: "0.03em",
   },
-
   leftFooter: {
     fontSize: 10,
-    color: "rgba(255,255,255,0.15)",
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
+    color: "rgba(255,255,255,0.18)",
+    letterSpacing: "0.07em",
+    textTransform: "uppercase" as const,
     fontFamily: "'Inter', sans-serif",
   },
 
-  /* Panneau droit */
+  /* ── Droite ── */
   right: {
-    width: "45%",
-    background: "#ffffff",
+    flex: 1,
+    background: "#f5f7fa",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "40px",
+    padding: "40px 32px",
     overflowY: "auto",
   },
-
   formWrap: {
     width: "100%",
-    maxWidth: 360,
+    maxWidth: 380,
   },
-
+  mobileLogoWrap: {
+    display: "none",
+    marginBottom: 36,
+  },
+  formHeader: {
+    marginBottom: 36,
+  },
   formTitle: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 36,
+    fontSize: 40,
     fontWeight: 600,
     color: "#0d2540",
-    letterSpacing: "-0.02em",
+    letterSpacing: "-0.025em",
     marginBottom: 6,
+    lineHeight: 1,
   },
   formSub: {
     fontSize: 14,
     color: "#8a9ab0",
-    marginBottom: 36,
     fontWeight: 400,
   },
-
   form: {
     display: "flex",
     flexDirection: "column",
-    gap: 20,
+    gap: 18,
   },
   field: {
     display: "flex",
     flexDirection: "column",
-    gap: 6,
+    gap: 7,
   },
   label: {
     fontSize: 12,
     fontWeight: 500,
     color: "#4a6080",
-    letterSpacing: "0.02em",
+    letterSpacing: "0.01em",
   },
   input: {
     width: "100%",
     border: "1.5px solid #dce6f0",
-    borderRadius: 8,
-    padding: "12px 14px",
-    fontSize: 15,
+    borderRadius: 10,
+    padding: "13px 16px",
+    fontSize: 14,
     color: "#0d2540",
     fontFamily: "'Inter', sans-serif",
-    background: "#f8fafc",
-    transition: "border-color 0.15s",
+    background: "#ffffff",
   },
-
   warningBox: {
     background: "#fffbeb",
     border: "1px solid #fcd34d",
-    borderRadius: 8,
+    borderRadius: 10,
     padding: "12px 16px",
     color: "#92400e",
     fontSize: 13,
+    lineHeight: 1.5,
     marginBottom: 20,
   },
   errorBox: {
     background: "#fef2f2",
     border: "1px solid #fecaca",
-    borderRadius: 8,
-    padding: "10px 14px",
+    borderRadius: 10,
+    padding: "11px 16px",
     color: "#b91c1c",
     fontSize: 13,
   },
-
   btn: {
     width: "100%",
-    padding: "13px",
-    marginTop: 4,
+    padding: "14px",
+    marginTop: 6,
     background: "#0a66c2",
     border: "none",
-    borderRadius: 8,
+    borderRadius: 10,
     color: "#ffffff",
     fontSize: 15,
     fontWeight: 600,
     fontFamily: "'Inter', sans-serif",
     cursor: "pointer",
     letterSpacing: "0.01em",
-    transition: "background 0.15s",
+    boxShadow: "0 4px 16px rgba(10,102,194,0.28)",
   },
-
+  dividerRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    margin: "28px 0",
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    background: "#dce6f0",
+  },
+  dividerText: {
+    fontSize: 12,
+    color: "#aab8cc",
+    fontWeight: 500,
+  },
   register: {
     textAlign: "center",
-    fontSize: 13,
+    fontSize: 14,
     color: "#8a9ab0",
-    marginTop: 28,
   },
   registerLink: {
     color: "#0a66c2",
     textDecoration: "none",
     fontWeight: 600,
+  },
+  legalRight: {
+    textAlign: "center",
+    fontSize: 10,
+    color: "#c0cdd8",
+    letterSpacing: "0.06em",
+    textTransform: "uppercase" as const,
+    marginTop: 28,
   },
 };
