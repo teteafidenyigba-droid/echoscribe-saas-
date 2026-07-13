@@ -2539,14 +2539,14 @@ document.getElementById('mistralModelSelect').addEventListener('change', updateA
   window._esManualAI = null;
   ['btnClaude','btnGrok'].forEach(function(id) { var b=document.getElementById(id); if(b) b.style.display='none'; });
   var btnO=document.getElementById('btnOpenai'), btnM=document.getElementById('btnMistral'), btnG=document.getElementById('btnGemini');
-  if(btnO) btnO.textContent='◍ High Premium';
-  if(btnM) btnM.textContent='◆ Premium Lite';
-  if(btnG) btnG.textContent='◉ Premium';
+  if(btnO) { btnO.textContent='★ Premium High'; btnO.style.order='3'; }
+  if(btnM) { btnM.textContent='◆ Premium Lite'; btnM.style.order='2'; }
+  if(btnG) { btnG.textContent='◉ Premium'; btnG.style.order='1'; }
 
   function _setActive(ai) {
-    var map={ openai:{id:'btnOpenai',bg:'rgba(255,255,255,0.18)',color:'#ffffff'}, mistral:{id:'btnMistral',bg:'rgba(255,255,255,0.18)',color:'#ffffff'}, gemini:{id:'btnGemini',bg:'rgba(255,255,255,0.18)',color:'#ffffff'} };
-    ['btnOpenai','btnMistral','btnGemini'].forEach(function(id){ var b=document.getElementById(id); if(b){b.style.background='transparent';b.style.color='rgba(255,255,255,0.45)';} });
-    var a=map[ai]; if(a){ var b=document.getElementById(a.id); if(b){b.style.background=a.bg;b.style.color=a.color;} }
+    var map={ openai:{id:'btnOpenai',bg:'linear-gradient(135deg,rgba(139,92,246,0.55),rgba(109,40,217,0.4))',color:'#e9d5ff',border:'1px solid rgba(167,139,250,0.6)'}, mistral:{id:'btnMistral',bg:'linear-gradient(135deg,rgba(148,163,184,0.4),rgba(100,116,139,0.3))',color:'#e2e8f0',border:'1px solid rgba(148,163,184,0.5)'}, gemini:{id:'btnGemini',bg:'linear-gradient(135deg,rgba(245,158,11,0.55),rgba(217,119,6,0.4))',color:'#fef3c7',border:'1px solid rgba(251,191,36,0.6)'} };
+    ['btnOpenai','btnMistral','btnGemini'].forEach(function(id){ var b=document.getElementById(id); if(b){b.style.background='transparent';b.style.border='none';b.style.color='rgba(255,255,255,0.4)';} });
+    var a=map[ai]; if(a){ var b=document.getElementById(a.id); if(b){b.style.background=a.bg;b.style.color=a.color;b.style.border=a.border;b.style.fontWeight='700';} }
   }
   window._esHighlightAI = _setActive;
 
