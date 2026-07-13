@@ -71,9 +71,13 @@
   @keyframes spin { to{transform:rotate(360deg);} }
   .error-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.35); border-radius:10px; padding:14px 18px; color:#fca5a5; font-size:13px; font-family:'JetBrains Mono',monospace; margin-bottom:14px; line-height:1.6; }
   .footer { text-align:center; font-size:11px; color:#1e3448; margin-top:40px; font-family:'JetBrains Mono',monospace; line-height:1.8; }
-  ::-webkit-scrollbar { width:17px; }
-  ::-webkit-scrollbar-thumb { background:#c1c1c1; border-radius:0; border:3px solid #f1f1f1; }
-  ::-webkit-scrollbar-track { background:#f1f1f1; }
+  ::-webkit-scrollbar { width:17px; background:#f0f0f0; }
+  ::-webkit-scrollbar-track { background:#f0f0f0; }
+  ::-webkit-scrollbar-thumb { background:#c1c1c1; border-radius:0; border:none; }
+  ::-webkit-scrollbar-thumb:hover { background:#a8a8a8; }
+  ::-webkit-scrollbar-button { display:block; height:17px; background:#f0f0f0; }
+  ::-webkit-scrollbar-button:vertical:decrement { background:#f0f0f0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17'%3E%3Cpolygon points='8.5,4 13,12 4,12' fill='%23606060'/%3E%3C/svg%3E") no-repeat center; }
+  ::-webkit-scrollbar-button:vertical:increment { background:#f0f0f0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17'%3E%3Cpolygon points='8.5,13 4,5 13,5' fill='%23606060'/%3E%3C/svg%3E") no-repeat center; }
 
   /* ══ THÈME PRO ECHOSCRIBE — CSS uniquement, code V5 intact ══ */
   html{overflow-y:scroll!important;}
