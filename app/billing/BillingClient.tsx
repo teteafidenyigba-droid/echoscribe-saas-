@@ -223,7 +223,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
 
 const s: Record<string, React.CSSProperties> = {
   page: {
-    background: "#f5f7fa",
+    background: "#111827",
     minHeight: "100vh",
     fontFamily: "'EB Garamond', Georgia, serif",
     color: "#0d2540",
