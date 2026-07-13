@@ -62,7 +62,8 @@ export async function middleware(request: NextRequest) {
       .maybeSingle();
 
     const now = new Date();
-    const trialStillActive = sub?.status === "trialing" && (!sub.trial_end || new Date(sub.trial_end) > now);
+    // trial_end DOIT être défini et dans le futur — null = pas d'accès
+    const trialStillActive = sub?.status === "trialing" && sub.trial_end != null && new Date(sub.trial_end) > now;
     const hasAccess = sub && (
       sub.status === "active" ||
       trialStillActive ||
