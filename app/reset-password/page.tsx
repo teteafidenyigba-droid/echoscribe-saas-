@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,14 +14,22 @@ export default function ResetPasswordPage() {
   const [ready, setReady] = useState(false);
   const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Supabase injecte la session via le hash de l'URL au chargement
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") setReady(true);
+    const code = searchParams.get("code");
+    if (!code) {
+      setError("Lien invalide. Demandez un nouveau lien de réinitialisation.");
+      return;
+    }
+    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+      if (error) {
+        setError("Ce lien est invalide ou a expiré. Demandez un nouveau lien.");
+      } else {
+        setReady(true);
+      }
     });
-    return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,7 +45,7 @@ export default function ResetPasswordPage() {
     setLoading(true);
     const { error } = await supabase.auth.updateUser({ password });
     if (error) {
-      setError("Une erreur est survenue. Le lien a peut-être expiré.");
+      setError("Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
       setLoading(false);
     } else {
       setDone(true);
@@ -63,20 +71,27 @@ export default function ResetPasswordPage() {
           <h2 style={{ fontFamily: "'EB Garamond', serif", fontSize: 38, fontWeight: 600, color: "#0d2540", letterSpacing: "-0.025em", marginBottom: 10, lineHeight: 1 }}>
             Nouveau mot de passe
           </h2>
-          <div style={{ width: 36, height: 3, background: "#c45d4a", borderRadius: 2, marginBottom: 14 }} />
+          <div style={{ width: 36, height: 3, background: "#c45d4a", borderRadius: 2, marginBottom: 28 }} />
 
           {done ? (
             <div style={{ textAlign: "center", paddingTop: 8 }}>
               <div style={{ fontSize: 48, marginBottom: 20 }}>✅</div>
               <p style={{ fontSize: 16, color: "#0d2540", fontWeight: 600, marginBottom: 10 }}>Mot de passe modifié</p>
               <p style={{ fontSize: 14, color: "#8a9ab0", lineHeight: 1.7 }}>
-                Vous allez être redirigé vers la page de connexion…
+                Vous recevrez un e-mail de confirmation.<br />Redirection vers la connexion…
               </p>
             </div>
+          ) : error && !ready ? (
+            <div>
+              <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "14px 16px", color: "#b91c1c", fontSize: 14, marginBottom: 24 }}>
+                {error}
+              </div>
+              <Link href="/forgot-password" style={{ display: "inline-block", fontSize: 14, color: "#0a66c2", textDecoration: "none", fontWeight: 600 }}>
+                Demander un nouveau lien →
+              </Link>
+            </div>
           ) : !ready ? (
-            <p style={{ fontSize: 14, color: "#8a9ab0", lineHeight: 1.7 }}>
-              Vérification du lien en cours…
-            </p>
+            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification du lien…</p>
           ) : (
             <>
               <p style={{ fontSize: 14, color: "#8a9ab0", marginBottom: 28, lineHeight: 1.6 }}>
@@ -133,5 +148,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div style={{ background: "#f5f7fa", minHeight: "100vh" }} />}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
