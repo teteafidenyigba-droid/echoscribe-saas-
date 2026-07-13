@@ -6,30 +6,6 @@ function getResend() {
 const FROM = process.env.RESEND_FROM_EMAIL ?? "EchoScribe <noreply@echoscribe.fr>";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://echoscribe.fr";
 
-const LOGO = `
-<table cellpadding="0" cellspacing="0" style="margin:0 auto 12px;">
-  <tr>
-    <td valign="middle" style="padding-right:10px;">
-      <img src="https://echoscribe.fr/ecg.png" width="34" height="22" alt="" style="display:block;">
-    </td>
-    <td valign="middle">
-      <span style="font-size:34px;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:#ffffff;letter-spacing:-0.01em;">Echo<span style="font-style:normal;font-weight:700;color:#4a9fd4;">Scribe</span></span>
-    </td>
-  </tr>
-</table>
-<span style="display:inline-block;background:rgba(125,211,252,0.15);border:1px solid rgba(125,211,252,0.3);border-radius:999px;padding:4px 16px;font-size:11px;color:#7dd3fc;letter-spacing:0.1em;font-family:monospace;">Dictée Médicale</span>`;
-
-const FOOTER = `
-<div style="background:#0f2440;border-radius:0 0 20px 20px;padding:24px 40px;text-align:center;">
-  <p style="font-size:11px;color:#4a6a8a;margin:0;font-family:monospace;line-height:2;">
-    © 2026 EchoScribe · Outil d'aide à la rédaction médicale<br>
-    À valider par le médecin responsable<br>
-    Adresse non surveillée — merci de ne pas répondre à cet email<br>
-    <a href="${APP_URL}/confidentialite" style="color:#7dd3fc;text-decoration:none;">Confidentialité</a> ·
-    <a href="${APP_URL}/cgu" style="color:#7dd3fc;text-decoration:none;">CGU</a>
-  </p>
-</div>`;
-
 function base(content: string) {
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -38,15 +14,54 @@ function base(content: string) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body style="margin:0;padding:0;background:#dce8f5;font-family:Georgia,serif;">
-  <div style="max-width:560px;margin:0 auto;padding:40px 20px;">
-    <div style="background:linear-gradient(135deg,#0f2440 0%,#1e3a5f 60%,#1a6aaa 100%);border-radius:20px 20px 0 0;padding:40px;text-align:center;">
-      ${LOGO}
-    </div>
-    <div style="background:#ffffff;padding:40px;border-left:1px solid #c8ddef;border-right:1px solid #c8ddef;">
-      ${content}
-    </div>
-    ${FOOTER}
-  </div>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td align="center" style="background:#dce8f5;padding:40px 20px;">
+      <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;width:100%;">
+
+        <!-- HEADER -->
+        <tr>
+          <td align="center" style="background:linear-gradient(135deg,#0f2440 0%,#1e3a5f 60%,#1a6aaa 100%);border-radius:20px 20px 0 0;padding:40px;">
+            <table cellpadding="0" cellspacing="0" border="0" align="center">
+              <tr>
+                <td valign="middle" style="padding-right:10px;">
+                  <img src="https://echoscribe.fr/ecg.png" width="34" height="22" alt="" style="display:block;">
+                </td>
+                <td valign="middle">
+                  <span style="font-size:34px;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:#ffffff;letter-spacing:-0.01em;">Echo</span><span style="font-size:34px;font-style:normal;font-weight:700;font-family:Georgia,'Times New Roman',serif;color:#4a9fd4;">Scribe</span>
+                </td>
+              </tr>
+            </table>
+            <div style="margin-top:12px;display:inline-block;background:rgba(125,211,252,0.15);border:1px solid rgba(125,211,252,0.3);border-radius:999px;padding:4px 16px;font-size:11px;color:#7dd3fc;letter-spacing:0.1em;font-family:monospace;">Dictée Médicale</div>
+          </td>
+        </tr>
+
+        <!-- BODY -->
+        <tr>
+          <td style="background:#ffffff;padding:40px;border-left:1px solid #c8ddef;border-right:1px solid #c8ddef;">
+            ${content}
+          </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+          <td align="center" style="background:#0f2440;border-radius:0 0 20px 20px;padding:24px 40px;">
+            <p style="font-size:11px;color:#4a6a8a;margin:0;font-family:monospace;line-height:2;">
+              © 2026 EchoScribe · Outil d'aide à la rédaction médicale<br>
+              À valider par le médecin responsable<br>
+              Adresse non surveillée — merci de ne pas répondre à cet email<br>
+              <a href="${APP_URL}/confidentialite" style="color:#7dd3fc;text-decoration:none;">Confidentialité</a> ·
+              <a href="${APP_URL}/cgu" style="color:#7dd3fc;text-decoration:none;">CGU</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+
 </body>
 </html>`;
 }
