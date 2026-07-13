@@ -34,86 +34,152 @@ function LoginForm() {
   }
 
   return (
-    <div style={s.root}>
-      {/* Fond plein écran — image filtrée mode échographe */}
-      <div style={s.bgImage} />
-      <div style={s.bgOverlay} />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        .es-input:focus { border-color: #0a66c2 !important; outline: none; }
+        .es-btn:hover:not(:disabled) { background: #0552a3 !important; }
+        .es-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        @media (max-width: 768px) {
+          .es-left { display: none !important; }
+          .es-right { width: 100% !important; }
+        }
+      `}</style>
 
-      {/* Tagline flottante en haut à gauche */}
-      <div style={s.topLeft}>
-        <p style={s.tagline}>Dictée médicale<br />augmentée par l&apos;IA</p>
-      </div>
-
-      {/* Panneau bas pleine largeur */}
-      <div style={s.bottomPanel}>
-        {/* Ligne de scan — signature echographique */}
-        <div style={s.scanLine} />
-
-        <form onSubmit={handleLogin} style={s.row}>
-          {/* Logo */}
-          <Link href="/" style={s.logoLink}>
-            <svg width="30" height="20" viewBox="0 0 38 26" fill="none" style={{ flexShrink: 0 }}>
-              <polyline
-                points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
-                stroke="#00b4d8" strokeWidth="2.4"
-                strokeLinecap="round" strokeLinejoin="round" fill="none"
-              />
-            </svg>
-            <span style={s.logoText}>
-              <em>Echo</em><strong style={{ fontStyle: "normal", color: "#00b4d8" }}>Scribe</strong>
-            </span>
-          </Link>
-
-          <div style={s.divider} />
-
-          {/* Champs */}
-          <div style={s.fieldGroup}>
-            <label style={s.label}>Email</label>
-            <input
-              type="email" required value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="dr.dupont@clinique.fr"
-              style={s.input}
+      <div style={s.root}>
+        {/* Panneau gauche — graphique */}
+        <div className="es-left" style={s.left}>
+          {/* Grande onde ECG décorative */}
+          <svg
+            viewBox="0 0 800 200"
+            style={s.ecgBig}
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <polyline
+              points="0,100 120,100 160,20 210,180 255,60 295,130 330,100 800,100"
+              stroke="rgba(0,180,216,0.18)"
+              strokeWidth="2"
+              fill="none"
             />
-          </div>
-
-          <div style={s.fieldGroup}>
-            <label style={s.label}>Mot de passe</label>
-            <input
-              type="password" required value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
-              style={s.input}
+            <polyline
+              points="0,100 120,100 160,20 210,180 255,60 295,130 330,100 800,100"
+              stroke="rgba(0,180,216,0.7)"
+              strokeWidth="1.5"
+              fill="none"
+              strokeDasharray="800"
+              strokeDashoffset="0"
             />
+          </svg>
+
+          {/* Contenu */}
+          <div style={s.leftContent}>
+            <Link href="/" style={s.logoLinkLeft}>
+              <svg width="28" height="18" viewBox="0 0 38 26" fill="none">
+                <polyline
+                  points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+                  stroke="#00b4d8" strokeWidth="2.4"
+                  strokeLinecap="round" strokeLinejoin="round" fill="none"
+                />
+              </svg>
+              <span style={s.logoTextLeft}>
+                <em>Echo</em><strong style={{ fontStyle: "normal", color: "#00b4d8" }}>Scribe</strong>
+              </span>
+            </Link>
+
+            <div style={s.leftBody}>
+              <h1 style={s.headline}>
+                La dictée médicale<br />
+                <em style={{ color: "#00b4d8" }}>réinventée.</em>
+              </h1>
+              <p style={s.desc}>
+                Comptes rendus d&apos;échographie générés en quelques secondes.
+                Précis, conformes, prêts à signer.
+              </p>
+
+              <div style={s.badges}>
+                <span style={s.badge}>✓ Hébergement France</span>
+                <span style={s.badge}>✓ RGPD · HDS</span>
+                <span style={s.badge}>✓ IA médicale spécialisée</span>
+              </div>
+            </div>
+
+            <p style={s.leftFooter}>
+              Fait pour les radiologues et échographistes
+            </p>
           </div>
+        </div>
 
-          <button type="submit" disabled={loading} style={s.btn}>
-            {loading ? "…" : "Se connecter →"}
-          </button>
+        {/* Panneau droit — formulaire */}
+        <div className="es-right" style={s.right}>
+          <div style={s.formWrap}>
+            {/* Logo mobile uniquement */}
+            <Link href="/" style={{ ...s.logoLinkLeft, display: "none", marginBottom: 32 } as React.CSSProperties}>
+              <svg width="24" height="16" viewBox="0 0 38 26" fill="none">
+                <polyline points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
+                  stroke="#0a66c2" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+              <span style={{ ...s.logoTextLeft, color: "#0d2540" }}>
+                <em>Echo</em><strong style={{ fontStyle: "normal", color: "#0a66c2" }}>Scribe</strong>
+              </span>
+            </Link>
 
-          <div style={s.divider} />
+            <h2 style={s.formTitle}>Connexion</h2>
+            <p style={s.formSub}>Accédez à votre espace</p>
 
-          <div style={s.registerBlock}>
-            <Link href="/register" style={s.registerLink}>Essai gratuit 7 jours</Link>
-            <span style={s.legal}>RGPD · HDS</span>
+            {autreAppareil && (
+              <div style={s.warningBox}>
+                <strong>Autre appareil connecté</strong>
+                <p style={{ marginTop: 4, fontSize: 13 }}>
+                  Cette session sera déconnectée dès votre connexion ici.
+                </p>
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} style={s.form}>
+              <div style={s.field}>
+                <label style={s.label}>Email professionnel</label>
+                <input
+                  className="es-input"
+                  type="email" required value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="dr.dupont@clinique.fr"
+                  style={s.input}
+                />
+              </div>
+              <div style={s.field}>
+                <label style={s.label}>Mot de passe</label>
+                <input
+                  className="es-input"
+                  type="password" required value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  style={s.input}
+                />
+              </div>
+
+              {error && <div style={s.errorBox}>{error}</div>}
+
+              <button className="es-btn" type="submit" disabled={loading} style={s.btn}>
+                {loading ? "Connexion…" : "Se connecter"}
+              </button>
+            </form>
+
+            <p style={s.register}>
+              Pas encore de compte ?{" "}
+              <Link href="/register" style={s.registerLink}>Essai gratuit 7 jours</Link>
+            </p>
           </div>
-        </form>
-
-        {(error || autreAppareil) && (
-          <div style={s.errorRow}>
-            {autreAppareil
-              ? "⚠️ Autre appareil connecté — cette session sera déconnectée."
-              : error}
-          </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div style={{ background: "#000d1a", minHeight: "100vh" }} />}>
+    <Suspense fallback={<div style={{ background: "#f8fafc", minHeight: "100vh" }} />}>
       <LoginForm />
     </Suspense>
   );
@@ -121,158 +187,202 @@ export default function LoginPage() {
 
 const s: Record<string, React.CSSProperties> = {
   root: {
-    position: "relative",
+    display: "flex",
     height: "100vh",
     width: "100vw",
     overflow: "hidden",
-    fontFamily: "'EB Garamond', Georgia, serif",
+    fontFamily: "'Inter', sans-serif",
   },
 
-  bgImage: {
-    position: "absolute",
-    inset: 0,
-    backgroundImage: "url('/medical-bg.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center 30%",
-    filter: "grayscale(100%) brightness(0.6) sepia(0.5) hue-rotate(170deg) saturate(3)",
-    transform: "scale(1.03)",
+  /* Panneau gauche */
+  left: {
+    position: "relative",
+    width: "55%",
+    background: "linear-gradient(145deg, #050f1e 0%, #0a1f3d 60%, #0d2952 100%)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
   },
 
-  bgOverlay: {
+  ecgBig: {
     position: "absolute",
-    inset: 0,
-    background: "linear-gradient(to bottom, rgba(0,6,18,0.35) 0%, rgba(0,6,18,0.55) 60%, rgba(0,6,18,0.85) 100%)",
-  },
-
-  /* Tagline haut gauche */
-  topLeft: {
-    position: "absolute",
-    top: 40,
-    left: 48,
-    zIndex: 2,
-  },
-  tagline: {
-    fontSize: 42,
-    fontWeight: 400,
-    fontStyle: "italic",
-    color: "rgba(232,244,253,0.88)",
-    lineHeight: 1.2,
-    margin: 0,
-    letterSpacing: "-0.02em",
-    textShadow: "0 2px 24px rgba(0,0,0,0.5)",
-  },
-
-  /* Panneau bas */
-  bottomPanel: {
-    position: "absolute",
-    bottom: 0,
+    bottom: "38%",
     left: 0,
     right: 0,
-    zIndex: 2,
-    background: "rgba(0,8,22,0.90)",
-    backdropFilter: "blur(20px)",
+    width: "100%",
+    opacity: 1,
   },
 
-  scanLine: {
-    height: 1,
-    background: "linear-gradient(90deg, transparent 0%, rgba(0,180,216,0.12) 15%, rgba(0,180,216,0.55) 50%, rgba(0,180,216,0.12) 85%, transparent 100%)",
+  leftContent: {
+    position: "relative",
+    zIndex: 1,
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    padding: "44px 52px",
   },
 
-  row: {
+  logoLinkLeft: {
     display: "flex",
     alignItems: "center",
-    gap: 20,
-    padding: "20px 48px",
-    flexWrap: "wrap" as const,
-  },
-
-  logoLink: {
-    display: "flex",
-    alignItems: "center",
-    gap: 9,
+    gap: 10,
     textDecoration: "none",
-    flexShrink: 0,
   },
-  logoText: {
+  logoTextLeft: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 22,
+    fontSize: 24,
     color: "#e8f4fd",
     letterSpacing: "-0.01em",
   },
 
-  divider: {
-    width: 1,
-    height: 36,
-    background: "rgba(0,180,216,0.18)",
-    flexShrink: 0,
+  leftBody: {
+    marginTop: "auto",
+    marginBottom: "auto",
+    paddingTop: 40,
   },
 
-  fieldGroup: {
+  headline: {
+    fontFamily: "'EB Garamond', serif",
+    fontSize: 52,
+    fontWeight: 400,
+    color: "#e8f4fd",
+    lineHeight: 1.15,
+    letterSpacing: "-0.02em",
+    marginBottom: 20,
+  },
+
+  desc: {
+    fontSize: 16,
+    color: "rgba(232,244,253,0.6)",
+    lineHeight: 1.65,
+    maxWidth: 380,
+    marginBottom: 32,
+    fontWeight: 400,
+  },
+
+  badges: {
     display: "flex",
-    flexDirection: "column" as const,
-    gap: 3,
+    flexDirection: "column",
+    gap: 8,
+  },
+  badge: {
+    fontSize: 13,
+    color: "rgba(0,180,216,0.85)",
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: 500,
+    letterSpacing: "0.01em",
+  },
+
+  leftFooter: {
+    fontSize: 11,
+    color: "rgba(232,244,253,0.25)",
+    letterSpacing: "0.06em",
+    textTransform: "uppercase",
+    fontFamily: "'Inter', sans-serif",
+  },
+
+  /* Panneau droit */
+  right: {
+    width: "45%",
+    background: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px",
+    overflowY: "auto",
+  },
+
+  formWrap: {
+    width: "100%",
+    maxWidth: 360,
+  },
+
+  formTitle: {
+    fontFamily: "'EB Garamond', serif",
+    fontSize: 36,
+    fontWeight: 600,
+    color: "#0d2540",
+    letterSpacing: "-0.02em",
+    marginBottom: 6,
+  },
+  formSub: {
+    fontSize: 14,
+    color: "#8a9ab0",
+    marginBottom: 36,
+    fontWeight: 400,
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+  },
+  field: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 6,
   },
   label: {
-    fontSize: 9,
-    color: "rgba(0,180,216,0.55)",
-    fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.12em",
-    textTransform: "uppercase" as const,
+    fontSize: 12,
+    fontWeight: 500,
+    color: "#4a6080",
+    letterSpacing: "0.02em",
   },
   input: {
-    background: "rgba(0,180,216,0.06)",
-    border: "1px solid rgba(0,180,216,0.2)",
-    borderRadius: 6,
-    padding: "8px 12px",
-    color: "#e8f4fd",
-    fontFamily: "'JetBrains Mono', monospace",
+    width: "100%",
+    border: "1.5px solid #dce6f0",
+    borderRadius: 8,
+    padding: "12px 14px",
+    fontSize: 15,
+    color: "#0d2540",
+    fontFamily: "'Inter', sans-serif",
+    background: "#f8fafc",
+    transition: "border-color 0.15s",
+  },
+
+  warningBox: {
+    background: "#fffbeb",
+    border: "1px solid #fcd34d",
+    borderRadius: 8,
+    padding: "12px 16px",
+    color: "#92400e",
     fontSize: 13,
-    outline: "none",
-    width: 200,
-    boxSizing: "border-box" as const,
+    marginBottom: 20,
+  },
+  errorBox: {
+    background: "#fef2f2",
+    border: "1px solid #fecaca",
+    borderRadius: 8,
+    padding: "10px 14px",
+    color: "#b91c1c",
+    fontSize: 13,
   },
 
   btn: {
-    padding: "10px 22px",
-    background: "linear-gradient(135deg, #0552a3 0%, #0a66c2 100%)",
+    width: "100%",
+    padding: "13px",
+    marginTop: 4,
+    background: "#0a66c2",
     border: "none",
-    borderRadius: 7,
+    borderRadius: 8,
     color: "#ffffff",
     fontSize: 15,
-    fontFamily: "'EB Garamond', serif",
     fontWeight: 600,
+    fontFamily: "'Inter', sans-serif",
     cursor: "pointer",
-    whiteSpace: "nowrap" as const,
-    boxShadow: "0 3px 14px rgba(10,102,194,0.4)",
-    flexShrink: 0,
-    letterSpacing: "0.02em",
+    letterSpacing: "0.01em",
+    transition: "background 0.15s",
   },
 
-  registerBlock: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: 4,
-    marginLeft: "auto",
+  register: {
+    textAlign: "center",
+    fontSize: 13,
+    color: "#8a9ab0",
+    marginTop: 28,
   },
   registerLink: {
-    color: "#00b4d8",
+    color: "#0a66c2",
     textDecoration: "none",
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: 11,
     fontWeight: 600,
-  },
-  legal: {
-    fontSize: 9,
-    color: "rgba(0,180,216,0.3)",
-    fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.08em",
-  },
-
-  errorRow: {
-    padding: "8px 48px 12px",
-    fontSize: 12,
-    color: "#fca5a5",
-    fontFamily: "'JetBrains Mono', monospace",
-    background: "rgba(239,68,68,0.06)",
   },
 };
