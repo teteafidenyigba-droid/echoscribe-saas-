@@ -52,25 +52,6 @@ function LoginForm() {
         {/* Panneau gauche — graphique */}
         <div className="es-left" style={s.left}>
           {/* Grande onde ECG décorative */}
-          <svg
-            viewBox="0 0 900 160"
-            style={s.ecgBig}
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <polyline
-              points="0,80 150,80 190,80 220,15 260,145 295,45 330,110 360,80 900,80"
-              stroke="rgba(255,255,255,0.04)"
-              strokeWidth="1.5"
-              fill="none"
-            />
-            <polyline
-              points="0,80 150,80 190,80 220,15 260,145 295,45 330,110 360,80 900,80"
-              stroke="rgba(255,255,255,0.12)"
-              strokeWidth="1"
-              fill="none"
-            />
-          </svg>
-
           {/* Contenu */}
           <div style={s.leftContent}>
             <Link href="/" style={s.logoLinkLeft}>
