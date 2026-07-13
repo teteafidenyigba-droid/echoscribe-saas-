@@ -77,11 +77,6 @@ function LoginForm() {
                 Précis, conformes, prêts à signer.
               </p>
 
-              <div style={s.badges}>
-                <span style={s.badge}>✓ Hébergement France</span>
-                <span style={s.badge}>✓ RGPD · HDS</span>
-                <span style={s.badge}>✓ IA médicale spécialisée</span>
-              </div>
             </div>
 
             <p style={s.leftFooter}>
