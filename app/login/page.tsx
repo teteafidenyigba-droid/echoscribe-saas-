@@ -70,7 +70,6 @@ function LoginForm() {
 
             {/* Corps */}
             <div style={s.leftBody}>
-              <p style={s.eyebrow}>Dictée médicale augmentée par l&apos;IA</p>
               <h1 style={s.headline}>
                 Le compte rendu<br />en quelques<br /><em>secondes.</em>
               </h1>
