@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /billing
+Disallow: /api/
+
+Sitemap: https://echoscribe-saas-git-main-connexion-med.vercel.app/sitemap.xml
