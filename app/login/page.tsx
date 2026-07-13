@@ -35,17 +35,24 @@ function LoginForm() {
 
   return (
     <div style={s.root}>
-      {/* Fond : image filtrée en mode échographe */}
+      {/* Fond plein écran — image filtrée mode échographe */}
       <div style={s.bgImage} />
       <div style={s.bgOverlay} />
 
-      {/* Contenu centré */}
-      <div style={s.center}>
-        <div style={s.card}>
+      {/* Tagline flottante en haut à gauche */}
+      <div style={s.topLeft}>
+        <p style={s.tagline}>Dictée médicale<br />augmentée par l&apos;IA</p>
+      </div>
 
+      {/* Panneau bas pleine largeur */}
+      <div style={s.bottomPanel}>
+        {/* Ligne de scan — signature echographique */}
+        <div style={s.scanLine} />
+
+        <form onSubmit={handleLogin} style={s.row}>
           {/* Logo */}
           <Link href="/" style={s.logoLink}>
-            <svg width="34" height="22" viewBox="0 0 38 26" fill="none" style={{ flexShrink: 0 }}>
+            <svg width="30" height="20" viewBox="0 0 38 26" fill="none" style={{ flexShrink: 0 }}>
               <polyline
                 points="0,13 7,13 10,3 14,23 18,9 22,17 26,13 38,13"
                 stroke="#00b4d8" strokeWidth="2.4"
@@ -57,57 +64,48 @@ function LoginForm() {
             </span>
           </Link>
 
-          {/* Ligne de scan — signature */}
-          <div style={s.scanLine}>
-            <div style={s.scanGlow} />
+          <div style={s.divider} />
+
+          {/* Champs */}
+          <div style={s.fieldGroup}>
+            <label style={s.label}>Email</label>
+            <input
+              type="email" required value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="dr.dupont@clinique.fr"
+              style={s.input}
+            />
           </div>
 
-          <h1 style={s.title}>Connexion</h1>
-          <p style={s.sub}>Accédez à votre espace de dictée</p>
+          <div style={s.fieldGroup}>
+            <label style={s.label}>Mot de passe</label>
+            <input
+              type="password" required value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="••••••••"
+              style={s.input}
+            />
+          </div>
 
-          {autreAppareil && (
-            <div style={s.warningBox}>
-              <strong>⚠️ Autre appareil connecté</strong>
-              <p style={{ margin: "4px 0 0", fontSize: 12 }}>
-                Connectez-vous ici pour basculer — l&apos;autre session sera déconnectée.
-              </p>
-            </div>
-          )}
+          <button type="submit" disabled={loading} style={s.btn}>
+            {loading ? "…" : "Se connecter →"}
+          </button>
 
-          <form onSubmit={handleLogin} style={s.form}>
-            <div>
-              <label style={s.label}>Email professionnel</label>
-              <input
-                type="email" required value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="dr.dupont@clinique.fr"
-                style={s.input}
-              />
-            </div>
-            <div>
-              <label style={s.label}>Mot de passe</label>
-              <input
-                type="password" required value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                style={s.input}
-              />
-            </div>
+          <div style={s.divider} />
 
-            {error && <div style={s.errorBox}>{error}</div>}
-
-            <button type="submit" disabled={loading} style={s.btn}>
-              {loading ? "Connexion…" : "Se connecter →"}
-            </button>
-          </form>
-
-          <p style={s.register}>
-            Pas encore de compte ?{" "}
+          <div style={s.registerBlock}>
             <Link href="/register" style={s.registerLink}>Essai gratuit 7 jours</Link>
-          </p>
+            <span style={s.legal}>RGPD · HDS</span>
+          </div>
+        </form>
 
-          <p style={s.legal}>Hébergement Europe · RGPD · HDS</p>
-        </div>
+        {(error || autreAppareil) && (
+          <div style={s.errorRow}>
+            {autreAppareil
+              ? "⚠️ Autre appareil connecté — cette session sera déconnectée."
+              : error}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -124,188 +122,157 @@ export default function LoginPage() {
 const s: Record<string, React.CSSProperties> = {
   root: {
     position: "relative",
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "24px 16px",
-    fontFamily: "'EB Garamond', Georgia, serif",
+    height: "100vh",
+    width: "100vw",
     overflow: "hidden",
+    fontFamily: "'EB Garamond', Georgia, serif",
   },
 
-  /* Fond image filtrée mode échographe */
   bgImage: {
     position: "absolute",
     inset: 0,
     backgroundImage: "url('/medical-bg.png')",
     backgroundSize: "cover",
-    backgroundPosition: "center",
-    filter: "grayscale(100%) brightness(0.55) sepia(0.6) hue-rotate(170deg) saturate(3)",
-    transform: "scale(1.04)",
+    backgroundPosition: "center 30%",
+    filter: "grayscale(100%) brightness(0.6) sepia(0.5) hue-rotate(170deg) saturate(3)",
+    transform: "scale(1.03)",
   },
 
-  /* Overlay sombre par-dessus */
   bgOverlay: {
     position: "absolute",
     inset: 0,
-    background: "linear-gradient(160deg, rgba(0,8,24,0.72) 0%, rgba(0,14,38,0.68) 100%)",
+    background: "linear-gradient(to bottom, rgba(0,6,18,0.35) 0%, rgba(0,6,18,0.55) 60%, rgba(0,6,18,0.85) 100%)",
   },
 
-  /* Carte centrale */
-  center: {
-    position: "relative",
-    zIndex: 1,
-    width: "100%",
+  /* Tagline haut gauche */
+  topLeft: {
+    position: "absolute",
+    top: 40,
+    left: 48,
+    zIndex: 2,
+  },
+  tagline: {
+    fontSize: 42,
+    fontWeight: 400,
+    fontStyle: "italic",
+    color: "rgba(232,244,253,0.88)",
+    lineHeight: 1.2,
+    margin: 0,
+    letterSpacing: "-0.02em",
+    textShadow: "0 2px 24px rgba(0,0,0,0.5)",
+  },
+
+  /* Panneau bas */
+  bottomPanel: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    background: "rgba(0,8,22,0.90)",
+    backdropFilter: "blur(20px)",
+  },
+
+  scanLine: {
+    height: 1,
+    background: "linear-gradient(90deg, transparent 0%, rgba(0,180,216,0.12) 15%, rgba(0,180,216,0.55) 50%, rgba(0,180,216,0.12) 85%, transparent 100%)",
+  },
+
+  row: {
     display: "flex",
-    justifyContent: "center",
-  },
-
-  card: {
-    width: "100%",
-    maxWidth: 400,
-    background: "rgba(0,10,28,0.88)",
-    border: "1px solid rgba(0,180,216,0.22)",
-    borderRadius: 18,
-    padding: "40px 36px 36px",
-    backdropFilter: "blur(24px)",
-    boxShadow: "0 0 0 1px rgba(0,180,216,0.06), 0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(0,180,216,0.12)",
+    alignItems: "center",
+    gap: 20,
+    padding: "20px 48px",
+    flexWrap: "wrap" as const,
   },
 
   logoLink: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
+    gap: 9,
     textDecoration: "none",
-    marginBottom: 28,
+    flexShrink: 0,
   },
   logoText: {
     fontFamily: "'EB Garamond', serif",
-    fontSize: 26,
+    fontSize: 22,
     color: "#e8f4fd",
     letterSpacing: "-0.01em",
   },
 
-  /* Ligne de scan — signature visuelle */
-  scanLine: {
-    position: "relative",
-    height: 1,
-    background: "linear-gradient(90deg, transparent 0%, rgba(0,180,216,0.15) 20%, rgba(0,180,216,0.5) 50%, rgba(0,180,216,0.15) 80%, transparent 100%)",
-    marginBottom: 28,
-  },
-  scanGlow: {
-    position: "absolute",
-    top: -2,
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: 60,
-    height: 5,
-    background: "rgba(0,180,216,0.25)",
-    borderRadius: 4,
-    filter: "blur(4px)",
+  divider: {
+    width: 1,
+    height: 36,
+    background: "rgba(0,180,216,0.18)",
+    flexShrink: 0,
   },
 
-  title: {
-    fontSize: 26,
-    fontWeight: 600,
-    color: "#e8f4fd",
-    marginBottom: 4,
-    textAlign: "center",
-    letterSpacing: "-0.01em",
-  },
-  sub: {
-    fontSize: 13,
-    color: "#4a7a96",
-    fontFamily: "'JetBrains Mono', monospace",
-    marginBottom: 28,
-    textAlign: "center",
-  },
-
-  form: {
+  fieldGroup: {
     display: "flex",
-    flexDirection: "column",
-    gap: 16,
+    flexDirection: "column" as const,
+    gap: 3,
   },
-
   label: {
-    display: "block",
-    fontSize: 10,
-    color: "#4a7a96",
+    fontSize: 9,
+    color: "rgba(0,180,216,0.55)",
     fontFamily: "'JetBrains Mono', monospace",
-    letterSpacing: "0.1em",
-    textTransform: "uppercase",
-    marginBottom: 6,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase" as const,
   },
   input: {
-    width: "100%",
-    background: "rgba(0,180,216,0.04)",
-    border: "1px solid rgba(0,180,216,0.18)",
-    borderRadius: 8,
-    padding: "11px 14px",
+    background: "rgba(0,180,216,0.06)",
+    border: "1px solid rgba(0,180,216,0.2)",
+    borderRadius: 6,
+    padding: "8px 12px",
     color: "#e8f4fd",
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: 14,
+    fontSize: 13,
     outline: "none",
-    boxSizing: "border-box",
-    transition: "border-color 0.2s",
-  },
-
-  warningBox: {
-    background: "rgba(251,191,36,0.07)",
-    border: "1px solid rgba(251,191,36,0.25)",
-    borderRadius: 8,
-    padding: "12px 14px",
-    color: "#fde68a",
-    fontSize: 13,
-    fontFamily: "'JetBrains Mono', monospace",
-    lineHeight: 1.5,
-  },
-  errorBox: {
-    background: "rgba(239,68,68,0.07)",
-    border: "1px solid rgba(239,68,68,0.25)",
-    borderRadius: 8,
-    padding: "10px 14px",
-    color: "#fca5a5",
-    fontSize: 13,
-    fontFamily: "'JetBrains Mono', monospace",
+    width: 200,
+    boxSizing: "border-box" as const,
   },
 
   btn: {
-    width: "100%",
-    padding: "13px",
-    marginTop: 4,
+    padding: "10px 22px",
     background: "linear-gradient(135deg, #0552a3 0%, #0a66c2 100%)",
     border: "none",
-    borderRadius: 9,
+    borderRadius: 7,
     color: "#ffffff",
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: "'EB Garamond', serif",
     fontWeight: 600,
-    letterSpacing: "0.03em",
     cursor: "pointer",
-    boxShadow: "0 4px 20px rgba(10,102,194,0.45)",
-    transition: "opacity 0.15s, transform 0.1s",
+    whiteSpace: "nowrap" as const,
+    boxShadow: "0 3px 14px rgba(10,102,194,0.4)",
+    flexShrink: 0,
+    letterSpacing: "0.02em",
   },
 
-  register: {
-    textAlign: "center",
-    fontSize: 13,
-    color: "#3d5a6e",
-    fontFamily: "'JetBrains Mono', monospace",
-    marginTop: 24,
+  registerBlock: {
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: 4,
+    marginLeft: "auto",
   },
   registerLink: {
     color: "#00b4d8",
     textDecoration: "none",
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: 11,
     fontWeight: 600,
   },
   legal: {
-    textAlign: "center",
-    fontSize: 10,
+    fontSize: 9,
     color: "rgba(0,180,216,0.3)",
     fontFamily: "'JetBrains Mono', monospace",
     letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    marginTop: 20,
+  },
+
+  errorRow: {
+    padding: "8px 48px 12px",
+    fontSize: 12,
+    color: "#fca5a5",
+    fontFamily: "'JetBrains Mono', monospace",
+    background: "rgba(239,68,68,0.06)",
   },
 };
