@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -12,46 +11,18 @@ function ResetPasswordForm() {
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const [ready, setReady] = useState(false);
-  const supabase = useMemo(() => createClient(), []);
+  const [resetToken, setResetToken] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const token_hash = searchParams.get("token_hash");
-    const type = searchParams.get("type");
-    const code = searchParams.get("code");
-
-    // DEBUG temporaire — affiche les params reçus
-    const params = [
-      token_hash ? `token_hash=✓(${token_hash.slice(0,8)}…)` : "token_hash=∅",
-      type ? `type=${type}` : "type=∅",
-      code ? `code=✓(${code.slice(0,8)}…)` : "code=∅",
-    ].join(" | ");
-
-    if (token_hash && type === "recovery") {
-      supabase.auth.verifyOtp({ token_hash, type: "recovery" }).then(({ error }) => {
-        if (error) {
-          setError(`[OTP] ${error.message} — params: ${params}`);
-        } else {
-          setReady(true);
-        }
-      });
+    const token = searchParams.get("reset_token");
+    if (token) {
+      setResetToken(token);
+      setReady(true);
       return;
     }
-
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-        if (error) {
-          setError(`[PKCE] ${error.message} — params: ${params}`);
-        } else {
-          setReady(true);
-          router.replace("/reset-password");
-        }
-      });
-      return;
-    }
-
-    setError(`Aucun paramètre reçu — params: ${params}`);
+    setError("Lien invalide ou expiré. Demandez-en un nouveau.");
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -60,13 +31,23 @@ function ResetPasswordForm() {
     if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return; }
     if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
     setLoading(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) {
-      setError(error.message || "Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+    try {
+      const res = await fetch("/api/auth/update-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reset_token: resetToken, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error || "Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+        setLoading(false);
+      } else {
+        setDone(true);
+        setTimeout(() => router.push("/login"), 3000);
+      }
+    } catch {
+      setError("Une erreur est survenue. Vérifiez votre connexion.");
       setLoading(false);
-    } else {
-      setDone(true);
-      setTimeout(() => router.push("/login"), 3000);
     }
   }
 
