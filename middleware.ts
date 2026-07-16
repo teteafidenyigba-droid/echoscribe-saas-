@@ -27,6 +27,30 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
 
+  // ── Routes relay IA — session valide + abonnement requis ──
+  if (pathname.startsWith("/api/relay")) {
+    if (!user) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    }
+    if (!isAdmin(user.email!)) {
+      const { data: sub } = await supabase
+        .from("subscriptions")
+        .select("status, trial_end, current_period_end")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      const now = new Date();
+      const hasAccess = sub && (
+        sub.status === "active" ||
+        (sub.status === "trialing" && sub.trial_end != null && new Date(sub.trial_end) > now) ||
+        (sub.status === "canceled" && sub.current_period_end && new Date(sub.current_period_end) > now)
+      );
+      if (!hasAccess) {
+        return NextResponse.json({ error: "Abonnement requis" }, { status: 403 });
+      }
+    }
+    return supabaseResponse;
+  }
+
   // ── Routes ADMIN — complètement séparées, jamais de vérif abonnement ──
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     if (!user) return NextResponse.redirect(new URL("/login", request.url));

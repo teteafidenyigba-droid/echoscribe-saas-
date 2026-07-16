@@ -150,6 +150,19 @@ export async function sendSubscriptionActiveEmail(to: string, name: string, plan
   });
 }
 
+export async function sendResetPasswordEmail(to: string, resetUrl: string) {
+  await getResend().emails.send({
+    from: FROM, to,
+    subject: "Réinitialisation de votre mot de passe EchoScribe",
+    html: base(`
+      ${h1("Réinitialisation de votre mot de passe")}
+      ${p("Vous avez demandé la réinitialisation de votre mot de passe EchoScribe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.")}
+      ${btn("Réinitialiser mon mot de passe →", resetUrl)}
+      ${p("Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail. Ce lien expire dans 1 heure.", true)}
+    `),
+  });
+}
+
 export async function sendCancellationEmail(to: string, name: string, endDate: Date) {
   const dateStr = endDate.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   await getResend().emails.send({

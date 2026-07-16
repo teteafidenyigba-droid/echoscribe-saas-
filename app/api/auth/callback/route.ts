@@ -58,12 +58,13 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error && data.user) {
-      // Recovery flow (reset password) — just redirect, no trial/welcome email
-      if (next) {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
 
+    // Flux reset password : rediriger quoi qu'il arrive (le succès ou l'erreur est géré par la page)
+    if (next === "/reset-password") {
+      return NextResponse.redirect(`${origin}/reset-password`);
+    }
+
+    if (!error && data.user) {
       const user = data.user;
       const name = user.user_metadata?.full_name ?? user.email ?? "";
 

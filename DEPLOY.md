@@ -28,10 +28,14 @@ Dans **Settings → API** :
 - `SUPABASE_SERVICE_ROLE_KEY` → service_role key (⚠️ à garder secret)
 
 ### 1.4 Configurer l'authentification
-1. **Authentication → Settings** :
+1. **Authentication → URL Configuration** :
    - Site URL : `https://votre-domaine.vercel.app`
-   - Redirect URLs : `https://votre-domaine.vercel.app/api/auth/callback`
+   - Redirect URLs (ajouter les deux) :
+     - `https://votre-domaine.vercel.app/api/auth/callback`
+     - `https://votre-domaine.vercel.app/api/auth/callback?next=/reset-password`
 2. **Authentication → Email Templates** : personnalisez si souhaité
+
+> ⚠️ **Important — Mot de passe oublié** : le `redirectTo` utilisé lors du reset de mot de passe est `https://votre-domaine.vercel.app/api/auth/callback?next=/reset-password`. Cette URL **doit figurer dans la liste des Redirect URLs autorisées** dans Supabase, sinon les liens de réinitialisation seront rejetés.
 
 ---
 
@@ -142,6 +146,17 @@ stripe login
 stripe listen --forward-to localhost:3000/api/stripe/webhook
 ```
 
+### Tester le flow mot de passe oublié
+1. Allez sur `http://localhost:3000/forgot-password`
+2. Entrez l'email d'un compte existant
+3. Vérifiez la boîte mail — vous recevrez l'email via Supabase
+4. Cliquez le lien **dans le même navigateur** que celui utilisé pour le formulaire
+5. Le formulaire "Nouveau mot de passe" doit s'afficher
+6. Entrez et confirmez un nouveau mot de passe
+7. Vérifiez que la connexion fonctionne avec le nouveau mot de passe
+
+> ⚠️ **Limitation PKCE** : le lien de réinitialisation doit être ouvert dans le **même navigateur** que celui du formulaire. Si l'email est ouvert dans l'app Gmail mobile (webview séparé), l'échange PKCE échouera. C'est une limitation connue de Supabase SSR avec PKCE activé par défaut.
+
 ---
 
 ## Étape 6 — Déploiement sur Vercel
@@ -176,7 +191,9 @@ git push -u origin main
 ### 6.4 Mettre à jour Supabase avec l'URL de production
 1. Supabase → **Authentication → URL Configuration**
 2. Site URL : `https://echoscribe.fr`
-3. Redirect URLs : `https://echoscribe.fr/api/auth/callback`
+3. Redirect URLs (les deux sont requises) :
+   - `https://echoscribe.fr/api/auth/callback`
+   - `https://echoscribe.fr/api/auth/callback?next=/reset-password`
 
 ---
 
@@ -184,7 +201,11 @@ git push -u origin main
 
 - [ ] `https://echoscribe.fr` → landing page
 - [ ] `https://echoscribe.fr/register` → inscription
-- [ ] Email de confirmation fonctionne
+- [ ] Email de confirmation reçu (Supabase)
+- [ ] Connexion après confirmation → `/app`
+- [ ] `https://echoscribe.fr/forgot-password` → formulaire mot de passe oublié
+- [ ] Email de réinitialisation reçu → lien fonctionne dans le même navigateur
+- [ ] Nouveau mot de passe enregistré, connexion validée
 - [ ] `https://echoscribe.fr/billing` → plans de paiement
 - [ ] Checkout Stripe redirige correctement
 - [ ] Webhook Stripe reçu (vérifier dans Stripe Dashboard → Webhooks → événements)
@@ -217,20 +238,79 @@ Vercel Dashboard → votre projet → **Functions** → sélectionnez une route 
 ## Architecture technique
 
 ```
-/                     Landing page marketing
-/login                Authentification Supabase
-/register             Inscription + sélection plan
-/api/auth/callback    Callback OAuth/email Supabase
-/billing              Gestion abonnement Stripe
-/app                  Application EchoScribe (iframe)
-/api/stripe/checkout  Création session Checkout
-/api/stripe/portal    Portail client Stripe
-/api/stripe/webhook   Webhooks Stripe (events)
-/mentions-legales     Mentions légales
-/cgu                  CGU
-/confidentialite      Politique de confidentialité
-/public/echoscribe-app.html  App HTML servie statiquement
+/                          Landing page marketing
+/login                     Authentification Supabase
+/register                  Inscription + sélection plan
+/forgot-password           Formulaire "mot de passe oublié"
+/reset-password            Formulaire de saisie du nouveau mot de passe
+/billing                   Gestion abonnement Stripe
+/app                       Application EchoScribe (iframe)
+/app/historique            Historique des comptes rendus
+/app/parametres            Paramètres utilisateur
+/admin                     Panel administration (table admins Supabase)
+
+/api/auth/callback         Callback OAuth/email Supabase (échange PKCE server-side)
+/api/auth/reset-password   Génère et envoie le token de réinitialisation (POST)
+/api/auth/update-password  Vérifie le token HMAC et met à jour le mot de passe (POST)
+/api/auth/session-init     Initialisation de session
+/api/auth/force-signout    Déconnexion forcée
+
+/api/stripe/checkout       Création session Checkout
+/api/stripe/portal         Portail client Stripe
+/api/stripe/webhook        Webhooks Stripe (events)
+
+/api/relay/claude          Relay Claude (protège la clé API)
+/api/relay/gemini          Relay Gemini avec fallback (timeout 5s)
+/api/relay/openai          Relay OpenAI
+/api/relay/groq            Relay Groq (llama-3.3-70b-versatile, timeout 3s)
+/api/relay/whisper         Relay Whisper (transcription audio)
+/api/relay/mistral         Relay Mistral
+
+/mentions-legales          Mentions légales
+/cgu                       CGU
+/confidentialite           Politique de confidentialité
+/public/echoscribe-app.html  App V5 HTML servie statiquement (embarquée en iframe dans /app)
 ```
+
+### Flow authentification — Mot de passe oublié
+
+```
+[/forgot-password]
+  → supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://echoscribe.fr/api/auth/callback?next=/reset-password"
+    })
+  → Supabase envoie l'email avec le lien de vérification
+
+[Clic sur le lien email]
+  → Supabase vérifie le token
+  → Redirige vers /api/auth/callback?code=XXXX&next=/reset-password
+
+[/api/auth/callback] (server-side)
+  → exchangeCodeForSession(code)  ← échange PKCE côté serveur
+  → Session établie dans les cookies SSR
+  → Redirige vers /reset-password
+
+[/reset-password]
+  → supabase.auth.getSession()  ← session trouvée dans les cookies
+  → Affiche le formulaire
+  → supabase.auth.updateUser({ password })
+  → Redirige vers /login
+```
+
+> **Pourquoi l'échange se fait server-side** : Supabase utilise PKCE par défaut. Le `code_verifier` est stocké dans les cookies du navigateur par `@supabase/ssr`. En faisant l'échange dans `/api/auth/callback` (route serveur), le verifier est disponible. Si l'utilisateur ouvre le lien dans un navigateur différent (ex: webview Gmail mobile), les cookies ne sont pas partagés et l'échange échoue.
+
+### Chaîne de fallback IA (relays)
+
+```
+Groq llama-3.3-70b (3s timeout)
+  ↓ échec
+Gemini Flash (5s timeout)
+  ↓ échec
+OpenAI GPT-4
+```
+
+### Accès admin
+L'accès à `/admin` est contrôlé par la table `admins` dans Supabase (pas par variable d'environnement). La variable `ADMIN_EMAILS` sert uniquement à bypasser la vérification d'abonnement pour l'accès à `/app`.
 
 ## Support
 

@@ -12,22 +12,26 @@ function ResetPasswordForm() {
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const [ready, setReady] = useState(false);
+  const [resetToken, setResetToken] = useState("");
   const supabase = createClient();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const token_hash = searchParams.get("token_hash");
-    const type = searchParams.get("type");
-    if (!token_hash || type !== "recovery") {
-      setError("Lien invalide ou expiré.");
+    // Cas 1 : notre token HMAC custom (?reset_token=xxx)
+    const rt = searchParams.get("reset_token");
+    if (rt) {
+      setResetToken(rt);
+      setReady(true);
       return;
     }
-    supabase.auth.verifyOtp({ token_hash, type: "recovery" }).then(({ error }) => {
-      if (error) {
-        setError("Ce lien est invalide ou a expiré. Demandez-en un nouveau.");
-      } else {
+
+    // Cas 2 : session déjà établie par le callback server-side
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
         setReady(true);
+      } else {
+        setError("Lien invalide ou expiré.");
       }
     });
   }, []);
@@ -35,16 +39,47 @@ function ResetPasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return; }
-    if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
+    if (password.length < 8) {
+      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      return;
+    }
+    if (password !== confirm) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
     setLoading(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    if (error) {
-      setError("Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
-      setLoading(false);
-    } else {
+
+    if (resetToken) {
+      // Cas HMAC : appel à notre API
+      try {
+        const res = await fetch("/api/auth/update-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reset_token: resetToken, password }),
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          setError(data.error || "Une erreur est survenue. Demandez un nouveau lien.");
+          setLoading(false);
+          return;
+        }
+      } catch {
+        setError("Une erreur réseau est survenue. Réessayez.");
+        setLoading(false);
+        return;
+      }
       setDone(true);
       setTimeout(() => router.push("/login"), 3000);
+    } else {
+      // Cas session Supabase : updateUser
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        setError("Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+        setLoading(false);
+      } else {
+        setDone(true);
+        setTimeout(() => router.push("/login"), 3000);
+      }
     }
   }
 
@@ -62,7 +97,6 @@ function ResetPasswordForm() {
 
       <div style={{ minHeight: "100vh", background: "#f5f7fa", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 20px", fontFamily: "'Inter', sans-serif" }}>
         <div style={{ width: "100%", maxWidth: 380 }}>
-
           <h2 style={{ fontFamily: "'EB Garamond', serif", fontSize: 38, fontWeight: 600, color: "#0d2540", letterSpacing: "-0.025em", marginBottom: 10, lineHeight: 1 }}>
             Nouveau mot de passe
           </h2>
@@ -72,9 +106,7 @@ function ResetPasswordForm() {
             <div style={{ textAlign: "center", paddingTop: 8 }}>
               <div style={{ fontSize: 48, marginBottom: 20 }}>✅</div>
               <p style={{ fontSize: 16, color: "#0d2540", fontWeight: 600, marginBottom: 10 }}>Mot de passe modifié</p>
-              <p style={{ fontSize: 14, color: "#8a9ab0", lineHeight: 1.7 }}>
-                Vous recevrez un e-mail de confirmation.<br />Redirection en cours…
-              </p>
+              <p style={{ fontSize: 14, color: "#8a9ab0", lineHeight: 1.7 }}>Redirection vers la connexion…</p>
             </div>
           ) : error && !ready ? (
             <div>
