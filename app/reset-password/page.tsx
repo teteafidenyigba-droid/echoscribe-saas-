@@ -18,13 +18,12 @@ function ResetPasswordForm() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Erreur transmise par le callback (exchange échoué)
     if (searchParams.get("error") === "expired") {
       setError("Ce lien a expiré ou est invalide. Demandez un nouveau lien.");
       return;
     }
 
-    // Cas 1 : notre token HMAC custom (?reset_token=xxx)
+    // Cas 1 : token HMAC custom (?reset_token=xxx)
     const rt = searchParams.get("reset_token");
     if (rt) {
       setResetToken(rt);
@@ -32,7 +31,22 @@ function ResetPasswordForm() {
       return;
     }
 
-    // Cas 2 : session établie par le callback server-side
+    // Cas 2 : code PKCE passé par le callback — échange côté client
+    // (l'échange server-side ne popule pas la mémoire du client browser → updateUser échoue)
+    const code = searchParams.get("code");
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (error) {
+          setError("Ce lien a expiré ou est invalide. Demandez un nouveau lien.");
+        } else {
+          setReady(true);
+          router.replace("/reset-password");
+        }
+      });
+      return;
+    }
+
+    // Cas 3 : session déjà en mémoire (ex. refresh de la page après échange)
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setReady(true);
