@@ -17,13 +17,21 @@ function ResetPasswordForm() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Format OTP / implicit : ?token_hash=xxx&type=recovery
     const token_hash = searchParams.get("token_hash");
     const type = searchParams.get("type");
+    const code = searchParams.get("code");
+
+    // DEBUG temporaire — affiche les params reçus
+    const params = [
+      token_hash ? `token_hash=✓(${token_hash.slice(0,8)}…)` : "token_hash=∅",
+      type ? `type=${type}` : "type=∅",
+      code ? `code=✓(${code.slice(0,8)}…)` : "code=∅",
+    ].join(" | ");
+
     if (token_hash && type === "recovery") {
       supabase.auth.verifyOtp({ token_hash, type: "recovery" }).then(({ error }) => {
         if (error) {
-          setError("Ce lien est invalide ou a expiré. Demandez-en un nouveau.");
+          setError(`[OTP] ${error.message} — params: ${params}`);
         } else {
           setReady(true);
         }
@@ -31,12 +39,10 @@ function ResetPasswordForm() {
       return;
     }
 
-    // Format PKCE : ?code=xxx
-    const code = searchParams.get("code");
     if (code) {
       supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
         if (error) {
-          setError("Ce lien est invalide ou a expiré. Demandez-en un nouveau.");
+          setError(`[PKCE] ${error.message} — params: ${params}`);
         } else {
           setReady(true);
           router.replace("/reset-password");
@@ -45,7 +51,7 @@ function ResetPasswordForm() {
       return;
     }
 
-    setError("Lien invalide ou expiré.");
+    setError(`Aucun paramètre reçu — params: ${params}`);
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
