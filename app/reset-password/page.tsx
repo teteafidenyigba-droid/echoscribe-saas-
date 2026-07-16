@@ -12,49 +12,22 @@ function ResetPasswordForm() {
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const [ready, setReady] = useState(false);
-  const [resetToken, setResetToken] = useState("");
-  // useMemo garantit UNE SEULE instance par mount du composant.
-  // Sans ça, chaque re-render (setReady, router.replace) crée une nouvelle instance
-  // qui n'a pas la session PKCE en mémoire → updateUser échoue.
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("error") === "expired") {
-      setError("Ce lien a expiré ou est invalide. Demandez un nouveau lien.");
+    const token_hash = searchParams.get("token_hash");
+    const type = searchParams.get("type");
+    if (!token_hash || type !== "recovery") {
+      setError("Lien invalide ou expiré.");
       return;
     }
-
-    // Cas 1 : token HMAC custom (?reset_token=xxx)
-    const rt = searchParams.get("reset_token");
-    if (rt) {
-      setResetToken(rt);
-      setReady(true);
-      return;
-    }
-
-    // Cas 2 : code PKCE passé par le callback — échange côté client
-    // (l'échange server-side ne popule pas la mémoire du client browser → updateUser échoue)
-    const code = searchParams.get("code");
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-        if (error) {
-          setError("Ce lien a expiré ou est invalide. Demandez un nouveau lien.");
-        } else {
-          setReady(true);
-          router.replace("/reset-password");
-        }
-      });
-      return;
-    }
-
-    // Cas 3 : session déjà en mémoire (ex. refresh de la page après échange)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setReady(true);
+    supabase.auth.verifyOtp({ token_hash, type: "recovery" }).then(({ error }) => {
+      if (error) {
+        setError("Ce lien est invalide ou a expiré. Demandez-en un nouveau.");
       } else {
-        setError("Lien invalide ou expiré. Demandez un nouveau lien.");
+        setReady(true);
       }
     });
   }, []);
@@ -62,47 +35,16 @@ function ResetPasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
-      return;
-    }
-    if (password !== confirm) {
-      setError("Les mots de passe ne correspondent pas.");
-      return;
-    }
+    if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return; }
+    if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
     setLoading(true);
-
-    if (resetToken) {
-      // Cas HMAC : appel à notre API
-      try {
-        const res = await fetch("/api/auth/update-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reset_token: resetToken, password }),
-        });
-        const data = await res.json();
-        if (!res.ok || data.error) {
-          setError(data.error || "Une erreur est survenue. Demandez un nouveau lien.");
-          setLoading(false);
-          return;
-        }
-      } catch {
-        setError("Une erreur réseau est survenue. Réessayez.");
-        setLoading(false);
-        return;
-      }
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+      setError(error.message || "Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+      setLoading(false);
+    } else {
       setDone(true);
       setTimeout(() => router.push("/login"), 3000);
-    } else {
-      // Cas session Supabase : updateUser
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) {
-        setError(error.message || "Une erreur est survenue. Demandez un nouveau lien.");
-        setLoading(false);
-      } else {
-        setDone(true);
-        setTimeout(() => router.push("/login"), 3000);
-      }
     }
   }
 
@@ -120,6 +62,7 @@ function ResetPasswordForm() {
 
       <div style={{ minHeight: "100vh", background: "#f5f7fa", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 20px", fontFamily: "'Inter', sans-serif" }}>
         <div style={{ width: "100%", maxWidth: 380 }}>
+
           <h2 style={{ fontFamily: "'EB Garamond', serif", fontSize: 38, fontWeight: 600, color: "#0d2540", letterSpacing: "-0.025em", marginBottom: 10, lineHeight: 1 }}>
             Nouveau mot de passe
           </h2>

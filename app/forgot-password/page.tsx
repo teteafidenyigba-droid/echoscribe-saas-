@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {
@@ -8,21 +9,19 @@ export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const supabase = useMemo(() => createClient(), []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
-    try {
-      await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      // Toujours afficher succès (évite l'énumération d'e-mails)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://echoscribe.fr/reset-password",
+    });
+    if (error) {
+      setError("Une erreur est survenue. Vérifiez votre adresse e-mail.");
+    } else {
       setSent(true);
-    } catch {
-      setError("Une erreur réseau est survenue. Réessayez.");
     }
     setLoading(false);
   }
