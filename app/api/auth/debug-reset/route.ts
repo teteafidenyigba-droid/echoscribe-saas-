@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       const { Resend } = await import("resend");
       const resend = new Resend(process.env.RESEND_API_KEY);
       const { error } = await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL ?? "EchoScribe <noreply@echoscribe.fr>",
+        from: "EchoScribe <noreply@echoscribe.fr>",
         to: email,
         subject: "[DEBUG] Test envoi email EchoScribe",
         html: "<p>Test de diagnostic — si vous recevez ceci, Resend fonctionne.</p>",
