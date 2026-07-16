@@ -24,20 +24,21 @@ export async function POST(request: NextRequest) {
     SECRET
   );
 
-  // Find user ID from profiles table
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("email", email)
-    .single();
+  // Utilise generateLink pour trouver l'user via auth.users (pas besoin de la table profiles)
+  const { data, error } = await supabase.auth.admin.generateLink({
+    type: "recovery",
+    email,
+    options: { redirectTo: `${APP_URL}/reset-password` },
+  });
 
-  if (profileError || !profile?.id) {
-    console.log("[reset-password] no profile found for:", email);
-    // Always return success to avoid email enumeration
+  if (error || !data?.user?.id) {
+    console.log("[reset-password] user not found or error:", error?.message);
+    // Toujours succès pour éviter l'énumération d'emails
     return NextResponse.json({ success: true });
   }
 
-  const token = signResetToken(profile.id, email);
+  const userId = data.user.id;
+  const token = signResetToken(userId, email);
   const resetUrl = `${APP_URL}/reset-password?reset_token=${token}`;
 
   let emailResult = "not_attempted";
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
     emailResult = `error: ${e instanceof Error ? e.message : String(e)}`;
   }
 
-  console.log(`[reset-password] userId=${profile.id} email=${email} resend=${emailResult} url_start=${resetUrl.slice(0, 80)}`);
+  console.log(`[reset-password] userId=${userId} email=${email} resend=${emailResult}`);
 
   return NextResponse.json({ success: true });
 }
