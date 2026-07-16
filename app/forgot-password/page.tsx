@@ -1,9 +1,7 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
-import { useState } from "react";
-import { createBrowserClient } from "@supabase/ssr";
+import { useState, useMemo } from "react";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {
@@ -12,10 +10,8 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  // Instance stable : évite de recréer le client à chaque render
+  const supabase = useMemo(() => createClient(), []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

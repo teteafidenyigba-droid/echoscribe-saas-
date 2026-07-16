@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -13,7 +13,10 @@ function ResetPasswordForm() {
   const [done, setDone] = useState(false);
   const [ready, setReady] = useState(false);
   const [resetToken, setResetToken] = useState("");
-  const supabase = createClient();
+  // useMemo garantit UNE SEULE instance par mount du composant.
+  // Sans ça, chaque re-render (setReady, router.replace) crée une nouvelle instance
+  // qui n'a pas la session PKCE en mémoire → updateUser échoue.
+  const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const searchParams = useSearchParams();
 
