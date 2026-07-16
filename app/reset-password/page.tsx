@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { checkPassword, isPasswordValid, PASSWORD_RULES } from "@/lib/password";
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState("");
@@ -28,7 +29,7 @@ function ResetPasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return; }
+    if (!isPasswordValid(password)) { setError("Le mot de passe ne respecte pas les critères de sécurité."); return; }
     if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
     setLoading(true);
     try {
@@ -93,8 +94,20 @@ function ResetPasswordForm() {
               <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                 <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080" }}>Nouveau mot de passe</label>
                 <input className="es-input" type="password" required value={password}
-                  onChange={e => setPassword(e.target.value)} placeholder="8 caractères minimum"
+                  onChange={e => setPassword(e.target.value)} placeholder="••••••••"
                   style={{ width: "100%", border: "1.5px solid #dce6f0", borderRadius: 10, padding: "13px 16px", fontSize: 14, color: "#0d2540", fontFamily: "'Inter', sans-serif", background: "#ffffff" }} />
+                {password.length > 0 && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    {PASSWORD_RULES.map(({ key, label }) => {
+                      const ok = checkPassword(password)[key];
+                      return (
+                        <span key={key} style={{ fontSize: 11, color: ok ? "#16a34a" : "#94a3b8", display: "flex", alignItems: "center", gap: 5 }}>
+                          <span style={{ fontSize: 10 }}>{ok ? "✓" : "○"}</span> {label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                 <label style={{ fontSize: 12, fontWeight: 500, color: "#4a6080" }}>Confirmer le mot de passe</label>

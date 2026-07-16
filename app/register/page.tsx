@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { checkPassword, isPasswordValid, PASSWORD_RULES } from "@/lib/password";
 
 function RegisterForm() {
   const [name, setName] = useState("");
@@ -19,8 +20,8 @@ function RegisterForm() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
+    if (!isPasswordValid(password)) {
+      setError("Le mot de passe ne respecte pas les critères de sécurité.");
       return;
     }
     setLoading(true);
@@ -125,10 +126,22 @@ function RegisterForm() {
                   </div>
                   <div style={s.field}>
                     <label style={s.label}>Mot de passe</label>
-                    <input className="reg-input" type="password" required minLength={8} value={password}
+                    <input className="reg-input" type="password" required value={password}
                       onChange={e => setPassword(e.target.value)}
-                      placeholder="••••••••  (min. 8 caractères)"
+                      placeholder="••••••••"
                       style={s.input} />
+                    {password.length > 0 && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 3, marginTop: 6 }}>
+                        {PASSWORD_RULES.map(({ key, label }) => {
+                          const ok = checkPassword(password)[key];
+                          return (
+                            <span key={key} style={{ fontSize: 11, color: ok ? "#16a34a" : "#94a3b8", display: "flex", alignItems: "center", gap: 5 }}>
+                              <span style={{ fontSize: 10 }}>{ok ? "✓" : "○"}</span> {label}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   {error && <div style={s.errorBox}>{error}</div>}

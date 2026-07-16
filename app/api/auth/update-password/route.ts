@@ -30,8 +30,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Paramètres manquants." }, { status: 400 });
   }
 
-  if (password.length < 8) {
-    return NextResponse.json({ error: "Mot de passe trop court." }, { status: 400 });
+  if (
+    password.length < 8 ||
+    !/[A-Z]/.test(password) ||
+    !/[0-9]/.test(password) ||
+    !/[^A-Za-z0-9]/.test(password)
+  ) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial." }, { status: 400 });
   }
 
   const decoded = verifyResetToken(reset_token);
