@@ -18,6 +18,12 @@ function ResetPasswordForm() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    // Erreur transmise par le callback (exchange échoué)
+    if (searchParams.get("error") === "expired") {
+      setError("Ce lien a expiré ou est invalide. Demandez un nouveau lien.");
+      return;
+    }
+
     // Cas 1 : notre token HMAC custom (?reset_token=xxx)
     const rt = searchParams.get("reset_token");
     if (rt) {
@@ -26,12 +32,12 @@ function ResetPasswordForm() {
       return;
     }
 
-    // Cas 2 : session déjà établie par le callback server-side
+    // Cas 2 : session établie par le callback server-side
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setReady(true);
       } else {
-        setError("Lien invalide ou expiré.");
+        setError("Lien invalide ou expiré. Demandez un nouveau lien.");
       }
     });
   }, []);
@@ -74,7 +80,7 @@ function ResetPasswordForm() {
       // Cas session Supabase : updateUser
       const { error } = await supabase.auth.updateUser({ password });
       if (error) {
-        setError("Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+        setError(error.message || "Une erreur est survenue. Demandez un nouveau lien.");
         setLoading(false);
       } else {
         setDone(true);
