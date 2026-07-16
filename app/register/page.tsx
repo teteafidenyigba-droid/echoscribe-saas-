@@ -10,6 +10,7 @@ function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [cguAccepted, setCguAccepted] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,10 @@ function RegisterForm() {
     setError("");
     if (!isPasswordValid(password)) {
       setError("Le mot de passe ne respecte pas les critères de sécurité.");
+      return;
+    }
+    if (!cguAccepted) {
+      setError("Vous devez accepter les CGU pour créer un compte.");
       return;
     }
     setLoading(true);
@@ -144,18 +149,28 @@ function RegisterForm() {
                     )}
                   </div>
 
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={cguAccepted}
+                      onChange={e => setCguAccepted(e.target.checked)}
+                      style={{ marginTop: 2, width: 15, height: 15, flexShrink: 0, accentColor: "#0a66c2", cursor: "pointer" }}
+                    />
+                    <span style={{ fontSize: 12, color: "#4a6080", lineHeight: 1.5 }}>
+                      J&apos;accepte les{" "}
+                      <Link href="/cgu" target="_blank" style={{ color: "#0a66c2", textDecoration: "underline" }}>CGU</Link>
+                      {" "}et la{" "}
+                      <Link href="/confidentialite" target="_blank" style={{ color: "#0a66c2", textDecoration: "underline" }}>politique de confidentialité</Link>
+                      {" "}d&apos;EchoScribe.
+                    </span>
+                  </label>
+
                   {error && <div style={s.errorBox}>{error}</div>}
 
-                  <button className="reg-btn" type="submit" disabled={loading} style={s.btn}>
+                  <button className="reg-btn" type="submit" disabled={loading || !cguAccepted} style={s.btn}>
                     {loading ? "Création du compte…" : "Démarrer l'essai gratuit →"}
                   </button>
                 </form>
-
-                <p style={s.legal}>
-                  En vous inscrivant, vous acceptez nos{" "}
-                  <Link href="/cgu" style={{ color: "#8a9ab0" }}>CGU</Link> et notre{" "}
-                  <Link href="/confidentialite" style={{ color: "#8a9ab0" }}>politique de confidentialité</Link>.
-                </p>
 
                 <div style={s.dividerRow}>
                   <span style={s.dividerLine} />
