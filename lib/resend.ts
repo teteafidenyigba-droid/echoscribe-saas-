@@ -3,7 +3,7 @@ import { Resend } from "resend";
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY ?? "re_placeholder");
 }
-const FROM = process.env.RESEND_FROM_EMAIL ?? "EchoScribe <noreply@echoscribe.fr>";
+const FROM = "EchoScribe <noreply@echoscribe.fr>";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://echoscribe.fr";
 
 function base(content: string) {
