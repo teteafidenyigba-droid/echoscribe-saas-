@@ -211,9 +211,15 @@ export default function LandingPage() {
             <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.05em", marginBottom: 16 }}>
               7 jours gratuits · Sans engagement · Résiliable en un clic
             </p>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 999, padding: "7px 16px" }}>
-              <span style={{ fontSize: 15 }}>🩺</span>
-              <span style={{ fontSize: 13, color: "#ffffff", fontStyle: "italic", fontWeight: 500 }}>Conçu par un médecin échographiste</span>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 999, padding: "7px 16px" }}>
+                <span style={{ fontSize: 15 }}>🩺</span>
+                <span style={{ fontSize: 13, color: "#ffffff", fontStyle: "italic", fontWeight: 500 }}>Conçu par un médecin échographiste</span>
+              </div>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(56,189,248,0.15)", border: "1px solid rgba(56,189,248,0.4)", borderRadius: 999, padding: "7px 16px" }}>
+                <span style={{ fontSize: 15 }}>🎙️</span>
+                <span style={{ fontSize: 13, color: "#38bdf8", fontWeight: 600 }}>Micro PC intégré suffisant — sans matériel externe</span>
+              </div>
             </div>
           </div>
 
@@ -243,6 +249,7 @@ export default function LandingPage() {
             "Compte rendu structuré SFR / HAS",
             "Vocabulaire échographique natif",
             "Prêt à signer en 30 secondes",
+            "🎙️ Micro PC intégré — zéro matériel externe",
             "Le temps gagné, c'est du temps dédié au patient",
           ].map((item, i) => (
             <span key={i} style={{
@@ -253,7 +260,7 @@ export default function LandingPage() {
               color: "#0a2240",
               whiteSpace: "nowrap",
               padding: "0 28px",
-              borderRight: i < 3 ? "1.5px solid rgba(10,34,64,0.22)" : "none",
+              borderRight: i < 4 ? "1.5px solid rgba(10,34,64,0.22)" : "none",
               lineHeight: 1,
             }}>
               {item}
@@ -340,6 +347,7 @@ export default function LandingPage() {
             {[
               { icon: "🎙", color: "#dbeafe", accent: "#1e40af", title: "Dictez comme vous parlez", body: "Pas besoin d'adapter votre dictée. Vous parlez naturellement — EchoScribe filtre les échanges avec le patient, les hésitations, les \"euh\"." },
               { icon: "⚡", color: "#fef9c3", accent: "#92400e", title: "30 secondes. Pas plus.", body: "Un clic. L'IA structure votre dictée en compte rendu complet : INDICATION, RÉSULTATS, CONCLUSION, CAT. Terminologie SFR corrigée, mesures préservées." },
+              { icon: "💻", color: "#ede9fe", accent: "#6d28d9", title: "Votre micro PC suffit", body: "Pas besoin de micro externe, de perche, ni d'aucun matériel supplémentaire. Le micro intégré de votre ordinateur est largement suffisant — branchez, cliquez, dictez." },
               { icon: "📋", color: "#dcfce7", accent: "#166534", title: "Collez. Relisez. Signez.", body: "Mise en page riche, prête à coller dans Doctolib, HelloDoc, WEDA, Medistory, Axisante ou Word. Rien à reformater." },
             ].map((c, i) => (
               <div key={i} style={{ borderRadius: 20, padding: "32px 28px", background: c.color, border: `1px solid ${c.color}` }}>
