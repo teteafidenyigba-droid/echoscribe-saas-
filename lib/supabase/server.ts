@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,10 +27,11 @@ export function createClient() {
   );
 }
 
+// Service client uses the raw supabase-js client (no cookies) so the service
+// role key is sent as the sole Authorization header and RLS is bypassed.
 export function createServiceClient() {
-  return createServerClient(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { cookies: makeCookies() }
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
