@@ -347,7 +347,7 @@ export default function LandingPage() {
             {[
               { icon: "🎙", color: "#dbeafe", accent: "#1e40af", title: "Dictez comme vous parlez", body: "Pas besoin d'adapter votre dictée. Vous parlez naturellement — EchoScribe filtre les échanges avec le patient, les hésitations, les \"euh\"." },
               { icon: "⚡", color: "#fef9c3", accent: "#92400e", title: "30 secondes. Pas plus.", body: "Un clic. L'IA structure votre dictée en compte rendu complet : INDICATION, RÉSULTATS, CONCLUSION, CAT. Terminologie SFR corrigée, mesures préservées." },
-              { icon: "💻", color: "#ede9fe", accent: "#6d28d9", title: "Votre micro PC suffit", body: "Pas besoin de micro externe, de perche, ni d'aucun matériel supplémentaire. Le micro intégré de votre ordinateur est largement suffisant — branchez, cliquez, dictez." },
+              { icon: "💻", color: "#ede9fe", accent: "#6d28d9", title: "Zéro équipement à acheter", body: "Le micro intégré de votre ordinateur suffit. Pas de dictaphone, pas de perche, pas de logiciel tiers. Ouvrez votre PC, connectez-vous, dictez." },
               { icon: "📋", color: "#dcfce7", accent: "#166534", title: "Collez. Relisez. Signez.", body: "Mise en page riche, prête à coller dans Doctolib, HelloDoc, WEDA, Medistory, Axisante ou Word. Rien à reformater." },
             ].map((c, i) => (
               <div key={i} style={{ borderRadius: 20, padding: "32px 28px", background: c.color, border: `1px solid ${c.color}` }}>
