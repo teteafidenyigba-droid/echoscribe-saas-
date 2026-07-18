@@ -78,6 +78,7 @@ export default function AppClient({ user, panel = "main" }: Props) {
           : <>
               <Link href="/app/historique" className="es-btn-settings">Historique</Link>
               <Link href="/app/parametres" className="es-btn-settings">Paramètres</Link>
+              <Link href="/app/support" className="es-btn-settings">Support</Link>
             </>
         }
       </div>

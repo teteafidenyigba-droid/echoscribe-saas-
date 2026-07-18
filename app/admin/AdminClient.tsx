@@ -37,7 +37,7 @@ type Tab = "overview"|"users"|"subscriptions"|"errors"|"support"|"admins";
 
 type User = { id: string; email: string; full_name: string; created_at: string; blocked: boolean; crCount: number; subscription: { status: string; trial_end: string | null; current_period_end: string | null } | null };
 type ErrorLog = { id: string; relay: string; error: string; created_at: string; profiles: { email: string } | null };
-type SupportMsg = { id: string; email: string; message: string; status: string; created_at: string };
+type SupportMsg = { id: string; email: string; name?: string; subject?: string; category?: string; message: string; status: string; created_at: string };
 type Admin = { id: string; email: string; created_at: string };
 type Stats = { totalUsers: number; activeSubs: number; trialSubs: number; canceledSubs: number; totalCR: number; totalErrors: number; openSupport: number };
 
@@ -258,13 +258,15 @@ export default function AdminClient() {
             <h2 style={{ color: "#93c5fd", fontWeight: 600, marginBottom: 16 }}>Messages support</h2>
             {support.map(m => (
               <div key={m.id} style={{ ...S.card, borderColor: m.status === "open" ? "#1e40af" : "#1e3a5f" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ color: "#93c5fd" }}>{m.email}</span>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ color: "#93c5fd", fontWeight: 600 }}>{m.name ?? m.email} <span style={{ color: "#6b8aaa", fontWeight: 400 }}>· {m.email}</span></span>
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    {m.category && <span style={{ ...S.badge("trialing"), background: "#1a2a1a", color: "#86efac" }}>{m.category}</span>}
                     <span style={S.badge(m.status === "open" ? "trialing" : "active")}>{m.status}</span>
                     <span style={{ color: "#6b8aaa", fontSize: 11 }}>{fmtDt(m.created_at)}</span>
                   </div>
                 </div>
+                {m.subject && <p style={{ color: "#e2eaf3", fontWeight: 600, margin: "0 0 8px" }}>{m.subject}</p>}
                 <p style={{ color: "#c8d8ea", margin: "0 0 12px" }}>{m.message}</p>
                 {m.status === "open" && (
                   <button style={S.btn("blue")} onClick={() => { setModal({ type: "reply", msg: m }); setForm({ reply: "" }); }}>Répondre & fermer</button>
