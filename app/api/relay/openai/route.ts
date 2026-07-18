@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkRelayAuth } from "@/lib/relay-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,6 +16,9 @@ RÈGLES ABSOLUES :
 - Respecte scrupuleusement ce qui a été dicté, sans rien inventer ni extrapoler\n\n`;
 
 export async function POST(request: NextRequest) {
+  const auth = await checkRelayAuth();
+  if (!auth.ok) return auth.response;
+
   const body = await request.text();
 
   // Injecter le préfixe médical dans le system message OpenAI

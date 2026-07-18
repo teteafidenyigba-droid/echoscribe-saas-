@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkRelayAuth } from "@/lib/relay-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,6 +16,9 @@ const ALLOWED_AUDIO_TYPES = [
 ];
 
 export async function POST(request: NextRequest) {
+  const auth = await checkRelayAuth();
+  if (!auth.ok) return auth.response;
+
   const formData = await request.formData();
 
   const file = formData.get("file") as File | null;
