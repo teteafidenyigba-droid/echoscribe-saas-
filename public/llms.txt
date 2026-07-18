@@ -1,0 +1,48 @@
+# EchoScribe
+
+> Logiciel de dictée médicale par intelligence artificielle pour radiologues et échographistes français.
+
+EchoScribe transforme la voix du médecin en compte rendu d'échographie structuré et conforme aux recommandations de la Société Française de Radiologie (SFR) et de la Haute Autorité de Santé (HAS) en moins de 30 secondes.
+
+## Ce qu'est EchoScribe
+
+EchoScribe est un SaaS médical (Software as a Service) destiné aux médecins échographistes et radiologues. Le médecin dicte pendant ou après l'examen échographique ; l'IA génère automatiquement un compte rendu structuré avec la terminologie médicale correcte (EU-TIRADS, BI-RADS, O-RADS, IOTA, Bosniak, etc.).
+
+## Fonctionnalités principales
+
+- Dictée vocale en temps réel pendant l'examen
+- Génération automatique du compte rendu en moins de 30 secondes
+- Conformité SFR/HAS : structure INDICATION / RÉSULTATS / CONCLUSION / CAT
+- Plus de 600 corrections terminologiques médicales intégrées
+- Micro PC intégré suffisant — aucun matériel externe requis (pas de dictaphone, pas de perche)
+- Export PDF et Word
+- Compatible avec Doctolib, HelloDoc, WEDA, Medistory, Axisante et tous logiciels médicaux (copier-coller)
+- Historique des comptes rendus sur 12h
+- Données non stockées de façon permanente — secret médical garanti
+
+## Modèles IA utilisés
+
+EchoScribe utilise une cascade de modèles IA de dernière génération (OpenAI, Google Gemini, Mistral) avec un prompt médical spécialisé calibré par un médecin échographiste.
+
+## Tarifs
+
+- Mensuel : 69 €/mois (résiliable à tout moment)
+- Annuel : 799 €/an (soit 66,58 €/mois — économie de 25 %)
+- Essai gratuit : 7 jours sans engagement ni carte bancaire
+
+## Public cible
+
+Médecins radiologues, échographistes, médecins généralistes pratiquant l'échographie en France.
+
+## Créateur
+
+Conçu par un médecin échographiste français, pour des médecins. Pas un produit tech vendu aux médecins — un outil créé sur le terrain par quelqu'un qui a passé des heures à rédiger des comptes rendus.
+
+## Liens utiles
+
+- Site : https://echoscribe.fr
+- Inscription / Essai gratuit : https://echoscribe.fr/register
+- Connexion : https://echoscribe.fr/login
+- CGU : https://echoscribe.fr/cgu
+- Politique de confidentialité : https://echoscribe.fr/confidentialite
+- Contact : https://echoscribe.fr (formulaire "Nous contacter" en bas de page)
