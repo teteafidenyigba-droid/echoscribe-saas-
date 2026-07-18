@@ -1,11 +1,63 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const BASE_URL = "https://echoscribe.fr";
+
 export const metadata: Metadata = {
-  title: "EchoScribe — Dictée échographique IA",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: "EchoScribe — Compte rendu d'échographie par dictée IA",
+    template: "%s | EchoScribe",
+  },
   description:
-    "Générez des comptes rendus d'échographie structurés et conformes SFR en 30 secondes par dictée vocale. Conforme aux standards médicaux français.",
-  keywords: "échographie, compte rendu, dictée vocale, IA médicale, radiologie, SFR",
+    "EchoScribe génère votre compte rendu d'échographie structuré en 30 secondes par dictée vocale. Conforme SFR / HAS. Pas de matériel externe — le micro de votre PC suffit. Essai gratuit 7 jours.",
+  keywords: [
+    "compte rendu échographie",
+    "dictée médicale IA",
+    "logiciel radiologue dictée",
+    "transcription médicale intelligence artificielle",
+    "compte rendu radiologie automatique",
+    "dictée vocale médecin",
+    "echoscribe",
+    "IA médicale SFR",
+    "compte rendu structuré HAS",
+    "logiciel échographie",
+    "dictée échographique",
+    "compte rendu médical automatique",
+  ],
+  authors: [{ name: "EchoScribe", url: BASE_URL }],
+  creator: "EchoScribe",
+  publisher: "EchoScribe",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  alternates: { canonical: BASE_URL },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    url: BASE_URL,
+    siteName: "EchoScribe",
+    title: "EchoScribe — Compte rendu d'échographie en 30 secondes par IA",
+    description:
+      "Dictez pendant l'examen. EchoScribe structure votre compte rendu conforme SFR/HAS en 30 secondes. Sans matériel externe. Essai gratuit 7 jours.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "EchoScribe — Dictée médicale IA pour radiologues",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EchoScribe — Compte rendu d'échographie par IA en 30 secondes",
+    description:
+      "Dictée vocale → compte rendu structuré SFR/HAS en 30 secondes. Micro PC intégré suffisant. Essai gratuit 7 jours.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

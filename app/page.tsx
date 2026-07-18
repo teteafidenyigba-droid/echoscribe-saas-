@@ -1,10 +1,89 @@
 import Link from "next/link";
 import FaqSection from "./components/FaqSection";
 import ContactModal from "./components/ContactModal";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EchoScribe — Compte rendu d'échographie par dictée IA",
+  alternates: { canonical: "https://echoscribe.fr" },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "EchoScribe",
+      "url": "https://echoscribe.fr",
+      "description": "Logiciel de dictée médicale par IA pour radiologues et échographistes. Génère des comptes rendus structurés conformes SFR/HAS en 30 secondes par dictée vocale.",
+      "applicationCategory": "MedicalApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "EUR",
+        "lowPrice": "66.58",
+        "highPrice": "69",
+        "offerCount": "2",
+        "offers": [
+          { "@type": "Offer", "name": "Mensuel", "price": "69", "priceCurrency": "EUR", "billingIncrement": "P1M" },
+          { "@type": "Offer", "name": "Annuel", "price": "799", "priceCurrency": "EUR", "billingIncrement": "P1Y" }
+        ]
+      },
+      "featureList": [
+        "Dictée vocale en temps réel",
+        "Compte rendu conforme SFR et HAS",
+        "600+ corrections médicales échographiques",
+        "Micro PC intégré suffisant — sans matériel externe",
+        "Export PDF et Word",
+        "Vocabulaire EU-TIRADS, BI-RADS, O-RADS, IOTA, Bosniak"
+      ],
+      "inLanguage": "fr",
+      "audience": { "@type": "MedicalAudience", "audienceType": "Médecin radiologue, échographiste" }
+    },
+    {
+      "@type": "Organization",
+      "name": "EchoScribe",
+      "url": "https://echoscribe.fr",
+      "logo": "https://echoscribe.fr/og-image.png",
+      "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "availableLanguage": "French" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Faut-il un microphone externe pour utiliser EchoScribe ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Non. Le microphone intégré de votre ordinateur suffit largement. Pas de dictaphone, pas de perche, pas de matériel supplémentaire à acheter." }
+        },
+        {
+          "@type": "Question",
+          "name": "EchoScribe est-il conforme aux recommandations SFR et HAS ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Oui. EchoScribe structure les comptes rendus selon les normes de la Société Française de Radiologie (SFR) et de la Haute Autorité de Santé (HAS), avec plus de 600 corrections terminologiques médicales." }
+        },
+        {
+          "@type": "Question",
+          "name": "Combien de temps faut-il pour générer un compte rendu ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Moins de 30 secondes. Vous dictez pendant l'examen, l'IA structure et rédige le compte rendu complet prêt à signer." }
+        },
+        {
+          "@type": "Question",
+          "name": "Mes données médicales sont-elles sécurisées ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "L'audio est traité sans stockage permanent. Les données sont effacées automatiquement après 12h. Le secret médical est garanti." }
+        },
+        {
+          "@type": "Question",
+          "name": "EchoScribe fonctionne-t-il avec mon logiciel médical ?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Oui. Le compte rendu généré se copie-colle directement dans Doctolib, HelloDoc, WEDA, Medistory, Axisante, Word ou tout autre logiciel." }
+        }
+      ]
+    }
+  ]
+};
 
 export default function LandingPage() {
   return (
     <div style={{ background: "#eaf4fb", minHeight: "100vh", color: "#0d2540", fontFamily: "'EB Garamond', Georgia, serif" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <style>{`
         @media (max-width: 768px) {
           body, html { overflow-x: hidden; }
