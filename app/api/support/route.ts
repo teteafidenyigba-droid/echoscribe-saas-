@@ -30,15 +30,27 @@ export async function POST(req: NextRequest) {
 
   const name = profile?.full_name ?? user.email ?? "";
 
-  const { error: dbErr } = await db.from("support_messages").insert({
+  // Tentative avec toutes les colonnes (migration appliquée)
+  let { error: dbErr } = await db.from("support_messages").insert({
     user_id: user.id,
     email: user.email,
     name,
     subject: subject.trim(),
     category: category ?? "autre",
-    message: message.trim(),
+    message: `[${category ?? "autre"}] ${subject.trim()}\n\n${message.trim()}`,
     status: "open",
   });
+
+  // Fallback : colonnes de base uniquement (si migration pas encore appliquée)
+  if (dbErr) {
+    console.warn("[support] full insert failed, trying minimal:", dbErr.message);
+    const fallback = await db.from("support_messages").insert({
+      email: user.email,
+      message: `[${category ?? "autre"}] ${subject.trim()}\n\n${message.trim()}`,
+      status: "open",
+    });
+    dbErr = fallback.error;
+  }
 
   if (dbErr) {
     console.error("[support] insert error:", dbErr.message);
