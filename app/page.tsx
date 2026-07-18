@@ -265,7 +265,7 @@ export default function LandingPage() {
             </p>
             <h1 style={{ fontSize: "clamp(32px, 4.5vw, 54px)", fontWeight: 800, lineHeight: 1.08, color: "#ffffff", marginBottom: 22, letterSpacing: "-0.02em" }}>
               Vous dictez.<br />
-              <em style={{ fontStyle: "italic", fontWeight: 800, color: "#38bdf8" }}>Le compte rendu s&apos;écrit.</em>
+              <em style={{ fontStyle: "italic", fontWeight: 800, color: "#38bdf8" }}>Le compte rendu d&apos;échographie s&apos;écrit.</em>
             </h1>
             <p style={{ fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.75, color: "rgba(255,255,255,0.72)", marginBottom: 32, maxWidth: 460 }}>
               EchoScribe transforme votre voix, pendant l&apos;examen, en compte rendu structuré conforme aux recommandations de la Société Française de Radiologie et de la Haute Autorité de Santé — prêt à coller dans votre logiciel.

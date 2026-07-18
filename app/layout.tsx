@@ -6,11 +6,11 @@ const BASE_URL = "https://echoscribe.fr";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "EchoScribe — Compte rendu d'échographie par dictée IA",
+    default: "Compte rendu échographie par IA | EchoScribe",
     template: "%s | EchoScribe",
   },
   description:
-    "EchoScribe génère votre compte rendu d'échographie structuré en 30 secondes par dictée vocale. Conforme SFR / HAS. Pas de matériel externe — le micro de votre PC suffit. Essai gratuit 7 jours.",
+    "Générez votre compte rendu d'échographie en 30s par dictée vocale IA. Conforme SFR/HAS. Micro PC suffisant. Essai gratuit 7 jours →",
   keywords: [
     // Prioritaires
     "compte rendu échographie IA",
@@ -82,6 +82,7 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
           rel="stylesheet"
