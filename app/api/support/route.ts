@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
   if (dbErr) {
     console.error("[support] insert error:", dbErr.message);
-    return NextResponse.json({ error: `[debug] ${dbErr.message}` }, { status: 500 });
+    return NextResponse.json({ error: "Erreur serveur. Réessayez dans quelques instants." }, { status: 500 });
   }
 
   try {
