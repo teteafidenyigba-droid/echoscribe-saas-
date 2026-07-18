@@ -5,7 +5,7 @@ import { Resend } from "resend";
 
 export const dynamic = "force-dynamic";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "eliasco2018@gmail.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "tete.afidenyigba@gmail.com";
 
 export async function POST(req: NextRequest) {
   const supabase = createClient();
