@@ -12,6 +12,18 @@ export const metadata: Metadata = {
   description:
     "EchoScribe génère votre compte rendu d'échographie structuré en 30 secondes par dictée vocale. Conforme SFR / HAS. Pas de matériel externe — le micro de votre PC suffit. Essai gratuit 7 jours.",
   keywords: [
+    // Prioritaires
+    "compte rendu échographie IA",
+    "dictée échographique automatique",
+    "logiciel compte rendu échographie",
+    "compte rendu SFR automatisé",
+    "dictée vocale radiologue IA",
+    "compte rendu échographie conforme HAS",
+    // Secondaires
+    "logiciel dictée médicale radiologue",
+    "transcription vocale médicale France",
+    "alternative Dragon Medical radiologie",
+    // Généraux
     "compte rendu échographie",
     "dictée médicale IA",
     "logiciel radiologue dictée",
