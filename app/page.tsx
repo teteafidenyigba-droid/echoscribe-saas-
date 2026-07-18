@@ -1,5 +1,6 @@
 import Link from "next/link";
 import FaqSection from "./components/FaqSection";
+import ContactModal from "./components/ContactModal";
 
 export default function LandingPage() {
   return (
@@ -425,9 +426,7 @@ export default function LandingPage() {
           </span>
         </div>
         <div style={{ marginBottom: 16 }}>
-          <a href="mailto:contact@echoscribe.fr" style={{ color: "#7dd3fc", textDecoration: "none", fontSize: 13 }}>
-            contact@echoscribe.fr
-          </a>
+          <ContactModal />
         </div>
         <div style={{ display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
           {[
