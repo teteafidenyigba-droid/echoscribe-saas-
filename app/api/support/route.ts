@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: "EchoScribe <noreply@echoscribe.fr>",
       to: ADMIN_EMAIL,
+      replyTo: user.email!,
       subject: `[Support] ${subject.trim()}`,
       html: `
         <p><strong>De :</strong> ${name} (${user.email})</p>
