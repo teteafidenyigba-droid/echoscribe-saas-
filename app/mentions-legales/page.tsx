@@ -45,8 +45,6 @@ const content = `
   Email : contact@echoscribe.fr
 </p>
 
-<h2>2. Directeur de la publication</h2>
-<p>Le directeur de la publication est le représentant légal de la société CONNEXION MED.</p>
 
 <h2>3. Hébergement</h2>
 <p>
