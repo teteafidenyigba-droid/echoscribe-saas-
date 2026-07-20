@@ -12,11 +12,12 @@ export default async function BillingPage({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, email, stripe_customer_id")
-    .eq("id", user.id)
-    .single();
+  const db = createServiceClient();
+
+  const [{ data: profile }, { data: admin }] = await Promise.all([
+    supabase.from("profiles").select("full_name, email, stripe_customer_id").eq("id", user.id).single(),
+    db.from("admins").select("id").eq("id", user.id).single(),
+  ]);
 
   let { data: sub } = await supabase
     .from("subscriptions")
@@ -64,6 +65,7 @@ export default async function BillingPage({
       subscription={sub}
       hasStripeCustomer={!!profile?.stripe_customer_id}
       searchParams={searchParams}
+      isAdmin={!!admin}
     />
   );
 }

@@ -19,9 +19,10 @@ interface Props {
   subscription: Subscription;
   hasStripeCustomer: boolean;
   searchParams: { success?: string; canceled?: string; welcome?: string; plan?: string };
+  isAdmin?: boolean;
 }
 
-export default function BillingClient({ user, subscription, hasStripeCustomer, searchParams }: Props) {
+export default function BillingClient({ user, subscription, hasStripeCustomer, searchParams, isAdmin = false }: Props) {
   const [loading, setLoading] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -86,8 +87,15 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
       <div style={s.content}>
         <h1 style={s.h1}>Mon abonnement</h1>
 
+        {/* Admin banner */}
+        {isAdmin && (
+          <div style={{ ...s.successBox, marginBottom: 20 }}>
+            ✓ Compte administrateur — accès permanent sans restriction.
+          </div>
+        )}
+
         {/* Banners */}
-        {trialExpired && (
+        {!isAdmin && trialExpired && (
           <div style={{ ...s.errorBox, marginBottom: 20 }}>
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>⏰ Votre essai gratuit est terminé</div>
             <p>Votre période d'essai de 7 jours a expiré le {trialEnd ? fmtDate(trialEnd) : ""}. Choisissez un abonnement ci-dessous pour retrouver l'accès à EchoScribe.</p>
@@ -148,7 +156,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
         )}
 
         {/* Plans */}
-        {!isActive && (
+        {!isAdmin && !isActive && (
           <>
             <h2 style={s.h2}>Choisissez votre plan</h2>
             <div style={s.plans}>
