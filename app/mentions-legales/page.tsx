@@ -33,33 +33,30 @@ function LegalPage({ title, content }: { title: string; content: string }) {
 }
 
 const content = `
-<p><strong>Dernière mise à jour :</strong> Juin 2025</p>
+<p><strong>Dernière mise à jour :</strong> Juillet 2025</p>
 
 <h2>1. Éditeur du site</h2>
 <p>
   Le site EchoScribe (ci-après « le Service ») est édité par :<br>
-  <strong>[VOTRE NOM / RAISON SOCIALE]</strong><br>
-  [Forme juridique] au capital de [X]€<br>
-  SIRET : [NUMÉRO SIRET]<br>
+  <strong>CONNEXION MED</strong><br>
+  Société immatriculée au RCS d'Orléans sous le numéro <strong>981 614 882</strong><br>
+  Date d'immatriculation : 28 juin 2024<br>
   Siège social : [ADRESSE COMPLÈTE]<br>
-  Email : contact@echoscribe.fr<br>
-  Numéro de TVA intracommunautaire : FR[NUMÉRO]
+  Email : contact@echoscribe.fr
 </p>
 
 <h2>2. Directeur de la publication</h2>
-<p>[NOM DU DIRECTEUR DE PUBLICATION], en qualité de [TITRE].</p>
+<p>Le directeur de la publication est le représentant légal de la société CONNEXION MED.</p>
 
 <h2>3. Hébergement</h2>
 <p>
   Le site est hébergé par :<br>
   <strong>Vercel Inc.</strong><br>
-  340 Pine Street, Suite 701, San Francisco, CA 94104, USA<br>
   <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">https://vercel.com</a>
 </p>
 <p>
   Base de données hébergée par :<br>
   <strong>Supabase Inc.</strong><br>
-  970 Toa Payoh North, Singapore<br>
   <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">https://supabase.com</a>
 </p>
 
