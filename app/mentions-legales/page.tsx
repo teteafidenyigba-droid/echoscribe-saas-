@@ -42,7 +42,6 @@ const content = `
   Société par actions simplifiée (SAS) au capital de 3 000 €<br>
   RCS Orléans n° <strong>981 614 882</strong><br>
   Date d'immatriculation : 28 janvier 2024<br>
-  Siège social : 12 rue de la Mairie Lugard, 45600 Saint-Jean-de-Braye<br>
   Email : contact@echoscribe.fr
 </p>
 
