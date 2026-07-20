@@ -26,8 +26,8 @@ export default function CGUPage() {
 }
 
 const cguContent = `
-<p><strong>Dernière mise à jour :</strong> Juin 2025</p>
-<p>Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») régissent l'accès et l'utilisation du service EchoScribe (ci-après « le Service ») par tout professionnel de santé (ci-après « l'Utilisateur »).</p>
+<p><strong>Dernière mise à jour :</strong> Juillet 2025</p>
+<p>Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») régissent l'accès et l'utilisation du service EchoScribe (ci-après « le Service ») édité par la société <strong>CONNEXION MED</strong>, SAS au capital de 3 000 €, immatriculée au RCS d'Orléans sous le numéro 981 614 882 (ci-après « l'Éditeur »), par tout professionnel de santé (ci-après « l'Utilisateur »).</p>
 
 <h2>1. Acceptation des CGU</h2>
 <p>L'accès et l'utilisation du Service impliquent l'acceptation pleine et entière des présentes CGU. Si l'Utilisateur n'accepte pas les présentes CGU, il doit s'abstenir d'utiliser le Service.</p>

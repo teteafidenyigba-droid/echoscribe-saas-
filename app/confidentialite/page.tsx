@@ -32,8 +32,7 @@ const privacyContent = `
 <h2>1. Responsable du traitement</h2>
 <p>
   <strong>CONNEXION MED</strong><br>
-  SAS au capital de 3 000 € — RCS Orléans n° 981 614 882<br>
-  Email DPO / contact RGPD : <a href="mailto:contact@echoscribe.fr">contact@echoscribe.fr</a>
+  SAS au capital de 3 000 € — RCS Orléans n° 981 614 882
 </p>
 
 <h2>2. Données collectées</h2>
