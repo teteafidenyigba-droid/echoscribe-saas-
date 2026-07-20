@@ -284,8 +284,11 @@ export default function LandingPage() {
         <div className="hero-inner2">
           {/* LEFT */}
           <div>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 20 }}>
-              DICTÉE MÉDICALE PAR INTELLIGENCE ARTIFICIELLE
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 8 }}>
+              GÉNÉRATION DE COMPTE RENDU ASSISTÉE PAR INTELLIGENCE ARTIFICIELLE
+            </p>
+            <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".10em", textTransform: "uppercase", color: "rgba(74,222,128,0.85)", fontFamily: "'JetBrains Mono', monospace", marginBottom: 20 }}>
+              ✓ Conformité RGPD &amp; respect du secret médical
             </p>
             <h1 style={{ fontSize: "clamp(32px, 4.5vw, 54px)", fontWeight: 800, lineHeight: 1.08, color: "#ffffff", marginBottom: 22, letterSpacing: "-0.02em" }}>
               Vous dictez.<br />
