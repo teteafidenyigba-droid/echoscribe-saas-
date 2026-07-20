@@ -39,9 +39,10 @@ const content = `
 <p>
   Le site EchoScribe (ci-après « le Service ») est édité par :<br>
   <strong>CONNEXION MED</strong><br>
-  Société immatriculée au RCS d'Orléans sous le numéro <strong>981 614 882</strong><br>
-  Date d'immatriculation : 28 juin 2024<br>
-  Siège social : [ADRESSE COMPLÈTE]<br>
+  Société par actions simplifiée (SAS) au capital de [CAPITAL]€<br>
+  RCS Orléans n° <strong>981 614 882</strong><br>
+  Date d'immatriculation : 28 janvier 2024<br>
+  Siège social : 12 rue de la Mairie Lugard, 45600 Saint-Jean-de-Braye<br>
   Email : contact@echoscribe.fr
 </p>
 
