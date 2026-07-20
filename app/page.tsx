@@ -12,6 +12,41 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebSite",
+      "@id": "https://echoscribe.fr/#website",
+      "url": "https://echoscribe.fr",
+      "name": "EchoScribe",
+      "description": "Compte rendu d'échographie par dictée vocale IA — conforme SFR/HAS",
+      "inLanguage": "fr",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://echoscribe.fr/?q={search_term_string}" },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://echoscribe.fr/#organization",
+      "name": "EchoScribe",
+      "url": "https://echoscribe.fr",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://echoscribe.fr/og-image.png",
+        "width": 1200,
+        "height": 630
+      },
+      "description": "Éditeur de logiciel de dictée médicale par IA pour radiologues et échographistes français.",
+      "foundingDate": "2024",
+      "areaServed": { "@type": "Country", "name": "France" },
+      "knowsAbout": ["Radiologie", "Échographie médicale", "Intelligence artificielle médicale", "Dictée médicale"],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "availableLanguage": "French",
+        "url": "https://echoscribe.fr"
+      }
+    },
+    {
       "@type": "SoftwareApplication",
       "name": "EchoScribe",
       "url": "https://echoscribe.fr",
@@ -39,13 +74,6 @@ const jsonLd = {
       ],
       "inLanguage": "fr",
       "audience": { "@type": "MedicalAudience", "audienceType": "Médecin radiologue, échographiste" }
-    },
-    {
-      "@type": "Organization",
-      "name": "EchoScribe",
-      "url": "https://echoscribe.fr",
-      "logo": "https://echoscribe.fr/og-image.png",
-      "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "availableLanguage": "French" }
     },
     {
       "@type": "FAQPage",

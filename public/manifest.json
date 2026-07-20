@@ -1,0 +1,23 @@
+{
+  "name": "EchoScribe — Dictée médicale IA",
+  "short_name": "EchoScribe",
+  "description": "Compte rendu d'échographie structuré en 30 secondes par dictée vocale IA. Conforme SFR/HAS.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eaf4fb",
+  "theme_color": "#0a66c2",
+  "lang": "fr",
+  "categories": ["medical", "productivity", "health"],
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" },
+    { "src": "/og-image.png", "sizes": "1200x630", "type": "image/png", "purpose": "any" }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "EchoScribe — Interface de dictée médicale"
+    }
+  ]
+}
