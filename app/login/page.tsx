@@ -62,7 +62,7 @@ function LoginForm() {
           <div style={s.leftContent}>
             {/* Logo */}
             <Link href="/" style={s.logoLink}>
-              <Logo size={24} />
+              <Logo dark size={24} />
             </Link>
 
             {/* Corps */}

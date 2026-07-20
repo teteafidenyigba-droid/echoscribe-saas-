@@ -68,7 +68,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
       {/* NAV */}
       <nav style={s.nav}>
         <Link href="/" style={s.logoLink}>
-          <Logo size={22} />
+          <Logo dark size={22} />
         </Link>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span style={s.userEmail}>{user.email}</span>

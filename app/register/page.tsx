@@ -75,7 +75,7 @@ function RegisterForm() {
           <div style={s.leftOverlay} />
           <div style={s.leftContent}>
             <Link href="/" style={s.logoLink}>
-              <Logo size={24} />
+              <Logo dark size={24} />
             </Link>
             <div style={s.leftBody}>
               <h1 style={s.headline}>
