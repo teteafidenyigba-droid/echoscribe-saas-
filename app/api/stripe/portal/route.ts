@@ -19,10 +19,23 @@ export async function POST() {
     return NextResponse.json({ error: "Aucun abonnement trouvé" }, { status: 400 });
   }
 
-  const session = await stripe.billingPortal.sessions.create({
-    customer: profile.stripe_customer_id as string,
-    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing`,
-  });
+  let session;
+  try {
+    session = await stripe.billingPortal.sessions.create({
+      customer: profile.stripe_customer_id as string,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing`,
+    });
+  } catch (err: any) {
+    if (err?.code === "resource_missing") {
+      // Customer from test mode — clear stale ID so next checkout creates a fresh one
+      await supabase
+        .from("profiles")
+        .update({ stripe_customer_id: null })
+        .eq("id", user.id);
+      return NextResponse.json({ url: `${process.env.NEXT_PUBLIC_APP_URL}/billing` });
+    }
+    return NextResponse.json({ error: err?.message ?? "Stripe error" }, { status: 400 });
+  }
 
   return NextResponse.json({ url: session.url });
 }
