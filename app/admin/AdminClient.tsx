@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
+import { Logo } from "../components/Logo";
 
 const S: Record<string, React.CSSProperties> = {
   root: { minHeight: "100dvh", background: "#0d1b2a", color: "#e2eaf3", fontFamily: "'JetBrains Mono', monospace", fontSize: 13 },
@@ -133,7 +134,10 @@ export default function AdminClient() {
     <div style={S.root}>
       {/* Topbar */}
       <div style={S.topbar}>
-        <span style={S.logo}>Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#3b82f6" }}>Scribe</span> <span style={{ fontSize: 12, color: "#6b8aaa", fontFamily: "JetBrains Mono" }}>· Admin</span></span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+          <Logo dark size={20} />
+          <span style={{ fontSize: 12, color: "#6b8aaa", fontFamily: "JetBrains Mono" }}>· Admin</span>
+        </span>
         <a href="/app" style={{ color: "#6b8aaa", fontSize: 12, textDecoration: "none" }}>← Retour à l'app</a>
       </div>
 

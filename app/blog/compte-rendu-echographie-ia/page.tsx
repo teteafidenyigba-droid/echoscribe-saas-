@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Logo } from "../../components/Logo";
 
 export const metadata: Metadata = {
   title: "Compte rendu d'échographie par IA : guide complet pour le radiologue | EchoScribe",
@@ -48,9 +49,8 @@ export default function ArticlePage() {
 
       {/* Nav */}
       <nav style={{ background: "rgba(234,244,251,0.97)", borderBottom: "1px solid #c8ddef", padding: "0 48px", height: 70, display: "flex", alignItems: "center", justifyContent: "space-between", backdropFilter: "blur(16px)", boxShadow: "0 1px 16px rgba(13,37,64,.18)", position: "sticky", top: 0, zIndex: 50 }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <svg width="30" height="20" viewBox="0 0 34 22" fill="none"><polyline points="0,11 6,11 9,3 12,19 15,8 18,14 21,11 34,11" stroke="#c45d4a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 26, fontStyle: "italic", color: "#0d2540" }}>Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span></span>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <Logo size={26} />
         </Link>
         <Link href="/register" style={{ background: "#c45d4a", color: "#fff", textDecoration: "none", padding: "9px 22px", borderRadius: 10, fontSize: 14, fontWeight: 600 }}>
           Essai gratuit 7 jours →

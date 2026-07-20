@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "../components/Logo";
 
 export const metadata = {
   title: "Conditions Générales d'Utilisation — EchoScribe",
@@ -8,8 +9,8 @@ export default function CGUPage() {
   return (
     <div style={s.page}>
       <nav style={s.nav}>
-        <Link href="/" style={s.logo}>
-          Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#38bdf8" }}>Scribe</span>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <Logo dark size={22} />
         </Link>
       </nav>
       <div style={s.content}>

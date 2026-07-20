@@ -1,6 +1,7 @@
 import Link from "next/link";
 import FaqSection from "./components/FaqSection";
 import ContactModal from "./components/ContactModal";
+import { Logo } from "./components/Logo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -231,14 +232,7 @@ export default function LandingPage() {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         height: 70, boxShadow: "0 1px 16px rgba(13,37,64,0.18)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <svg width="34" height="22" viewBox="0 0 34 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="0,11 6,11 9,3 12,19 15,8 18,14 21,11 34,11" stroke="#c45d4a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          </svg>
-          <span className="logo-text" style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#0d2540", letterSpacing: "-0.01em" }}>
-            Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
-          </span>
-        </div>
+        <Logo size={28} />
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <Link className="nav-login" href="/login" style={{
             color: "#0a5fa8", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8,
@@ -536,9 +530,7 @@ export default function LandingPage() {
         fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 2.2,
       }}>
         <div style={{ marginBottom: 20 }}>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 24, fontStyle: "italic", color: "#e2eaf2" }}>
-            Echo<span style={{ fontStyle: "normal", color: "#1e7fc5" }}>Scribe</span>
-          </span>
+          <Logo dark size={24} />
         </div>
         <div style={{ marginBottom: 16 }}>
           <ContactModal />

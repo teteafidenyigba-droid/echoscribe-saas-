@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Logo } from "../components/Logo";
 
 interface Props {
   user: { email: string; name: string };
@@ -45,14 +46,7 @@ export default function AppClient({ user, panel = "main" }: Props) {
       {/* Top bar */}
       <div className="es-topbar">
         {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <svg width="30" height="20" viewBox="0 0 34 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="0,11 6,11 9,3 12,19 15,8 18,14 21,11 34,11" stroke="#c45d4a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          </svg>
-          <span className="es-logo-text">
-            Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
-          </span>
-        </div>
+        <Logo size={22} />
 
         {/* Right side */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

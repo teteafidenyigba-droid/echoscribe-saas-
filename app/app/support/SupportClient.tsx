@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Logo } from "../../components/Logo";
 
 const CATEGORIES = [
   { value: "bug",       label: "🐛  Bug technique" },
@@ -68,14 +69,7 @@ export default function SupportClient({ user }: Props) {
 
       {/* Top bar */}
       <div style={{ padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: "rgba(234,244,251,0.97)", backdropFilter: "blur(16px)", borderBottom: "1px solid #c8ddef", boxShadow: "0 1px 16px rgba(13,37,64,.18)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <svg width="30" height="20" viewBox="0 0 34 22" fill="none">
-            <polyline points="0,11 6,11 9,3 12,19 15,8 18,14 21,11 34,11" stroke="#c45d4a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          </svg>
-          <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 28, fontStyle: "italic", color: "#0d2540", letterSpacing: "-0.01em" }}>
-            Echo<span style={{ fontStyle: "normal", fontWeight: 700, color: "#0a6abf" }}>Scribe</span>
-          </span>
-        </div>
+        <Logo size={26} />
         <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#2a5070" }}>{displayName}</span>
       </div>
 
