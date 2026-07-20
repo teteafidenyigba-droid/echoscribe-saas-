@@ -1,16 +1,17 @@
 interface LogoProps {
   dark?: boolean;
   size?: number;
+  className?: string;
 }
 
-export function Logo({ dark = false, size = 26 }: LogoProps) {
+export function Logo({ dark = false, size = 26, className }: LogoProps) {
   const echoColor = dark ? "#e2eaf5" : "#1d3558";
   const scribeColor = dark ? "#7dc8f5" : "#3b6cb7";
   const iw = Math.round(size * 1.25);
   const ih = Math.round(size * 0.95);
 
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
+    <span className={className} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
       {/* Mic capsule + arcs pointing right */}
       <svg
         width={iw}

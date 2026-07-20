@@ -128,7 +128,8 @@ export default function LandingPage() {
           .nav-cta-short { display: inline !important; }
           .nav-login { font-size: 13px !important; padding: 6px 12px !important; }
           .nav-cta { padding: 7px 14px !important; font-size: 13px !important; }
-          .logo-text { font-size: 20px !important; }
+          .logo-text > span { font-size: 20px !important; }
+          .logo-text > svg { width: 25px !important; height: 19px !important; }
 
           /* Sections padding */
           .section-pad { padding-top: 48px !important; padding-bottom: 48px !important; padding-left: 16px !important; padding-right: 16px !important; }
@@ -185,7 +186,8 @@ export default function LandingPage() {
         }
 
         @media (max-width: 480px) {
-          .logo-text { font-size: 18px !important; }
+          .logo-text > span { font-size: 18px !important; }
+          .logo-text > svg { width: 23px !important; height: 17px !important; }
           .how-grid { grid-template-columns: 1fr !important; }
           .bandeau-inner span { font-size: 12px !important; padding: 0 12px !important; }
         }
@@ -232,7 +234,7 @@ export default function LandingPage() {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         height: 70, boxShadow: "0 1px 16px rgba(13,37,64,0.18)",
       }}>
-        <Logo size={28} />
+        <Logo size={28} className="logo-text" />
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <Link className="nav-login" href="/login" style={{
             color: "#0a5fa8", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8,

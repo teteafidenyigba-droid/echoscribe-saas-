@@ -129,7 +129,8 @@ body {
   }
 
   /* Logo */
-  .logo-text { font-size: 22px !important; }
+  .logo-text > span { font-size: 22px !important; }
+  .logo-text > svg { width: 28px !important; height: 21px !important; }
   .nav-login { font-size: 13px !important; padding: 6px 12px !important; }
   .nav-cta { font-size: 13px !important; padding: 7px 14px !important; }
   .nav-cta-text { display: none !important; }

@@ -73,7 +73,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
         </Link>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
           <span style={s.userEmail}>{user.email}</span>
-          {isActive && (
+          {(isAdmin || isActive) && (
             <Link href="/app" style={s.navBtn}>
               ← Application
             </Link>
