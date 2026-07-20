@@ -26,14 +26,14 @@ export default function ConfidentialitePage() {
 }
 
 const privacyContent = `
-<p><strong>Dernière mise à jour :</strong> Juin 2025</p>
+<p><strong>Dernière mise à jour :</strong> Juillet 2025</p>
 <p>La présente Politique de confidentialité décrit comment EchoScribe collecte, utilise et protège vos données personnelles, conformément au Règlement Général sur la Protection des Données (RGPD – UE 2016/679) et à la loi Informatique et Libertés.</p>
 
 <h2>1. Responsable du traitement</h2>
 <p>
-  [VOTRE NOM / RAISON SOCIALE]<br>
-  [ADRESSE]<br>
-  Email DPO / contact RGPD : <a href="mailto:privacy@echoscribe.fr">privacy@echoscribe.fr</a>
+  <strong>CONNEXION MED</strong><br>
+  SAS au capital de 3 000 € — RCS Orléans n° 981 614 882<br>
+  Email DPO / contact RGPD : <a href="mailto:contact@echoscribe.fr">contact@echoscribe.fr</a>
 </p>
 
 <h2>2. Données collectées</h2>
