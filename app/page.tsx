@@ -545,6 +545,7 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
           {[
+            { href: "/blog", label: "Blog" },
             { href: "/mentions-legales", label: "Mentions légales" },
             { href: "/cgu", label: "CGU" },
             { href: "/confidentialite", label: "Confidentialité" },
