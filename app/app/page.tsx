@@ -7,11 +7,13 @@ export default async function AppPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
+  const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com"];
+  const envAdmins = (process.env.ADMIN_EMAILS || "")
     .split(",")
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
-  const isAdminByEmail = ADMIN_EMAILS.includes((user.email || "").toLowerCase());
+  const allAdmins = [...new Set([...HARDCODED_ADMINS, ...envAdmins])];
+  const isAdminByEmail = allAdmins.includes((user.email || "").toLowerCase());
 
   const db = createServiceClient();
 
