@@ -7,14 +7,22 @@ export default async function AppPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  const isAdminByEmail = ADMIN_EMAILS.includes((user.email || "").toLowerCase());
+
   const db = createServiceClient();
 
-  const [{ data: profile }, { data: admin }] = await Promise.all([
+  const [{ data: profile }, { data: adminRecord }] = await Promise.all([
     supabase.from("profiles").select("full_name, email").eq("id", user.id).single(),
     db.from("admins").select("id").eq("id", user.id).single(),
   ]);
 
-  if (!admin) {
+  const isAdmin = isAdminByEmail || !!adminRecord;
+
+  if (!isAdmin) {
     const { data: sub } = await supabase
       .from("subscriptions")
       .select("status")
