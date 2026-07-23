@@ -80,7 +80,11 @@ export async function GET(request: NextRequest) {
       if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_PLACEHOLDER')) {
         try {
           await sendWelcomeEmail(user.email!, name);
-        } catch {}
+        } catch (emailErr) {
+          console.error("[Resend welcome email error]", emailErr);
+        }
+      } else {
+        console.warn("[Auth callback] RESEND_API_KEY manquant ou placeholder — email de bienvenue non envoyé");
       }
 
       return NextResponse.redirect(`${origin}/app`);
