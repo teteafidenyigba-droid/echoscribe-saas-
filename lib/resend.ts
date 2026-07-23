@@ -22,18 +22,11 @@ function base(content: string) {
 
         <!-- HEADER -->
         <tr>
-          <td align="center" style="background:linear-gradient(135deg,#0f2440 0%,#1e3a5f 60%,#1a6aaa 100%);border-radius:20px 20px 0 0;padding:40px;">
-            <table cellpadding="0" cellspacing="0" border="0" align="center">
-              <tr>
-                <td valign="middle" style="padding-right:10px;">
-                  <img src="https://echoscribe.fr/ecg.png" width="34" height="22" alt="" style="display:block;">
-                </td>
-                <td valign="middle">
-                  <span style="font-size:34px;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:#ffffff;letter-spacing:-0.01em;">Echo</span><span style="font-size:34px;font-style:normal;font-weight:700;font-family:Georgia,'Times New Roman',serif;color:#4a9fd4;">Scribe</span>
-                </td>
-              </tr>
-            </table>
-            <div style="margin-top:12px;display:inline-block;background:rgba(125,211,252,0.15);border:1px solid rgba(125,211,252,0.3);border-radius:999px;padding:4px 16px;font-size:11px;color:#7dd3fc;letter-spacing:0.1em;font-family:monospace;">Dictée Médicale</div>
+          <td align="center" style="background:#1a3354;border-radius:20px 20px 0 0;padding:40px;">
+            <div style="margin-bottom:10px;">
+              <span style="font-family:Georgia,'Times New Roman',serif;font-size:32px;font-style:normal;font-weight:400;color:#e2eaf5;letter-spacing:-0.01em;">Echo</span><span style="font-family:Georgia,'Times New Roman',serif;font-size:32px;font-style:normal;font-weight:400;color:#7dc8f5;letter-spacing:-0.01em;">Scribe</span>
+            </div>
+            <div style="display:inline-block;background:rgba(125,211,252,0.15);border:1px solid rgba(125,211,252,0.3);border-radius:999px;padding:4px 16px;font-size:11px;color:#7dd3fc;letter-spacing:0.1em;font-family:monospace;">Génération de CR assistée par IA</div>
           </td>
         </tr>
 
@@ -73,7 +66,7 @@ function p(text: string, small = false) {
   return `<p style="font-size:${small ? "13px" : "16px"};line-height:1.75;color:${small ? "#8aaac8" : "#4a6a8a"};margin:0 0 ${small ? "0" : "16px"};">${text}</p>`;
 }
 function btn(label: string, url: string) {
-  return `<a href="${url}" style="display:block;text-align:center;background:linear-gradient(135deg,#1e3a5f,#1e5a8a);color:#ffffff;text-decoration:none;font-size:17px;font-weight:700;padding:18px 32px;border-radius:12px;margin:0 0 32px;">${label}</a>`;
+  return `<a href="${url}" style="display:block;text-align:center;background:#1e5a8a;color:#ffffff;text-decoration:none;font-size:17px;font-weight:700;padding:18px 32px;border-radius:12px;margin:0 0 32px;">${label}</a>`;
 }
 
 export async function sendWelcomeEmail(to: string, name: string) {
