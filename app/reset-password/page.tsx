@@ -4,6 +4,9 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { checkPassword, isPasswordValid, PASSWORD_RULES } from "@/lib/password";
+import { createClient } from "@/lib/supabase/client";
+
+type Mode = "session" | "token" | "loading" | "error";
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState("");
@@ -11,20 +14,41 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [mode, setMode] = useState<Mode>("loading");
   const [resetToken, setResetToken] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const token = searchParams.get("reset_token");
-    if (token) {
-      setResetToken(token);
-      setReady(true);
+    const errorParam = searchParams.get("error");
+
+    if (errorParam) {
+      setError("Lien invalide ou expiré. Demandez-en un nouveau.");
+      setMode("error");
       return;
     }
-    setError("Lien invalide ou expiré. Demandez-en un nouveau.");
-  }, []);
+
+    // Flux legacy : token custom dans l'URL
+    if (token) {
+      setResetToken(token);
+      setMode("token");
+      return;
+    }
+
+    // Flux Supabase action_link : le callback a échangé le code et stocké la session en cookie
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setMode("session");
+      } else {
+        setError("Lien invalide ou expiré. Demandez-en un nouveau.");
+        setMode("error");
+      }
+    });
+  }, [searchParams]);
+
+  const ready = mode === "session" || mode === "token";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,20 +56,34 @@ function ResetPasswordForm() {
     if (!isPasswordValid(password)) { setError("Le mot de passe ne respecte pas les critères de sécurité."); return; }
     if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
     setLoading(true);
+
     try {
-      const res = await fetch("/api/auth/update-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reset_token: resetToken, password }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.error) {
-        setError(data.error || "Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
-        setLoading(false);
+      if (mode === "session") {
+        // Flux Supabase : l'utilisateur a une session active, on peut updateUser directement
+        const supabase = createClient();
+        const { error: updateErr } = await supabase.auth.updateUser({ password });
+        if (updateErr) {
+          setError("Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+          setLoading(false);
+          return;
+        }
+        await supabase.auth.signOut();
       } else {
-        setDone(true);
-        setTimeout(() => router.push("/login"), 3000);
+        // Flux legacy : token custom → API update-password
+        const res = await fetch("/api/auth/update-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reset_token: resetToken, password }),
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          setError(data.error || "Une erreur est survenue. Réessayez ou demandez un nouveau lien.");
+          setLoading(false);
+          return;
+        }
       }
+      setDone(true);
+      setTimeout(() => router.push("/login"), 3000);
     } catch {
       setError("Une erreur est survenue. Vérifiez votre connexion.");
       setLoading(false);
@@ -78,7 +116,9 @@ function ResetPasswordForm() {
               <p style={{ fontSize: 16, color: "#0d2540", fontWeight: 600, marginBottom: 10 }}>Mot de passe modifié</p>
               <p style={{ fontSize: 14, color: "#8a9ab0", lineHeight: 1.7 }}>Redirection vers la connexion…</p>
             </div>
-          ) : error && !ready ? (
+          ) : mode === "loading" ? (
+            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification du lien…</p>
+          ) : mode === "error" ? (
             <div>
               <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, padding: "14px 16px", color: "#b91c1c", fontSize: 14, marginBottom: 24 }}>
                 {error}
@@ -87,8 +127,6 @@ function ResetPasswordForm() {
                 Demander un nouveau lien →
               </Link>
             </div>
-          ) : !ready ? (
-            <p style={{ fontSize: 14, color: "#8a9ab0" }}>Vérification du lien…</p>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>

@@ -1,19 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { sendResetPasswordEmail } from "@/lib/resend";
-import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
 
 const SECRET = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const APP_URL = "https://echoscribe.fr";
-
-export function signResetToken(userId: string, email: string): string {
-  const exp = Math.floor(Date.now() / 1000) + 3600; // 1h
-  const payload = Buffer.from(JSON.stringify({ userId, email, exp })).toString("base64url");
-  const sig = crypto.createHmac("sha256", SECRET).update(payload).digest("hex");
-  return `${payload}.${sig}`;
-}
 
 export async function POST(request: NextRequest) {
   const { email } = await request.json();
@@ -24,22 +16,21 @@ export async function POST(request: NextRequest) {
     SECRET
   );
 
-  // Utilise generateLink pour trouver l'user via auth.users (pas besoin de la table profiles)
+  // generateLink retourne un action_link via supabase.co (domaine de confiance pour Yahoo/Outlook)
+  // Après vérification OTP, Supabase redirige vers /api/auth/callback?next=/reset-password
   const { data, error } = await supabase.auth.admin.generateLink({
     type: "recovery",
     email,
-    options: { redirectTo: `${APP_URL}/reset-password` },
+    options: { redirectTo: `${APP_URL}/api/auth/callback?next=/reset-password` },
   });
 
-  if (error || !data?.user?.id) {
+  if (error || !data?.user?.id || !data?.properties?.action_link) {
     console.log("[reset-password] user not found or error:", error?.message);
-    // Toujours succès pour éviter l'énumération d'emails
     return NextResponse.json({ success: true });
   }
 
-  const userId = data.user.id;
-  const token = signResetToken(userId, email);
-  const resetUrl = `${APP_URL}/reset-password?reset_token=${token}`;
+  // Le lien dans l'email passe par supabase.co → Yahoo/Outlook l'acceptent toujours
+  const resetUrl = data.properties.action_link;
 
   let emailResult = "not_attempted";
   try {
@@ -49,7 +40,7 @@ export async function POST(request: NextRequest) {
     emailResult = `error: ${e instanceof Error ? e.message : String(e)}`;
   }
 
-  console.log(`[reset-password] userId=${userId} email=${email} resend=${emailResult}`);
+  console.log(`[reset-password] email=${email} resend=${emailResult}`);
 
   return NextResponse.json({ success: true });
 }
