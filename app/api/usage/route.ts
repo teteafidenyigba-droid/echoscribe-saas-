@@ -1,7 +1,7 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com"];
+const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com", "komlanserge@hotmail.com"];
 
 function getPlanLimits(priceId?: string | null) {
   const PRO_MONTHLY = process.env.STRIPE_PRICE_PRO_MONTHLY;

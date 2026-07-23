@@ -19,7 +19,7 @@ export default async function AppPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com"];
+  const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com", "komlanserge@hotmail.com"];
   const envAdmins = (process.env.ADMIN_EMAILS || "")
     .split(",")
     .map((e) => e.trim().toLowerCase())
