@@ -406,7 +406,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div style={{ height: 1, background: "#e8f0f7", margin: "20px 0" }} />
-              {["Génération de CR assistée par IA", "Accès OpenAI · Gemini · Mistral", "Corrections médicales SFR", "Historique des CR", "Support email sous 24h"].map((f) => (
+              {["Génération de CR assistée par IA", "Accès IA Premium", "Corrections médicales SFR", "Historique des CR", "Support email sous 24h"].map((f) => (
                 <div key={f} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 12, fontSize: 14, color: "#0d2540" }}>
                   <span style={{ color: "#0a5fa8", fontWeight: 700, fontSize: 16, lineHeight: 1.2 }}>✓</span> {f}
                 </div>
@@ -443,7 +443,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div style={{ height: 1, background: "rgba(255,255,255,0.1)", margin: "20px 0" }} />
-              {["Génération de CR assistée par IA", "Accès OpenAI · Gemini · Mistral", "Corrections médicales SFR", "Historique des CR", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
+              {["Génération de CR assistée par IA", "Accès IA Premium · Premium Lite", "Corrections médicales SFR", "Historique des CR", "Support prioritaire", "Nouvelles fonctionnalités en avant-première"].map((f) => (
                 <div key={f} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 12, fontSize: 14, color: "#ffffff" }}>
                   <span style={{ color: "#7dd3fc", fontWeight: 700, fontSize: 16, lineHeight: 1.2 }}>✓</span> {f}
                 </div>
@@ -475,7 +475,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div style={{ height: 1, background: "#e8f0f7", margin: "20px 0" }} />
-              {["Génération de CR assistée par IA", "Accès OpenAI · Gemini · Mistral", "Corrections médicales SFR", "Historique des CR", "Support dédié réponse 4h", "CR illimités pour tout le cabinet"].map((f) => (
+              {["Génération de CR assistée par IA", "Accès IA Premium · Premium Lite · Premium High", "Corrections médicales SFR", "Historique des CR", "Support dédié réponse 4h", "CR illimités pour tout le cabinet"].map((f) => (
                 <div key={f} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 12, fontSize: 14, color: "#0d2540" }}>
                   <span style={{ color: "#0a5fa8", fontWeight: 700, fontSize: 16, lineHeight: 1.2 }}>✓</span> {f}
                 </div>
