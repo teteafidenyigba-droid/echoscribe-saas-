@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { plan } = await request.json();
-  const planConfig = plan === "yearly" ? PLANS.yearly : PLANS.monthly;
+  const planConfig = PLANS[plan as keyof typeof PLANS] ?? PLANS.standard_monthly;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
   const { data: profile } = await supabase

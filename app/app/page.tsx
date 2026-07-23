@@ -53,6 +53,7 @@ export default async function AppPage() {
 
   let usage = { today: 0, month: 0 };
   let planPriceId: string | null = null;
+  let isTrial = false;
 
   try {
     const [{ count: todayCount }, { count: monthCount }, { data: subPlan }] = await Promise.all([
@@ -60,16 +61,19 @@ export default async function AppPage() {
         .eq("user_id", user.id).gte("created_at", todayStart),
       db.from("cr_usage").select("*", { count: "exact", head: true })
         .eq("user_id", user.id).gte("created_at", monthStart),
-      db.from("subscriptions").select("price_id").eq("user_id", user.id).single(),
+      db.from("subscriptions").select("price_id, status").eq("user_id", user.id).single(),
     ]);
     usage = { today: todayCount ?? 0, month: monthCount ?? 0 };
     planPriceId = subPlan?.price_id ?? null;
+    isTrial = subPlan?.status === "trialing";
   } catch {
     // Table cr_usage not yet created — quota not enforced
   }
 
   const limits = isAdmin
     ? { daily: 9999, monthly: 9999, unlimited: true }
+    : isTrial
+    ? { daily: 10, monthly: 70, unlimited: false }
     : getPlanLimits(planPriceId);
 
   return (
@@ -77,6 +81,7 @@ export default async function AppPage() {
       user={{ email: user.email!, name: profile?.full_name ?? user.email! }}
       usage={usage}
       limits={limits}
+      isTrial={isTrial}
     />
   );
 }

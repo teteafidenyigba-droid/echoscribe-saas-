@@ -24,6 +24,7 @@ interface Props {
 
 export default function BillingClient({ user, subscription, hasStripeCustomer, searchParams, isAdmin = false }: Props) {
   const [loading, setLoading] = useState<string | null>(null);
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
   const router = useRouter();
   const supabase = createClient();
 
@@ -34,7 +35,7 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
   const trialExpired = isTrialing && trialEnd !== null && trialEnd < now;
   const isActive = (subscription?.status === "active" || (isTrialing && !trialExpired));
 
-  async function handleCheckout(plan: "monthly" | "yearly") {
+  async function handleCheckout(plan: string) {
     setLoading(plan);
     const res = await fetch("/api/stripe/checkout", {
       method: "POST",
@@ -159,34 +160,114 @@ export default function BillingClient({ user, subscription, hasStripeCustomer, s
         {!isAdmin && !isActive && (
           <>
             <h2 style={s.h2}>Choisissez votre plan</h2>
-            <div style={s.plans}>
-              <div style={s.planCard}>
-                <div style={s.planName}>Mensuel</div>
-                <div style={s.planPrice}>
-                  69€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/mois</span>
-                </div>
-                <p style={s.planDesc}>Sans engagement · résiliable à tout moment</p>
+
+            {/* Toggle mensuel / annuel */}
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
+              <div style={{ display: "inline-flex", background: "rgba(255,255,255,0.06)", borderRadius: 12, padding: 4, gap: 4, border: "1px solid rgba(255,255,255,0.1)" }}>
                 <button
-                  onClick={() => handleCheckout("monthly")}
+                  onClick={() => setBillingPeriod("monthly")}
+                  style={{
+                    padding: "8px 22px", borderRadius: 9, border: "none", cursor: "pointer",
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600,
+                    background: billingPeriod === "monthly" ? "#ffffff" : "transparent",
+                    color: billingPeriod === "monthly" ? "#0d2540" : "#8aaac8",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  Mensuel
+                </button>
+                <button
+                  onClick={() => setBillingPeriod("yearly")}
+                  style={{
+                    padding: "8px 22px", borderRadius: 9, border: "none", cursor: "pointer",
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600,
+                    background: billingPeriod === "yearly" ? "#0a66c2" : "transparent",
+                    color: billingPeriod === "yearly" ? "#ffffff" : "#8aaac8",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  Annuel&nbsp;<span style={{ color: billingPeriod === "yearly" ? "#86efac" : "#4a7a96" }}>−10%</span>
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 16, marginBottom: 16 }}>
+
+              {/* Standard */}
+              <div style={s.planCard}>
+                <div style={s.planName}>Standard</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "#8a9ab0", marginBottom: 14, letterSpacing: "0.06em" }}>
+                  500 CR/mois · 30/jour
+                </div>
+                <div style={s.planPrice}>
+                  {billingPeriod === "monthly" ? "69€" : "745€"}
+                  <span style={{ fontSize: 15, color: "#7bacc2" }}>
+                    {billingPeriod === "monthly" ? " /mois" : " /an"}
+                  </span>
+                </div>
+                {billingPeriod === "yearly"
+                  ? <p style={{ ...s.planDesc, color: "#0a66c2", fontWeight: 600 }}>Soit 62€/mois · −10%</p>
+                  : <p style={s.planDesc}>Sans engagement</p>
+                }
+                <button
+                  onClick={() => handleCheckout(billingPeriod === "monthly" ? "standard_monthly" : "standard_yearly")}
                   disabled={!!loading}
                   style={s.primaryBtn}
                 >
-                  {loading === "monthly" ? "Redirection…" : "S'abonner →"}
+                  {loading === (billingPeriod === "monthly" ? "standard_monthly" : "standard_yearly") ? "Redirection…" : "Choisir →"}
                 </button>
               </div>
 
+              {/* Pro */}
               <div style={{ ...s.planCard, borderColor: "#0a66c2", borderWidth: 2 }}>
-                <div style={{ ...s.planName }}>Annuel · <span style={{ color: "#0a66c2", fontWeight: 700 }}>-4%</span></div>
-                <div style={s.planPrice}>
-                  799€ <span style={{ fontSize: 16, color: "#7bacc2" }}>/an</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                  <span style={{ ...s.planName, marginBottom: 0 }}>Pro</span>
+                  <span style={{ background: "#0a66c2", color: "#fff", borderRadius: 6, padding: "2px 8px", fontFamily: "'JetBrains Mono', monospace", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em" }}>POPULAIRE</span>
                 </div>
-                <p style={{ ...s.planDesc, color: "#7bacc2" }}>Soit 66,58€/mois · économisez 4%</p>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "#8a9ab0", marginBottom: 14, letterSpacing: "0.06em" }}>
+                  1 500 CR/mois · 70/jour
+                </div>
+                <div style={s.planPrice}>
+                  {billingPeriod === "monthly" ? "129€" : "1 392€"}
+                  <span style={{ fontSize: 15, color: "#7bacc2" }}>
+                    {billingPeriod === "monthly" ? " /mois" : " /an"}
+                  </span>
+                </div>
+                {billingPeriod === "yearly"
+                  ? <p style={{ ...s.planDesc, color: "#0a66c2", fontWeight: 600 }}>Soit 116€/mois · −10%</p>
+                  : <p style={s.planDesc}>Sans engagement</p>
+                }
                 <button
-                  onClick={() => handleCheckout("yearly")}
+                  onClick={() => handleCheckout(billingPeriod === "monthly" ? "pro_monthly" : "pro_yearly")}
                   disabled={!!loading}
-                  style={{ ...s.primaryBtn }}
+                  style={s.primaryBtn}
                 >
-                  {loading === "yearly" ? "Redirection…" : "S'abonner →"}
+                  {loading === (billingPeriod === "monthly" ? "pro_monthly" : "pro_yearly") ? "Redirection…" : "Choisir →"}
+                </button>
+              </div>
+
+              {/* Cabinet */}
+              <div style={s.planCard}>
+                <div style={s.planName}>Cabinet</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "#8a9ab0", marginBottom: 14, letterSpacing: "0.06em" }}>
+                  Illimité
+                </div>
+                <div style={s.planPrice}>
+                  {billingPeriod === "monthly" ? "249€" : "2 688€"}
+                  <span style={{ fontSize: 15, color: "#7bacc2" }}>
+                    {billingPeriod === "monthly" ? " /mois" : " /an"}
+                  </span>
+                </div>
+                {billingPeriod === "yearly"
+                  ? <p style={{ ...s.planDesc, color: "#0a66c2", fontWeight: 600 }}>Soit 224€/mois · −10%</p>
+                  : <p style={s.planDesc}>Sans engagement</p>
+                }
+                <button
+                  onClick={() => handleCheckout(billingPeriod === "monthly" ? "cabinet_monthly" : "cabinet_yearly")}
+                  disabled={!!loading}
+                  style={s.primaryBtn}
+                >
+                  {loading === (billingPeriod === "monthly" ? "cabinet_monthly" : "cabinet_yearly") ? "Redirection…" : "Choisir →"}
                 </button>
               </div>
             </div>

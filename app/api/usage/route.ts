@@ -45,11 +45,14 @@ export async function GET() {
 
   const [usage, { data: sub }] = await Promise.all([
     getUsageCounts(db, user.id),
-    db.from("subscriptions").select("price_id").eq("user_id", user.id).single(),
+    db.from("subscriptions").select("price_id, status").eq("user_id", user.id).single(),
   ]);
 
+  const isTrial = sub?.status === "trialing";
   const limits = isAdmin
     ? { daily: 9999, monthly: 9999, unlimited: true }
+    : isTrial
+    ? { daily: 10, monthly: 70, unlimited: false }
     : getPlanLimits(sub?.price_id);
 
   return NextResponse.json({
@@ -76,11 +79,14 @@ export async function POST() {
 
   const [usage, { data: sub }] = await Promise.all([
     getUsageCounts(db, user.id),
-    db.from("subscriptions").select("price_id").eq("user_id", user.id).single(),
+    db.from("subscriptions").select("price_id, status").eq("user_id", user.id).single(),
   ]);
 
+  const isTrial = sub?.status === "trialing";
   const limits = isAdmin
     ? { daily: 9999, monthly: 9999, unlimited: true }
+    : isTrial
+    ? { daily: 10, monthly: 70, unlimited: false }
     : getPlanLimits(sub?.price_id);
 
   if (!limits.unlimited) {
