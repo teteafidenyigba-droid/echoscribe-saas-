@@ -238,7 +238,9 @@ export default function LandingPage() {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         height: 70, boxShadow: "0 1px 16px rgba(13,37,64,0.18)",
       }}>
-        <Logo size={28} className="logo-text" />
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <Logo size={28} className="logo-text" />
+        </Link>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <Link className="nav-login" href="/login" style={{
             color: "#0a5fa8", textDecoration: "none", fontSize: 15, padding: "8px 18px", borderRadius: 8,
@@ -590,7 +592,9 @@ export default function LandingPage() {
         fontFamily: "'JetBrains Mono', monospace", fontSize: 12, lineHeight: 2.2,
       }}>
         <div style={{ marginBottom: 20 }}>
-          <Logo dark size={24} />
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <Logo dark size={24} />
+          </Link>
         </div>
         <div style={{ marginBottom: 16 }}>
           <ContactModal />

@@ -53,7 +53,9 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
       {/* Top bar */}
       <div className="es-topbar">
         {/* Logo */}
-        <Logo size={22} />
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <Logo size={22} />
+        </Link>
 
         {/* Right side */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

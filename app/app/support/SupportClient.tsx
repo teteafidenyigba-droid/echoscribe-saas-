@@ -69,7 +69,9 @@ export default function SupportClient({ user }: Props) {
 
       {/* Top bar */}
       <div style={{ padding: "0 20px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: "rgba(234,244,251,0.97)", backdropFilter: "blur(16px)", borderBottom: "1px solid #c8ddef", boxShadow: "0 1px 16px rgba(13,37,64,.18)" }}>
-        <Logo size={26} />
+        <Link href="/app" style={{ textDecoration: "none" }}>
+          <Logo size={26} />
+        </Link>
         <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#2a5070" }}>{displayName}</span>
       </div>
 
