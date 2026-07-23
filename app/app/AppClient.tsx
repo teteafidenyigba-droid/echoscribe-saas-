@@ -25,6 +25,10 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
 
   const displayName = user.name !== user.email ? user.name : user.email;
 
+  const tier = limits?.unlimited ? "cabinet"
+    : limits?.daily === 70 ? "pro"
+    : "standard";
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100dvh", background: "#0A66C2" }}>
       <style>{`
@@ -135,7 +139,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         );
       })() : (
         <iframe
-          src={`/echoscribe-app.html?v=v5pro86${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
+          src={`/echoscribe-app.html?v=v5pro86&tier=${tier}${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
           style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
           title="EchoScribe Application"
           allow="microphone"

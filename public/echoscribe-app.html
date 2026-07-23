@@ -2544,6 +2544,10 @@ document.getElementById('mistralModelSelect').addEventListener('change', updateA
   if(btnM) { btnM.textContent='◆ Premium Lite'; btnM.style.order='2'; }
   if(btnG) { btnG.textContent='◉ Premium'; btnG.style.order='1'; }
 
+  var _tier = (new URLSearchParams(window.location.search)).get('tier') || 'cabinet';
+  if(_tier === 'standard') { if(btnM) btnM.style.display='none'; if(btnO) btnO.style.display='none'; }
+  else if(_tier === 'pro') { if(btnO) btnO.style.display='none'; }
+
   function _setActive(ai) {
     var map={ openai:{id:'btnOpenai',bg:'linear-gradient(135deg,rgba(139,92,246,0.55),rgba(109,40,217,0.4))',color:'#e9d5ff',border:'1px solid rgba(167,139,250,0.6)'}, mistral:{id:'btnMistral',bg:'linear-gradient(135deg,rgba(148,163,184,0.4),rgba(100,116,139,0.3))',color:'#e2e8f0',border:'1px solid rgba(148,163,184,0.5)'}, gemini:{id:'btnGemini',bg:'linear-gradient(135deg,rgba(245,158,11,0.55),rgba(217,119,6,0.4))',color:'#fef3c7',border:'1px solid rgba(251,191,36,0.6)'} };
     ['btnOpenai','btnMistral','btnGemini'].forEach(function(id){ var b=document.getElementById(id); if(b){b.style.background='transparent';b.style.border='none';b.style.color='rgba(255,255,255,0.4)';} });
