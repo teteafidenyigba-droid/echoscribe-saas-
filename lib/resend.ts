@@ -66,7 +66,20 @@ function p(text: string, small = false) {
   return `<p style="font-size:${small ? "13px" : "16px"};line-height:1.75;color:${small ? "#8aaac8" : "#4a6a8a"};margin:0 0 ${small ? "0" : "16px"};">${text}</p>`;
 }
 function btn(label: string, url: string) {
-  return `<a href="${url}" style="display:block;text-align:center;background:#1e5a8a;color:#ffffff;text-decoration:none;font-size:17px;font-weight:700;padding:18px 32px;border-radius:12px;margin:0 0 32px;">${label}</a>`;
+  return `
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 32px;">
+  <tr>
+    <td align="center">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" bgcolor="#1e5a8a" style="background:#1e5a8a;border-radius:12px;">
+            <a href="${url}" target="_blank" style="display:inline-block;padding:18px 32px;font-size:17px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:12px;font-family:Arial,Helvetica,sans-serif;mso-padding-alt:0;">${label}</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
 }
 
 export async function sendWelcomeEmail(to: string, name: string) {
@@ -151,6 +164,8 @@ export async function sendResetPasswordEmail(to: string, resetUrl: string) {
       ${h1("Réinitialisation de votre mot de passe")}
       ${p("Vous avez demandé la réinitialisation de votre mot de passe EchoScribe. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.")}
       ${btn("Réinitialiser mon mot de passe →", resetUrl)}
+      ${p("Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :", true)}
+      <p style="font-size:12px;line-height:1.5;color:#4a6a8a;word-break:break-all;margin:4px 0 16px;"><a href="${resetUrl}" style="color:#1e5a8a;text-decoration:underline;">${resetUrl}</a></p>
       ${p("Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail. Ce lien expire dans 1 heure.", true)}
     `),
   });
