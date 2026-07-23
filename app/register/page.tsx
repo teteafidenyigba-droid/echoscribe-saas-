@@ -31,6 +31,20 @@ function RegisterForm() {
       return;
     }
     setLoading(true);
+
+    // Vérification IP anti-abus essai gratuit
+    try {
+      const ipCheck = await fetch("/api/auth/check-ip");
+      const ipData = await ipCheck.json();
+      if (!ipData.allowed) {
+        setError(ipData.reason || "Un essai gratuit a déjà été utilisé depuis votre réseau.");
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // Si la vérification échoue, on laisse passer (pas de blocage sur erreur réseau)
+    }
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin;
     const { data, error } = await supabase.auth.signUp({
       email,

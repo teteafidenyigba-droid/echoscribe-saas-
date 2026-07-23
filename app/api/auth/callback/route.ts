@@ -28,7 +28,7 @@ async function createTrialSubscription(userId: string) {
   });
 }
 
-async function upsertProfile(userId: string, email: string, name: string, plan: string) {
+async function upsertProfile(userId: string, email: string, name: string, plan: string, ip?: string) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
@@ -45,6 +45,7 @@ async function upsertProfile(userId: string, email: string, name: string, plan: 
       email,
       full_name: name,
       selected_plan: plan,
+      ...(ip ? { registration_ip: ip } : {}),
     }),
   });
 }
@@ -68,7 +69,12 @@ export async function GET(request: NextRequest) {
       const user = data.user;
       const name = user.user_metadata?.full_name ?? user.email ?? "";
 
-      await upsertProfile(user.id, user.email!, name, plan);
+      const ip =
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        request.headers.get("x-real-ip") ||
+        undefined;
+
+      await upsertProfile(user.id, user.email!, name, plan, ip);
       await createTrialSubscription(user.id);
 
       if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.startsWith('re_PLACEHOLDER')) {
