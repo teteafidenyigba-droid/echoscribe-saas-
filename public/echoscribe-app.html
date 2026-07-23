@@ -2267,6 +2267,7 @@ async function reformulate() {
             ? document.getElementById('mistralModelSelect').value
             : document.getElementById('openaiModelSelect').value;
     esSaveReport(correctedText, fullText, usedModel);
+    fetch('/api/usage', { method: 'POST', credentials: 'include' }).catch(()=>{});
   } catch(e) {
     if(timedOut || e.name === 'AbortError') {
       setError("Délai dépassé : le moteur est trop lent ou ne répond pas. Réessayez, désactivez « Raisonnement approfondi », ou changez de moteur (OpenAI est souvent le plus rapide).");

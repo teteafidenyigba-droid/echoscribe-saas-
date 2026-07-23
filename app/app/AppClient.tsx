@@ -8,9 +8,11 @@ import { Logo } from "../components/Logo";
 interface Props {
   user: { email: string; name: string };
   panel?: "main" | "settings" | "history";
+  usage?: { today: number; month: number };
+  limits?: { daily: number; monthly: number; unlimited: boolean };
 }
 
-export default function AppClient({ user, panel = "main" }: Props) {
+export default function AppClient({ user, panel = "main", usage, limits }: Props) {
   const backHref = panel !== "main" ? "/app" : null;
   const router = useRouter();
   const supabase = createClient();
@@ -56,14 +58,49 @@ export default function AppClient({ user, panel = "main" }: Props) {
         </div>
       </div>
 
-      {/* App iframe */}
-      <iframe
-        src={`/echoscribe-app.html?v=v5pro86${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
-        style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
-        title="EchoScribe Application"
-        allow="microphone"
-        allowTransparency={true}
-      />
+      {/* Quota bar */}
+      {usage && limits && !limits.unlimited && (
+        <div style={{ background: "rgba(234,244,251,0.97)", borderBottom: "1px solid #c8ddef", padding: "4px 20px", display: "flex", alignItems: "center", gap: 16, flexShrink: 0 }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: usage.today >= limits.daily ? "#ef4444" : "#4a7a96" }}>
+            Aujourd'hui : <strong>{usage.today}/{limits.daily}</strong> CR
+          </span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: usage.month >= limits.monthly ? "#ef4444" : "#4a7a96" }}>
+            Ce mois : <strong>{usage.month}/{limits.monthly}</strong> CR
+          </span>
+          <div style={{ flex: 1, height: 4, background: "#dce8f0", borderRadius: 2, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${Math.min(100, (usage.today / limits.daily) * 100)}%`, background: usage.today >= limits.daily ? "#ef4444" : usage.today >= limits.daily * 0.8 ? "#f59e0b" : "#0a66c2", borderRadius: 2, transition: "width 0.3s" }} />
+          </div>
+        </div>
+      )}
+
+      {/* Quota exceeded overlay */}
+      {usage && limits && !limits.unlimited && (usage.today >= limits.daily || usage.month >= limits.monthly) ? (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#f0f6fb", padding: 40, textAlign: "center" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>⏸</div>
+          <h2 style={{ fontFamily: "'EB Garamond', serif", fontSize: 26, color: "#1e3a5f", marginBottom: 12 }}>
+            {usage.today >= limits.daily ? "Limite journalière atteinte" : "Limite mensuelle atteinte"}
+          </h2>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: "#4a7a96", marginBottom: 8 }}>
+            {usage.today >= limits.daily
+              ? `Vous avez généré ${usage.today} comptes rendus aujourd'hui (max ${limits.daily}/jour).`
+              : `Vous avez généré ${usage.month} comptes rendus ce mois (max ${limits.monthly}/mois).`}
+          </p>
+          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#7bacc2", marginBottom: 28 }}>
+            {usage.today >= limits.daily ? "Revenez demain ou passez à un forfait supérieur." : "Passez à un forfait supérieur pour continuer."}
+          </p>
+          <Link href="/billing" style={{ background: "#0a66c2", color: "#fff", textDecoration: "none", padding: "12px 28px", borderRadius: 10, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, fontWeight: 700 }}>
+            Voir les forfaits →
+          </Link>
+        </div>
+      ) : (
+        <iframe
+          src={`/echoscribe-app.html?v=v5pro86${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
+          style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
+          title="EchoScribe Application"
+          allow="microphone"
+          allowTransparency={true}
+        />
+      )}
 
       {/* Bottom nav */}
       <div className="es-bottombar">
