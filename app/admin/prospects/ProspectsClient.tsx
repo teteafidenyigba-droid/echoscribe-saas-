@@ -163,13 +163,17 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const text = await file.text();
       const lines = text.split(/\r?\n/);
 
-      // Détecter le séparateur automatiquement sur la première ligne
-      const firstLine = lines[0] || "";
-      const sep = firstLine.includes("|") ? "|" : firstLine.includes(";") ? ";" : "\t";
+      // Détecter le séparateur automatiquement
+      const firstLine = (lines[0] || "").replace(/^﻿/, ""); // retire BOM UTF-8
+      const countPipe = (firstLine.match(/\|/g) || []).length;
+      const countSemi = (firstLine.match(/;/g) || []).length;
+      const countTab  = (firstLine.match(/\t/g) || []).length;
+      const sep = countPipe >= countSemi && countPipe >= countTab ? "|"
+                : countSemi >= countTab ? ";" : "\t";
 
       const header = firstLine.split(sep).map(h =>
         h.trim().replace(/"/g, "")
-          .normalize("NFD").replace(/[̀-ͯ]/g, "") // enlève les accents
+          .normalize("NFD").replace(/[̀-ͯ]/g, "") // retire les accents
           .toLowerCase()
       );
 
@@ -197,9 +201,10 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const iRPPS     = col(["identifiant_pp", "rpps", "identifiant"]);
       const iEmail    = col(["adresse_e_mail", "adresse_email", "email", "mail", "courriel"]);
 
-      // Debug : 5 premières colonnes détectées
-      setRppsProgress(`Colonnes détectées : sep="${sep}" nom=${iNom} prenom=${iPrenom} prof=${iProfCode} cat=${iCatCode} email=${iEmail}`);
-      await new Promise(r => setTimeout(r, 800));
+      // Debug : affiche séparateur + 8 premières colonnes brutes pour diagnostic
+      const rawCols = firstLine.split(sep).slice(0, 8).map(h => h.trim().replace(/"/g, "").slice(0, 20)).join(" | ");
+      setRppsProgress(`sep="${sep}" (${header.length} cols) — ${rawCols}`);
+      await new Promise(r => setTimeout(r, 2000));
 
       const TARGET_SPECS = ["radiodiag", "gynecolog", "gynecolog", "cardiol", "imagerie"];
       const BATCH = 100;
