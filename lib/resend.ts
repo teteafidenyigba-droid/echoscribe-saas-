@@ -171,6 +171,23 @@ export async function sendResetPasswordEmail(to: string, resetUrl: string) {
   });
 }
 
+export async function sendProspectEmail(to: string, name: string, subject: string, body: string) {
+  const firstName = name.split(" ")[0] || name;
+  const htmlBody = body
+    .replace(/\n\n/g, "</p><p style=\"font-size:16px;line-height:1.75;color:#4a6a8a;margin:0 0 16px;\">")
+    .replace(/\n/g, "<br>");
+  await getResend().emails.send({
+    from: FROM, to,
+    subject,
+    html: base(`
+      ${p(`Bonjour ${firstName},`)}
+      <p style="font-size:16px;line-height:1.75;color:#4a6a8a;margin:0 0 16px;">${htmlBody}</p>
+      ${btn("Essayer EchoScribe gratuitement →", `${APP_URL}/register`)}
+      ${p("Pour vous désinscrire de nos communications, répondez simplement à cet email.", true)}
+    `),
+  });
+}
+
 export async function sendCancellationEmail(to: string, name: string, endDate: Date) {
   const dateStr = endDate.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   await getResend().emails.send({
