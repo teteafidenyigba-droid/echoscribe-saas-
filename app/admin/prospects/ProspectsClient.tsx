@@ -161,28 +161,47 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
 
     try {
       const text = await file.text();
-      const lines = text.split("\n");
-      const header = lines[0].split("|").map(h => h.trim().replace(/"/g, ""));
+      const lines = text.split(/\r?\n/);
 
-      // Find column indices (flexible matching)
-      const col = (names: string[]) => {
-        for (const n of names) {
-          const idx = header.findIndex(h => h.toLowerCase().includes(n.toLowerCase()));
+      // Détecter le séparateur automatiquement sur la première ligne
+      const firstLine = lines[0] || "";
+      const sep = firstLine.includes("|") ? "|" : firstLine.includes(";") ? ";" : "\t";
+
+      const header = firstLine.split(sep).map(h =>
+        h.trim().replace(/"/g, "")
+          .normalize("NFD").replace(/[̀-ͯ]/g, "") // enlève les accents
+          .toLowerCase()
+      );
+
+      // Matching souple : retire accents + lowercase
+      const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+      const col = (candidates: string[]): number => {
+        for (const c of candidates) {
+          const n = norm(c);
+          const idx = header.findIndex(h => h === n || h.includes(n));
           if (idx !== -1) return idx;
         }
         return -1;
       };
 
-      const iPrenom    = col(["Prénom_Exercice", "prenom_exercice", "prenom"]);
-      const iNom       = col(["Nom_Exercice", "nom_exercice", "nom"]);
-      const iProfCode  = col(["Code_Profession_Sante", "code_profession"]);
-      const iCatPro    = col(["Code_Categorie_Professionnelle", "categorie_prof"]);
-      const iSpecLib   = col(["Libelle_Specialite_Ordinale", "libelle_specialite", "specialite"]);
-      const iVille     = col(["Libelle_Commune_Exercice", "commune_exercice", "commune"]);
-      const iCP        = col(["Code_Postal_Exercice", "code_postal_exercice", "code_postal"]);
-      const iRPPS      = col(["Identifiant_PP", "rpps"]);
+      const iPrenom   = col(["prenom_exercice", "prenom exercice", "prenom"]);
+      const iNom      = col(["nom_exercice", "nom exercice", "nom"]);
+      const iProfCode = col(["code_profession_sante", "code_profession", "code profession"]);
+      const iProfLib  = col(["libelle_profession_sante", "libelle_profession", "profession"]);
+      const iCatCode  = col(["code_categorie_professionnelle", "categorie_professionnelle", "code_categorie"]);
+      const iCatLib   = col(["libelle_categorie_professionnelle", "libelle_categorie"]);
+      const iSpecLib  = col(["libelle_savoir_faire", "libelle_specialite_ordinale", "libelle_specialite", "savoir_faire", "specialite"]);
+      const iVille    = col(["libelle_commune_exercice", "commune_exercice", "commune", "ville"]);
+      const iCP       = col(["code_postal_exercice", "code_postal", "cp"]);
+      const iRPPS     = col(["identifiant_pp", "rpps", "identifiant"]);
+      const iEmail    = col(["adresse_e_mail", "adresse_email", "email", "mail", "courriel"]);
 
-      const TARGET_SPECS = ["radiodiag", "gynécolog", "gynecolog", "cardiol"];
+      // Debug : 5 premières colonnes détectées
+      setRppsProgress(`Colonnes détectées : sep="${sep}" nom=${iNom} prenom=${iPrenom} prof=${iProfCode} cat=${iCatCode} email=${iEmail}`);
+      await new Promise(r => setTimeout(r, 800));
+
+      const TARGET_SPECS = ["radiodiag", "gynecolog", "gynecolog", "cardiol", "imagerie"];
       const BATCH = 100;
       const rows: Record<string, string>[] = [];
       let scanned = 0;
@@ -192,49 +211,65 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i];
         if (!line.trim()) continue;
-        const cells = line.split("|");
-
-        // Filtre : médecin (code 10) + libéral (L)
-        const profCode = cells[iProfCode]?.trim();
-        const catPro   = cells[iCatPro]?.trim().toUpperCase();
-        if (profCode !== "10" || catPro !== "L") continue;
-
-        // Filtre spécialité (radiodiag, gynéco, cardio)
-        const spec = (cells[iSpecLib] ?? "").toLowerCase();
-        if (!TARGET_SPECS.some(s => spec.includes(s))) continue;
-
-        rows.push({
-          first_name:   cells[iPrenom]?.trim() || "",
-          last_name:    cells[iNom]?.trim() || "",
-          specialty:    cells[iSpecLib]?.trim() || "",
-          city:         cells[iVille]?.trim() || "",
-          postal_code:  cells[iCP]?.trim() || "",
-          rpps_number:  cells[iRPPS]?.trim() || "",
-        });
+        const cells = line.split(sep);
         scanned++;
 
-        if (scanned % 500 === 0) {
-          setRppsProgress(`${scanned} médecins trouvés…`);
+        // Filtre médecin : code 10 OU libellé contient "m decin" / "medecin"
+        const profCode = cells[iProfCode]?.trim() ?? "";
+        const profLib  = norm(cells[iProfLib]?.trim() ?? "");
+        const isDoc = profCode === "10" || profLib.includes("medecin");
+        if (!isDoc) continue;
+
+        // Filtre libéral : code L OU libellé contient "liberal"
+        const catCode = cells[iCatCode]?.trim().toUpperCase() ?? "";
+        const catLib  = norm(cells[iCatLib]?.trim() ?? "");
+        const isLib = catCode === "L" || catLib.includes("liberal");
+        if (!isLib) continue;
+
+        // Filtre spécialité (si la colonne existe)
+        if (iSpecLib !== -1) {
+          const spec = norm(cells[iSpecLib]?.trim() ?? "");
+          if (spec && !TARGET_SPECS.some(s => spec.includes(s))) continue;
         }
+
+        rows.push({
+          first_name:  cells[iPrenom]?.trim() || "",
+          last_name:   cells[iNom]?.trim() || "",
+          specialty:   iSpecLib !== -1 ? (cells[iSpecLib]?.trim() || "") : "",
+          city:        cells[iVille]?.trim() || "",
+          postal_code: cells[iCP]?.trim() || "",
+          rpps_number: cells[iRPPS]?.trim() || "",
+          email:       iEmail !== -1 ? (cells[iEmail]?.trim().toLowerCase() || "") : "",
+        });
+
+        if (rows.length % 200 === 0) {
+          setRppsProgress(`${rows.length} médecins libéraux trouvés (analysé ${scanned} lignes)…`);
+          await new Promise(r => setTimeout(r, 0)); // laisser le UI respirer
+        }
+      }
+
+      if (rows.length === 0) {
+        setRppsProgress(`✗ 0 résultat — vérifiez le fichier (sep="${sep}", colonnes prof=${iProfCode}, cat=${iCatCode})`);
+        setRppsLoading(false);
+        if (rppsRef.current) rppsRef.current.value = "";
+        return;
       }
 
       setRppsProgress(`${rows.length} médecins trouvés — import en cours…`);
 
-      // Envoyer par batch de 100
       let inserted = 0;
       for (let b = 0; b < rows.length; b += BATCH) {
-        const batch = rows.slice(b, b + BATCH);
         const res = await fetch("/api/admin/prospects", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ rows: batch }),
+          body: JSON.stringify({ rows: rows.slice(b, b + BATCH) }),
         });
         const json = await res.json();
         inserted += json.inserted ?? 0;
         setRppsProgress(`Import : ${inserted}/${rows.length}…`);
       }
 
-      setRppsProgress(`✓ ${inserted} médecins libéraux importés`);
+      setRppsProgress(`✓ ${inserted} médecins libéraux importés (dont emails si disponibles)`);
       fetchProspects();
     } catch (err) {
       setRppsProgress(`✗ Erreur : ${err instanceof Error ? err.message : String(err)}`);
