@@ -201,10 +201,8 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const iRPPS     = col(["identifiant_pp", "rpps", "identifiant"]);
       const iEmail    = col(["adresse_e_mail", "adresse_email", "email", "mail", "courriel"]);
 
-      // Debug : affiche séparateur + 8 premières colonnes brutes pour diagnostic
-      const rawCols = firstLine.split(sep).slice(0, 8).map(h => h.trim().replace(/"/g, "").slice(0, 20)).join(" | ");
-      setRppsProgress(`sep="${sep}" (${header.length} cols) — ${rawCols}`);
-      await new Promise(r => setTimeout(r, 2000));
+      // Stocker les 20 premières colonnes brutes pour le diagnostic
+      const rawCols20 = firstLine.split(sep).slice(0, 20).map(h => h.trim().replace(/"/g, "").slice(0, 30)).join(" · ");
 
       const TARGET_SPECS = ["radiodiag", "gynecolog", "gynecolog", "cardiol", "imagerie"];
       const BATCH = 100;
@@ -254,7 +252,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       }
 
       if (rows.length === 0) {
-        setRppsProgress(`✗ 0 résultat — vérifiez le fichier (sep="${sep}", colonnes prof=${iProfCode}, cat=${iCatCode})`);
+        setRppsProgress(`✗ 0 résultat | sep="${sep}" | prof=${iProfCode} cat=${iCatCode} | Colonnes: ${rawCols20}`);
         setRppsLoading(false);
         if (rppsRef.current) rppsRef.current.value = "";
         return;
