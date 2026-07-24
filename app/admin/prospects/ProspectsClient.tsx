@@ -62,10 +62,15 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const [campaignLoading, setCampaignLoading] = useState(false);
   const [campaignResult, setCampaignResult] = useState<{ sent: number; skipped: number; errors: number } | null>(null);
 
-  // Import CSV
+  // Import CSV generic
   const [importLoading, setImportLoading] = useState(false);
   const [importResult, setImportResult] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Import RPPS ANS (.txt)
+  const [rppsLoading, setRppsLoading] = useState(false);
+  const [rppsProgress, setRppsProgress] = useState("");
+  const rppsRef = useRef<HTMLInputElement>(null);
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -146,6 +151,97 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
     setCampaignLoading(false);
     setCampaignResult(json);
     if (!json.error) fetchProspects();
+  };
+
+  const handleImportRPPS = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setRppsLoading(true);
+    setRppsProgress("Lecture du fichier…");
+
+    try {
+      const text = await file.text();
+      const lines = text.split("\n");
+      const header = lines[0].split("|").map(h => h.trim().replace(/"/g, ""));
+
+      // Find column indices (flexible matching)
+      const col = (names: string[]) => {
+        for (const n of names) {
+          const idx = header.findIndex(h => h.toLowerCase().includes(n.toLowerCase()));
+          if (idx !== -1) return idx;
+        }
+        return -1;
+      };
+
+      const iPrenom    = col(["Prénom_Exercice", "prenom_exercice", "prenom"]);
+      const iNom       = col(["Nom_Exercice", "nom_exercice", "nom"]);
+      const iProfCode  = col(["Code_Profession_Sante", "code_profession"]);
+      const iCatPro    = col(["Code_Categorie_Professionnelle", "categorie_prof"]);
+      const iSpecLib   = col(["Libelle_Specialite_Ordinale", "libelle_specialite", "specialite"]);
+      const iVille     = col(["Libelle_Commune_Exercice", "commune_exercice", "commune"]);
+      const iCP        = col(["Code_Postal_Exercice", "code_postal_exercice", "code_postal"]);
+      const iRPPS      = col(["Identifiant_PP", "rpps"]);
+
+      const TARGET_SPECS = ["radiodiag", "gynécolog", "gynecolog", "cardiol"];
+      const BATCH = 100;
+      const rows: Record<string, string>[] = [];
+      let scanned = 0;
+
+      setRppsProgress("Analyse en cours…");
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line.trim()) continue;
+        const cells = line.split("|");
+
+        // Filtre : médecin (code 10) + libéral (L)
+        const profCode = cells[iProfCode]?.trim();
+        const catPro   = cells[iCatPro]?.trim().toUpperCase();
+        if (profCode !== "10" || catPro !== "L") continue;
+
+        // Filtre spécialité (radiodiag, gynéco, cardio)
+        const spec = (cells[iSpecLib] ?? "").toLowerCase();
+        if (!TARGET_SPECS.some(s => spec.includes(s))) continue;
+
+        rows.push({
+          first_name:   cells[iPrenom]?.trim() || "",
+          last_name:    cells[iNom]?.trim() || "",
+          specialty:    cells[iSpecLib]?.trim() || "",
+          city:         cells[iVille]?.trim() || "",
+          postal_code:  cells[iCP]?.trim() || "",
+          rpps_number:  cells[iRPPS]?.trim() || "",
+        });
+        scanned++;
+
+        if (scanned % 500 === 0) {
+          setRppsProgress(`${scanned} médecins trouvés…`);
+        }
+      }
+
+      setRppsProgress(`${rows.length} médecins trouvés — import en cours…`);
+
+      // Envoyer par batch de 100
+      let inserted = 0;
+      for (let b = 0; b < rows.length; b += BATCH) {
+        const batch = rows.slice(b, b + BATCH);
+        const res = await fetch("/api/admin/prospects", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rows: batch }),
+        });
+        const json = await res.json();
+        inserted += json.inserted ?? 0;
+        setRppsProgress(`Import : ${inserted}/${rows.length}…`);
+      }
+
+      setRppsProgress(`✓ ${inserted} médecins libéraux importés`);
+      fetchProspects();
+    } catch (err) {
+      setRppsProgress(`✗ Erreur : ${err instanceof Error ? err.message : String(err)}`);
+    }
+
+    setRppsLoading(false);
+    if (rppsRef.current) rppsRef.current.value = "";
   };
 
   const handleImportCSV = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -270,7 +366,20 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
 
           <div style={{ flex: 1 }} />
 
-          {/* Import CSV */}
+          {/* Import RPPS ANS */}
+          <label style={{ cursor: "pointer" }}>
+            <span className="pr-btn pr-btn-ghost" style={{ display: "inline-block", background: rppsLoading ? "#f0f5fb" : undefined }}>
+              {rppsLoading ? "Traitement…" : "↑ Import RPPS ANS (.txt)"}
+            </span>
+            <input ref={rppsRef} type="file" accept=".txt" style={{ display: "none" }} disabled={rppsLoading} onChange={handleImportRPPS} />
+          </label>
+          {rppsProgress && (
+            <span style={{ fontSize: 12, color: rppsProgress.startsWith("✓") ? "#22c55e" : rppsProgress.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
+              {rppsProgress}
+            </span>
+          )}
+
+          {/* Import CSV générique */}
           <label style={{ cursor: "pointer" }}>
             <span className="pr-btn pr-btn-ghost" style={{ display: "inline-block" }}>
               {importLoading ? "Import…" : "↑ Import CSV"}
