@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       status: "cold",
     }));
     const { data, error } = await db.from("prospects")
-      .upsert(rows, { onConflict: "rpps_number", ignoreDuplicates: true })
+      .upsert(rows, { onConflict: "rpps_number" })
       .select("id");
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ inserted: data?.length ?? 0 });
