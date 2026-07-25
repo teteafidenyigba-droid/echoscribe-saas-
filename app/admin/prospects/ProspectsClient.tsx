@@ -187,20 +187,18 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
                 : countPipe >= countSemi && countPipe >= countTab ? "|"
                 : countSemi >= countTab ? ";" : "\t";
 
-      // Retire les accents via plage Unicode explicite (plus fiable que littéral)
-      const stripAccents = (s: string) =>
-        s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+      // Normalise : retire accents (̀-ͯ), lowercase, underscore/tiret → espace
+      const normalize = (s: string) =>
+        s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[_-]/g, " ");
 
-      const header = firstLine.split(sep).map(h =>
-        stripAccents(h.trim().replace(/"/g, "")).toLowerCase()
-      );
+      const header = firstLine.split(sep).map(h => normalize(h.trim().replace(/"/g, "")));
 
-      // Matching souple : retire accents + lowercase
-      const norm = (s: string) => stripAccents(s).toLowerCase();
+      // norm utilisé pour les valeurs de cellules (filtre médecin/libéral)
+      const norm = (s: string) => normalize(s);
 
       const col = (candidates: string[]): number => {
         for (const c of candidates) {
-          const n = norm(c);
+          const n = normalize(c);
           const idx = header.findIndex(h => h === n || h.includes(n));
           if (idx !== -1) return idx;
         }
