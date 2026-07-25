@@ -74,12 +74,10 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        searchStrings,
+        searchStringsArray: searchStrings,
         maxCrawledPlacesPerSearch: 1,
         language: "fr",
         countryCode: "fr",
-        includeHistogramData: false,
-        scrapeDirectories: false,
       }),
       signal: AbortSignal.timeout(58000),
     });
