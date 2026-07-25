@@ -1,28 +1,56 @@
 /**
- * Script local — Enrichissement Annuaire Santé FHIR
- * Usage : node scripts/enrich-annuaire-local.mjs <prospects_export.csv>
+ * Enrichissement Annuaire Santé FHIR — script local
+ * Lit directement dans Supabase, pas besoin d'exporter un CSV.
  *
- * Entrée  : CSV exporté depuis EchoScribe (colonnes rpps_number, first_name, last_name)
- * Sortie  : enrichissement.csv (rpps_number, phone, address)
- * Upload  : bouton "Enrichir CSV" dans /admin/prospects
+ * Usage : node scripts/enrich-annuaire-local.mjs
  */
 
-import { createReadStream, createWriteStream } from "fs";
-import { createInterface } from "readline";
-import { resolve } from "path";
+import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
-const INPUT  = process.argv[2];
-const OUTPUT = "enrichissement.csv";
-const DELAY  = 300; // ms entre chaque appel (évite le rate-limit ANS)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const envPath = resolve(__dirname, "../.env.local");
 
-if (!INPUT) {
-  console.error("Usage: node scripts/enrich-annuaire-local.mjs <prospects_export.csv>");
+// Charge .env.local
+const env = {};
+try {
+  readFileSync(envPath, "utf-8").split(/\r?\n/).forEach(line => {
+    const m = line.match(/^([^#=]+)=(.*)$/);
+    if (m) env[m[1].trim()] = m[2].trim().replace(/^["']|["']$/g, "");
+  });
+} catch {
+  console.error("Fichier .env.local introuvable — vérifier que tu es dans le bon dossier");
   process.exit(1);
 }
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+const SUPABASE_URL = env.NEXT_PUBLIC_SUPABASE_URL;
+const SERVICE_KEY  = env.SUPABASE_SERVICE_ROLE_KEY;
 
-async function fetchFHIR(rpps) {
+if (!SUPABASE_URL || !SERVICE_KEY) {
+  console.error("NEXT_PUBLIC_SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY manquant dans .env.local");
+  process.exit(1);
+}
+
+const BATCH   = 50;   // prospects par itération
+const DELAY   = 300;  // ms entre chaque appel ANS
+const sleep   = ms => new Promise(r => setTimeout(r, ms));
+
+async function dbFetch(path, opts = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {
+    ...opts,
+    headers: {
+      apikey: SERVICE_KEY,
+      Authorization: `Bearer ${SERVICE_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+      ...(opts.headers || {}),
+    },
+  });
+  return res;
+}
+
+async function fetchANS(rpps) {
   const url = `https://api.annuaire.sante.fr/fhir/v1/Practitioner?identifier=urn:oid:1.2.250.1.71.4.2.1%7C${rpps}`;
   try {
     const res = await fetch(url, {
@@ -33,17 +61,9 @@ async function fetchFHIR(rpps) {
     const bundle = await res.json();
     if (!bundle.entry?.length) return null;
     const p = bundle.entry[0].resource;
-
-    const phone = p.telecom
-      ?.filter(t => t.system === "phone" || t.system === "tel")
-      .map(t => t.value)
-      .find(Boolean) ?? "";
-
-    const addr = p.address?.[0];
-    const address = addr
-      ? [addr.line?.join(" "), addr.postalCode, addr.city].filter(Boolean).join(", ")
-      : "";
-
+    const phone = p.telecom?.filter(t => t.system === "phone" || t.system === "tel").map(t => t.value).find(Boolean) ?? null;
+    const addr  = p.address?.[0];
+    const address = addr ? [addr.line?.join(" "), addr.postalCode, addr.city].filter(Boolean).join(", ") : null;
     return { phone, address };
   } catch {
     return null;
@@ -51,47 +71,47 @@ async function fetchFHIR(rpps) {
 }
 
 async function main() {
-  const inputPath = resolve(INPUT);
-  const rl = createInterface({ input: createReadStream(inputPath), crlfDelay: Infinity });
+  // Compte total à enrichir
+  const countRes = await dbFetch(
+    `/prospects?select=id&phone=is.null&rpps_number=not.is.null`,
+    { headers: { Prefer: "count=exact", Range: "0-0" } }
+  );
+  const total = parseInt(countRes.headers.get("content-range")?.split("/")[1] ?? "0");
+  console.log(`${total} prospects sans téléphone à enrichir via ANS FHIR\n`);
+  if (!total) { console.log("Rien à faire."); return; }
 
-  const lines = [];
-  for await (const line of rl) lines.push(line);
+  let enriched = 0;
+  let offset   = 0;
 
-  if (lines.length < 2) { console.error("Fichier vide"); process.exit(1); }
+  while (offset < total) {
+    // Récupère un batch de prospects
+    const batchRes = await dbFetch(
+      `/prospects?select=id,rpps_number,phone,address&phone=is.null&rpps_number=not.is.null&order=id&limit=${BATCH}&offset=${offset}`
+    );
+    const prospects = await batchRes.json();
+    if (!Array.isArray(prospects) || !prospects.length) break;
 
-  const sep = lines[0].includes(";") ? ";" : ",";
-  const headers = lines[0].split(sep).map(h => h.trim().replace(/^"|"$/g, "").toLowerCase());
-  const iRpps = headers.indexOf("rpps_number");
+    for (const p of prospects) {
+      if (!p.rpps_number) continue;
+      const data = await fetchANS(p.rpps_number);
+      if (!data?.phone && !data?.address) { await sleep(DELAY); continue; }
 
-  if (iRpps === -1) { console.error("Colonne rpps_number introuvable"); process.exit(1); }
+      const patch = { updated_at: new Date().toISOString() };
+      if (data.phone && !p.phone)     patch.phone   = data.phone;
+      if (data.address && !p.address) patch.address = data.address;
 
-  const out = createWriteStream(OUTPUT);
-  out.write("rpps_number,phone,address\n");
-
-  const rows = lines.slice(1)
-    .map(l => l.split(sep).map(c => c.trim().replace(/^"|"$/g, "")))
-    .filter(c => c[iRpps]);
-
-  console.log(`${rows.length} prospects à enrichir…`);
-  let found = 0;
-
-  for (let i = 0; i < rows.length; i++) {
-    const rpps = rows[i][iRpps];
-    const data = await fetchFHIR(rpps);
-    if (data) {
-      const phone   = (data.phone   || "").replace(/,/g, " ");
-      const address = (data.address || "").replace(/,/g, " ");
-      if (phone || address) {
-        out.write(`${rpps},${phone},"${address}"\n`);
-        found++;
+      if (Object.keys(patch).length > 1) {
+        await dbFetch(`/prospects?id=eq.${p.id}`, { method: "PATCH", body: JSON.stringify(patch) });
+        enriched++;
       }
+      await sleep(DELAY);
     }
-    if ((i + 1) % 50 === 0) console.log(`  ${i + 1}/${rows.length} (${found} trouvés)`);
-    await sleep(DELAY);
+
+    offset += prospects.length;
+    console.log(`${offset}/${total} traités — ${enriched} enrichis`);
   }
 
-  out.end();
-  console.log(`\nTerminé : ${found}/${rows.length} enrichis → ${OUTPUT}`);
+  console.log(`\n✓ Terminé : ${enriched}/${total} prospects enrichis avec téléphone/adresse ANS`);
 }
 
-main();
+main().catch(err => { console.error(err); process.exit(1); });
