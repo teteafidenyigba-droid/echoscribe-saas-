@@ -202,10 +202,14 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       if (lines.length < 2) { setEnrichCsvResult("✗ Fichier vide"); setEnrichCsvLoading(false); return; }
       const sep = lines[0].includes(";") ? ";" : ",";
       const headers = lines[0].split(sep).map(h => h.trim().replace(/^"|"$/g, "").toLowerCase());
-      const iRpps = headers.indexOf("rpps_number");
-      const iEmail = headers.indexOf("email");
-      if (iRpps === -1 || iEmail === -1) {
-        setEnrichCsvResult("✗ Le CSV doit contenir les colonnes rpps_number et email");
+      const iRpps    = headers.indexOf("rpps_number");
+      const iEmail   = headers.indexOf("email");
+      const iPhone2  = headers.indexOf("phone");
+      const iAddr    = headers.indexOf("address");
+      const iCity    = headers.indexOf("city");
+      const iCP2     = headers.indexOf("postal_code");
+      if (iRpps === -1) {
+        setEnrichCsvResult("✗ Le CSV doit contenir la colonne rpps_number");
         setEnrichCsvLoading(false);
         if (enrichCsvRef.current) enrichCsvRef.current.value = "";
         return;
@@ -213,9 +217,15 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const enrichRows = lines.slice(1)
         .map(line => {
           const cells = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ""));
-          return { rpps_number: cells[iRpps], email: cells[iEmail] };
+          const row: Record<string, string> = { rpps_number: cells[iRpps] };
+          if (iEmail  !== -1) row.email       = cells[iEmail];
+          if (iPhone2 !== -1) row.phone       = cells[iPhone2];
+          if (iAddr   !== -1) row.address     = cells[iAddr];
+          if (iCity   !== -1) row.city        = cells[iCity];
+          if (iCP2    !== -1) row.postal_code = cells[iCP2];
+          return row;
         })
-        .filter(r => r.rpps_number && r.email && r.email.includes("@"));
+        .filter(r => r.rpps_number);
 
       const BATCH = 500;
       let totalUpdated = 0;
@@ -229,7 +239,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         if (json.error) { setEnrichCsvResult(`✗ ${json.error}`); break; }
         totalUpdated += json.updated ?? 0;
       }
-      setEnrichCsvResult(`✓ ${totalUpdated} emails mis à jour`);
+      setEnrichCsvResult(`✓ ${totalUpdated} prospects mis à jour`);
       fetchProspects();
     } catch (err) {
       setEnrichCsvResult(`✗ ${err instanceof Error ? err.message : String(err)}`);

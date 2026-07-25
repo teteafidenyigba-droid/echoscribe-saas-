@@ -75,12 +75,18 @@ export async function POST(request: NextRequest) {
     let updated = 0;
     for (const r of body.enrichRows as Record<string, string>[]) {
       const rpps = r.rpps_number?.trim();
+      if (!rpps) continue;
+      const patch: Record<string, string> = { updated_at: new Date().toISOString() };
       const email = r.email?.trim().toLowerCase();
-      if (!rpps || !email || !email.includes("@")) continue;
+      if (email && email.includes("@")) patch.email = email;
+      if (r.phone?.trim())       patch.phone       = r.phone.trim();
+      if (r.address?.trim())     patch.address     = r.address.trim();
+      if (r.city?.trim())        patch.city        = r.city.trim();
+      if (r.postal_code?.trim()) patch.postal_code = r.postal_code.trim();
+      if (Object.keys(patch).length === 1) continue; // only updated_at → rien à faire
       const { error } = await db.from("prospects")
-        .update({ email, updated_at: new Date().toISOString() })
-        .eq("rpps_number", rpps)
-        .is("email", null);
+        .update(patch)
+        .eq("rpps_number", rpps);
       if (!error) updated++;
     }
     return NextResponse.json({ updated });
