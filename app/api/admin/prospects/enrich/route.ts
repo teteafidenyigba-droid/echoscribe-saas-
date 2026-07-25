@@ -66,26 +66,41 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: `Dropcontact erreur ${submitRes.status}: ${txt}` }, { status: 502 });
   }
 
-  const submitJson = await submitRes.json() as { request_id?: string; contacts?: Record<string, unknown>[] };
+  type DCResponse = { request_id?: string; success?: boolean; contacts?: Record<string, unknown>[]; data?: Record<string, unknown>[] };
+  const submitJson = await submitRes.json() as DCResponse;
 
-  // Réponse synchrone (contacts directs) ou asynchrone (request_id à poller)
+  // Extrait le tableau de contacts quelle que soit la clé (contacts ou data)
+  const extractContacts = (j: DCResponse) => {
+    if (Array.isArray(j.contacts) && j.contacts.length > 0) return j.contacts;
+    if (Array.isArray(j.data) && j.data.length > 0) return j.data;
+    return null;
+  };
+
   let contacts: Record<string, unknown>[] | null = null;
 
-  if (Array.isArray(submitJson.contacts)) {
-    contacts = submitJson.contacts;
+  // Réponse synchrone directe ?
+  const direct = extractContacts(submitJson);
+  if (direct) {
+    contacts = direct;
   } else if (submitJson.request_id) {
-    // Polling (max 60 s)
-    for (let i = 0; i < 60; i++) {
-      await new Promise(r => setTimeout(r, 1000));
+    // Polling (max 90 s, toutes les 2 s)
+    for (let i = 0; i < 45; i++) {
+      await new Promise(r => setTimeout(r, 2000));
       const pollRes = await fetch(`https://api.dropcontact.com/v1/enrich/${submitJson.request_id}`, {
         headers: { "X-Access-Token": DROPCONTACT_KEY },
       });
-      const pollJson = await pollRes.json() as { success?: boolean; contacts?: Record<string, unknown>[] };
-      if (pollJson.success && Array.isArray(pollJson.contacts)) { contacts = pollJson.contacts; break; }
+      const pollJson = await pollRes.json() as DCResponse;
+      const found = extractContacts(pollJson);
+      if (found) { contacts = found; break; }
     }
   }
 
-  if (!contacts) return NextResponse.json({ error: "Dropcontact: timeout ou réponse inattendue" }, { status: 504 });
+  if (!contacts) {
+    return NextResponse.json({
+      error: "Dropcontact: réponse inattendue",
+      debug: { submitStatus: submitRes.status, submitKeys: Object.keys(submitJson), request_id: submitJson.request_id },
+    }, { status: 504 });
+  }
 
   // Mise à jour des prospects avec les emails trouvés
   let enriched = 0;
