@@ -71,6 +71,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const [rppsLoading, setRppsLoading] = useState(false);
   const [rppsProgress, setRppsProgress] = useState("");
   const rppsRef = useRef<HTMLInputElement>(null);
+  const [clearLoading, setClearLoading] = useState(false);
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -151,6 +152,14 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
     setCampaignLoading(false);
     setCampaignResult(json);
     if (!json.error) fetchProspects();
+  };
+
+  const handleClearAll = async () => {
+    if (!window.confirm(`Supprimer les ${total.toLocaleString("fr-FR")} prospects ? Cette action est irréversible.`)) return;
+    setClearLoading(true);
+    const res = await fetch("/api/admin/prospects", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ deleteAll: true }) });
+    setClearLoading(false);
+    if (res.ok) { setRppsProgress(""); fetchProspects(); }
   };
 
   const handleImportRPPS = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -470,6 +479,13 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           </select>
 
           <div style={{ flex: 1 }} />
+
+          {/* Vider la liste */}
+          {total > 0 && (
+            <button className="pr-btn pr-btn-ghost" style={{ color: "#ef4444", borderColor: "#fca5a5" }} onClick={handleClearAll} disabled={clearLoading}>
+              {clearLoading ? "Suppression…" : "🗑 Vider la liste"}
+            </button>
+          )}
 
           {/* Import RPPS ANS */}
           <label style={{ cursor: "pointer" }}>

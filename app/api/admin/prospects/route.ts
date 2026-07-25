@@ -130,15 +130,22 @@ export async function PATCH(request: NextRequest) {
   return NextResponse.json({ ok: true });
 }
 
-// DELETE /api/admin/prospects — { ids: [...] }
+// DELETE /api/admin/prospects — { ids: [...] } or { deleteAll: true }
 export async function DELETE(request: NextRequest) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { ids } = await request.json();
-  if (!Array.isArray(ids) || ids.length === 0) return NextResponse.json({ error: "ids required" }, { status: 400 });
-
+  const body = await request.json();
   const db = createServiceClient();
+
+  if (body.deleteAll === true) {
+    const { error } = await db.from("prospects").delete().not("id", "is", null);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  }
+
+  const { ids } = body;
+  if (!Array.isArray(ids) || ids.length === 0) return NextResponse.json({ error: "ids required" }, { status: 400 });
   const { error } = await db.from("prospects").delete().in("id", ids);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
