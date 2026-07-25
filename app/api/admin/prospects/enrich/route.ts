@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     .from("prospects")
     .select("id, first_name, last_name, specialty, city, postal_code")
     .is("email", null)
+    .or("specialty.ilike.%radio%,specialty.ilike.%imagerie%,specialty.ilike.%echograph%")
     .limit(batchSize);
 
   if (fetchError) return NextResponse.json({ error: fetchError.message }, { status: 500 });
