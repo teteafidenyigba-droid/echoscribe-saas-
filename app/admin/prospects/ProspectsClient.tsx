@@ -82,6 +82,8 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const [enrichApiResult, setEnrichApiResult] = useState("");
   const [enrichAnnuaireLoading, setEnrichAnnuaireLoading] = useState(false);
   const [enrichAnnuaireResult, setEnrichAnnuaireResult] = useState("");
+  const [enrichPlacesLoading, setEnrichPlacesLoading] = useState(false);
+  const [enrichPlacesResult, setEnrichPlacesResult] = useState("");
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -298,6 +300,32 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       setEnrichAnnuaireResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
     }
     setEnrichAnnuaireLoading(false);
+  };
+
+  const handleEnrichPlaces = async () => {
+    const batchStr = window.prompt("Combien de contacts enrichir via Google Places ?\n(~0.017€/contact — commence par 20 pour tester)", "20");
+    if (!batchStr) return;
+    const batch = parseInt(batchStr);
+    if (isNaN(batch) || batch <= 0) return;
+    setEnrichPlacesLoading(true);
+    setEnrichPlacesResult("Recherche Google Places…");
+    try {
+      const res = await fetch("/api/admin/prospects/enrich-places", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ batch, mode: "both" }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        setEnrichPlacesResult(`✗ ${json.error}`);
+      } else {
+        setEnrichPlacesResult(`✓ ${json.enriched}/${json.total} enrichis`);
+        fetchProspects();
+      }
+    } catch (err) {
+      setEnrichPlacesResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
+    }
+    setEnrichPlacesLoading(false);
   };
 
   const handleClearAll = async () => {
@@ -700,6 +728,17 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           {enrichAnnuaireResult && (
             <span style={{ fontSize: 12, color: enrichAnnuaireResult.startsWith("✓") ? "#22c55e" : enrichAnnuaireResult.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
               {enrichAnnuaireResult}
+            </span>
+          )}
+
+          {/* Google Places — téléphone + adresse */}
+          <button className="pr-btn pr-btn-ghost" onClick={handleEnrichPlaces} disabled={enrichPlacesLoading || total === 0}
+            title="Enrichissement téléphone + adresse via Google Places (~0.017€/contact)">
+            {enrichPlacesLoading ? "Places…" : "📍 Google Places"}
+          </button>
+          {enrichPlacesResult && (
+            <span style={{ fontSize: 12, color: enrichPlacesResult.startsWith("✓") ? "#22c55e" : enrichPlacesResult.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
+              {enrichPlacesResult}
             </span>
           )}
 
