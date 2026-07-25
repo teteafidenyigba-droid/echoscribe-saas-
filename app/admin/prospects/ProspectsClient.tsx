@@ -310,11 +310,17 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           body: JSON.stringify({ rows: rows.slice(b, b + BATCH) }),
         });
         const json = await res.json();
+        if (!res.ok || json.error) {
+          setRppsProgress(`✗ Erreur API batch ${Math.floor(b/BATCH)+1} : ${json.error || res.status}`);
+          setRppsLoading(false);
+          if (rppsRef.current) rppsRef.current.value = "";
+          return;
+        }
         inserted += json.inserted ?? 0;
         setRppsProgress(`Import : ${inserted}/${rows.length}…`);
       }
 
-      setRppsProgress(`✓ ${inserted} médecins libéraux importés (dont emails si disponibles)`);
+      setRppsProgress(`✓ ${inserted} médecins libéraux importés`);
       fetchProspects();
     } catch (err) {
       setRppsProgress(`✗ Erreur : ${err instanceof Error ? err.message : String(err)}`);
