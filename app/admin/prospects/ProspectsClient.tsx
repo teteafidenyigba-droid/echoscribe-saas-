@@ -261,9 +261,9 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         const modeLib  = norm(cells[iModeLib]?.trim() ?? "");
         if (modeCode !== "L" && !modeLib.startsWith("lib")) return;
 
-        // Filtre spécialité : radiodiag, gynéco, cardio, imagerie, généraliste
+        // Filtre spécialité : on n'importe que les médecins avec une spécialité cible connue
         const spec = norm(cells[iSpecLib]?.trim() ?? "");
-        if (spec && !TARGET_SPECS.some(s => spec.includes(s))) return;
+        if (!spec || !TARGET_SPECS.some(s => spec.includes(s))) return;
 
         rows.push({
           first_name:  cells[iPrenom]?.trim() || "",
@@ -307,14 +307,17 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         return;
       }
 
-      // Dédupliquer par numéro RPPS (un médecin peut avoir plusieurs lignes dans le fichier)
-      const seenRpps = new Set<string>();
-      const uniqueRows = rows.filter(r => {
-        if (!r.rpps_number) return true;
-        if (seenRpps.has(r.rpps_number)) return false;
-        seenRpps.add(r.rpps_number);
-        return true;
-      });
+      // Dédupliquer par RPPS en gardant la ligne la plus complète (ville, email, spécialité)
+      const score = (r: Record<string, string>) =>
+        [r.city, r.postal_code, r.email, r.specialty].filter(Boolean).length;
+      const byRpps = new Map<string, Record<string, string>>();
+      const noRpps: Record<string, string>[] = [];
+      for (const r of rows) {
+        if (!r.rpps_number) { noRpps.push(r); continue; }
+        const existing = byRpps.get(r.rpps_number);
+        if (!existing || score(r) > score(existing)) byRpps.set(r.rpps_number, r);
+      }
+      const uniqueRows = [...byRpps.values(), ...noRpps];
 
       setRppsProgress(`${uniqueRows.length} médecins uniques trouvés — import en cours…`);
 
