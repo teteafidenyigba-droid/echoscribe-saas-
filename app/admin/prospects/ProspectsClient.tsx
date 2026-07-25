@@ -197,9 +197,16 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const norm = (s: string) => normalize(s);
 
       const col = (candidates: string[]): number => {
+        // Exact match first to avoid "type identifiant pp" matching "identifiant pp"
         for (const c of candidates) {
           const n = normalize(c);
-          const idx = header.findIndex(h => h === n || h.includes(n));
+          const idx = header.findIndex(h => h === n);
+          if (idx !== -1) return idx;
+        }
+        // Fallback: partial match
+        for (const c of candidates) {
+          const n = normalize(c);
+          const idx = header.findIndex(h => h.includes(n));
           if (idx !== -1) return idx;
         }
         return -1;
