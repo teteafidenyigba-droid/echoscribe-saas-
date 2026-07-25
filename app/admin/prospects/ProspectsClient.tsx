@@ -302,46 +302,39 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
     setEnrichAnnuaireLoading(false);
   };
 
+  const enrichPlacesStopRef = useRef(false);
+
   const handleEnrichPlaces = async () => {
+    enrichPlacesStopRef.current = false;
     setEnrichPlacesLoading(true);
-    setEnrichPlacesResult("Lancement Apify…");
+    let totalEnriched = 0;
+    let batch = 0;
+    setEnrichPlacesResult("Démarrage…");
     try {
-      // 1. Démarre le run Apify pour tous les prospects
-      const startRes = await fetch("/api/admin/prospects/enrich-places", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "start" }),
-      });
-      const startJson = await startRes.json();
-      if (startJson.error) { setEnrichPlacesResult(`✗ ${startJson.error}`); setEnrichPlacesLoading(false); return; }
-      if (startJson.total === 0) { setEnrichPlacesResult("✓ Tous déjà enrichis"); setEnrichPlacesLoading(false); return; }
-
-      const { runId, total } = startJson;
-      setEnrichPlacesResult(`⏳ Apify traite ${total} contacts… (peut prendre 5-20 min)`);
-
-      // 2. Polling toutes les 20s jusqu'à SUCCEEDED
-      let attempts = 0;
-      const maxAttempts = 90; // 90 × 20s = 30 min max
-      while (attempts < maxAttempts) {
-        await new Promise(r => setTimeout(r, 20000));
-        attempts++;
-        const statusRes = await fetch("/api/admin/prospects/enrich-places", {
+      while (!enrichPlacesStopRef.current) {
+        batch++;
+        const res = await fetch("/api/admin/prospects/enrich-places", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "status", runId }),
+          body: JSON.stringify({ batch: 30 }),
         });
-        const statusJson = await statusRes.json();
-        if (statusJson.error && statusJson.done) { setEnrichPlacesResult(`✗ ${statusJson.error}`); break; }
-        if (!statusJson.done) {
-          setEnrichPlacesResult(`⏳ Apify en cours… (${attempts * 20}s écoulées sur ${total} contacts)`);
-          continue;
+        const json = await res.json();
+        if (json.error) { setEnrichPlacesResult(`✗ ${json.error}`); break; }
+        totalEnriched += json.enriched ?? 0;
+        if (json.total === 0) {
+          setEnrichPlacesResult(`✓ Terminé — ${totalEnriched} enrichis`);
+          fetchProspects();
+          break;
         }
-        // done = true
-        setEnrichPlacesResult(`✓ ${statusJson.enriched}/${statusJson.total} enrichis`);
-        fetchProspects();
-        break;
+        setEnrichPlacesResult(`⏳ Batch ${batch} : +${json.enriched}/${json.total} — total ${totalEnriched} enrichis`);
+        if (json.enriched === 0 && batch > 3) {
+          // 3 batches consécutifs sans résultat = terminé
+          setEnrichPlacesResult(`✓ Terminé — ${totalEnriched} enrichis`);
+          fetchProspects();
+          break;
+        }
       }
-      if (attempts >= maxAttempts) setEnrichPlacesResult("✗ Timeout — relance depuis Apify dashboard");
+      if (enrichPlacesStopRef.current) setEnrichPlacesResult(`⏹ Arrêté — ${totalEnriched} enrichis`);
     } catch (err) {
       setEnrichPlacesResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -753,9 +746,15 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
 
           {/* Google Places — téléphone + adresse */}
           <button className="pr-btn pr-btn-ghost" onClick={handleEnrichPlaces} disabled={enrichPlacesLoading || total === 0}
-            title="Enrichissement téléphone + adresse via Google Places (~0.017€/contact)">
-            {enrichPlacesLoading ? "Places…" : "📍 Google Places"}
+            title="Enrichissement téléphone + adresse via Google Places (boucle automatique)">
+            {enrichPlacesLoading ? "⏳ Places…" : "📍 Google Places"}
           </button>
+          {enrichPlacesLoading && (
+            <button className="pr-btn pr-btn-ghost" style={{ color: "#ef4444", borderColor: "#fca5a5" }}
+              onClick={() => { enrichPlacesStopRef.current = true; }}>
+              ⏹ Stop
+            </button>
+          )}
           {enrichPlacesResult && (
             <span style={{ fontSize: 12, color: enrichPlacesResult.startsWith("✓") ? "#22c55e" : enrichPlacesResult.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
               {enrichPlacesResult}
