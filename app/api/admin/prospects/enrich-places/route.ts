@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
         searchStrings,
         maxCrawledPlacesPerSearch: 1,
         language: "fr",
-        countryCode: "FR",
+        countryCode: "fr",
         includeHistogramData: false,
         scrapeDirectories: false,
       }),
