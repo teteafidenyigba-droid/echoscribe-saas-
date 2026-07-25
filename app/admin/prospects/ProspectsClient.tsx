@@ -262,7 +262,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       }
 
       if (rows.length === 0) {
-        setRppsProgress(`✗ 0 résultat | sep="${sep}"(${maxCount}) | FL=${firstLine.length} | prof=${iProfCode} mode=${iModeCode} spec=${iSpecLib} | Cols: ${rawCols20}`);
+        setRppsProgress(`✗ 0 résultat | lignes=${allLines.length} scanned=${scanned} | prof=${iProfCode} mode=${iModeCode} | Cols: ${rawCols20}`);
         setRppsLoading(false);
         if (rppsRef.current) rppsRef.current.value = "";
         return;
