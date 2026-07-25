@@ -45,6 +45,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [specialtyFilter, setSpecialtyFilter] = useState("");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -84,12 +85,13 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams({ page: String(page), status: statusFilter, search });
+    if (specialtyFilter) params.set("specialty", specialtyFilter);
     const res = await fetch(`/api/admin/prospects?${params}`);
     const json = await res.json();
     setProspects(json.data ?? []);
     setTotal(json.total ?? 0);
     setLoading(false);
-  }, [page, statusFilter, search]);
+  }, [page, statusFilter, specialtyFilter, search]);
 
   useEffect(() => { fetchProspects(); }, [fetchProspects]);
 
@@ -611,6 +613,21 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
             {Object.entries(STATUS_LABELS).map(([k, v]) => (
               <option key={k} value={k}>{v.label}</option>
             ))}
+          </select>
+
+          {/* Specialty filter */}
+          <select
+            className="pr-input"
+            style={{ maxWidth: 200 }}
+            value={specialtyFilter}
+            onChange={e => { setSpecialtyFilter(e.target.value); setPage(1); }}
+          >
+            <option value="">Toutes spécialités</option>
+            <option value="échograph">Échographie</option>
+            <option value="radiodiagnostic">Radiodiagnostic</option>
+            <option value="imagerie">Imagerie médicale</option>
+            <option value="gynécolog">Gynécologie</option>
+            <option value="cardiolog">Cardiologie</option>
           </select>
 
           <div style={{ flex: 1 }} />
