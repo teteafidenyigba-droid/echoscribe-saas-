@@ -78,6 +78,8 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const enrichCsvRef = useRef<HTMLInputElement>(null);
   const [enrichApiLoading, setEnrichApiLoading] = useState(false);
   const [enrichApiResult, setEnrichApiResult] = useState("");
+  const [enrichAnnuaireLoading, setEnrichAnnuaireLoading] = useState(false);
+  const [enrichAnnuaireResult, setEnrichAnnuaireResult] = useState("");
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -259,6 +261,32 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
     setEnrichApiLoading(false);
   };
 
+  const handleEnrichAnnuaire = async () => {
+    const batchStr = window.prompt("Combien de contacts enrichir via Annuaire Santé ?", "50");
+    if (!batchStr) return;
+    const batch = parseInt(batchStr);
+    if (isNaN(batch) || batch <= 0) return;
+    setEnrichAnnuaireLoading(true);
+    setEnrichAnnuaireResult(`Recherche sur Annuaire Santé…`);
+    try {
+      const res = await fetch("/api/admin/prospects/enrich-annuaire", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ batch }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        setEnrichAnnuaireResult(`✗ ${json.error}`);
+      } else {
+        setEnrichAnnuaireResult(`✓ ${json.enriched}/${json.total} tél trouvés`);
+        fetchProspects();
+      }
+    } catch (err) {
+      setEnrichAnnuaireResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
+    }
+    setEnrichAnnuaireLoading(false);
+  };
+
   const handleClearAll = async () => {
     if (!window.confirm(`Supprimer les ${total.toLocaleString("fr-FR")} prospects ? Cette action est irréversible.`)) return;
     setClearLoading(true);
@@ -338,6 +366,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const iModeLib  = col(["libelle mode exercice"]) !== -1 ? col(["libelle mode exercice"]) : 18;
       const iCP       = col(["code postal (coord. structure)", "code postal"]) !== -1 ? col(["code postal (coord. structure)", "code postal"]) : 35;
       const iVille    = col(["libelle commune (coord. structure)", "libelle commune"]) !== -1 ? col(["libelle commune (coord. structure)", "libelle commune"]) : 37;
+      const iPhone    = col(["telephone (coord. structure)", "telephone"]) !== -1 ? col(["telephone (coord. structure)", "telephone"]) : 40;
       const iEmail    = col(["adresse e mail (coord. structure)", "adresse e mail", "email"]) !== -1 ? col(["adresse e mail (coord. structure)", "adresse e mail", "email"]) : 43;
 
       const rawCols20 = firstLine.split(sep).slice(0, 20).map(h => h.trim().replace(/"/g, "").slice(0, 30)).join(" · ");
@@ -386,6 +415,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           city:        cells[iVille]?.trim() || "",
           postal_code: cells[iCP]?.trim() || "",
           rpps_number: cells[iRPPS]?.trim() || "",
+          phone:       cells[iPhone]?.trim() || "",
           email:       cells[iEmail]?.trim().toLowerCase() || "",
         });
       };
@@ -620,6 +650,17 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           {enrichCsvResult && (
             <span style={{ fontSize: 12, color: enrichCsvResult.startsWith("✓") ? "#22c55e" : "#ef4444" }}>
               {enrichCsvResult}
+            </span>
+          )}
+
+          {/* Enrichissement téléphone via Annuaire Santé (API publique ANS/FHIR) */}
+          <button className="pr-btn pr-btn-ghost" onClick={handleEnrichAnnuaire} disabled={enrichAnnuaireLoading || total === 0}
+            title="Enrichissement téléphone via Annuaire Santé officiel (gratuit)">
+            {enrichAnnuaireLoading ? "Annuaire…" : "📞 Annuaire Santé"}
+          </button>
+          {enrichAnnuaireResult && (
+            <span style={{ fontSize: 12, color: enrichAnnuaireResult.startsWith("✓") ? "#22c55e" : enrichAnnuaireResult.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
+              {enrichAnnuaireResult}
             </span>
           )}
 
