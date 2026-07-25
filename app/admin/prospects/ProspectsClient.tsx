@@ -234,13 +234,17 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   };
 
   const handleEnrichDropcontact = async () => {
+    const batchStr = window.prompt("Combien de contacts enrichir ?\n(vérifie tes crédits Dropcontact avant)", "50");
+    if (!batchStr) return;
+    const batch = parseInt(batchStr);
+    if (isNaN(batch) || batch <= 0) return;
     setEnrichApiLoading(true);
-    setEnrichApiResult("Envoi à Dropcontact…");
+    setEnrichApiResult(`Envoi de ${batch} contacts à Dropcontact…`);
     try {
       const res = await fetch("/api/admin/prospects/enrich", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ batch: 100 }),
+        body: JSON.stringify({ batch }),
       });
       const json = await res.json();
       if (json.error) {
