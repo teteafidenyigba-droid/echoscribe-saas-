@@ -46,17 +46,19 @@ export async function POST(request: NextRequest) {
   if (fetchError) return NextResponse.json({ error: fetchError.message }, { status: 500 });
   if (!prospects?.length) return NextResponse.json({ enriched: 0, total: 0, message: "Tous les prospects ont déjà un email" });
 
-  // Soumission batch à Dropcontact
+  // Soumission batch à Dropcontact v1
   const dropcontactPayload = prospects.map(p => ({
     first_name: p.first_name,
     last_name: p.last_name,
-    company: p.specialty ? `Dr ${p.last_name} ${p.specialty}` : `Dr ${p.last_name} médecin libéral`,
+    full_name: `${p.first_name} ${p.last_name}`,
+    country: "france",
+    job: p.specialty ? `Médecin ${p.specialty}` : "Médecin libéral",
   }));
 
-  const submitRes = await fetch("https://api.dropcontact.com/batch", {
+  const submitRes = await fetch("https://api.dropcontact.com/v1/enrich/all", {
     method: "POST",
     headers: { "X-Access-Token": DROPCONTACT_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ data: dropcontactPayload, siren: false }),
+    body: JSON.stringify({ data: dropcontactPayload, siren: false, language: "fr" }),
   });
 
   if (!submitRes.ok) {
@@ -64,21 +66,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: `Dropcontact erreur ${submitRes.status}: ${txt}` }, { status: 502 });
   }
 
-  const { request_id } = await submitRes.json();
-  if (!request_id) return NextResponse.json({ error: "Dropcontact: pas de request_id" }, { status: 502 });
+  const submitJson = await submitRes.json() as { request_id?: string; contacts?: Record<string, unknown>[] };
 
-  // Polling du résultat (max 60 s)
+  // Réponse synchrone (contacts directs) ou asynchrone (request_id à poller)
   let contacts: Record<string, unknown>[] | null = null;
-  for (let i = 0; i < 60; i++) {
-    await new Promise(r => setTimeout(r, 1000));
-    const pollRes = await fetch(`https://api.dropcontact.com/batch/${request_id}`, {
-      headers: { "X-Access-Token": DROPCONTACT_KEY },
-    });
-    const pollJson = await pollRes.json() as { success?: boolean; contacts?: Record<string, unknown>[] };
-    if (pollJson.success && Array.isArray(pollJson.contacts)) { contacts = pollJson.contacts; break; }
+
+  if (Array.isArray(submitJson.contacts)) {
+    contacts = submitJson.contacts;
+  } else if (submitJson.request_id) {
+    // Polling (max 60 s)
+    for (let i = 0; i < 60; i++) {
+      await new Promise(r => setTimeout(r, 1000));
+      const pollRes = await fetch(`https://api.dropcontact.com/v1/enrich/${submitJson.request_id}`, {
+        headers: { "X-Access-Token": DROPCONTACT_KEY },
+      });
+      const pollJson = await pollRes.json() as { success?: boolean; contacts?: Record<string, unknown>[] };
+      if (pollJson.success && Array.isArray(pollJson.contacts)) { contacts = pollJson.contacts; break; }
+    }
   }
 
-  if (!contacts) return NextResponse.json({ error: "Dropcontact: timeout (>60 s)" }, { status: 504 });
+  if (!contacts) return NextResponse.json({ error: "Dropcontact: timeout ou réponse inattendue" }, { status: 504 });
 
   // Mise à jour des prospects avec les emails trouvés
   let enriched = 0;
@@ -92,7 +99,7 @@ export async function POST(request: NextRequest) {
     enriched++;
   }
 
-  return NextResponse.json({ enriched, total: prospects.length, request_id });
+  return NextResponse.json({ enriched, total: prospects.length });
 }
 
 // GET /api/admin/prospects/enrich — nombre de prospects sans email
