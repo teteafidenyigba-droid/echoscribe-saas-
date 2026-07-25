@@ -300,14 +300,23 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         return;
       }
 
-      setRppsProgress(`${rows.length} médecins trouvés — import en cours…`);
+      // Dédupliquer par numéro RPPS (un médecin peut avoir plusieurs lignes dans le fichier)
+      const seenRpps = new Set<string>();
+      const uniqueRows = rows.filter(r => {
+        if (!r.rpps_number) return true;
+        if (seenRpps.has(r.rpps_number)) return false;
+        seenRpps.add(r.rpps_number);
+        return true;
+      });
+
+      setRppsProgress(`${uniqueRows.length} médecins uniques trouvés — import en cours…`);
 
       let inserted = 0;
-      for (let b = 0; b < rows.length; b += BATCH) {
+      for (let b = 0; b < uniqueRows.length; b += BATCH) {
         const res = await fetch("/api/admin/prospects", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ rows: rows.slice(b, b + BATCH) }),
+          body: JSON.stringify({ rows: uniqueRows.slice(b, b + BATCH) }),
         });
         const json = await res.json();
         if (!res.ok || json.error) {
@@ -317,7 +326,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           return;
         }
         inserted += json.inserted ?? 0;
-        setRppsProgress(`Import : ${inserted}/${rows.length}…`);
+        setRppsProgress(`Import : ${inserted}/${uniqueRows.length}…`);
       }
 
       setRppsProgress(`✓ ${inserted} médecins libéraux importés`);
