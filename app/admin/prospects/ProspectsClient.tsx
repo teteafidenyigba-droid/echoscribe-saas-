@@ -303,25 +303,45 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   };
 
   const handleEnrichPlaces = async () => {
-    const batchStr = window.prompt("Combien de contacts enrichir via Google Places ?\n(~0.017€/contact — commence par 20 pour tester)", "20");
-    if (!batchStr) return;
-    const batch = parseInt(batchStr);
-    if (isNaN(batch) || batch <= 0) return;
     setEnrichPlacesLoading(true);
-    setEnrichPlacesResult("Recherche Google Places…");
+    setEnrichPlacesResult("Lancement Apify…");
     try {
-      const res = await fetch("/api/admin/prospects/enrich-places", {
+      // 1. Démarre le run Apify pour tous les prospects
+      const startRes = await fetch("/api/admin/prospects/enrich-places", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ batch, mode: "both" }),
+        body: JSON.stringify({ action: "start" }),
       });
-      const json = await res.json();
-      if (json.error) {
-        setEnrichPlacesResult(`✗ ${json.error}`);
-      } else {
-        setEnrichPlacesResult(`✓ ${json.enriched}/${json.total} enrichis`);
+      const startJson = await startRes.json();
+      if (startJson.error) { setEnrichPlacesResult(`✗ ${startJson.error}`); setEnrichPlacesLoading(false); return; }
+      if (startJson.total === 0) { setEnrichPlacesResult("✓ Tous déjà enrichis"); setEnrichPlacesLoading(false); return; }
+
+      const { runId, total } = startJson;
+      setEnrichPlacesResult(`⏳ Apify traite ${total} contacts… (peut prendre 5-20 min)`);
+
+      // 2. Polling toutes les 20s jusqu'à SUCCEEDED
+      let attempts = 0;
+      const maxAttempts = 90; // 90 × 20s = 30 min max
+      while (attempts < maxAttempts) {
+        await new Promise(r => setTimeout(r, 20000));
+        attempts++;
+        const statusRes = await fetch("/api/admin/prospects/enrich-places", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "status", runId }),
+        });
+        const statusJson = await statusRes.json();
+        if (statusJson.error && statusJson.done) { setEnrichPlacesResult(`✗ ${statusJson.error}`); break; }
+        if (!statusJson.done) {
+          setEnrichPlacesResult(`⏳ Apify en cours… (${attempts * 20}s écoulées sur ${total} contacts)`);
+          continue;
+        }
+        // done = true
+        setEnrichPlacesResult(`✓ ${statusJson.enriched}/${statusJson.total} enrichis`);
         fetchProspects();
+        break;
       }
+      if (attempts >= maxAttempts) setEnrichPlacesResult("✗ Timeout — relance depuis Apify dashboard");
     } catch (err) {
       setEnrichPlacesResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
     }
