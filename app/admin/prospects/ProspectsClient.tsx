@@ -205,29 +205,29 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         return -1;
       };
 
-      const iPrenom   = col(["prenom_exercice", "prenom exercice", "prenom"]);
-      const iNom      = col(["nom_exercice", "nom exercice", "nom"]);
-      const iProfCode = col(["code_profession_sante", "code_profession", "code profession"]);
-      const iProfLib  = col(["libelle_profession_sante", "libelle_profession", "profession"]);
-      const iCatCode  = col(["code_categorie_professionnelle", "categorie_professionnelle", "code_categorie"]);
-      const iCatLib   = col(["libelle_categorie_professionnelle", "libelle_categorie"]);
-      const iSpecLib  = col(["libelle_savoir_faire", "libelle_specialite_ordinale", "libelle_specialite", "savoir_faire", "specialite"]);
-      const iVille    = col(["libelle_commune_exercice", "commune_exercice", "commune", "ville"]);
-      const iCP       = col(["code_postal_exercice", "code_postal", "cp"]);
-      const iRPPS     = col(["identifiant_pp", "rpps", "identifiant"]);
-      const iEmail    = col(["adresse_e_mail", "adresse_email", "email", "mail", "courriel"]);
+      // Indices hardcodés validés sur le fichier ANS ps-libreacces-personne-activite.txt
+      // (56 colonnes, séparateur |)
+      // Fallback dynamique si le fichier a une structure différente
+      const iRPPS     = col(["identifiant pp"]) !== -1 ? col(["identifiant pp"]) : 1;
+      const iNom      = col(["nom d exercice", "nom"]) !== -1 ? col(["nom d exercice", "nom"]) : 7;
+      const iPrenom   = col(["prenom d exercice", "prenom"]) !== -1 ? col(["prenom d exercice", "prenom"]) : 8;
+      const iProfCode = col(["code profession"]) !== -1 ? col(["code profession"]) : 9;
+      const iSpecLib  = col(["libelle savoir faire"]) !== -1 ? col(["libelle savoir faire"]) : 16;
+      const iModeCode = col(["code mode exercice"]) !== -1 ? col(["code mode exercice"]) : 17;
+      const iModeLib  = col(["libelle mode exercice"]) !== -1 ? col(["libelle mode exercice"]) : 18;
+      const iCP       = col(["code postal (coord. structure)", "code postal"]) !== -1 ? col(["code postal (coord. structure)", "code postal"]) : 35;
+      const iVille    = col(["libelle commune (coord. structure)", "libelle commune"]) !== -1 ? col(["libelle commune (coord. structure)", "libelle commune"]) : 37;
+      const iEmail    = col(["adresse e mail (coord. structure)", "adresse e mail", "email"]) !== -1 ? col(["adresse e mail (coord. structure)", "adresse e mail", "email"]) : 43;
 
-      // Stocker les 20 premières colonnes brutes pour le diagnostic
       const rawCols20 = firstLine.split(sep).slice(0, 20).map(h => h.trim().replace(/"/g, "").slice(0, 30)).join(" · ");
 
-      const TARGET_SPECS = ["radiodiag", "gynecolog", "gynecolog", "cardiol", "imagerie"];
       const BATCH = 100;
       const rows: Record<string, string>[] = [];
       let scanned = 0;
 
       setRppsProgress("Analyse en cours…");
 
-      // Lecture du fichier complet pour les données (après détection de l'entête)
+      // Lecture du fichier complet pour les données
       const fullText = await file.text();
       const allLines = fullText.replace(/^﻿/, "").split(/\r\n|\r|\n/);
 
@@ -237,32 +237,22 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         const cells = line.split(sep);
         scanned++;
 
-        // Filtre médecin : code 10 OU libellé contient "m decin" / "medecin"
-        const profCode = cells[iProfCode]?.trim() ?? "";
-        const profLib  = norm(cells[iProfLib]?.trim() ?? "");
-        const isDoc = profCode === "10" || profLib.includes("medecin");
-        if (!isDoc) continue;
+        // Filtre médecin : code profession = 10
+        if (cells[iProfCode]?.trim() !== "10") continue;
 
-        // Filtre libéral : code L OU libellé contient "liberal"
-        const catCode = cells[iCatCode]?.trim().toUpperCase() ?? "";
-        const catLib  = norm(cells[iCatLib]?.trim() ?? "");
-        const isLib = catCode === "L" || catLib.includes("liberal");
-        if (!isLib) continue;
-
-        // Filtre spécialité (si la colonne existe)
-        if (iSpecLib !== -1) {
-          const spec = norm(cells[iSpecLib]?.trim() ?? "");
-          if (spec && !TARGET_SPECS.some(s => spec.includes(s))) continue;
-        }
+        // Filtre libéral : Code mode exercice = L (pas Code catégorie qui = Civil/Militaire)
+        const modeCode = cells[iModeCode]?.trim().toUpperCase() ?? "";
+        const modeLib  = norm(cells[iModeLib]?.trim() ?? "");
+        if (modeCode !== "L" && !modeLib.startsWith("lib")) continue;
 
         rows.push({
           first_name:  cells[iPrenom]?.trim() || "",
           last_name:   cells[iNom]?.trim() || "",
-          specialty:   iSpecLib !== -1 ? (cells[iSpecLib]?.trim() || "") : "",
+          specialty:   cells[iSpecLib]?.trim() || "",
           city:        cells[iVille]?.trim() || "",
           postal_code: cells[iCP]?.trim() || "",
           rpps_number: cells[iRPPS]?.trim() || "",
-          email:       iEmail !== -1 ? (cells[iEmail]?.trim().toLowerCase() || "") : "",
+          email:       cells[iEmail]?.trim().toLowerCase() || "",
         });
 
         if (rows.length % 200 === 0) {
@@ -272,7 +262,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       }
 
       if (rows.length === 0) {
-        setRppsProgress(`✗ 0 résultat | sep="${sep}"(${maxCount}) | FL=${firstLine.length} | prof=${iProfCode} cat=${iCatCode} | Cols: ${rawCols20}`);
+        setRppsProgress(`✗ 0 résultat | sep="${sep}"(${maxCount}) | FL=${firstLine.length} | prof=${iProfCode} mode=${iModeCode} spec=${iSpecLib} | Cols: ${rawCols20}`);
         setRppsLoading(false);
         if (rppsRef.current) rppsRef.current.value = "";
         return;
