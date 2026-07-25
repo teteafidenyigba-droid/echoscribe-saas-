@@ -623,11 +623,11 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
             onChange={e => { setSpecialtyFilter(e.target.value); setPage(1); }}
           >
             <option value="">Toutes spécialités</option>
-            <option value="échograph">Échographie</option>
-            <option value="radiodiagnostic">Radiodiagnostic</option>
+            <option value="echographie">Échographie</option>
+            <option value="radiodiag">Radiodiagnostic / Radiologie</option>
             <option value="imagerie">Imagerie médicale</option>
-            <option value="gynécolog">Gynécologie</option>
-            <option value="cardiolog">Cardiologie</option>
+            <option value="gyneco">Gynécologie</option>
+            <option value="cardio">Cardiologie</option>
           </select>
 
           <div style={{ flex: 1 }} />

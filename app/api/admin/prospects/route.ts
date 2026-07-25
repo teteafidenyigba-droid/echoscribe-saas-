@@ -31,7 +31,14 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const status = searchParams.get("status");
   const search = searchParams.get("search") || "";
-  const specialty = searchParams.get("specialty") || "";
+  const specialtyGroup = searchParams.get("specialty") || "";
+  const SPECIALTY_PATTERNS: Record<string, string> = {
+    echographie: "specialty.ilike.%echograph%,specialty.ilike.%échograph%",
+    radiodiag:   "specialty.ilike.%radiodiag%,specialty.ilike.%radiolog%",
+    imagerie:    "specialty.ilike.%imagerie%",
+    gyneco:      "specialty.ilike.%gynecolog%,specialty.ilike.%gynécolog%,specialty.ilike.%gynaecolog%",
+    cardio:      "specialty.ilike.%cardiolog%",
+  };
   const page = parseInt(searchParams.get("page") || "1");
   const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 50000);
   const offset = (page - 1) * limit;
@@ -40,7 +47,8 @@ export async function GET(request: NextRequest) {
   let query = db.from("prospects").select("*", { count: "exact" });
 
   if (status && status !== "all") query = query.eq("status", status);
-  if (specialty) query = query.ilike("specialty", `%${specialty}%`);
+  const specialtyPattern = SPECIALTY_PATTERNS[specialtyGroup];
+  if (specialtyPattern) query = query.or(specialtyPattern);
   if (search) {
     query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%,city.ilike.%${search}%`);
   }
