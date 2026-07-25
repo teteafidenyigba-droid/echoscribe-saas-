@@ -23,91 +23,93 @@ async function getAdminUser() {
   return user;
 }
 
-type PlacesResult = {
-  places?: {
-    displayName?: { text: string };
-    formattedAddress?: string;
-    nationalPhoneNumber?: string;
-    internationalPhoneNumber?: string;
-  }[];
+type ApifyItem = {
+  searchString?: string;
+  title?: string;
+  address?: string;
+  phone?: string;
+  phoneUnformatted?: string;
 };
 
-async function searchPlace(query: string, apiKey: string): Promise<{ address?: string; phone?: string } | null> {
-  try {
-    const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber",
-      },
-      body: JSON.stringify({
-        textQuery: query,
-        languageCode: "fr",
-        regionCode: "FR",
-        maxResultCount: 1,
-      }),
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!res.ok) return null;
-    const json = await res.json() as PlacesResult;
-    const place = json.places?.[0];
-    if (!place) return null;
-    return {
-      address: place.formattedAddress,
-      phone: place.nationalPhoneNumber || place.internationalPhoneNumber,
-    };
-  } catch {
-    return null;
-  }
-}
-
 // POST /api/admin/prospects/enrich-places
-// Body: { batch?: number, mode?: "phone" | "address" | "both" }
+// Body: { batch?: number }
 export async function POST(request: NextRequest) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const PLACES_KEY = process.env.GOOGLE_PLACES_API_KEY;
-  if (!PLACES_KEY) {
-    return NextResponse.json({ error: "GOOGLE_PLACES_API_KEY non configurée dans Vercel" }, { status: 500 });
+  const APIFY_TOKEN = process.env.APIFY_API_TOKEN;
+  if (!APIFY_TOKEN) {
+    return NextResponse.json({ error: "APIFY_API_TOKEN non configurée dans Vercel" }, { status: 500 });
   }
 
   const body = await request.json().catch(() => ({}));
-  const batchSize = Math.min(parseInt(body.batch ?? "20"), 100);
-  const mode: string = body.mode ?? "both";
+  const batchSize = Math.min(parseInt(body.batch ?? "10"), 50);
 
   const db = createServiceClient();
 
-  // Sélectionne les prospects sans téléphone OU sans adresse selon le mode
-  let query = db.from("prospects")
+  // Prospects sans téléphone ET avec ville connue
+  const { data: prospects, error } = await db
+    .from("prospects")
     .select("id, first_name, last_name, specialty, city, phone, address")
-    .not("city", "is", null);
-
-  if (mode === "phone" || mode === "both") {
-    query = query.or("phone.is.null,phone.eq.");
-  }
-
-  const { data: prospects, error } = await query
+    .not("city", "is", null)
+    .or("phone.is.null,phone.eq.")
     .or("specialty.ilike.%radio%,specialty.ilike.%imagerie%,specialty.ilike.%echograph%,specialty.ilike.%gynecolog%,specialty.ilike.%gynécolog%,specialty.ilike.%cardiolog%")
     .limit(batchSize);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!prospects?.length) return NextResponse.json({ enriched: 0, total: 0 });
 
+  // Construit les requêtes de recherche + index pour retrouver le prospect
+  const searchStrings = prospects.map(p => {
+    const spec = (p.specialty ?? "médecin").split(" ").slice(0, 2).join(" ");
+    return `Dr ${p.first_name} ${p.last_name} ${spec} ${p.city} France`;
+  });
+
+  // Appel Apify Actor synchrone — retourne les items du dataset directement
+  const apifyUrl = `https://api.apify.com/v2/acts/compass~crawler-google-places/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=55&memory=256`;
+
+  let items: ApifyItem[] = [];
+  try {
+    const res = await fetch(apifyUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        searchStrings,
+        maxCrawledPlacesPerSearch: 1,
+        language: "fr",
+        countryCode: "FR",
+        includeHistogramData: false,
+        scrapeDirectories: false,
+      }),
+      signal: AbortSignal.timeout(58000),
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      return NextResponse.json({ error: `Apify erreur ${res.status}: ${txt.slice(0, 200)}` }, { status: 502 });
+    }
+    items = await res.json() as ApifyItem[];
+  } catch (e) {
+    return NextResponse.json({ error: `Apify timeout ou erreur réseau: ${String(e).slice(0, 100)}` }, { status: 504 });
+  }
+
+  // Indexe les résultats par searchString pour matcher avec le prospect
+  const bySearch = new Map<string, ApifyItem>();
+  for (const item of items) {
+    if (item.searchString) bySearch.set(item.searchString, item);
+  }
+
   let enriched = 0;
-  for (const p of prospects) {
-    const specialty = p.specialty?.split(" ")[0] ?? "médecin";
-    const query = `Dr ${p.first_name} ${p.last_name} ${specialty} ${p.city} France`;
-    const result = await searchPlace(query, PLACES_KEY);
-    if (!result) continue;
+  for (let i = 0; i < prospects.length; i++) {
+    const item = bySearch.get(searchStrings[i]);
+    if (!item) continue;
 
     const patch: Record<string, string> = { updated_at: new Date().toISOString() };
-    if (result.phone && !p.phone)     patch.phone   = result.phone;
-    if (result.address && !p.address) patch.address = result.address;
+    const phone = item.phone || item.phoneUnformatted;
+    if (phone && !prospects[i].phone)     patch.phone   = phone;
+    if (item.address && !prospects[i].address) patch.address = item.address;
     if (Object.keys(patch).length === 1) continue;
 
-    await db.from("prospects").update(patch).eq("id", p.id);
+    await db.from("prospects").update(patch).eq("id", prospects[i].id);
     enriched++;
   }
 
