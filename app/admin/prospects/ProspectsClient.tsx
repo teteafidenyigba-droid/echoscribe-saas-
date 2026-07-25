@@ -72,6 +72,12 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
   const [rppsProgress, setRppsProgress] = useState("");
   const rppsRef = useRef<HTMLInputElement>(null);
   const [clearLoading, setClearLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [enrichCsvLoading, setEnrichCsvLoading] = useState(false);
+  const [enrichCsvResult, setEnrichCsvResult] = useState("");
+  const enrichCsvRef = useRef<HTMLInputElement>(null);
+  const [enrichApiLoading, setEnrichApiLoading] = useState(false);
+  const [enrichApiResult, setEnrichApiResult] = useState("");
 
   const fetchProspects = useCallback(async () => {
     setLoading(true);
@@ -152,6 +158,101 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
     setCampaignLoading(false);
     setCampaignResult(json);
     if (!json.error) fetchProspects();
+  };
+
+  const handleExportCSV = async () => {
+    setExportLoading(true);
+    try {
+      const res = await fetch("/api/admin/prospects?status=all&limit=50000&page=1");
+      const json = await res.json();
+      const data: Prospect[] = json.data || [];
+      const cols: (keyof Prospect)[] = ["rpps_number", "first_name", "last_name", "specialty", "city", "postal_code", "email", "phone", "status"] as (keyof Prospect)[];
+      const BOM = "﻿";
+      const header = cols.join(";");
+      const rows = data.map(p => cols.map(c => `"${String(p[c] ?? "").replace(/"/g, '""')}"`).join(";"));
+      const csv = BOM + [header, ...rows].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `prospects_echoscribe_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Export CSV:", err);
+    }
+    setExportLoading(false);
+  };
+
+  const handleEnrichCSV = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setEnrichCsvLoading(true);
+    setEnrichCsvResult("");
+    try {
+      const text = await file.text();
+      const lines = text.replace(/^﻿/, "").split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) { setEnrichCsvResult("✗ Fichier vide"); setEnrichCsvLoading(false); return; }
+      const sep = lines[0].includes(";") ? ";" : ",";
+      const headers = lines[0].split(sep).map(h => h.trim().replace(/^"|"$/g, "").toLowerCase());
+      const iRpps = headers.indexOf("rpps_number");
+      const iEmail = headers.indexOf("email");
+      if (iRpps === -1 || iEmail === -1) {
+        setEnrichCsvResult("✗ Le CSV doit contenir les colonnes rpps_number et email");
+        setEnrichCsvLoading(false);
+        if (enrichCsvRef.current) enrichCsvRef.current.value = "";
+        return;
+      }
+      const enrichRows = lines.slice(1)
+        .map(line => {
+          const cells = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ""));
+          return { rpps_number: cells[iRpps], email: cells[iEmail] };
+        })
+        .filter(r => r.rpps_number && r.email && r.email.includes("@"));
+
+      const BATCH = 500;
+      let totalUpdated = 0;
+      for (let b = 0; b < enrichRows.length; b += BATCH) {
+        const res = await fetch("/api/admin/prospects", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ enrichRows: enrichRows.slice(b, b + BATCH) }),
+        });
+        const json = await res.json();
+        if (json.error) { setEnrichCsvResult(`✗ ${json.error}`); break; }
+        totalUpdated += json.updated ?? 0;
+      }
+      setEnrichCsvResult(`✓ ${totalUpdated} emails mis à jour`);
+      fetchProspects();
+    } catch (err) {
+      setEnrichCsvResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
+    }
+    setEnrichCsvLoading(false);
+    if (enrichCsvRef.current) enrichCsvRef.current.value = "";
+  };
+
+  const handleEnrichDropcontact = async () => {
+    setEnrichApiLoading(true);
+    setEnrichApiResult("Envoi à Dropcontact…");
+    try {
+      const res = await fetch("/api/admin/prospects/enrich", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ batch: 100 }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        setEnrichApiResult(`✗ ${json.error}`);
+      } else {
+        setEnrichApiResult(`✓ ${json.enriched}/${json.total} emails trouvés`);
+        fetchProspects();
+      }
+    } catch (err) {
+      setEnrichApiResult(`✗ ${err instanceof Error ? err.message : String(err)}`);
+    }
+    setEnrichApiLoading(false);
   };
 
   const handleClearAll = async () => {
@@ -497,6 +598,35 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           {rppsProgress && (
             <span style={{ fontSize: 12, color: rppsProgress.startsWith("✓") ? "#22c55e" : rppsProgress.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
               {rppsProgress}
+            </span>
+          )}
+
+          {/* Export CSV */}
+          <button className="pr-btn pr-btn-ghost" onClick={handleExportCSV} disabled={exportLoading || total === 0}>
+            {exportLoading ? "Export…" : "↓ Exporter CSV"}
+          </button>
+
+          {/* Enrichissement par CSV (rpps_number + email) */}
+          <label style={{ cursor: "pointer" }}>
+            <span className="pr-btn pr-btn-ghost" style={{ display: "inline-block" }}>
+              {enrichCsvLoading ? "Enrichissement…" : "✉ Enrichir CSV"}
+            </span>
+            <input ref={enrichCsvRef} type="file" accept=".csv" style={{ display: "none" }} disabled={enrichCsvLoading} onChange={handleEnrichCSV} />
+          </label>
+          {enrichCsvResult && (
+            <span style={{ fontSize: 12, color: enrichCsvResult.startsWith("✓") ? "#22c55e" : "#ef4444" }}>
+              {enrichCsvResult}
+            </span>
+          )}
+
+          {/* Enrichissement automatique via Dropcontact */}
+          <button className="pr-btn pr-btn-ghost" onClick={handleEnrichDropcontact} disabled={enrichApiLoading || total === 0}
+            title="Nécessite DROPCONTACT_API_KEY dans les variables Vercel">
+            {enrichApiLoading ? "Dropcontact…" : "⚡ Dropcontact"}
+          </button>
+          {enrichApiResult && (
+            <span style={{ fontSize: 12, color: enrichApiResult.startsWith("✓") ? "#22c55e" : enrichApiResult.startsWith("✗") ? "#ef4444" : "#0a66c2" }}>
+              {enrichApiResult}
             </span>
           )}
 

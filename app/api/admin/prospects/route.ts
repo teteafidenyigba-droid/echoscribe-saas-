@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   const status = searchParams.get("status");
   const search = searchParams.get("search") || "";
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = 50;
+  const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 50000);
   const offset = (page - 1) * limit;
 
   const db = createServiceClient();
@@ -59,6 +59,22 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const db = createServiceClient();
+
+  // Enrichissement par CSV : body.enrichRows = [{ rpps_number, email }]
+  if (Array.isArray(body.enrichRows)) {
+    let updated = 0;
+    for (const r of body.enrichRows as Record<string, string>[]) {
+      const rpps = r.rpps_number?.trim();
+      const email = r.email?.trim().toLowerCase();
+      if (!rpps || !email || !email.includes("@")) continue;
+      const { error } = await db.from("prospects")
+        .update({ email, updated_at: new Date().toISOString() })
+        .eq("rpps_number", rpps)
+        .is("email", null);
+      if (!error) updated++;
+    }
+    return NextResponse.json({ updated });
+  }
 
   // Bulk import: body.rows = [...]
   if (Array.isArray(body.rows)) {
