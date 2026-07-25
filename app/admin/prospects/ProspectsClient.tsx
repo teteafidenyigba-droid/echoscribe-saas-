@@ -221,7 +221,10 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
 
       const rawCols20 = firstLine.split(sep).slice(0, 20).map(h => h.trim().replace(/"/g, "").slice(0, 30)).join(" · ");
 
-      const BATCH = 100;
+      // Spécialités cibles EchoScribe : radiologie, gynéco, cardio, imagerie
+      const TARGET_SPECS = ["radiodiag", "radiolog", "imagerie", "gynecolog", "cardiol", "echograph"];
+
+      const BATCH = 1000; // batches plus grands pour réduire le nb d'appels API
       const rows: Record<string, string>[] = [];
       let scanned = 0;
       let lineNum = 0; // 1 = entête, 2+ = données
@@ -250,6 +253,10 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         const modeCode = cells[iModeCode]?.trim().toUpperCase() ?? "";
         const modeLib  = norm(cells[iModeLib]?.trim() ?? "");
         if (modeCode !== "L" && !modeLib.startsWith("lib")) return;
+
+        // Filtre spécialité : radiodiag, gynéco, cardio, imagerie, généraliste
+        const spec = norm(cells[iSpecLib]?.trim() ?? "");
+        if (spec && !TARGET_SPECS.some(s => spec.includes(s))) return;
 
         rows.push({
           first_name:  cells[iPrenom]?.trim() || "",
