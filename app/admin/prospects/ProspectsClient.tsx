@@ -160,25 +160,43 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
     setRppsProgress("Lecture du fichier…");
 
     try {
-      const text = await file.text();
-      const lines = text.split(/\r?\n/);
+      console.log("[RPPS-v3] fichier:", file.name, "taille:", file.size);
+      // Lire les 4 premiers Ko pour détecter l'entête (sans charger 774 Mo)
+      const headerRaw = await file.slice(0, 4096).text();
+      const headerClean = headerRaw.replace(/^﻿/, "");
+      const headerLines = headerClean.split(/\r\n|\r|\n/);
+      const firstLine = headerLines.find(l => l.trim().length > 0) || "";
 
-      // Détecter le séparateur automatiquement
-      const firstLine = (lines[0] || "").replace(/^﻿/, ""); // retire BOM UTF-8
+      // Si l'entête est vide : afficher aperçu hexadécimal pour diagnostic
+      if (firstLine.length === 0) {
+        const preview = Array.from(headerClean.slice(0, 80)).map(c => {
+          const code = c.charCodeAt(0);
+          return code < 32 || code > 126 ? `[${code.toString(16)}]` : c;
+        }).join("");
+        setRppsProgress(`✗ Entête vide — aperçu: ${preview || "(fichier vide)"}`);
+        setRppsLoading(false);
+        if (rppsRef.current) rppsRef.current.value = "";
+        return;
+      }
+
       const countPipe = (firstLine.match(/\|/g) || []).length;
       const countSemi = (firstLine.match(/;/g) || []).length;
       const countTab  = (firstLine.match(/\t/g) || []).length;
-      const sep = countPipe >= countSemi && countPipe >= countTab ? "|"
+      const maxCount  = Math.max(countPipe, countSemi, countTab);
+      const sep = maxCount === 0 ? "|"
+                : countPipe >= countSemi && countPipe >= countTab ? "|"
                 : countSemi >= countTab ? ";" : "\t";
 
+      // Retire les accents via plage Unicode explicite (plus fiable que littéral)
+      const stripAccents = (s: string) =>
+        s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+
       const header = firstLine.split(sep).map(h =>
-        h.trim().replace(/"/g, "")
-          .normalize("NFD").replace(/[̀-ͯ]/g, "") // retire les accents
-          .toLowerCase()
+        stripAccents(h.trim().replace(/"/g, "")).toLowerCase()
       );
 
       // Matching souple : retire accents + lowercase
-      const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+      const norm = (s: string) => stripAccents(s).toLowerCase();
 
       const col = (candidates: string[]): number => {
         for (const c of candidates) {
@@ -211,8 +229,12 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
 
       setRppsProgress("Analyse en cours…");
 
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
+      // Lecture du fichier complet pour les données (après détection de l'entête)
+      const fullText = await file.text();
+      const allLines = fullText.replace(/^﻿/, "").split(/\r\n|\r|\n/);
+
+      for (let i = 1; i < allLines.length; i++) {
+        const line = allLines[i];
         if (!line.trim()) continue;
         const cells = line.split(sep);
         scanned++;
@@ -252,7 +274,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       }
 
       if (rows.length === 0) {
-        setRppsProgress(`✗ 0 résultat | sep="${sep}" | prof=${iProfCode} cat=${iCatCode} | Colonnes: ${rawCols20}`);
+        setRppsProgress(`✗ 0 résultat | sep="${sep}"(${maxCount}) | FL=${firstLine.length} | prof=${iProfCode} cat=${iCatCode} | Cols: ${rawCols20}`);
         setRppsLoading(false);
         if (rppsRef.current) rppsRef.current.value = "";
         return;
