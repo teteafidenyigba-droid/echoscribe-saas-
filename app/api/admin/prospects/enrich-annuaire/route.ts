@@ -27,32 +27,40 @@ type FHIRAddress = { line?: string[]; city?: string; postalCode?: string };
 type FHIRPractitioner = { resourceType: string; telecom?: FHIRTelecom[]; address?: FHIRAddress[] };
 type FHIRBundle = { resourceType: string; entry?: { resource: FHIRPractitioner }[] };
 
-async function fetchAnnuaire(rpps: string): Promise<{ phone?: string; address?: string } | null> {
-  try {
-    const url = `https://api.annuaire.sante.fr/fhir/v1/Practitioner?identifier=urn:oid:1.2.250.1.71.4.2.1%7C${rpps}&_elements=telecom,address`;
-    const res = await fetch(url, {
-      headers: { Accept: "application/fhir+json" },
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!res.ok) return null;
-    const bundle = await res.json() as FHIRBundle;
-    const practitioner = bundle.entry?.[0]?.resource;
-    if (!practitioner) return null;
+// Essaie plusieurs formats d'URL ANS FHIR jusqu'à obtenir un résultat
+async function fetchAnnuaire(rpps: string): Promise<{ phone?: string; address?: string; debug?: string } | null> {
+  const urls = [
+    `https://api.annuaire.sante.fr/fhir/v1/Practitioner?identifier=urn:oid:1.2.250.1.71.4.2.1%7C${rpps}`,
+    `https://api.annuaire.sante.fr/fhir/v1/Practitioner?identifier=${rpps}`,
+    `https://api.esante.gouv.fr/apis/annuaire-sante/v1/fhir/Practitioner?identifier=${rpps}`,
+  ];
 
-    const phone = practitioner.telecom
-      ?.filter(t => t.system === "phone")
-      .map(t => t.value)
-      .find(Boolean);
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        headers: { Accept: "application/fhir+json", "Cache-Control": "no-cache" },
+        signal: AbortSignal.timeout(6000),
+      });
+      if (!res.ok) continue;
+      const bundle = await res.json() as FHIRBundle & { total?: number };
+      if (!bundle.entry?.length) continue;
 
-    const addr = practitioner.address?.[0];
-    const address = addr
-      ? [addr.line?.join(" "), addr.postalCode, addr.city].filter(Boolean).join(", ")
-      : undefined;
+      const practitioner = bundle.entry[0].resource;
+      const phone = practitioner.telecom
+        ?.filter(t => t.system === "phone")
+        .map(t => t.value)
+        .find(Boolean);
+      const addr = practitioner.address?.[0];
+      const address = addr
+        ? [addr.line?.join(" "), addr.postalCode, addr.city].filter(Boolean).join(", ")
+        : undefined;
 
-    return { phone, address };
-  } catch {
-    return null;
+      return { phone, address };
+    } catch {
+      continue;
+    }
   }
+  return null;
 }
 
 // POST /api/admin/prospects/enrich-annuaire

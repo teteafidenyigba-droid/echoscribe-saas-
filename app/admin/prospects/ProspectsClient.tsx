@@ -725,6 +725,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
                     </th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Nom</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Email</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Téléphone</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Spécialité</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Ville</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Statut</th>
@@ -739,6 +740,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
                       </td>
                       <td style={{ fontWeight: 600 }}>{p.first_name} {p.last_name}</td>
                       <td style={{ color: p.email ? "#0a66c2" : "#aab8cc" }}>{p.email || "—"}</td>
+                      <td style={{ color: p.phone ? "#0a66c2" : "#aab8cc", fontSize: 13 }}>{p.phone || "—"}</td>
                       <td style={{ color: "#4a6a8a" }}>{p.specialty || "—"}</td>
                       <td style={{ color: "#4a6a8a" }}>{p.city || "—"}{p.postal_code ? ` (${p.postal_code.slice(0, 2)})` : ""}</td>
                       <td>
