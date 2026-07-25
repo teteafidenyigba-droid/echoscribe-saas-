@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
       email: r.email?.trim().toLowerCase() || null,
       specialty: r.specialty?.trim() || null,
       phone: r.phone?.trim() || null,
+      address: r.address?.trim() || null,
       city: r.city?.trim() || null,
       postal_code: r.postal_code?.trim() || null,
       rpps_number: r.rpps_number?.trim() || null,

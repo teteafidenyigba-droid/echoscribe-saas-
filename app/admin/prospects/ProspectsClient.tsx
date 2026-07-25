@@ -21,6 +21,7 @@ type Prospect = {
   email: string | null;
   specialty: string | null;
   phone: string | null;
+  address: string | null;
   city: string | null;
   postal_code: string | null;
   status: string;
@@ -370,6 +371,10 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const iVille    = col(["libelle commune (coord. structure)", "libelle commune"]) !== -1 ? col(["libelle commune (coord. structure)", "libelle commune"]) : 37;
       const iPhone    = col(["telephone (coord. structure)", "telephone"]) !== -1 ? col(["telephone (coord. structure)", "telephone"]) : 40;
       const iEmail    = col(["adresse e mail (coord. structure)", "adresse e mail", "email"]) !== -1 ? col(["adresse e mail (coord. structure)", "adresse e mail", "email"]) : 43;
+      const iNumVoie  = col(["numero voie (coord. structure)", "numero voie"]);
+      const iTypeVoie = col(["type voie (coord. structure)", "type voie"]);
+      const iLibVoie  = col(["libelle voie (coord. structure)", "libelle voie"]);
+      const iCompLoc  = col(["complement localisation (coord. structure)", "mention distribution (coord. structure)", "complement localisation"]);
 
       const rawCols20 = firstLine.split(sep).slice(0, 20).map(h => h.trim().replace(/"/g, "").slice(0, 30)).join(" · ");
 
@@ -410,6 +415,12 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
         const spec = norm(cells[iSpecLib]?.trim() ?? "");
         if (!spec || !TARGET_SPECS.some(s => spec.includes(s))) return;
 
+        const addrParts = [
+          iNumVoie  !== -1 ? cells[iNumVoie]?.trim()  : "",
+          iTypeVoie !== -1 ? cells[iTypeVoie]?.trim()  : "",
+          iLibVoie  !== -1 ? cells[iLibVoie]?.trim()   : "",
+          iCompLoc  !== -1 ? cells[iCompLoc]?.trim()   : "",
+        ].filter(Boolean);
         rows.push({
           first_name:  cells[iPrenom]?.trim() || "",
           last_name:   cells[iNom]?.trim() || "",
@@ -419,6 +430,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           rpps_number: cells[iRPPS]?.trim() || "",
           phone:       cells[iPhone]?.trim() || "",
           email:       cells[iEmail]?.trim().toLowerCase() || "",
+          address:     addrParts.join(" ") || "",
         });
       };
 
@@ -743,6 +755,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Nom</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Email</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Téléphone</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Adresse</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Spécialité</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Ville</th>
                     <th style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#4a6a8a", letterSpacing: "0.08em", textTransform: "uppercase" }}>Statut</th>
@@ -758,6 +771,7 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
                       <td style={{ fontWeight: 600 }}>{p.first_name} {p.last_name}</td>
                       <td style={{ color: p.email ? "#0a66c2" : "#aab8cc" }}>{p.email || "—"}</td>
                       <td style={{ color: p.phone ? "#0a66c2" : "#aab8cc", fontSize: 13 }}>{p.phone || "—"}</td>
+                      <td style={{ color: p.address ? "#4a6a8a" : "#aab8cc", fontSize: 12 }}>{p.address || "—"}</td>
                       <td style={{ color: "#4a6a8a" }}>{p.specialty || "—"}</td>
                       <td style={{ color: "#4a6a8a" }}>{p.city || "—"}{p.postal_code ? ` (${p.postal_code.slice(0, 2)})` : ""}</td>
                       <td>
