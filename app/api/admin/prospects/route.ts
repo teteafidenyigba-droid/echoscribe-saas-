@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
   // Bulk import: body.rows = [...]
   if (Array.isArray(body.rows)) {
-    const rows = body.rows.map((r: Record<string, string>) => ({
+    const mapped = body.rows.map((r: Record<string, string>) => ({
       first_name: r.first_name?.trim() || "?",
       last_name: r.last_name?.trim() || "?",
       email: r.email?.trim().toLowerCase() || null,
@@ -73,6 +73,15 @@ export async function POST(request: NextRequest) {
       rpps_number: r.rpps_number?.trim() || null,
       status: "cold",
     }));
+    // Deduplicate by rpps_number server-side — PostgreSQL upsert errors if two rows
+    // in the same statement would update the same target row.
+    const seen = new Set<string>();
+    const rows = mapped.filter(r => {
+      if (!r.rpps_number) return true;
+      if (seen.has(r.rpps_number)) return false;
+      seen.add(r.rpps_number);
+      return true;
+    });
     const { data, error } = await db.from("prospects")
       .upsert(rows, { onConflict: "rpps_number" })
       .select("id");
