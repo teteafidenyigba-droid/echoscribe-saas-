@@ -224,26 +224,32 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
       const BATCH = 100;
       const rows: Record<string, string>[] = [];
       let scanned = 0;
+      let lineNum = 0; // 1 = entête, 2+ = données
 
       setRppsProgress("Analyse en cours…");
 
-      // Lecture du fichier complet pour les données
-      const fullText = await file.text();
-      const allLines = fullText.replace(/^﻿/, "").split(/\r\n|\r|\n/);
+      // Lecture par blocs de 1 Mo — évite le OOM sur 774 Mo avec file.text()
+      const CHUNK = 1024 * 1024;
+      const decoder = new TextDecoder("utf-8");
+      let offset = 0;
+      let leftover = "";
+      let bomStripped = false;
 
-      for (let i = 1; i < allLines.length; i++) {
-        const line = allLines[i];
-        if (!line.trim()) continue;
-        const cells = line.split(sep);
+      const processLine = (line: string) => {
+        if (!line.trim()) return;
+        lineNum++;
+        if (lineNum === 1) return; // skip header
         scanned++;
 
-        // Filtre médecin : code profession = 10
-        if (cells[iProfCode]?.trim() !== "10") continue;
+        const cells = line.split(sep);
 
-        // Filtre libéral : Code mode exercice = L (pas Code catégorie qui = Civil/Militaire)
+        // Filtre médecin : code profession = 10
+        if (cells[iProfCode]?.trim() !== "10") return;
+
+        // Filtre libéral : Code mode exercice = L
         const modeCode = cells[iModeCode]?.trim().toUpperCase() ?? "";
         const modeLib  = norm(cells[iModeLib]?.trim() ?? "");
-        if (modeCode !== "L" && !modeLib.startsWith("lib")) continue;
+        if (modeCode !== "L" && !modeLib.startsWith("lib")) return;
 
         rows.push({
           first_name:  cells[iPrenom]?.trim() || "",
@@ -254,15 +260,34 @@ export default function ProspectsClient({ adminEmail }: { adminEmail: string }) 
           rpps_number: cells[iRPPS]?.trim() || "",
           email:       cells[iEmail]?.trim().toLowerCase() || "",
         });
+      };
 
-        if (rows.length % 200 === 0) {
-          setRppsProgress(`${rows.length} médecins libéraux trouvés (analysé ${scanned} lignes)…`);
-          await new Promise(r => setTimeout(r, 0)); // laisser le UI respirer
+      while (offset < file.size) {
+        const blob = file.slice(offset, offset + CHUNK);
+        const buf = await blob.arrayBuffer();
+        let chunk = decoder.decode(new Uint8Array(buf), { stream: offset + CHUNK < file.size });
+
+        if (!bomStripped) {
+          chunk = chunk.replace(/^﻿/, "");
+          bomStripped = true;
         }
+
+        leftover += chunk;
+        const lines = leftover.split(/\r\n|\r|\n/);
+        leftover = lines.pop() || "";
+
+        for (const line of lines) processLine(line);
+
+        if (rows.length % 500 === 0 && rows.length > 0) {
+          setRppsProgress(`${rows.length} médecins libéraux trouvés (${Math.round(offset / file.size * 100)} %)…`);
+          await new Promise(r => setTimeout(r, 0));
+        }
+        offset += CHUNK;
       }
+      if (leftover.trim()) processLine(leftover);
 
       if (rows.length === 0) {
-        setRppsProgress(`✗ 0 résultat | lignes=${allLines.length} scanned=${scanned} | prof=${iProfCode} mode=${iModeCode} | Cols: ${rawCols20}`);
+        setRppsProgress(`✗ 0 résultat | scanned=${scanned} lignes | prof=${iProfCode} mode=${iModeCode} | Cols: ${rawCols20}`);
         setRppsLoading(false);
         if (rppsRef.current) rppsRef.current.value = "";
         return;
