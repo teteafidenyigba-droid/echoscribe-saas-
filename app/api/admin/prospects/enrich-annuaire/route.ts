@@ -63,6 +63,52 @@ async function fetchAnnuaire(rpps: string): Promise<{ phone?: string; address?: 
   return null;
 }
 
+// GET /api/admin/prospects/enrich-annuaire?debug=1 — teste l'API FHIR avec le 1er RPPS trouvé
+export async function GET(request: NextRequest) {
+  const user = await getAdminUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { searchParams } = new URL(request.url);
+  if (searchParams.get("debug") !== "1") {
+    return NextResponse.json({ info: "Ajoutez ?debug=1 pour tester l'API FHIR" });
+  }
+
+  const db = createServiceClient();
+  const { data: sample } = await db
+    .from("prospects")
+    .select("id, rpps_number, first_name, last_name")
+    .not("rpps_number", "is", null)
+    .limit(3);
+
+  if (!sample?.length) return NextResponse.json({ error: "Aucun prospect avec RPPS" });
+
+  const results = [];
+  for (const p of sample) {
+    const rpps = p.rpps_number!;
+    const urlsToTest = [
+      `https://api.annuaire.sante.fr/fhir/v1/Practitioner?identifier=urn:oid:1.2.250.1.71.4.2.1%7C${rpps}`,
+      `https://api.annuaire.sante.fr/fhir/v1/Practitioner?identifier=${rpps}`,
+      `https://api.esante.gouv.fr/apis/annuaire-sante/v1/fhir/Practitioner?identifier=urn:oid:1.2.250.1.71.4.2.1%7C${rpps}`,
+    ];
+    const urlResults = [];
+    for (const url of urlsToTest) {
+      try {
+        const res = await fetch(url, {
+          headers: { Accept: "application/fhir+json" },
+          signal: AbortSignal.timeout(6000),
+        });
+        const body = await res.json();
+        urlResults.push({ url, status: res.status, total: body.total, entryCount: body.entry?.length ?? 0, firstEntry: body.entry?.[0]?.resource ?? null });
+      } catch (e) {
+        urlResults.push({ url, error: String(e) });
+      }
+    }
+    results.push({ rpps, name: `${p.first_name} ${p.last_name}`, urls: urlResults });
+  }
+
+  return NextResponse.json({ results });
+}
+
 // POST /api/admin/prospects/enrich-annuaire
 // Body: { batch?: number, specialties?: string[] }
 export async function POST(request: NextRequest) {
