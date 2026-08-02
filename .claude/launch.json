@@ -1,0 +1,26 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "echoscribe-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": false
+    },
+    {
+      "name": "Email Preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "emails", "--no-clipboard"],
+      "port": 4300,
+      "autoPort": true
+    },
+    {
+      "name": "1-confirm-signup.html",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "emails/supabase"],
+      "port": 4301,
+      "autoPort": false
+    }
+  ]
+}

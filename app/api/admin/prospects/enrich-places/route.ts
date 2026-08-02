@@ -6,7 +6,7 @@ import { createServerClient } from "@supabase/ssr";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com", "komlanserge@hotmail.com"];
+const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com", "komlanserge@hotmail.com", "contact@echoscribe.fr"];
 const APIFY_ACTOR = "compass~crawler-google-places";
 
 async function getAdminUser() {
