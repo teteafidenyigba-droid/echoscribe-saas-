@@ -7,7 +7,7 @@ import { Logo } from "../components/Logo";
 
 interface Props {
   user: { email: string; name: string };
-  panel?: "main" | "settings" | "history";
+  panel?: "main" | "settings" | "history" | "formulations";
   usage?: { today: number; month: number };
   limits?: { daily: number; monthly: number; unlimited: boolean };
   isTrial?: boolean;
@@ -36,7 +36,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         .es-logo-text { font-family: 'EB Garamond', serif; font-size: 28px; font-style: italic; color: #0d2540; letter-spacing: -0.01em; }
         .es-email { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #2a5070; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
         .es-btn-abo { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #ffffff; text-decoration: none; padding: 7px 16px; background: linear-gradient(135deg,#1e3a5f,#1e5a8a); border: none; border-radius: 8px; white-space: nowrap; box-shadow: 0 2px 8px rgba(30,58,95,0.3); }
-        .es-bottombar { height: 52px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-shrink: 0; background: rgba(234,244,251,0.97); backdrop-filter: blur(16px); border-top: 1px solid #c8ddef; box-shadow: 0 -1px 12px rgba(13,37,64,0.12); }
+        .es-bottombar { height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-shrink: 0; background: rgba(234,244,251,0.97); backdrop-filter: blur(16px); border-top: 1px solid #c8ddef; box-shadow: 0 -1px 12px rgba(13,37,64,0.12); overflow-x: auto; padding: 0 12px; }
         .es-btn-settings { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: 2px solid #c8ddef; border-radius: 8px; padding: 5px 20px; cursor: pointer; white-space: nowrap; text-decoration: none; }
         .es-btn-settings:hover { background: #e8f1fb; border-color: #0a5fa8; }
         .es-btn-back { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: none; padding: 5px 14px; cursor: pointer; white-space: nowrap; text-decoration: none; }
@@ -80,8 +80,15 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         </div>
       )}
 
-      {/* Quota exceeded overlay */}
-      {usage && limits && !limits.unlimited && (usage.today >= limits.daily || usage.month >= limits.monthly) ? (() => {
+      {/* Formulations panel */}
+      {panel === "formulations" ? (
+        <iframe
+          src="/echoscribe-personnalisation.html"
+          style={{ flex: 1, border: "none", width: "100%", display: "block", background: "#eef3f6" }}
+          title="Mes formulations — EchoScribe"
+        />
+      ) : /* Quota exceeded overlay */
+      usage && limits && !limits.unlimited && (usage.today >= limits.daily || usage.month >= limits.monthly) ? (() => {
         const isStandard = !isTrial && limits.daily === 30;
         const isPro = !isTrial && limits.daily === 70;
         const upsell = isTrial
@@ -141,7 +148,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         );
       })() : (
         <iframe
-          src={`/echoscribe-app.html?v=v5pro86&tier=${tier}${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
+          src={`/echoscribe-app.html?v=v5pro87&tier=${tier}${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
           style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
           title="EchoScribe Application"
           allow="microphone"
@@ -156,6 +163,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
           : <>
               <Link href="/app/historique" className="es-btn-settings">Historique</Link>
               <Link href="/app/parametres" className="es-btn-settings">Paramètres</Link>
+              <Link href="/app/formulations" className="es-btn-settings">Formulations</Link>
               <Link href="/app/support" className="es-btn-settings">Support</Link>
             </>
         }

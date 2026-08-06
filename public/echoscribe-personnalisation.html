@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EchoScribe — Mes formulations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eef3f6; --panel:#ffffff; --panel-2:#f7fafb;
+    --ink:#14303a; --muted:#5f7784; --faint:#8ea4ad;
+    --line:#dbe6ea; --line-2:#e9f0f3;
+    --teal:#15627a; --teal-dk:#0f4a5c; --teal-soft:#e3eef2;
+    --coral:#c45d4a; --coral-dk:#a9472f; --coral-soft:#fbeae5;
+    --ok:#2f7d5b;
+    --r:12px; --shadow:0 1px 2px rgba(20,48,58,.05),0 8px 24px rgba(20,48,58,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter Tight',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Fraunces',Georgia,serif}
+
+  header{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .name{font-family:'Fraunces',serif;font-size:20px;font-style:italic}
+  .brand .name b{font-style:normal;font-weight:600;color:var(--teal)}
+  .crumb{color:var(--faint);font-size:13px}
+  .crumb b{color:var(--muted);font-weight:600}
+  .spacer{flex:1}
+  .btn{font-family:inherit;font-size:13.5px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 15px;border-radius:9px;cursor:pointer;transition:.15s}
+  .btn:hover{border-color:var(--teal);color:var(--teal)}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+  .btn.primary:hover{background:var(--teal-dk);color:#fff}
+  .saved{font-size:12.5px;color:var(--ok);font-weight:600;opacity:0;transition:.3s}
+  .saved.show{opacity:1}
+
+  .promise{display:flex;align-items:center;gap:11px;padding:11px 22px;background:linear-gradient(90deg,var(--coral-soft),#fff);border-bottom:1px solid var(--line)}
+  .promise p{font-size:13.5px;color:var(--coral-dk)}
+  .promise b{color:var(--coral-dk)}
+
+  .wrap{display:grid;grid-template-columns:238px minmax(0,1fr) minmax(340px,430px)}
+  .rail{border-right:1px solid var(--line);background:var(--panel-2);padding:16px 12px}
+  .center{padding:22px 24px;min-width:0}
+  .preview{border-left:1px solid var(--line);background:var(--panel-2);padding:22px 22px 40px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+
+  .rail nav{display:flex;flex-direction:column;gap:3px}
+  .rail button.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;font-family:inherit;font-size:14px;color:var(--ink);background:none;border:none;border-radius:9px;padding:9px 11px;cursor:pointer;transition:.12s}
+  .rail button.nav:hover{background:var(--teal-soft)}
+  .rail button.nav.on{background:var(--teal);color:#fff;font-weight:600}
+  .rail button.nav.on .pill{background:rgba(255,255,255,.22);color:#fff}
+  .pill{font-size:11px;font-weight:700;min-width:20px;text-align:center;padding:2px 7px;border-radius:20px;background:var(--coral-soft);color:var(--coral-dk)}
+  .pill.zero{background:var(--line-2);color:var(--faint)}
+  .rail-div{display:flex;align-items:center;gap:8px;margin:18px 4px 8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .rail-div::after{content:"";flex:1;height:1px;background:var(--line)}
+  .add-exam{width:100%;text-align:left;margin-top:8px;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--teal);background:#fff;border:1px dashed var(--teal);border-radius:9px;padding:9px 11px;cursor:pointer;transition:.12s}
+  .add-exam:hover{background:var(--teal-soft)}
+  .empty-note{font-size:12px;color:var(--faint);padding:2px 11px}
+
+  .center h1.serif{font-weight:600;font-size:24px;letter-spacing:-.01em}
+  .title-input{font-family:'Fraunces',serif;font-weight:600;font-size:24px;color:var(--ink);border:none;border-bottom:2px dashed var(--line);background:none;width:100%;padding:2px 0;letter-spacing:-.01em}
+  .title-input:focus{outline:none;border-bottom-color:var(--teal)}
+  .center .sub{color:var(--muted);font-size:14px;margin-top:5px;margin-bottom:18px}
+  .center .sub b{color:var(--ink)}
+
+  .routing{display:flex;flex-direction:column;gap:7px;padding:14px 16px;background:var(--teal-soft);border:1px solid #cfe0e6;border-radius:var(--r);margin-bottom:18px}
+  .routing label{font-size:12.5px;font-weight:600;color:var(--teal-dk);display:flex;align-items:center;gap:7px}
+  .routing input{font-family:inherit;font-size:14px;color:var(--ink);border:1px solid #bcd4dc;border-radius:8px;padding:9px 11px;background:#fff}
+  .routing input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(21,98,122,.12)}
+  .routing .rh{font-size:12px;color:var(--teal-dk);opacity:.85}
+
+  .controls{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding:13px 16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-bottom:20px}
+  .ctl{display:flex;align-items:center;gap:9px}
+  .ctl .lab{font-size:12.5px;color:var(--muted);font-weight:600}
+  .seg{display:inline-flex;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:2px}
+  .seg button{font-family:inherit;font-size:12.5px;font-weight:600;color:var(--muted);border:none;background:none;padding:5px 12px;border-radius:6px;cursor:pointer;transition:.12s}
+  .seg button.on{background:#fff;color:var(--teal);box-shadow:0 1px 2px rgba(20,48,58,.12)}
+
+  .cards{display:flex;flex-direction:column;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;box-shadow:var(--shadow)}
+  .card.custom{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-soft)}
+  .card.mine{border-color:var(--coral)}
+  .card-head{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .organ{font-size:15px;font-weight:600}
+  .name-input{font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);border:none;border-bottom:1px solid var(--line-2);background:none;padding:2px 0;min-width:160px;flex:1}
+  .name-input:focus{outline:none;border-bottom-color:var(--coral)}
+  .badge{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2.5px 8px;border-radius:20px}
+  .badge.sfr{background:var(--line-2);color:var(--faint)}
+  .badge.perso{background:var(--coral-soft);color:var(--coral-dk)}
+  .lock{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ok);font-weight:600;margin-left:auto}
+  .del{border:none;background:none;color:var(--faint);cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:7px}
+  .del:hover{background:var(--coral-soft);color:var(--coral-dk)}
+  textarea.phrase{width:100%;font-family:inherit;font-size:14.5px;line-height:1.55;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:10px 12px;resize:vertical;min-height:52px;background:var(--panel-2);transition:.12s}
+  textarea.phrase:focus{outline:none;border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px var(--teal-soft)}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:7px;gap:10px}
+  .hint{font-size:12px;color:var(--faint)}
+  .icon-btn{border:none;background:none;color:var(--faint);cursor:pointer;font-size:12px;font-weight:600;padding:5px 8px;border-radius:7px;white-space:nowrap}
+  .icon-btn:hover{background:var(--panel-2);color:var(--teal)}
+  .icon-btn[disabled]{opacity:.35;cursor:default}
+  .add-rub{margin-top:14px;width:100%;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--teal);background:#fff;border:1px dashed var(--teal);border-radius:10px;padding:11px;cursor:pointer;transition:.12s}
+  .add-rub:hover{background:var(--teal-soft)}
+  .danger{font-size:12.5px;font-weight:600;color:var(--coral-dk);background:none;border:none;cursor:pointer;padding:6px 0}
+  .danger:hover{text-decoration:underline}
+
+  /* preview */
+  .pv-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .pv-head .eyebrow{margin:0}
+  .doc{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);font-family:'Fraunces',Georgia,serif}
+  .doc h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);font-family:'Inter Tight',sans-serif;font-weight:700;margin:0 0 12px}
+  .doc h2.concl{margin-top:20px}
+  .line{font-size:14.5px;line-height:1.62;color:var(--ink);padding:4px 0 4px 12px;border-left:2.5px solid var(--coral);margin-bottom:5px}
+  .line .org{font-weight:600}
+  .line.ai{border-left-color:var(--teal);border-left-style:dashed}
+  .line .tag{font-family:'Inter Tight',sans-serif;font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:5px;margin-left:7px;white-space:nowrap}
+  .line .tag.you{background:var(--coral-soft);color:var(--coral-dk)}
+  .line .tag.ai{background:var(--teal-soft);color:var(--teal-dk)}
+  .concl-line{font-size:14.5px;line-height:1.6;padding-left:12px}
+  .concl-line.bullet::before{content:"•  ";color:var(--teal)}
+  .pv-empty{font-family:'Inter Tight',sans-serif;font-size:13px;color:var(--faint);padding:8px 0}
+  .pv-legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+  .pv-legend span{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+  .swatch{width:12px;height:12px;border-radius:3px;border-left:3px solid var(--coral)}
+  .swatch.ai{border-left:3px dashed var(--teal)}
+  .simrow{display:flex;align-items:center;gap:9px;margin-top:16px;padding:12px 14px;background:var(--panel);border:1px dashed var(--line);border-radius:10px}
+  .simrow .lab{font-size:12.5px;color:var(--muted);font-weight:600}
+  select{font-family:inherit;font-size:13px;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:#fff;cursor:pointer;max-width:200px}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(20,48,58,.42);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:26px 26px 22px;box-shadow:0 24px 60px rgba(20,48,58,.28)}
+  .modal h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:4px}
+  .modal .msub{font-size:13.5px;color:var(--muted);margin-bottom:18px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+  .field input,.field select{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:#fff}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+  .choice{display:flex;gap:10px}
+  .choice label{flex:1;display:flex;flex-direction:column;gap:3px;border:1.5px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;transition:.12s}
+  .choice label:hover{border-color:var(--teal)}
+  .choice input{display:none}
+  .choice input:checked + .ch-t{color:var(--teal)}
+  .choice label:has(input:checked){border-color:var(--teal);background:var(--teal-soft)}
+  .ch-t{font-size:13.5px;font-weight:600}
+  .ch-d{font-size:11.5px;color:var(--muted)}
+  .modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+
+  @media (max-width:1050px){
+    .wrap{grid-template-columns:1fr}
+    .rail{border-right:none;border-bottom:1px solid var(--line)}
+    .preview{border-left:none;border-top:1px solid var(--line)}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg width="30" height="30" viewBox="14.5 32 70 70" aria-hidden="true">
+      <rect x="20" y="43" width="19" height="34" rx="9" fill="#c45d4a"/>
+      <rect x="22.5" y="73" width="14" height="5" rx="2" fill="#c45d4a" opacity="0.5"/>
+      <path d="M50 55 A22 22 0 0 1 50 79" fill="none" stroke="#c45d4a" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M60 48 A32 32 0 0 1 60 86" fill="none" stroke="#c45d4a" stroke-width="2.8" stroke-linecap="round" opacity="0.6"/>
+      <path d="M70 41 A42 42 0 0 1 70 93" fill="none" stroke="#c45d4a" stroke-width="2.8" stroke-linecap="round" opacity="0.32"/>
+    </svg>
+    <span class="name serif">Echo<b>Scribe</b></span>
+  </div>
+  <span class="crumb">Réglages ›  <b>Mes formulations</b></span>
+  <div class="spacer"></div>
+  <span class="saved" id="saved">✓ Enregistré</span>
+  <button class="btn primary" onclick="save()">Enregistrer</button>
+</header>
+
+<div class="promise">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a9472f" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+  <p><b>Vos phrases de normalité sont insérées telles quelles.</b> EchoScribe ne les reformule jamais — l'IA n'intervient que sur les anomalies que vous dictez.</p>
+</div>
+
+<div class="wrap">
+  <aside class="rail">
+    <div class="eyebrow">Types d'examen EchoScribe</div>
+    <nav id="railBuiltin"></nav>
+    <div class="rail-div">Mes examens</div>
+    <nav id="railCustom"></nav>
+    <div id="railEmpty" class="empty-note">Aucun pour l'instant.</div>
+    <button class="add-exam" onclick="openCreate()">+ Nouveau type d'examen</button>
+  </aside>
+
+  <main class="center" id="center"></main>
+
+  <aside class="preview">
+    <div class="pv-head"><div class="eyebrow">Aperçu du compte rendu</div><span style="font-size:12px;color:var(--faint)">exemple « tout normal »</span></div>
+    <div class="doc">
+      <h2>Résultats</h2>
+      <div id="pvBody"></div>
+      <h2 class="concl">Conclusion</h2>
+      <div id="pvConcl"></div>
+    </div>
+    <div class="pv-legend">
+      <span><span class="swatch"></span> Votre formulation, insérée telle quelle</span>
+      <span><span class="swatch ai"></span> Rédigé par EchoScribe (anomalie dictée)</span>
+    </div>
+    <div class="simrow">
+      <span class="lab">Simuler une anomalie dictée sur&nbsp;:</span>
+      <select id="simSelect"></select>
+    </div>
+  </aside>
+</div>
+
+<!-- Modal de création -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3>Nouveau type d'examen</h3>
+    <p class="msub">Créez un examen sur mesure avec vos propres rubriques et vos formulations (ex. Doppler artériel des TSA, des membres inférieurs, de la cheville…).</p>
+    <div class="field">
+      <label>Nom de l'examen</label>
+      <input type="text" id="mName" placeholder="ex. Doppler artériel des troncs supra-aortiques" />
+    </div>
+    <div class="field">
+      <label>Point de départ</label>
+      <div class="choice">
+        <label><input type="radio" name="mStart" value="scratch" checked><span class="ch-t">Partir de zéro</span><span class="ch-d">Une rubrique vide, vous saisissez tout.</span></label>
+        <label><input type="radio" name="mStart" value="template"><span class="ch-t">Partir d'un modèle</span><span class="ch-d">Rubriques pré-remplies, à adapter.</span></label>
+      </div>
+    </div>
+    <div class="field" id="mTemplateField" style="display:none">
+      <label>Modèle de départ</label>
+      <select id="mTemplate"></select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeCreate()">Annuler</button>
+      <button class="btn primary" onclick="createExam()">Créer l'examen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+let uid = 1; const nid = () => "x"+(uid++);
+
+/* ---------- Examens intégrés (avec modèles SFR) ---------- */
+const BUILTIN = {
+  "abdominal":{label:"Abdominale complète", organs:[
+    {id:"foie",name:"Foie", full:"Foie de taille normale, aux contours réguliers, d'échostructure homogène, sans lésion focale décelable.", short:"Foie normal, sans lésion focale."},
+    {id:"vesicule",name:"Vésicule biliaire", full:"Vésicule biliaire alithiasique, à parois fines.", short:"Vésicule alithiasique, parois fines."},
+    {id:"vbil",name:"Voies biliaires", full:"Voies biliaires intra et extra-hépatiques non dilatées.", short:"Voies biliaires non dilatées."},
+    {id:"pancreas",name:"Pancréas", full:"Pancréas d'échostructure homogène, sans dilatation du canal de Wirsung.", short:"Pancréas homogène, Wirsung non dilaté."},
+    {id:"rate",name:"Rate", full:"Rate de taille normale, d'échostructure homogène.", short:"Rate normale, homogène."},
+    {id:"aorte",name:"Aorte abdominale", full:"Aorte abdominale de calibre régulier, sans anévrisme ni ectasie.", short:"Aorte de calibre normal."},
+    {id:"reins",name:"Reins", full:"Reins de taille normale, bien différenciés, sans dilatation des cavités pyélocalicielles ni lithiase décelable.", short:"Reins normaux, sans dilatation ni lithiase."},
+    {id:"vessie",name:"Vessie", full:"Vessie à parois fines, à contenu transsonique.", short:"Vessie normale, à parois fines."}
+  ]},
+  "pelvien-feminin":{label:"Pelvien féminin", organs:[
+    {id:"uterus",name:"Utérus", full:"Utérus de taille et de morphologie normales, antéversé, à myomètre homogène.", short:"Utérus normal, myomètre homogène."},
+    {id:"endometre",name:"Endomètre", full:"Endomètre régulier, d'épaisseur normale pour la période du cycle.", short:"Endomètre régulier."},
+    {id:"ovaired",name:"Ovaire droit", full:"Ovaire droit de taille normale, d'aspect folliculaire physiologique.", short:"Ovaire droit normal."},
+    {id:"ovaireg",name:"Ovaire gauche", full:"Ovaire gauche de taille normale, d'aspect folliculaire physiologique.", short:"Ovaire gauche normal."},
+    {id:"douglas",name:"Cul-de-sac de Douglas", full:"Absence d'épanchement dans le cul-de-sac de Douglas.", short:"Douglas libre."}
+  ]},
+  "pelvien-masculin":{label:"Réno-vésico-prostatique", organs:[
+    {id:"reins",name:"Reins", full:"Reins de taille normale, bien différenciés, sans dilatation pyélocalicielle ni lithiase.", short:"Reins normaux, sans dilatation."},
+    {id:"vessie",name:"Vessie", full:"Vessie à parois fines et régulières, à contenu transsonique.", short:"Vessie normale."},
+    {id:"prostate",name:"Prostate", full:"Prostate de volume normal, à contours réguliers, sans nodule suspect.", short:"Prostate normale."},
+    {id:"vseminales",name:"Vésicules séminales", full:"Vésicules séminales symétriques, d'aspect habituel.", short:"Vésicules séminales normales."},
+    {id:"residu",name:"Résidu post-mictionnel", full:"Résidu post-mictionnel négligeable après miction.", short:"Résidu négligeable."}
+  ]},
+  "cervical":{label:"Thyroïde (cervical)", organs:[
+    {id:"thyroide",name:"Parenchyme thyroïdien", full:"Thyroïde de taille normale, d'échostructure homogène, sans nodule décelable.", short:"Thyroïde normale, sans nodule."},
+    {id:"lobed",name:"Lobe droit", full:"Lobe droit de dimensions normales, d'échostructure homogène.", short:"Lobe droit normal."},
+    {id:"lobeg",name:"Lobe gauche", full:"Lobe gauche de dimensions normales, d'échostructure homogène.", short:"Lobe gauche normal."},
+    {id:"isthme",name:"Isthme", full:"Isthme fin, d'épaisseur normale.", short:"Isthme fin."},
+    {id:"ganglions",name:"Aires ganglionnaires", full:"Absence d'adénopathie cervicale d'allure suspecte.", short:"Pas d'adénopathie suspecte."}
+  ]},
+  "scrotal":{label:"Scrotale (bourses)", organs:[
+    {id:"testiculed",name:"Testicule droit", full:"Testicule droit de taille normale, d'échostructure homogène, sans nodule.", short:"Testicule droit normal."},
+    {id:"testiculeg",name:"Testicule gauche", full:"Testicule gauche de taille normale, d'échostructure homogène, sans nodule.", short:"Testicule gauche normal."},
+    {id:"epididymes",name:"Épididymes", full:"Épididymes d'aspect normal des deux côtés.", short:"Épididymes normaux."},
+    {id:"varices",name:"Plexus pampiniforme", full:"Absence de dilatation variqueuse du plexus pampiniforme.", short:"Pas de varicocèle."}
+  ]},
+  "doppler-veineux":{label:"Doppler veineux MI", organs:[
+    {id:"veinesfem",name:"Veines fémorales", full:"Veines fémorales commune et superficielle perméables et compressibles, au flux respiro-modulé.", short:"Veines fémorales perméables et compressibles."},
+    {id:"veinespop",name:"Veine poplitée", full:"Veine poplitée perméable et compressible.", short:"Poplitée perméable et compressible."},
+    {id:"veinesjamb",name:"Veines jambières", full:"Veines jambières perméables et compressibles (tibiales postérieures et fibulaires).", short:"Veines jambières perméables."},
+    {id:"saphenes",name:"Réseau saphène", full:"Réseau saphène continent, sans thrombose superficielle.", short:"Réseau saphène continent."}
+  ]},
+  "msk":{label:"Appareil locomoteur", organs:[
+    {id:"tendon",name:"Tendon exploré", full:"Tendon d'échostructure fibrillaire normale, de calibre conservé, sans rupture.", short:"Tendon normal, sans rupture."},
+    {id:"bourse",name:"Bourse séreuse", full:"Absence d'épanchement ou de distension bursale.", short:"Pas de bursite."},
+    {id:"articulation",name:"Articulation", full:"Absence d'épanchement articulaire ni de synovite.", short:"Pas d'épanchement articulaire."}
+  ]}
+};
+
+/* ---------- Modèles de départ pour examens sur-mesure ---------- */
+const TEMPLATES = {
+  "vierge":{label:"(examen vierge)", triggers:"", organs:[{name:"", text:""}]},
+
+  "insuf-veineuse":{label:"Bilan d'insuffisance veineuse des membres inférieurs",
+    triggers:"insuffisance veineuse, varices, reflux, crosse saphène, perforante, varicose",
+    organs:[
+      {name:"Crosse de la grande veine saphène", text:"Crosse de la grande veine saphène continente, sans reflux à la manœuvre de Valsalva."},
+      {name:"Grande veine saphène", text:"Grande veine saphène de calibre normal, continente sur tout son trajet."},
+      {name:"Petite veine saphène", text:"Petite veine saphène continente, sans reflux."},
+      {name:"Veines perforantes", text:"Absence de perforante incontinente décelée."},
+      {name:"Réseau veineux profond", text:"Réseau veineux profond perméable et compressible, sans reflux."}
+    ]},
+
+  "ami":{label:"Doppler artériel des membres inférieurs",
+    triggers:"artériel membre inférieur, AOMI, fémorale, poplitée, jambières, claudication",
+    organs:[
+      {name:"Étage aorto-iliaque", text:"Axe aorto-iliaque perméable, à flux triphasique, sans sténose significative."},
+      {name:"Artères fémorales", text:"Artères fémorales communes et superficielles perméables, à flux triphasique, sans sténose significative."},
+      {name:"Artères poplitées", text:"Artères poplitées perméables, à flux conservé."},
+      {name:"Axes jambiers", text:"Axes jambiers perméables (tibiales antérieures, tibiales postérieures, fibulaires), sans occlusion décelable."}
+    ]},
+
+  "tsa":{label:"Doppler artériel des troncs supra-aortiques",
+    triggers:"TSA, tronc supra-aortique, carotide, vertébrale, sous-clavière",
+    organs:[
+      {name:"Axe carotidien droit", text:"Axe carotidien droit perméable, à paroi fine et régulière, sans plaque ni sténose. Flux laminaire, index de résistance normal."},
+      {name:"Axe carotidien gauche", text:"Axe carotidien gauche perméable, à paroi fine et régulière, sans plaque ni sténose. Flux laminaire."},
+      {name:"Artère vertébrale droite", text:"Artère vertébrale droite perméable, de flux antérograde."},
+      {name:"Artère vertébrale gauche", text:"Artère vertébrale gauche perméable, de flux antérograde."},
+      {name:"Artères sous-clavières", text:"Artères sous-clavières perméables, sans argument pour un vol sous-clavier."}
+    ]},
+
+  "tsa-ami":{label:"Doppler artériel des TSA et des membres inférieurs",
+    triggers:"bilan artériel complet, TSA et membres inférieurs, artériopathie, athérome",
+    organs:[
+      {name:"Axe carotidien droit", text:"Axe carotidien droit perméable, à paroi fine, sans plaque ni sténose. Flux laminaire."},
+      {name:"Axe carotidien gauche", text:"Axe carotidien gauche perméable, à paroi fine, sans plaque ni sténose. Flux laminaire."},
+      {name:"Artères vertébrales", text:"Artères vertébrales perméables, de flux antérograde des deux côtés."},
+      {name:"Étage aorto-iliaque", text:"Axe aorto-iliaque perméable, à flux triphasique, sans sténose significative."},
+      {name:"Artères fémorales", text:"Artères fémorales communes et superficielles perméables, à flux triphasique."},
+      {name:"Artères poplitées", text:"Artères poplitées perméables, à flux conservé."},
+      {name:"Axes jambiers", text:"Axes jambiers perméables, sans occlusion décelable."}
+    ]},
+
+  "aorte":{label:"Doppler de l'aorte abdominale",
+    triggers:"aorte abdominale, anévrisme, AAA, ectasie aortique, dépistage aorte",
+    organs:[
+      {name:"Aorte sus-rénale", text:"Aorte abdominale sus-rénale de calibre régulier, sans ectasie."},
+      {name:"Aorte sous-rénale", text:"Aorte sous-rénale de calibre régulier, sans anévrisme, à diamètre antéro-postérieur dans les limites de la normale."},
+      {name:"Paroi aortique", text:"Paroi aortique fine, sans thrombus mural ni signe de dissection."},
+      {name:"Axes iliaques", text:"Axes iliaques primitifs de calibre normal, sans anévrisme."}
+    ]},
+
+  "art-renales":{label:"Doppler des artères rénales",
+    triggers:"artères rénales, HTA rénovasculaire, sténose artère rénale, doppler rénal",
+    organs:[
+      {name:"Artère rénale droite", text:"Artère rénale droite perméable, de flux normal, sans accélération significative en faveur d'une sténose."},
+      {name:"Artère rénale gauche", text:"Artère rénale gauche perméable, de flux normal, sans sténose significative."},
+      {name:"Index intraparenchymateux", text:"Index de résistance intraparenchymateux symétriques, dans les limites de la normale des deux côtés."},
+      {name:"Aorte au départ des rénales", text:"Aorte abdominale de calibre normal au départ des artères rénales."}
+    ]},
+
+  "cheville":{label:"Échographie de cheville",
+    triggers:"cheville, tendon d'Achille, ligament talo-fibulaire, fibulaires",
+    organs:[
+      {name:"Tendon d'Achille", text:"Tendon d'Achille d'échostructure fibrillaire normale, de calibre conservé, sans épaississement ni rupture."},
+      {name:"Tendons fibulaires", text:"Tendons fibulaires en place, d'aspect normal, sans ténosynovite."},
+      {name:"Ligaments latéraux", text:"Ligaments talo-fibulaire antérieur et calcanéo-fibulaire continus, sans rupture."},
+      {name:"Épanchement articulaire", text:"Absence d'épanchement articulaire tibio-talien."}
+    ]},
+
+  "doigt":{label:"Échographie de doigt",
+    triggers:"doigt, phalange, poulie, tendon fléchisseur, ressaut, plaque palmaire",
+    organs:[
+      {name:"Tendons fléchisseurs", text:"Tendons fléchisseurs continus, d'échostructure fibrillaire normale, coulissant normalement."},
+      {name:"Poulies digitales", text:"Poulies digitales continues, sans épaississement."},
+      {name:"Articulations", text:"Interlignes articulaires respectés, sans épanchement ni synovite."},
+      {name:"Parties molles", text:"Parties molles péri-articulaires sans nodule ni collection."}
+    ]},
+
+  "epaule":{label:"Échographie de l'épaule",
+    triggers:"épaule, coiffe des rotateurs, supra-épineux, infra-épineux, sous-scapulaire, long biceps, acromio-claviculaire",
+    organs:[
+      {name:"Tendon supra-épineux", text:"Tendon supra-épineux continu, d'échostructure fibrillaire normale, sans rupture."},
+      {name:"Tendon infra-épineux", text:"Tendon infra-épineux d'aspect normal, continu."},
+      {name:"Tendon sous-scapulaire", text:"Tendon sous-scapulaire continu, sans lésion."},
+      {name:"Long biceps", text:"Tendon du long biceps en place dans sa gouttière, sans épanchement significatif de gaine."},
+      {name:"Bourse sous-acromio-deltoïdienne", text:"Absence d'épanchement de la bourse sous-acromio-deltoïdienne."},
+      {name:"Articulation acromio-claviculaire", text:"Articulation acromio-claviculaire sans particularité."}
+    ]},
+
+  "genou":{label:"Échographie de genou",
+    triggers:"genou, kyste de Baker, tendon rotulien, quadricipital, épanchement genou",
+    organs:[
+      {name:"Épanchement articulaire", text:"Absence d'épanchement intra-articulaire significatif."},
+      {name:"Tendon quadricipital", text:"Tendon quadricipital d'échostructure normale, continu."},
+      {name:"Tendon rotulien", text:"Tendon rotulien d'échostructure fibrillaire normale, sans tendinopathie."},
+      {name:"Creux poplité", text:"Absence de kyste poplité (kyste de Baker)."},
+      {name:"Compartiments fémoro-tibiaux", text:"Compartiments fémoro-tibiaux sans épanchement péri-méniscal décelable."}
+    ]},
+
+  "hanche":{label:"Échographie de hanche",
+    triggers:"hanche, coxo-fémoral, tendon fessier, bourse trochantérienne, ilio-psoas",
+    organs:[
+      {name:"Épanchement coxo-fémoral", text:"Absence d'épanchement intra-articulaire coxo-fémoral, récessus antérieur libre."},
+      {name:"Tendons fessiers", text:"Tendons fessiers (moyen et petit fessiers) d'échostructure normale, sans rupture ni calcification."},
+      {name:"Bourse trochantérienne", text:"Absence de bursite trochantérienne."},
+      {name:"Tendon ilio-psoas", text:"Tendon ilio-psoas d'aspect normal, sans ressaut décelé."}
+    ]},
+
+  "paroi-abdo":{label:"Échographie de paroi abdominale",
+    triggers:"paroi abdominale, hernie, éventration, diastasis, ligne blanche, orifice ombilical",
+    organs:[
+      {name:"Ligne blanche / diastasis", text:"Absence de diastasis significatif des muscles grands droits."},
+      {name:"Orifices herniaires", text:"Absence de hernie de l'aine ou ombilicale décelable, y compris lors des manœuvres dynamiques."},
+      {name:"Plans musculaires", text:"Plans musculaires pariétaux d'échostructure normale, sans collection ni désinsertion."},
+      {name:"Parties molles sous-cutanées", text:"Parties molles sous-cutanées sans nodule ni collection."}
+    ]},
+
+  "poignet":{label:"Échographie de poignet",
+    triggers:"poignet, canal carpien, nerf médian, TFCC, kyste synovial, extenseurs",
+    organs:[
+      {name:"Nerf médian / canal carpien", text:"Nerf médian de calibre normal en amont et dans le canal carpien, sans aplatissement."},
+      {name:"Tendons fléchisseurs", text:"Tendons fléchisseurs continus, sans ténosynovite."},
+      {name:"Tendons extenseurs", text:"Compartiments des tendons extenseurs sans ténosynovite, notamment le premier compartiment."},
+      {name:"Articulation radio-carpienne", text:"Absence de kyste synovial ou d'épanchement articulaire radio-carpien."}
+    ]}
+};
+
+/* ---------- État ---------- */
+const state = {};
+for(const ex in BUILTIN){ state[ex]={}; BUILTIN[ex].organs.forEach(o=>state[ex][o.id]=null); }
+const CUSTOM = {};
+let current = "abdominal", currentCustom = false;
+let form = "complete", concl = "bullets", simOrgan = "";
+
+/* ---------- Helpers ---------- */
+const isCustom = id => !!CUSTOM[id];
+const examOrgans = id => isCustom(id) ? CUSTOM[id].organs : BUILTIN[id].organs;
+function customCount(ex){ return Object.values(state[ex]).filter(v=>v!==null).length; }
+function effBuiltin(ex,o){ const c=state[ex][o.id]; return c!==null ? c : (form==="concise"?o.short:o.full); }
+
+/* ---------- Rail ---------- */
+function railBtn(id,label,count,zero){
+  const b=document.createElement("button"); b.className="nav"+(id===current?" on":"");
+  b.innerHTML=`<span>${esc(label)}</span><span class="pill ${zero?'zero':''}">${count}</span>`;
+  b.onclick=()=>{ current=id; currentCustom=isCustom(id); simOrgan=""; renderAll(); };
+  return b;
+}
+function renderRail(){
+  const nb=document.getElementById("railBuiltin"); nb.innerHTML="";
+  for(const ex in BUILTIN){ const n=customCount(ex); nb.appendChild(railBtn(ex,BUILTIN[ex].label,n,n===0)); }
+  const nc=document.getElementById("railCustom"); nc.innerHTML="";
+  const ids=Object.keys(CUSTOM).sort((a,b)=>(CUSTOM[a].label||'').localeCompare(CUSTOM[b].label||'','fr'));
+  document.getElementById("railEmpty").style.display = ids.length? "none":"block";
+  ids.forEach(id=>{ const c=CUSTOM[id].organs.length; nc.appendChild(railBtn(id,CUSTOM[id].label||"(sans nom)",c,c===0)); });
+}
+
+/* ---------- Éditeur central ---------- */
+function renderEditor(){
+  const c=document.getElementById("center"); c.innerHTML="";
+  const custom=currentCustom;
+
+  if(custom){
+    const wrapT=document.createElement("div");
+    const ti=document.createElement("input"); ti.className="title-input"; ti.value=CUSTOM[current].label; ti.placeholder="Nom de l'examen";
+    ti.oninput=()=>{ CUSTOM[current].label=ti.value; renderRail(); };
+    wrapT.appendChild(ti); c.appendChild(wrapT);
+    const sub=document.createElement("p"); sub.className="sub"; sub.innerHTML="Examen sur mesure — <b>toutes vos rubriques et vos phrases</b>. Chaque phrase est reprise telle quelle quand la rubrique est normale.";
+    c.appendChild(sub);
+    const rt=document.createElement("div"); rt.className="routing";
+    rt.innerHTML=`<label>🎯 Mots-déclencheurs (routage automatique)</label>`;
+    const ri=document.createElement("input"); ri.value=CUSTOM[current].triggers; ri.placeholder="ex. carotide, TSA, vertébrale, sous-clavière";
+    ri.oninput=()=>{ CUSTOM[current].triggers=ri.value; };
+    const rh=document.createElement("div"); rh.className="rh"; rh.textContent="EchoScribe activera automatiquement ces formulations quand votre dictée contient l'un de ces mots. Séparez-les par des virgules.";
+    rt.appendChild(ri); rt.appendChild(rh); c.appendChild(rt);
+  } else {
+    const h=document.createElement("h1"); h.className="serif"; h.textContent="Formulations — "+BUILTIN[current].label; c.appendChild(h);
+    const sub=document.createElement("p"); sub.className="sub"; sub.innerHTML="Modifiez la phrase employée quand l'organe est <b>normal</b>. Elle sera reprise mot pour mot dans vos comptes rendus.";
+    c.appendChild(sub);
+  }
+
+  const ctr=document.createElement("div"); ctr.className="controls";
+  if(!custom){
+    ctr.innerHTML=`<div class="ctl"><span class="lab">Formulation par défaut</span>
+      <div class="seg" id="segForm"><button data-v="complete" class="${form==='complete'?'on':''}">Complète</button><button data-v="concise" class="${form==='concise'?'on':''}">Concise</button></div></div>`;
+  }
+  ctr.innerHTML+=`<div class="ctl"><span class="lab">Conclusion</span>
+    <div class="seg" id="segConcl"><button data-v="bullets" class="${concl==='bullets'?'on':''}">Puces</button><button data-v="prose" class="${concl==='prose'?'on':''}">Prose</button></div></div>`;
+  if(!custom) ctr.innerHTML+=`<div class="ctl" style="color:var(--faint);font-size:12px">Les organes personnalisés (en corail) ignorent ces réglages : votre texte prime.</div>`;
+  c.appendChild(ctr);
+  const sf=ctr.querySelector("#segForm");
+  if(sf) sf.addEventListener("click",e=>{ if(e.target.dataset.v){ form=e.target.dataset.v; renderEditor(); renderPreview(); }});
+  ctr.querySelector("#segConcl").addEventListener("click",e=>{ if(e.target.dataset.v){ concl=e.target.dataset.v; [...e.currentTarget.children].forEach(b=>b.classList.toggle("on",b===e.target)); renderPreview(); }});
+
+  const cards=document.createElement("div"); cards.className="cards"; c.appendChild(cards);
+  if(custom) renderCustomCards(cards); else renderBuiltinCards(cards);
+
+  if(custom){
+    const add=document.createElement("button"); add.className="add-rub"; add.textContent="+ Ajouter une rubrique";
+    add.onclick=()=>{ CUSTOM[current].organs.push({id:nid(),name:"",text:""}); renderEditor(); renderRail(); renderSim(); renderPreview(); };
+    c.appendChild(add);
+    const del=document.createElement("div"); del.style.marginTop="18px";
+    const db=document.createElement("button"); db.className="danger"; db.textContent="Supprimer ce type d'examen";
+    db.onclick=()=>{ if(confirm("Supprimer « "+(CUSTOM[current].label||"sans nom")+" » et ses formulations ?")){ delete CUSTOM[current]; current="abdominal"; currentCustom=false; renderAll(); } };
+    del.appendChild(db); c.appendChild(del);
+  }
+}
+
+function renderBuiltinCards(wrap){
+  BUILTIN[current].organs.forEach(o=>{
+    const custom=state[current][o.id]!==null;
+    const val=custom?state[current][o.id]:(form==="concise"?o.short:o.full);
+    const card=document.createElement("div"); card.className="card"+(custom?" custom":"");
+    card.innerHTML=`<div class="card-head">
+        <span class="organ">${esc(o.name)}</span>
+        <span class="badge ${custom?'perso':'sfr'}">${custom?'Personnalisé':'Modèle SFR'}</span>
+        <span class="lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>insérée telle quelle</span>
+      </div>
+      <textarea class="phrase" rows="2">${esc(val)}</textarea>
+      <div class="card-foot"><span class="hint">${custom?'Votre formulation — elle prime sur les réglages par défaut.':'Modèle standard. Adaptez le texte à votre style.'}</span>
+      <button class="icon-btn" ${custom?'':'disabled'}>↺ Rétablir le modèle SFR</button></div>`;
+    const ta=card.querySelector("textarea");
+    ta.addEventListener("input",()=>{
+      const base=form==="concise"?o.short:o.full;
+      state[current][o.id]=(ta.value.trim()===base.trim()||ta.value.trim()==="")?null:ta.value;
+      const cu=state[current][o.id]!==null;
+      card.classList.toggle("custom",cu);
+      const bd=card.querySelector(".badge"); bd.className="badge "+(cu?"perso":"sfr"); bd.textContent=cu?"Personnalisé":"Modèle SFR";
+      card.querySelector(".icon-btn").disabled=!cu;
+      renderRail(); renderPreview();
+    });
+    card.querySelector(".icon-btn").onclick=()=>{ state[current][o.id]=null; renderEditor(); renderRail(); renderPreview(); };
+    wrap.appendChild(card);
+  });
+}
+
+function renderCustomCards(wrap){
+  const organs=CUSTOM[current].organs;
+  organs.forEach((o,idx)=>{
+    const card=document.createElement("div"); card.className="card mine";
+    card.innerHTML=`<div class="card-head">
+        <input class="name-input" value="${esc(o.name)}" placeholder="Nom de la rubrique (ex. Axe carotidien droit)"/>
+        <span class="lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>insérée telle quelle</span>
+        <button class="del" title="Supprimer la rubrique">✕</button>
+      </div>
+      <textarea class="phrase" rows="2" placeholder="Votre phrase de normalité pour cette rubrique…">${esc(o.text)}</textarea>
+      <div class="card-foot"><span class="hint">Votre formulation, reprise telle quelle quand la rubrique est normale.</span></div>`;
+    const ni=card.querySelector(".name-input"), ta=card.querySelector("textarea");
+    ni.addEventListener("input",()=>{ o.name=ni.value; renderSimOptions(); renderPreview(); });
+    ta.addEventListener("input",()=>{ o.text=ta.value; renderPreview(); });
+    card.querySelector(".del").onclick=()=>{
+      if(organs.length<=1){ o.name="";o.text=""; renderEditor(); }
+      else { organs.splice(idx,1); }
+      renderEditor(); renderRail(); renderSim(); renderPreview();
+    };
+    wrap.appendChild(card);
+  });
+}
+
+/* ---------- Aperçu ---------- */
+const AI_BUILTIN = {
+  foie:"Foie siège d'une formation nodulaire hyperéchogène homogène de 14 mm du segment VII, sans halo ni flux, d'allure angiomateuse.",
+  reins:"Rein droit siège d'une image hyperéchogène avec cône d'ombre de 6 mm du groupe caliciel moyen, en rapport avec un calcul, sans dilatation d'amont.",
+  prostate:"Prostate de volume augmenté, estimé à 62 mL, hétérogène, avec saillie du lobe médian dans la vessie.",
+  thyroide:"Lobe droit siège d'un nodule iso-échogène de 12 × 8 × 10 mm, à contours réguliers, sans microcalcification (EU-TIRADS 3)."
+};
+function aiLineFor(id, label){
+  if(AI_BUILTIN[id]) return AI_BUILTIN[id];
+  const t=(CUSTOM[current]?CUSTOM[current].triggers+" "+label:label).toLowerCase();
+  if(/art|carotid|f[ée]moral|poplit|aorto|jambier|vert[ée]bral/.test(t))
+    return "Sténose focale estimée à 70 % en surface (accélération vélocimétrique significative), avec remaniement de paroi.";
+  if(/tendon|achille|ligament|coiffe/.test(t))
+    return "Épaississement hypoéchogène avec perte de l'organisation fibrillaire, sans rupture transfixiante, associé à une hyperhémie au Doppler.";
+  return "Anomalie décrite par EchoScribe à partir de votre dictée, avec ses mensurations et sa sémiologie.";
+}
+function renderPreview(){
+  const body=document.getElementById("pvBody"); body.innerHTML="";
+  const organs=examOrgans(current).filter(o=> isCustom(current)? (o.name||o.text) : true);
+  if(isCustom(current) && organs.length===0){ body.innerHTML=`<div class="pv-empty">Ajoutez une rubrique pour voir l'aperçu.</div>`; }
+  organs.forEach(o=>{
+    const abn=simOrgan===o.id;
+    const txt = abn ? aiLineFor(o.id,o.name) : (isCustom(current)? o.text : effBuiltin(current,o));
+    if(!txt && !abn) return;
+    const div=document.createElement("div"); div.className="line"+(abn?" ai":"");
+    const body_txt = esc(txt).replace(new RegExp('^'+o.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i'),'');
+    div.innerHTML=`<span class="org">${esc(o.name||"Rubrique")} :</span> ${body_txt} <span class="tag ${abn?'ai':'you'}">${abn?'EchoScribe':'vos mots'}</span>`;
+    body.appendChild(div);
+  });
+  const cc=document.getElementById("pvConcl"); cc.innerHTML="";
+  let items;
+  if(simOrgan){ const on=(examOrgans(current).find(o=>o.id===simOrgan)||{}).name||"la rubrique";
+    items=[`Anomalie de « ${on} » (voir résultats), à corréler au contexte clinique.`,`Reste de l'examen sans anomalie décelable.`];
+  } else { const lab=(isCustom(current)?CUSTOM[current].label:BUILTIN[current].label)||"cet examen";
+    items=[`Examen (${lab}) sans anomalie décelable.`]; }
+  if(concl==="bullets") items.forEach(t=>{ const d=document.createElement("div"); d.className="concl-line bullet"; d.textContent=t; cc.appendChild(d); });
+  else { const d=document.createElement("div"); d.className="concl-line"; d.textContent=items.join(" "); cc.appendChild(d); }
+}
+
+/* ---------- Simulation ---------- */
+function renderSimOptions(){
+  const s=document.getElementById("simSelect"); const prev=simOrgan; s.innerHTML=`<option value="">— aucune (tout normal) —</option>`;
+  examOrgans(current).forEach(o=>{ if(isCustom(current)&&!o.name&&!o.text) return; const op=document.createElement("option"); op.value=o.id; op.textContent=o.name||"(rubrique sans nom)"; if(o.id===prev)op.selected=true; s.appendChild(op); });
+}
+function renderSim(){ renderSimOptions(); const s=document.getElementById("simSelect"); s.onchange=()=>{ simOrgan=s.value; renderPreview(); }; }
+
+/* ---------- Création d'examen ---------- */
+function openCreate(){
+  document.getElementById("mName").value="";
+  document.querySelector('input[name="mStart"][value="scratch"]').checked=true;
+  const tf=document.getElementById("mTemplateField"); tf.style.display="none";
+  const sel=document.getElementById("mTemplate"); sel.innerHTML="";
+  Object.keys(TEMPLATES).filter(k=>k!=="vierge").sort((a,b)=>TEMPLATES[a].label.localeCompare(TEMPLATES[b].label,'fr')).forEach(k=>{ const o=document.createElement("option"); o.value=k; o.textContent=TEMPLATES[k].label; sel.appendChild(o); });
+  document.getElementById("modal").classList.add("show");
+}
+function closeCreate(){ document.getElementById("modal").classList.remove("show"); }
+document.querySelectorAll('input[name="mStart"]').forEach(r=>r.addEventListener("change",()=>{
+  document.getElementById("mTemplateField").style.display = document.querySelector('input[name="mStart"]:checked').value==="template"?"block":"none";
+}));
+function createExam(){
+  const start=document.querySelector('input[name="mStart"]:checked').value;
+  let label=document.getElementById("mName").value.trim();
+  let triggers="", organs=[];
+  if(start==="template"){
+    const tpl=TEMPLATES[document.getElementById("mTemplate").value];
+    if(!label) label=tpl.label;
+    triggers=tpl.triggers;
+    organs=tpl.organs.map(o=>({id:nid(),name:o.name,text:o.text}));
+  } else {
+    organs=[{id:nid(),name:"",text:""}];
+  }
+  if(!label) label="Nouvel examen";
+  const id="c"+nid();
+  CUSTOM[id]={label,triggers,organs};
+  current=id; currentCustom=true; simOrgan="";
+  closeCreate(); renderAll();
+}
+
+/* ---------- Persistance — DB séparée echoscribe-prefs v1 (ne touche PAS echoscribe v1 de V5) ---------- */
+const PZ_DB='echoscribe-prefs', PZ_VER=1;
+let pzDB=null;
+function pzOpen(){ return new Promise((res,rej)=>{ const r=indexedDB.open(PZ_DB,PZ_VER);
+  r.onupgradeneeded=e=>{ const db=e.target.result;
+    if(!db.objectStoreNames.contains('preferences')) db.createObjectStore('preferences',{keyPath:'key'});
+  };
+  r.onsuccess=e=>res(e.target.result); r.onerror=e=>rej(e.target.error); }); }
+async function pzReady(){ if(!pzDB){ try{ pzDB=await pzOpen(); }catch(e){ console.warn('IndexedDB indisponible',e); return null; } } return pzDB; }
+async function pzGet(key){ const db=await pzReady(); if(!db) return null;
+  return new Promise(res=>{ const r=db.transaction('preferences','readonly').objectStore('preferences').get(key); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); }); }
+async function pzPut(obj){ const db=await pzReady(); if(!db) return;
+  return new Promise(res=>{ const r=db.transaction('preferences','readwrite').objectStore('preferences').put(obj); r.onsuccess=()=>res(); r.onerror=()=>res(); }); }
+
+function pzSerialize(){
+  const normal={};
+  for(const ex in state){ const ov={}; let any=false;
+    for(const oid in state[ex]){ if(state[ex][oid]!==null){ ov[oid]=state[ex][oid]; any=true; } }
+    if(any) normal[ex]=ov;
+  }
+  const customExams=Object.keys(CUSTOM).map(id=>({
+    id, label:CUSTOM[id].label||'', triggers:CUSTOM[id].triggers||'',
+    organs:(CUSTOM[id].organs||[]).filter(o=>o.name||o.text).map(o=>({name:o.name||'',text:o.text||''}))
+  }));
+  return { key:'formulations', updatedAt:Date.now(), normal, customExams };
+}
+async function pzHydrate(){
+  const p=await pzGet('formulations'); if(!p) return;
+  if(p.normal){ for(const ex in p.normal){ if(state[ex]){ for(const oid in p.normal[ex]){ if(oid in state[ex]) state[ex][oid]=p.normal[ex][oid]; } } } }
+  if(Array.isArray(p.customExams)){
+    p.customExams.forEach(ex=>{ const id=ex.id||("c"+nid());
+      CUSTOM[id]={ label:ex.label||'', triggers:ex.triggers||'', organs:(ex.organs||[]).map(o=>({id:nid(),name:o.name||'',text:o.text||''})) };
+    });
+  }
+}
+
+/* ---------- Divers ---------- */
+async function save(){
+  await pzPut(pzSerialize());
+  const s=document.getElementById("saved"); s.classList.add("show"); setTimeout(()=>s.classList.remove("show"),1800);
+  try{ if(window.parent && window.parent!==window) window.parent.postMessage('echoscribe-prefs-saved','*'); }catch(e){}
+}
+function renderAll(){ renderRail(); renderEditor(); renderSim(); renderPreview(); }
+(async function(){ await pzHydrate(); renderAll(); })();
+</script>
+
+<!-- Adaptation iframe : masque le logo de marque quand la page est intégrée dans l'app -->
+<script>
+(function(){
+  if(window.parent===window) return;
+  function adaptFrame(){
+    var brand=document.querySelector('.brand');
+    if(brand) brand.style.display='none';
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',adaptFrame);
+  } else {
+    adaptFrame();
+  }
+})();
+</script>
+
+</body>
+</html>
