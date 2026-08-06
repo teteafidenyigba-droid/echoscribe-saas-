@@ -1,9 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const HARDCODED_ADMINS = ["eliasco2018@gmail.com", "tete.afidenyigba@gmail.com", "komlanserge@hotmail.com", "contact@echoscribe.fr"];
+
 function isAdmin(email: string): boolean {
-  const adminEmails = (process.env.ADMIN_EMAILS ?? "").split(",").map(e => e.trim().toLowerCase());
-  return adminEmails.includes(email.toLowerCase());
+  const envAdmins = (process.env.ADMIN_EMAILS ?? "").split(",").map(e => e.trim().toLowerCase()).filter(Boolean);
+  return [...HARDCODED_ADMINS, ...envAdmins].includes(email.toLowerCase());
 }
 
 export async function middleware(request: NextRequest) {
