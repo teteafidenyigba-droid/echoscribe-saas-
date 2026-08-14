@@ -89,9 +89,14 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
       {panel === "main" && (
         <Link href="/app/formulations" className="es-promo-banner">
           <span style={{ fontSize: 16, flexShrink: 0 }}>✦</span>
-          <span className="es-promo-label" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7a3025", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            Personnalisez vos comptes rendus avec vos phrases types
-          </span>
+          <div className="es-promo-label" style={{ flex: 1, overflow: "hidden" }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7a3025", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              Personnalisez vos comptes rendus avec vos phrases types
+            </div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "#a05040", marginTop: 2 }}>
+              À paramétrer une seule fois — s&apos;applique automatiquement à tous vos examens suivants, modifiable à tout moment.
+            </div>
+          </div>
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#c45d4a", whiteSpace: "nowrap", fontWeight: 700, flexShrink: 0 }}>
             Configurer →
           </span>
