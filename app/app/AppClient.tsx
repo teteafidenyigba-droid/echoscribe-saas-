@@ -39,6 +39,10 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         .es-bottombar { height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-shrink: 0; background: rgba(234,244,251,0.97); backdrop-filter: blur(16px); border-top: 1px solid #c8ddef; box-shadow: 0 -1px 12px rgba(13,37,64,0.12); overflow-x: auto; padding: 0 12px; }
         .es-btn-settings { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: 2px solid #c8ddef; border-radius: 8px; padding: 5px 20px; cursor: pointer; white-space: nowrap; text-decoration: none; }
         .es-btn-settings:hover { background: #e8f1fb; border-color: #0a5fa8; }
+        .es-btn-phrases { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #fff; background: linear-gradient(135deg,#c45d4a,#d4723a); border: none; border-radius: 8px; padding: 6px 16px; cursor: pointer; white-space: nowrap; text-decoration: none; font-weight: 700; box-shadow: 0 2px 8px rgba(196,93,74,0.28); }
+        .es-btn-phrases:hover { background: linear-gradient(135deg,#b5503e,#c4663a); box-shadow: 0 3px 12px rgba(196,93,74,0.4); }
+        .es-promo-banner { display: flex; align-items: center; gap: 10px; padding: 8px 20px; background: linear-gradient(90deg,#fdf5f3,#fff8f6); border-bottom: 1px solid #f0cfc8; flex-shrink: 0; text-decoration: none; cursor: pointer; transition: background 0.15s; }
+        .es-promo-banner:hover { background: linear-gradient(90deg,#faecea,#fdf5f3); }
         .es-btn-back { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: none; padding: 5px 14px; cursor: pointer; white-space: nowrap; text-decoration: none; }
         .es-btn-logout { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #0a5fa8; background: transparent; border: 2px solid #0a5fa8; border-radius: 8px; padding: 5px 14px; cursor: pointer; white-space: nowrap; font-weight: 700; }
         @media (max-width: 600px) {
@@ -47,6 +51,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
           .es-email { display: none; }
           .es-btn-abo { display: none; }
           .es-btn-logout { padding: 5px 10px; font-size: 10px; }
+          .es-promo-label { display: none; }
         }
       `}</style>
 
@@ -78,6 +83,19 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
             <div style={{ height: "100%", width: `${Math.min(100, (usage.today / limits.daily) * 100)}%`, background: usage.today >= limits.daily ? "#ef4444" : usage.today >= limits.daily * 0.8 ? "#f59e0b" : "#0a66c2", borderRadius: 2, transition: "width 0.3s" }} />
           </div>
         </div>
+      )}
+
+      {/* Bannière de découverte "Phrases types" — visible uniquement sur le panel principal */}
+      {panel === "main" && (
+        <Link href="/app/formulations" className="es-promo-banner">
+          <span style={{ fontSize: 16, flexShrink: 0 }}>✦</span>
+          <span className="es-promo-label" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7a3025", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            Personnalisez vos CR avec vos phrases types
+          </span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#c45d4a", whiteSpace: "nowrap", fontWeight: 700, flexShrink: 0 }}>
+            Configurer →
+          </span>
+        </Link>
       )}
 
       {/* Formulations panel */}
@@ -163,7 +181,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
           : <>
               <Link href="/app/historique" className="es-btn-settings">Historique</Link>
               <Link href="/app/parametres" className="es-btn-settings">Paramètres</Link>
-              <Link href="/app/formulations" className="es-btn-settings">Formulations</Link>
+              <Link href="/app/formulations" className="es-btn-phrases">✦ Phrases types</Link>
               <Link href="/app/support" className="es-btn-settings">Support</Link>
             </>
         }
