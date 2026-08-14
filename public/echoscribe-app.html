@@ -2737,28 +2737,14 @@ function exportWord(){var html=getContent();if(!html){alert('Aucun compte rendu 
 <script>
 (function(){
   var _esFormulations=null;
-  /* Charge depuis echoscribe-prefs (base séparée de V5) */
-  (function(){
-    try{
-      var r=indexedDB.open('echoscribe-prefs',1);
-      r.onupgradeneeded=function(e){
-        var db=e.target.result;
-        if(!db.objectStoreNames.contains('preferences'))
-          db.createObjectStore('preferences',{keyPath:'key'});
-      };
-      r.onsuccess=function(e){
-        var db=e.target.result;
-        var req=db.transaction('preferences','readonly').objectStore('preferences').get('formulations');
-        req.onsuccess=function(){
-          var p=req.result;
-          if(p&&(Object.keys(p.normal||{}).length||(p.customExams||[]).length))
-            _esFormulations=p;
-        };
-        req.onerror=function(){};
-      };
-      r.onerror=function(){};
-    }catch(e){}
-  })();
+  /* Charge les formulations depuis l'API serveur (liées au compte utilisateur) */
+  fetch('/api/formulations')
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(p){
+      if(p&&(Object.keys(p.normal||{}).length||(p.customExams||[]).length))
+        _esFormulations=p;
+    })
+    .catch(function(){});
   /* Override buildSystemPrompt (déclaration globale, safe à surcharger) */
   var _origBSP=window.buildSystemPrompt;
   if(typeof _origBSP!=='function') return;

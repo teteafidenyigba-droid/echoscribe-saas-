@@ -631,20 +631,7 @@ function createExam(){
   closeCreate(); renderAll();
 }
 
-/* ---------- Persistance — DB séparée echoscribe-prefs v1 (ne touche PAS echoscribe v1 de V5) ---------- */
-const PZ_DB='echoscribe-prefs', PZ_VER=1;
-let pzDB=null;
-function pzOpen(){ return new Promise((res,rej)=>{ const r=indexedDB.open(PZ_DB,PZ_VER);
-  r.onupgradeneeded=e=>{ const db=e.target.result;
-    if(!db.objectStoreNames.contains('preferences')) db.createObjectStore('preferences',{keyPath:'key'});
-  };
-  r.onsuccess=e=>res(e.target.result); r.onerror=e=>rej(e.target.error); }); }
-async function pzReady(){ if(!pzDB){ try{ pzDB=await pzOpen(); }catch(e){ console.warn('IndexedDB indisponible',e); return null; } } return pzDB; }
-async function pzGet(key){ const db=await pzReady(); if(!db) return null;
-  return new Promise(res=>{ const r=db.transaction('preferences','readonly').objectStore('preferences').get(key); r.onsuccess=()=>res(r.result||null); r.onerror=()=>res(null); }); }
-async function pzPut(obj){ const db=await pzReady(); if(!db) return;
-  return new Promise(res=>{ const r=db.transaction('preferences','readwrite').objectStore('preferences').put(obj); r.onsuccess=()=>res(); r.onerror=()=>res(); }); }
-
+/* ---------- Persistance — API serveur (formulations liées au compte utilisateur) ---------- */
 function pzSerialize(){
   const normal={};
   for(const ex in state){ const ov={}; let any=false;
@@ -655,23 +642,29 @@ function pzSerialize(){
     id, label:CUSTOM[id].label||'', triggers:CUSTOM[id].triggers||'',
     organs:(CUSTOM[id].organs||[]).filter(o=>o.name||o.text).map(o=>({name:o.name||'',text:o.text||''}))
   }));
-  return { key:'formulations', updatedAt:Date.now(), normal, customExams };
+  return { updatedAt:Date.now(), normal, customExams };
 }
 async function pzHydrate(){
-  const p=await pzGet('formulations'); if(!p) return;
-  if(p.normal){ for(const ex in p.normal){ if(state[ex]){ for(const oid in p.normal[ex]){ if(oid in state[ex]) state[ex][oid]=p.normal[ex][oid]; } } } }
-  if(Array.isArray(p.customExams)){
-    p.customExams.forEach(ex=>{ const id=ex.id||("c"+nid());
-      CUSTOM[id]={ label:ex.label||'', triggers:ex.triggers||'', organs:(ex.organs||[]).map(o=>({id:nid(),name:o.name||'',text:o.text||''})) };
-    });
-  }
+  try{
+    const res=await fetch('/api/formulations'); if(!res.ok) return;
+    const p=await res.json(); if(!p) return;
+    if(p.normal){ for(const ex in p.normal){ if(state[ex]){ for(const oid in p.normal[ex]){ if(oid in state[ex]) state[ex][oid]=p.normal[ex][oid]; } } } }
+    if(Array.isArray(p.customExams)){
+      p.customExams.forEach(ex=>{ const id=ex.id||("c"+nid());
+        CUSTOM[id]={ label:ex.label||'', triggers:ex.triggers||'', organs:(ex.organs||[]).map(o=>({id:nid(),name:o.name||'',text:o.text||''})) };
+      });
+    }
+  }catch(e){ console.warn('Chargement formulations impossible',e); }
 }
 
 /* ---------- Divers ---------- */
 async function save(){
-  await pzPut(pzSerialize());
-  const s=document.getElementById("saved"); s.classList.add("show"); setTimeout(()=>s.classList.remove("show"),1800);
-  try{ if(window.parent && window.parent!==window) window.parent.postMessage('echoscribe-prefs-saved','*'); }catch(e){}
+  try{
+    const res=await fetch('/api/formulations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pzSerialize())});
+    if(!res.ok) throw new Error();
+    const s=document.getElementById("saved"); s.classList.add("show"); setTimeout(()=>s.classList.remove("show"),1800);
+    try{ if(window.parent && window.parent!==window) window.parent.postMessage('echoscribe-prefs-saved','*'); }catch(e){}
+  }catch(e){ alert('Erreur de sauvegarde. Vérifiez votre connexion et réessayez.'); }
 }
 function renderAll(){ renderRail(); renderEditor(); renderSim(); renderPreview(); }
 (async function(){ await pzHydrate(); renderAll(); })();

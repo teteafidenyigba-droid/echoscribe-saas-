@@ -148,7 +148,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         );
       })() : (
         <iframe
-          src={`/echoscribe-app.html?v=v5pro87&tier=${tier}${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
+          src={`/echoscribe-app.html?v=v5pro88&tier=${tier}${panel === "settings" ? "&panel=settings" : panel === "history" ? "&panel=history" : ""}`}
           style={{ flex: 1, border: "none", width: "100%", display: "block", background: "transparent" }}
           title="EchoScribe Application"
           allow="microphone"
