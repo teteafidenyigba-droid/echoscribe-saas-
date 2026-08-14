@@ -90,7 +90,7 @@ export default function AppClient({ user, panel = "main", usage, limits, isTrial
         <Link href="/app/formulations" className="es-promo-banner">
           <span style={{ fontSize: 16, flexShrink: 0 }}>✦</span>
           <span className="es-promo-label" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#7a3025", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            Personnalisez vos CR avec vos phrases types
+            Personnalisez vos comptes rendus avec vos phrases types
           </span>
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#c45d4a", whiteSpace: "nowrap", fontWeight: 700, flexShrink: 0 }}>
             Configurer →
