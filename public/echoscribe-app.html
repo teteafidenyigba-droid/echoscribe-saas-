@@ -2733,11 +2733,26 @@ function exportWord(){var html=getContent();if(!html){alert('Aucun compte rendu 
 })();
 </script>
 
-<!-- ══ FORMULATIONS PERSONNALISÉES — injection après V5 ══ -->
+<!-- ══ FORMULATIONS PERSONNALISÉES + SUPPRESSIONS — injection après V5 ══ -->
 <script>
 (function(){
+  /* ── Suppression section CAT dans tout rendu ── */
+  function _stripCat(text){
+    if(!text) return text;
+    var lines=text.split('\n'); var catLine=-1;
+    for(var i=0;i<lines.length;i++){
+      var l=lines[i].trim().replace(/\*\*/g,'');
+      if(/^(?:##\s*)?CAT(?:\s*##)?\s*:?\s*$/.test(l)||/^CAT\s*:/i.test(l)){ catLine=i; break; }
+    }
+    return catLine===-1 ? text : lines.slice(0,catLine).join('\n').trimEnd();
+  }
+  var _origRR=window.renderResult;
+  if(typeof _origRR==='function'){
+    window.renderResult=function(text){ _origRR(_stripCat(text)); };
+  }
+
+  /* ── Formulations personnalisées ── */
   var _esFormulations=null;
-  /* Charge les formulations depuis l'API serveur (liées au compte utilisateur) */
   fetch('/api/formulations')
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(p){
@@ -2745,41 +2760,38 @@ function exportWord(){var html=getContent();if(!html){alert('Aucun compte rendu 
         _esFormulations=p;
     })
     .catch(function(){});
-  /* Override buildSystemPrompt (déclaration globale, safe à surcharger) */
   var _origBSP=window.buildSystemPrompt;
-  if(typeof _origBSP!=='function') return;
-  window.buildSystemPrompt=function(dictation){
-    var base=_origBSP(dictation);
-    if(!_esFormulations) return base;
-    var lines=[];
-    var normal=_esFormulations.normal||{};
-    /* Formulations built-in : injecter toutes les phrases personnalisées */
-    Object.keys(normal).forEach(function(examId){
-      var organs=normal[examId];
-      if(!organs) return;
-      Object.keys(organs).forEach(function(organId){
-        var phrase=organs[organId];
-        if(phrase&&phrase.trim())
-          lines.push('- '+organId+' (si normal) → écrire EXACTEMENT : "'+phrase.trim()+'"');
+  if(typeof _origBSP==='function'){
+    window.buildSystemPrompt=function(dictation){
+      var base=_origBSP(dictation);
+      if(!_esFormulations) return base;
+      var lines=[];
+      var normal=_esFormulations.normal||{};
+      Object.keys(normal).forEach(function(examId){
+        var organs=normal[examId]; if(!organs) return;
+        Object.keys(organs).forEach(function(organId){
+          var phrase=organs[organId];
+          if(phrase&&phrase.trim())
+            lines.push('- '+organId+' (si normal) → écrire EXACTEMENT : "'+phrase.trim()+'"');
+        });
       });
-    });
-    /* Formulations custom : déclencher uniquement si triggers détectés dans la dictée */
-    var dictLow=(dictation||'').toLowerCase();
-    (_esFormulations.customExams||[]).forEach(function(exam){
-      if(!exam.triggers||!exam.triggers.trim()) return;
-      var trgs=exam.triggers.split(',').map(function(t){return t.trim().toLowerCase();}).filter(Boolean);
-      if(!trgs.some(function(t){return t&&dictLow.indexOf(t)!==-1;})) return;
-      if(!exam.organs||!exam.organs.length) return;
-      lines.push('');
-      lines.push('Examen '+exam.label+' :');
-      exam.organs.forEach(function(o){
-        if(o.name&&o.text&&o.text.trim())
-          lines.push('  • '+o.name+' (si normal) → écrire EXACTEMENT : "'+o.text.trim()+'"');
+      var dictLow=(dictation||'').toLowerCase();
+      (_esFormulations.customExams||[]).forEach(function(exam){
+        if(!exam.triggers||!exam.triggers.trim()) return;
+        var trgs=exam.triggers.split(',').map(function(t){return t.trim().toLowerCase();}).filter(Boolean);
+        if(!trgs.some(function(t){return t&&dictLow.indexOf(t)!==-1;})) return;
+        if(!exam.organs||!exam.organs.length) return;
+        lines.push('');
+        lines.push('Examen '+exam.label+' :');
+        exam.organs.forEach(function(o){
+          if(o.name&&o.text&&o.text.trim())
+            lines.push('  • '+o.name+' (si normal) → écrire EXACTEMENT : "'+o.text.trim()+'"');
+        });
       });
-    });
-    if(!lines.length) return base;
-    return base+'\n\n---\n\n⚠ FORMULATIONS PERSONNALISÉES OBLIGATOIRES (organes normaux uniquement) :\n'+lines.join('\n');
-  };
+      if(!lines.length) return base;
+      return base+'\n\n---\n\n⚠ FORMULATIONS PERSONNALISÉES OBLIGATOIRES (organes normaux uniquement) :\n'+lines.join('\n');
+    };
+  }
 })();
 </script>
 </body>
