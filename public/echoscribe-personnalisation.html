@@ -634,9 +634,16 @@ function createExam(){
 /* ---------- Persistance — API serveur (formulations liées au compte utilisateur) ---------- */
 function pzSerialize(){
   const normal={};
-  for(const ex in state){ const ov={}; let any=false;
-    for(const oid in state[ex]){ if(state[ex][oid]!==null){ ov[oid]=state[ex][oid]; any=true; } }
-    if(any) normal[ex]=ov;
+  for(const ex in state){
+    const organs=(BUILTIN[ex]&&BUILTIN[ex].organs)||[];
+    if(!organs.length) continue;
+    const ov={};
+    organs.forEach(function(org){
+      /* Texte effectif : personnalisé si modifié, sinon modèle SFR selon format actif */
+      const text=state[ex][org.id]!==null ? state[ex][org.id] : (form==="concise"?org.short:org.full);
+      if(text&&text.trim()) ov[org.name]=text.trim();
+    });
+    if(Object.keys(ov).length) normal[ex]=ov;
   }
   const customExams=Object.keys(CUSTOM).map(id=>({
     id, label:CUSTOM[id].label||'', triggers:CUSTOM[id].triggers||'',
@@ -648,7 +655,20 @@ async function pzHydrate(){
   try{
     const res=await fetch('/api/formulations'); if(!res.ok) return;
     const p=await res.json(); if(!p) return;
-    if(p.normal){ for(const ex in p.normal){ if(state[ex]){ for(const oid in p.normal[ex]){ if(oid in state[ex]) state[ex][oid]=p.normal[ex][oid]; } } } }
+    if(p.normal){ for(const ex in p.normal){ if(state[ex]){
+      const organs=(BUILTIN[ex]&&BUILTIN[ex].organs)||[];
+      const nameToId={};
+      organs.forEach(function(o){ nameToId[o.name]=o.id; });
+      for(const key in p.normal[ex]){
+        const oid=nameToId[key]||key;
+        if(!(oid in state[ex])) continue;
+        const org=organs.find(function(o){return o.id===oid;});
+        const saved=(p.normal[ex][key]||'').trim();
+        /* Remettre à null si identique au modèle SFR → badge MODÈLE SFR conservé dans l'UI */
+        const isSfr=org&&(saved===(org.full||'').trim()||saved===(org.short||'').trim());
+        state[ex][oid]=isSfr?null:p.normal[ex][key];
+      }
+    } } }
     if(Array.isArray(p.customExams)){
       p.customExams.forEach(ex=>{ const id=ex.id||("c"+nid());
         CUSTOM[id]={ label:ex.label||'', triggers:ex.triggers||'', organs:(ex.organs||[]).map(o=>({id:nid(),name:o.name||'',text:o.text||''})) };
